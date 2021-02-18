@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 OPBPMNPlugin >> diagramControllerClass [
-	^ OPBPMNController
+	^ OPBPMNDiagramController
 ]
 
 { #category : #accessing }
