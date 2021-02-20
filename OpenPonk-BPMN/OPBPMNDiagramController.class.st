@@ -4,10 +4,30 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
+{ #category : #connecting }
+OPBPMNDiagramController >> canBeTargetFor: aController [
+	^ aController isKindOf: OPBPMNNodeController
+]
+
+{ #category : #connecting }
+OPBPMNDiagramController >> commonModelClassPrefix [
+	^ 'OPBPMN'
+]
+
+{ #category : #connecting }
+OPBPMNDiagramController >> elementsToShowInside [
+	^ model elements
+]
+
 { #category : #'ui interaction' }
 OPBPMNDiagramController >> initializePalette: aPalette [
 	aPalette
 		newCreationTool: 'Activity'
 			factory: [ OPBPMNActivityController new ]
 			icon: OPBPMNIcon current activity
+]
+
+{ #category : #'ui interaction' }
+OPBPMNDiagramController >> modelClass [
+	^ OPBPMNModel 
 ]
