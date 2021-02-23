@@ -24,7 +24,16 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 	aPalette
 		newCreationTool: 'Activity'
 			factory: [ OPBPMNActivityController new ]
-			icon: OPBPMNIcon current activity
+			icon: OPBPMNIcon current activity;
+		newCreationTool: 'Start Event'
+			factory: [ OPBPMNStartEventController new ]
+			icon: OPBPMNIcon current startEvent;
+		newCreationTool: 'End Event'
+			factory: [ OPBPMNEndEventController new ]
+			icon: OPBPMNIcon current endEvent;
+		newCreationTool: 'Sequence Flow'
+			factory: [ OPBPMNFlowController new ]
+			icon: OPBPMNIcon current sequenceFlow
 ]
 
 { #category : #'ui interaction' }
