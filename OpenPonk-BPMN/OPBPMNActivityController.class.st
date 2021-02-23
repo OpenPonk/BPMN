@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNActivityController,
-	#superclass : #OPElementController,
+	#superclass : #OPBPMNNodeController,
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 

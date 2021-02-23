@@ -31,3 +31,10 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 OPBPMNDiagramController >> modelClass [
 	^ OPBPMNModel 
 ]
+
+{ #category : #'ui interaction' }
+OPBPMNDiagramController >> modelToControllerMapping [
+	^ Dictionary new
+		at: OPBPMNActivityModel  put: OPBPMNActivityController;
+		yourself
+]

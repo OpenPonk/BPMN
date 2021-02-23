@@ -10,10 +10,15 @@ Class {
 	#category : #'OpenPonk-BPMN-Icons'
 }
 
+{ #category : #accessing }
+OPBPMNIcon class >> current [
+	^ Current ifNil: [ Current := self new ]
+]
+
 { #category : #initialization }
 OPBPMNIcon >> activity [
 	^ Form
-		fromBinaryStream: (Base64MimeConverter mimeDecodeToBytes: self activityContent readStream)
+		fromBinaryStream: (self activityContent base64Decoded asByteArray readStream)
 ]
 
 { #category : #initialization }

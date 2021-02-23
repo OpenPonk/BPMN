@@ -1,5 +1,5 @@
 Class {
 	#name : #OPBPMNNodeController,
-	#superclass : #Object,
+	#superclass : #OPElementController,
 	#category : #'OpenPonk-BPMN-Controllers'
 }

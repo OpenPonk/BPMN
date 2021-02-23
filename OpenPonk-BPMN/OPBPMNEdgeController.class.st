@@ -1,5 +1,5 @@
 Class {
 	#name : #OPBPMNEdgeController,
-	#superclass : #Object,
+	#superclass : #OPElementController,
 	#category : #'OpenPonk-BPMN-Controllers'
 }
