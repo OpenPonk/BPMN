@@ -6,7 +6,7 @@ Class {
 
 { #category : #connecting }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNNodeController
+	^ aController isKindOf: OPBPMNNodeController 
 ]
 
 { #category : #connecting }
@@ -45,5 +45,8 @@ OPBPMNDiagramController >> modelClass [
 OPBPMNDiagramController >> modelToControllerMapping [
 	^ Dictionary new
 		at: OPBPMNActivityModel  put: OPBPMNActivityController;
+		at: OPBPMNStartEventModel  put: OPBPMNStartEventController;
+		at: OPBPMNEndEventModel  put: OPBPMNEndEventController;
+		at: OPBPMNFlowModel  put: OPBPMNFlowController;
 		yourself
 ]

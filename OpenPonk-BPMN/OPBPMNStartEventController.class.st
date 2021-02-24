@@ -4,6 +4,12 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
+{ #category : #testing }
+OPBPMNStartEventController class >> initializePossibleConnected [
+	PossibleOutgoing := Set
+		with: OPBPMNFlowController
+]
+
 { #category : #connecting }
 OPBPMNStartEventController >> createRoassalShape [
 	^ RTRoundedBox new

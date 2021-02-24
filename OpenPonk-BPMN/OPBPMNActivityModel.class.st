@@ -1,5 +1,5 @@
 Class {
 	#name : #OPBPMNActivityModel,
-	#superclass : #OPBPMNModel,
+	#superclass : #OPBPMNNodeModel,
 	#category : #'OpenPonk-BPMN-Models'
 }

@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+OPBPMNFlowController >> headShapeClass [
+	^ RTEmptyCircle
+]
+
+{ #category : #accessing }
 OPBPMNFlowController >> modelClass [
 	^ OPBPMNFlowModel
 ]

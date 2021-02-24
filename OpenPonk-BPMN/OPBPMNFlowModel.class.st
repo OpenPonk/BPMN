@@ -1,5 +1,5 @@
 Class {
 	#name : #OPBPMNFlowModel,
-	#superclass : #OPBPMNModel,
+	#superclass : #OPDirectedAssociation,
 	#category : #'OpenPonk-BPMN-Models'
 }
