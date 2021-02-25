@@ -7,17 +7,6 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
-{ #category : #testing }
-OPBPMNNodeController class >> initializePossibleConnected [
-	self subclassResponsibility
-]
-
-{ #category : #testing }
-OPBPMNNodeController class >> isPossibleOutgoing: aController [
-	PossibleOutgoing ifNil: [ self initializePossibleConnected ].
-	^ PossibleOutgoing includes: aController
-]
-
 { #category : #connecting }
 OPBPMNNodeController >> buildEditorForm: aForm [
 	(aForm addText: 'Name')
@@ -28,16 +17,6 @@ OPBPMNNodeController >> buildEditorForm: aForm [
 ]
 
 { #category : #connecting }
-OPBPMNNodeController >> canBeSourceFor: aController [
-	^ self class isPossibleOutgoing: aController class
-]
-
-{ #category : #connecting }
-OPBPMNNodeController >> canBeTargetFor: aController [
-	^ (aController isKindOf: OPBPMNEdgeController)
-]
-
-{ #category : #connecting }
 OPBPMNNodeController >> createRoassalShape [
 	^ self subclassResponsibility
 ]
@@ -45,12 +24,6 @@ OPBPMNNodeController >> createRoassalShape [
 { #category : #connecting }
 OPBPMNNodeController >> dependentElements [
 	^ (model incoming , model outgoing) asSet
-]
-
-{ #category : #connecting }
-OPBPMNNodeController >> internalSubscribeTo: aModel [
-	super internalSubscribeTo: aModel.
-	aModel when: OPElementRemoved do: [ :e | self removeController ]
 ]
 
 { #category : #private }

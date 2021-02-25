@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 OPBPMNFlowController >> headShapeClass [
-	^ RTEmptyCircle
+	^ RTSimpleArrow
 ]
 
 { #category : #accessing }

@@ -26,5 +26,7 @@ OPBPMNNavigatorAdapter >> iconMapping [
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> typesByDependency [
-	^ {OPBPMNModel }
+	^ {OPBPMNModel.
+	OPBPMNNodeModel.
+	OPBPMNEdgeModel }
 ]

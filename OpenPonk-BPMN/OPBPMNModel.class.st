@@ -3,3 +3,13 @@ Class {
 	#superclass : #OPModelObject,
 	#category : #'OpenPonk-BPMN-Models'
 }
+
+{ #category : #accessing }
+OPBPMNModel >> edges [
+	^ elements select: #isEdge
+]
+
+{ #category : #accessing }
+OPBPMNModel >> nodes [
+	^ elements select: #isNode
+]

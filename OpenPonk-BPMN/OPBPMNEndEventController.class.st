@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #connecting }
+OPBPMNEndEventController >> canBeSourceFor: aController [
+	^ false
+]
+
+{ #category : #connecting }
+OPBPMNEndEventController >> canBeTargetFor: aController [
+	^ aController isKindOf: OPBPMNEdgeController
+]
+
+{ #category : #connecting }
 OPBPMNEndEventController >> createRoassalShape [
 	^ RTRoundedBox new
 		size: 32;

@@ -4,10 +4,14 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
-{ #category : #testing }
-OPBPMNStartEventController class >> initializePossibleConnected [
-	PossibleOutgoing := Set
-		with: OPBPMNFlowController
+{ #category : #connecting }
+OPBPMNStartEventController >> canBeSourceFor: aController [
+	^ aController modelClass = OPBPMNFlowModel
+]
+
+{ #category : #connecting }
+OPBPMNStartEventController >> canBeTargetFor: aController [
+	^ false
 ]
 
 { #category : #connecting }
