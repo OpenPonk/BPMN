@@ -29,3 +29,8 @@ OPBPMNPlugin >> modelSerializerClass [
 OPBPMNPlugin >> name [
 	^ 'BPMN'
 ]
+
+{ #category : #accessing }
+OPBPMNPlugin >> supportsHidingElements [
+	^ true
+]

@@ -11,12 +11,15 @@ OPBPMNNavigatorAdapter >> childrenMapping [
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> displayMapping [
-	^ { (OPBPMNModel -> 'Model') }
+	^ {(OPBPMNModel -> 'Model').
+	OPBPMNFlowModel -> 'Sequence Flow'}
 ]
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> hasMappingFor: anObject [
-	^ {OPBPMNModel} anySatisfy: [ :any | anObject isKindOf: any ]
+	^ {OPBPMNModel.
+	OPBPMNNodeModel.
+	OPBPMNEdgeModel} anySatisfy: [ :any | anObject isKindOf: any ]
 ]
 
 { #category : #'widget API' }

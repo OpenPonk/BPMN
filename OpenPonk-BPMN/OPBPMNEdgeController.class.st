@@ -62,9 +62,20 @@ OPBPMNEdgeController >> hideSelectionFeedback [
 			self figure view signalUpdate ]
 ]
 
+{ #category : #accessing }
+OPBPMNEdgeController >> internalSubscribeTo: aModel [
+	super internalSubscribeTo: aModel.
+	aModel when: OPElementRemoved do: [ :e | self removeController ]
+]
+
 { #category : #private }
 OPBPMNEdgeController >> isHideable [
 	^ true
+]
+
+{ #category : #private }
+OPBPMNEdgeController >> modelClass [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
