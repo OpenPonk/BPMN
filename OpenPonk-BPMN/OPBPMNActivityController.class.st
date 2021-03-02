@@ -6,12 +6,12 @@ Class {
 
 { #category : #connecting }
 OPBPMNActivityController >> canBeSourceFor: aController [
-	^ aController modelClass = OPBPMNFlowModel 
+	^ aController modelClass = OPBPMNFlowModel
 ]
 
 { #category : #connecting }
 OPBPMNActivityController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController modelClass = OPBPMNFlowModel
 ]
 
 { #category : #connecting }

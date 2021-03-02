@@ -38,6 +38,17 @@ OPBPMNIcon >> endEventContent [
 ]
 
 { #category : #initialization }
+OPBPMNIcon >> gateway [
+	^ Form
+		fromBinaryStream: self gatewayContent base64Decoded asByteArray readStream
+]
+
+{ #category : #initialization }
+OPBPMNIcon >> gatewayContent [
+	^ 'iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAVlpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KTMInWQAAAPZJREFUOBGlk1EOwjAMQ4sACcQl+rMz8g0cEgkOA35tPG2lA6FZykJS12udkVIfG7UJkMuz1u5FazlB3MXyWfmlIAP6P4UgbGELN8VdMUSmBqwvCk0FriI+FCcFIFPTB12hnsCh8tMxMvWiEAL2wCewwD4EnFuh0SPfjzvzplYgdFIrZI+8v7iPifbAGyzg7D48+J5ayioY46AA9qBWn0+vw2dfNgXFVSfxnVZ5goinc9Hvnrn2wtOBB8bpUCDEBwRaIXvQCsBn3ww9IU+L/FTwAtAVqEvzE+ERZjMFMjX4KlApVcgeMbW//8VTId83R5PaPfNKfgM93ijIHGg8rQAAAABJRU5ErkJggg=='
+]
+
+{ #category : #initialization }
 OPBPMNIcon >> initialize [
 	super initialize.
 	self initializeIcons

@@ -6,7 +6,7 @@ Class {
 
 { #category : #connecting }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNNodeController 
+	^ aController isKindOf: OPBPMNNodeController
 ]
 
 { #category : #connecting }
@@ -31,6 +31,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'End Event'
 			factory: [ OPBPMNEndEventController new ]
 			icon: OPBPMNIcon current endEvent;
+		newCreationTool: 'Gateway'
+			factory: [ OPBPMNGatewayController new ]
+			icon: OPBPMNIcon current gateway;
 		newCreationTool: 'Sequence Flow'
 			factory: [ OPBPMNFlowController new ]
 			icon: OPBPMNIcon current sequenceFlow
@@ -44,9 +47,10 @@ OPBPMNDiagramController >> modelClass [
 { #category : #'ui interaction' }
 OPBPMNDiagramController >> modelToControllerMapping [
 	^ Dictionary new
-		at: OPBPMNActivityModel  put: OPBPMNActivityController;
-		at: OPBPMNStartEventModel  put: OPBPMNStartEventController;
-		at: OPBPMNEndEventModel  put: OPBPMNEndEventController;
-		at: OPBPMNFlowModel  put: OPBPMNFlowController;
+		at: OPBPMNActivityModel put: OPBPMNActivityController;
+		at: OPBPMNStartEventModel put: OPBPMNStartEventController;
+		at: OPBPMNEndEventModel put: OPBPMNEndEventController;
+		at: OPBPMNGatewayModel put: OPBPMNGatewayController;
+		at: OPBPMNFlowModel put: OPBPMNFlowController;
 		yourself
 ]

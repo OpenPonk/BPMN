@@ -21,9 +21,15 @@ OPBPMNNodeController >> createRoassalShape [
 	^ self subclassResponsibility
 ]
 
-{ #category : #connecting }
+{ #category : #private }
 OPBPMNNodeController >> dependentElements [
 	^ (model incoming , model outgoing) asSet
+]
+
+{ #category : #private }
+OPBPMNNodeController >> internalSubscribeTo: aModel [
+	super internalSubscribeTo: aModel.
+	aModel when: OPElementRemoved do: [ :e | self removeController ]
 ]
 
 { #category : #private }

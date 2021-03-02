@@ -21,3 +21,23 @@ OPBPMNEdgeModel >> isEdge [
 OPBPMNEdgeModel >> isNode [
 	^ false
 ]
+
+{ #category : #accessing }
+OPBPMNEdgeModel >> source [
+	^ source
+]
+
+{ #category : #accessing }
+OPBPMNEdgeModel >> source: aNode [
+	source := aNode
+]
+
+{ #category : #accessing }
+OPBPMNEdgeModel >> target [ 
+	^ target
+]
+
+{ #category : #accessing }
+OPBPMNEdgeModel >> target: aNode [
+	target := aNode
+]
