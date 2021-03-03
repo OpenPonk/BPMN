@@ -28,6 +28,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Start Event'
 			factory: [ OPBPMNStartEventController new ]
 			icon: OPBPMNIcon current startEvent;
+		newCreationTool: 'Intermediate Event'
+			factory: [ OPBPMNIntermediateEventController new ]
+			icon: OPBPMNIcon current startEvent;
 		newCreationTool: 'End Event'
 			factory: [ OPBPMNEndEventController new ]
 			icon: OPBPMNIcon current endEvent;
