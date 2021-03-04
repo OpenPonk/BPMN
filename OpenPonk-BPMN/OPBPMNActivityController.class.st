@@ -11,6 +11,11 @@ Class {
 }
 
 { #category : #connecting }
+OPBPMNActivityController >> addedNodeFigure: aFigure [
+	elements add: aFigure
+]
+
+{ #category : #connecting }
 OPBPMNActivityController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
@@ -36,12 +41,21 @@ OPBPMNActivityController >> canBeTargetFor: aController [
 { #category : #connecting }
 OPBPMNActivityController >> createRoassalShape [
 	^ RTRoundedBox new
-		height: 45;
+		height: 50;
 		borderRadius: 10;
-		width: 60;
+		width: 68;
 		color: (Color fromHexString: 'f2f2f2');
 		borderColor: Color black;
 		yourself
+]
+
+{ #category : #accessing }
+OPBPMNActivityController >> layout: anElementLayout [
+	self figure trachelShape
+		doWithoutCallbacks: [ super layout: anElementLayout ].
+	anElementLayout hasExtent
+		ifTrue: [ self figure extent: anElementLayout extent ].
+	self refreshFigure
 ]
 
 { #category : #accessing }
@@ -49,49 +63,32 @@ OPBPMNActivityController >> modelClass [
 	^ OPBPMNActivityModel
 ]
 
-{ #category : #connecting }
+{ #category : #hooks }
 OPBPMNActivityController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 	labelConstraint move.
 	figure trachelShape pushBack.
-	iconElement trachelShape form: self typeIconForModel.
-	iconConstraint move.
 	self diagramController view signalUpdate.
 	^ self figure
 ]
 
-{ #category : #connecting }
+{ #category : #hooks }
 OPBPMNActivityController >> renderFigureIn: aView [
 	| labeled |
 	self diagramController addingFigureFor: self.
 	figure := self createRoassalShape elementOn: self model.
-	figure
-		@ RTDraggable;
-		@ RTResizable.
+	figure @ RTDraggable.
+	figure @ RTResizable.
 	(labeled := RTLabeled new)
 		view: aView;
 		top;
 		color: Color black.
 	figure @ labeled.
 	labelConstraint := (RTConstraint on: labeled lbl background: figure)
-		topLeft;
-		padding: 5;
+		center;
+		padding: 2;
 		stick.
 	figure renderIn: aView.
-	iconElement := (RTBitmap new form: self typeIconForModel) element.
-	iconElement renderIn: aView.
-	iconConstraint := (RTConstraint on: iconElement background: figure)
-		topRight;
-		padding: 5;
-		stick.
-	figure addCallback: (TRRemoveCallback with: iconElement).
-	elements := RTGroup new.
-	elements @ RTDraggable.
-	figure trachelShape
-		addCallback:
-			(TRTranslationCallback
-				block: [ :shape :step | elements do: [ :e | e translateBy: step ] ]).
-	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
 ]
 
@@ -99,7 +96,6 @@ OPBPMNActivityController >> renderFigureIn: aView [
 OPBPMNActivityController >> typeIconFor: aType [
 	aType = OPBPMNActivityType Service
 		ifTrue: [ ^ OPBPMNIcon current activity ]
-
 ]
 
 { #category : #hooks }

@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #accessing }
+OPBPMNActivityModel >> defaultType [
+	^ OPBPMNActivityType Service
+]
+
+{ #category : #accessing }
 OPBPMNActivityModel >> type [
 	^ type
 ]
