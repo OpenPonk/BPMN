@@ -89,6 +89,12 @@ OPBPMNActivityController >> renderFigureIn: aView [
 		padding: 2;
 		stick.
 	figure renderIn: aView.
+	iconElement := (RTBitmap new form: self typeIconForModel) element.
+	iconConstraint := (RTConstraint on: iconElement background: figure)
+		topRight;
+		padding: 5;
+		stick.
+		iconElement renderIn: aView.
 	^ self diagramController addedFigureFor: self
 ]
 
