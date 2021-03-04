@@ -17,8 +17,8 @@ OPBPMNEndEventController >> canBeTargetFor: aController [
 { #category : #connecting }
 OPBPMNEndEventController >> createRoassalShape [
 	^ RTRoundedBox new
-		size: 32;
-		borderRadius: 16;
+		size: 34;
+		borderRadius: 17;
 		color: Color transparent;
 		borderColor: Color black;
 		borderWidth: 5;

@@ -18,6 +18,16 @@ OPBPMNActivityType class >> None [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNActivityType class >> Receive [
+	^ #Receive
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNActivityType class >> Send [
+	^ #Send
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNActivityType class >> Service [
 	^ #Service
 ]

@@ -9,7 +9,7 @@ Class {
 
 { #category : #accessing }
 OPBPMNActivityModel >> defaultType [
-	^ OPBPMNActivityType Service
+	^ OPBPMNActivityType None
 ]
 
 { #category : #initialization }

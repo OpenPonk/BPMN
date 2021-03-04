@@ -1,6 +1,11 @@
 Class {
 	#name : #OPBPMNIntermediateEventController,
 	#superclass : #OPBPMNNodeController,
+	#instVars : [
+		'innerCircle',
+		'elements',
+		'innerConstraint'
+	],
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
@@ -25,18 +30,45 @@ OPBPMNIntermediateEventController >> createRoassalShape [
 		yourself
 ]
 
+{ #category : #accessing }
+OPBPMNIntermediateEventController >> modelClass [
+	^ OPBPMNIntermediateEventModel
+]
+
 { #category : #connecting }
-OPBPMNIntermediateEventController >> innerCircle [
-	^ RTRoundedBox new
+OPBPMNIntermediateEventController >> refreshFigure [
+	(figure attributeAt: #RTLabelledLabel) text: self model name.
+	innerConstraint move.
+	figure trachelShape pushBack.
+	self diagramController view signalUpdate.
+	^ self figure
+]
+
+{ #category : #construction }
+OPBPMNIntermediateEventController >> renderFigureIn: aView [
+	self diagramController addingFigureFor: self.
+	figure := self createRoassalShape elementOn: self model.
+	figure
+		addInteraction:
+			(OPRTMultilineLabeled new
+				view: aView;
+				below;
+				color: Color black;
+				yourself).
+	figure @ RTDraggable.
+	figure @ OPRTFocusable.
+	figure renderIn: aView.
+	innerCircle := RTRoundedBox new
 		size: 28;
 		borderRadius: 14;
 		borderWidth: 1;
 		color: Color transparent;
 		borderColor: Color black;
-		yourself
-]
-
-{ #category : #accessing }
-OPBPMNIntermediateEventController >> modelClass [
-	^ OPBPMNIntermediateEventModel
+		element.
+	innerConstraint := (RTConstraint on: innerCircle background: figure)
+		stick.
+	innerCircle renderIn: aView.
+	figure addCallback: (TRRemoveCallback with: innerCircle).
+	self saveStateOnDragEndFor: figure.
+	^ self diagramController addedFigureFor: self
 ]

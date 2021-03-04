@@ -19,7 +19,7 @@ OPBPMNActivityController >> addedNodeFigure: aFigure [
 OPBPMNActivityController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Service #User #Manual #Send #None);
+		items: #(#Service #User #Manual #Send #Receive #None);
 		iconHolder: [ :type | self typeIconFor: type ];
 		displayBlock: [ :type | type asString ];
 		setSelectedItem: self model type;
@@ -43,7 +43,7 @@ OPBPMNActivityController >> createRoassalShape [
 	^ RTRoundedBox new
 		height: 50;
 		borderRadius: 10;
-		width: 68;
+		width: 72;
 		color: (Color fromHexString: 'f2f2f2');
 		borderColor: Color black;
 		yourself
@@ -115,7 +115,13 @@ OPBPMNActivityController >> typeIconFor: aType [
 	aType = OPBPMNActivityType User
 		ifTrue: [ ^ OPBPMNIcon current activityUser ].
 	aType = OPBPMNActivityType Manual
-		ifTrue: [ ^ OPBPMNIcon current activityManual ]
+		ifTrue: [ ^ OPBPMNIcon current activityManual ].
+			aType = OPBPMNActivityType Send
+		ifTrue: [ ^ OPBPMNIcon current activitySend ].
+			aType = OPBPMNActivityType Receive
+		ifTrue: [ ^ OPBPMNIcon current activityReceive ].
+			aType = OPBPMNActivityType None
+		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]
 
 { #category : #hooks }

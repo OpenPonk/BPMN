@@ -30,7 +30,7 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 			icon: OPBPMNIcon current startEvent;
 		newCreationTool: 'Intermediate Event'
 			factory: [ OPBPMNIntermediateEventController new ]
-			icon: OPBPMNIcon current startEvent;
+			icon: OPBPMNIcon current intermediateEvent;
 		newCreationTool: 'End Event'
 			factory: [ OPBPMNEndEventController new ]
 			icon: OPBPMNIcon current endEvent;
