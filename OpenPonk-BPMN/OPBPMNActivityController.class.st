@@ -19,7 +19,7 @@ OPBPMNActivityController >> addedNodeFigure: aFigure [
 OPBPMNActivityController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Service #User  #Manual #Send);
+		items: #(#Service #User #Manual #Send #None);
 		iconHolder: [ :type | self typeIconFor: type ];
 		displayBlock: [ :type | type asString ];
 		setSelectedItem: self model type;
@@ -68,6 +68,8 @@ OPBPMNActivityController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 	labelConstraint move.
 	figure trachelShape pushBack.
+		iconElement trachelShape form: self typeIconForModel.
+	iconConstraint move.
 	self diagramController view signalUpdate.
 	^ self figure
 ]
@@ -89,13 +91,31 @@ OPBPMNActivityController >> renderFigureIn: aView [
 		padding: 2;
 		stick.
 	figure renderIn: aView.
+	iconElement := (RTBitmap new form: self typeIconForModel) element.
+	iconConstraint := (RTConstraint on: iconElement background: figure)
+		topLeft;
+		padding: 3;
+		stick.
+	iconElement renderIn: aView.
+	figure addCallback: (TRRemoveCallback with: iconElement).
+	elements := RTGroup new.
+	elements @ RTDraggable.
+	figure trachelShape
+		addCallback:
+			(TRTranslationCallback
+				block: [ :shape :step | elements do: [ :e | e translateBy: step ] ]).
+	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
 ]
 
 { #category : #hooks }
 OPBPMNActivityController >> typeIconFor: aType [
 	aType = OPBPMNActivityType Service
-		ifTrue: [ ^ OPBPMNIcon current activity ]
+		ifTrue: [ ^ OPBPMNIcon current activityService ].
+	aType = OPBPMNActivityType User
+		ifTrue: [ ^ OPBPMNIcon current activityUser ].
+	aType = OPBPMNActivityType Manual
+		ifTrue: [ ^ OPBPMNIcon current activityManual ]
 ]
 
 { #category : #hooks }

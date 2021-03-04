@@ -12,6 +12,12 @@ OPBPMNActivityModel >> defaultType [
 	^ OPBPMNActivityType Service
 ]
 
+{ #category : #initialization }
+OPBPMNActivityModel >> initialize [
+	super initialize.
+	type := self defaultType.
+]
+
 { #category : #accessing }
 OPBPMNActivityModel >> type [
 	^ type

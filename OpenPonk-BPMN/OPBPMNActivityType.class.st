@@ -8,6 +8,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+OPBPMNActivityType class >> Manual [
+	^ #Manual
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNActivityType class >> None [
+	^ #None
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNActivityType class >> Service [
 	^ #Service
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNActivityType class >> User [
+	^#User
 ]
