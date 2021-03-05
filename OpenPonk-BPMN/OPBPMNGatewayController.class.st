@@ -17,11 +17,10 @@ OPBPMNGatewayController >> canBeTargetFor: aController [
 { #category : #connecting }
 OPBPMNGatewayController >> createRoassalShape [
 	^ RTBox new
-		height: 30;
-		width: 30;
-		borderColor: Color black;
-		color: Color white;
+		size: 34;
 		rotation: 22;
+		color: Color transparent;
+		borderColor: Color black;
 		yourself
 ]
 

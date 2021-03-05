@@ -37,6 +37,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Gateway'
 			factory: [ OPBPMNGatewayController new ]
 			icon: OPBPMNIcon current gateway;
+		newCreationTool: 'Pool'
+			factory: [ OPBPMNPoolController new ]
+			icon: OPBPMNIcon current sequenceFlow;
 		newConnectionCreationTool: 'Sequence Flow'
 			factory: [ OPBPMNFlowController new ]
 			icon: OPBPMNIcon current sequenceFlow
