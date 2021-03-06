@@ -6,7 +6,7 @@ Class {
 
 { #category : #connecting }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNNodeController
+	^ aController isKindOf: OPBPMNNodeController 
 ]
 
 { #category : #connecting }
@@ -39,6 +39,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 			icon: OPBPMNIcon current gateway;
 		newCreationTool: 'Pool'
 			factory: [ OPBPMNPoolController new ]
+			icon: OPBPMNIcon current sequenceFlow;
+		newCreationTool: 'Lane'
+			factory: [ OPBPMNLaneController new ]
 			icon: OPBPMNIcon current sequenceFlow;
 		newConnectionCreationTool: 'Sequence Flow'
 			factory: [ OPBPMNFlowController new ]

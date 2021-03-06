@@ -4,16 +4,10 @@ Class {
 	#instVars : [
 		'labelConstraint',
 		'iconElement',
-		'iconConstraint',
-		'elements'
+		'iconConstraint'
 	],
 	#category : #'OpenPonk-BPMN-Controllers'
 }
-
-{ #category : #connecting }
-OPBPMNActivityController >> addedNodeFigure: aFigure [
-	elements add: aFigure
-]
 
 { #category : #connecting }
 OPBPMNActivityController >> buildEditorForm: aForm [
@@ -50,15 +44,6 @@ OPBPMNActivityController >> createRoassalShape [
 ]
 
 { #category : #accessing }
-OPBPMNActivityController >> layout: anElementLayout [
-	self figure trachelShape
-		doWithoutCallbacks: [ super layout: anElementLayout ].
-	anElementLayout hasExtent
-		ifTrue: [ self figure extent: anElementLayout extent ].
-	self refreshFigure
-]
-
-{ #category : #accessing }
 OPBPMNActivityController >> modelClass [
 	^ OPBPMNActivityModel
 ]
@@ -68,7 +53,7 @@ OPBPMNActivityController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 	labelConstraint move.
 	figure trachelShape pushBack.
-		iconElement trachelShape form: self typeIconForModel.
+	iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
 	self diagramController view signalUpdate.
 	^ self figure
@@ -81,6 +66,7 @@ OPBPMNActivityController >> renderFigureIn: aView [
 	figure := self createRoassalShape elementOn: self model.
 	figure @ RTDraggable.
 	figure @ RTResizable.
+	figure @ OPRTFocusable.
 	(labeled := RTLabeled new)
 		view: aView;
 		top;
@@ -98,12 +84,6 @@ OPBPMNActivityController >> renderFigureIn: aView [
 		stick.
 	iconElement renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: iconElement).
-	elements := RTGroup new.
-	elements @ RTDraggable.
-	figure trachelShape
-		addCallback:
-			(TRTranslationCallback
-				block: [ :shape :step | elements do: [ :e | e translateBy: step ] ]).
 	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
 ]
