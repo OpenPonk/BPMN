@@ -10,9 +10,20 @@ OPBPMNLaneController >> canBeTargetFor: aController [
 ]
 
 { #category : #connecting }
+OPBPMNLaneController >> createElement [
+	^ RTBox new
+		width: 280;
+		height: 100;
+		color: Color transparent;
+		borderColor: Color black;
+		borderWidth: 1;
+		element
+]
+
+{ #category : #connecting }
 OPBPMNLaneController >> createRoassalShape [
 	^ RTBox new
-		width: 300;
+		width: 520;
 		height: 100;
 		color: Color transparent;
 		borderColor: Color black;

@@ -18,7 +18,7 @@ OPBPMNPoolController >> addedNodeFigure: aFigure [
 
 { #category : #'as yet unclassified' }
 OPBPMNPoolController >> boxHeight [
-	^ 200
+	^ 300
 ]
 
 { #category : #connecting }
@@ -29,7 +29,7 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 { #category : #connecting }
 OPBPMNPoolController >> createRoassalShape [
 	^ RTBox new
-		width: 300;
+		width: 550;
 		height: self boxHeight;
 		color: Color transparent;
 		borderColor: Color black;
@@ -78,6 +78,8 @@ OPBPMNPoolController >> removeModel [
 
 { #category : #construction }
 OPBPMNPoolController >> renderFigureIn: aView [
+	"| lane laneConstraint |"
+
 	self diagramController addingFigureFor: self.
 	figure := self createRoassalShape elementOn: self model.
 	figure @ RTResizable.
@@ -95,7 +97,7 @@ OPBPMNPoolController >> renderFigureIn: aView [
 		stick.
 	figure renderIn: aView.
 	innerBox := RTRoundedBox new
-		width: 20;
+		width: 30;
 		height: self boxHeight;
 		color: Color transparent;
 		borderColor: Color black;
@@ -106,6 +108,12 @@ OPBPMNPoolController >> renderFigureIn: aView [
 		stick.
 	innerBox renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: innerBox).
+	"lane := OPBPMNLaneController new createElement.
+	laneConstraint := (RTConstraint on: lane background: figure)
+		top;
+		right;
+		stick.
+	lane renderIn: aView."
 	elements := RTGroup new.
 	elements @ RTDraggable.
 	figure trachelShape
