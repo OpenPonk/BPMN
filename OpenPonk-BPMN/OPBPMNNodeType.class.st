@@ -13,8 +13,18 @@ OPBPMNNodeType class >> Cancel [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Complex [
+	^ #Complex
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Error [
 	^ #Error
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Eventbased [
+	^ #Eventbased
 ]
 
 { #category : #'as yet unclassified' }
@@ -30,6 +40,16 @@ OPBPMNNodeType class >> Manual [
 { #category : #'as yet unclassified' }
 OPBPMNNodeType class >> None [
 	^ #None
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> OR [
+	^ #OR
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Parallel [
+	^ #Parallel
 ]
 
 { #category : #'as yet unclassified' }
@@ -55,4 +75,9 @@ OPBPMNNodeType class >> Timer [
 { #category : #'as yet unclassified' }
 OPBPMNNodeType class >> User [
 	^#User
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> XOR [
+	^ #XOR
 ]

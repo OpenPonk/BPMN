@@ -1,6 +1,9 @@
 Class {
 	#name : #OPBPMNNodeModel,
 	#superclass : #OPBPMNModel,
+	#instVars : [
+		'type'
+	],
 	#category : #'OpenPonk-BPMN-Models'
 }
 
@@ -12,9 +15,20 @@ OPBPMNNodeModel >> connected [
 ]
 
 { #category : #accessing }
+OPBPMNNodeModel >> defaultType [
+	^ OPBPMNNodeType None
+]
+
+{ #category : #accessing }
 OPBPMNNodeModel >> incoming [
 	owner ifNil: [ ^ #() ].
 	^ owner edges select: [ :each | each target = self ]
+]
+
+{ #category : #accessing }
+OPBPMNNodeModel >> initialize [
+	super initialize.
+	type := self defaultType
 ]
 
 { #category : #testing }
@@ -44,4 +58,15 @@ OPBPMNNodeModel >> removedFrom: aDiagram [
 		removedFrom: aDiagram
 		do: [ self incoming do: [ :each | aDiagram remove: each ].
 			self outgoing do: [ :each | aDiagram remove: each ] ]
+]
+
+{ #category : #accessing }
+OPBPMNNodeModel >> type [
+	^ type
+]
+
+{ #category : #accessing }
+OPBPMNNodeModel >> type: aParticipantType [
+	type := aParticipantType.
+	self changed
 ]
