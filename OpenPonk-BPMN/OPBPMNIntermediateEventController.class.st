@@ -41,7 +41,7 @@ OPBPMNIntermediateEventController >> refreshFigure [
 	innerConstraint move.
 	figure trachelShape pushBack.
 	self diagramController view signalUpdate.
-	^ self figure
+	^ super refreshFigure
 ]
 
 { #category : #construction }

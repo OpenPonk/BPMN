@@ -1,8 +1,21 @@
 Class {
 	#name : #OPBPMNEndEventController,
-	#superclass : #OPBPMNNodeController,
+	#superclass : #OPBPMNEventController,
 	#category : #'OpenPonk-BPMN-Controllers'
 }
+
+{ #category : #connecting }
+OPBPMNEndEventController >> buildEditorForm: aForm [
+	super buildEditorForm: aForm.
+	(aForm addDroplist: 'Type')
+		items: #(#Message #Link #Cancel #Error #None);
+		iconHolder: [ :type | self typeIconFor: type ];
+		displayBlock: [ :type | type asString ];
+		setSelectedItem: self model type;
+		whenSelectedItemChanged: [ :newValue | 
+			self model type: newValue.
+			self refreshFigure ]
+]
 
 { #category : #connecting }
 OPBPMNEndEventController >> canBeSourceFor: aController [
@@ -28,4 +41,18 @@ OPBPMNEndEventController >> createRoassalShape [
 { #category : #accessing }
 OPBPMNEndEventController >> modelClass [
 	^ OPBPMNEndEventModel
+]
+
+{ #category : #hooks }
+OPBPMNEndEventController >> typeIconFor: aType [
+	aType = OPBPMNNodeType Send
+		ifTrue: [ ^ OPBPMNIcon current activitySend ].
+	aType = OPBPMNNodeType Link
+		ifTrue: [ ^ OPBPMNIcon current eventLink ].
+	aType = OPBPMNNodeType Cancel
+		ifTrue: [ ^ OPBPMNIcon current eventCancel ].
+			aType = OPBPMNNodeType Error
+		ifTrue: [ ^ OPBPMNIcon current eventError ].
+	aType = OPBPMNNodeType None
+		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]

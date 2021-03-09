@@ -90,17 +90,17 @@ OPBPMNActivityController >> renderFigureIn: aView [
 
 { #category : #hooks }
 OPBPMNActivityController >> typeIconFor: aType [
-	aType = OPBPMNActivityType Service
+	aType = OPBPMNNodeType Service
 		ifTrue: [ ^ OPBPMNIcon current activityService ].
-	aType = OPBPMNActivityType User
+	aType = OPBPMNNodeType User
 		ifTrue: [ ^ OPBPMNIcon current activityUser ].
-	aType = OPBPMNActivityType Manual
+	aType = OPBPMNNodeType Manual
 		ifTrue: [ ^ OPBPMNIcon current activityManual ].
-			aType = OPBPMNActivityType Send
+			aType = OPBPMNNodeType Send
 		ifTrue: [ ^ OPBPMNIcon current activitySend ].
-			aType = OPBPMNActivityType Receive
+			aType = OPBPMNNodeType Receive
 		ifTrue: [ ^ OPBPMNIcon current activityReceive ].
-			aType = OPBPMNActivityType None
+			aType = OPBPMNNodeType None
 		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]
 
