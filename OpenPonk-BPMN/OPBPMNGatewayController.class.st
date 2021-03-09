@@ -82,10 +82,16 @@ OPBPMNGatewayController >> renderFigureIn: aView [
 
 { #category : #connecting }
 OPBPMNGatewayController >> typeIconFor: aType [
-	aType = OPBPMNNodeType Timer
-		ifTrue: [ ^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType Link
-		ifTrue: [ ^ OPBPMNIcon current eventLink ].
+	aType = OPBPMNNodeType Parallel
+		ifTrue: [ ^ OPBPMNIcon current gatewayParallel ].
+	aType = OPBPMNNodeType OR
+		ifTrue: [ ^ OPBPMNIcon current gatewayOr ].
+	aType = OPBPMNNodeType XOR
+		ifTrue: [ ^ OPBPMNIcon current gatewayXor ].
+	aType = OPBPMNNodeType Complex
+		ifTrue: [ ^ OPBPMNIcon current gatewayComplex ].
+	aType = OPBPMNNodeType Eventbased
+		ifTrue: [ ^ OPBPMNIcon current gatewayEvent ].
 	aType = OPBPMNNodeType None
 		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]
