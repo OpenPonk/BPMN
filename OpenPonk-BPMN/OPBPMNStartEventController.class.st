@@ -8,7 +8,7 @@ Class {
 OPBPMNStartEventController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Message #Timer #None);
+		items: #(#Receive #Timer #None);
 		iconHolder: [ :type | self typeIconFor: type ];
 		displayBlock: [ :type | type asString ];
 		setSelectedItem: self model type;
@@ -45,8 +45,8 @@ OPBPMNStartEventController >> modelClass [
 { #category : #hooks }
 OPBPMNStartEventController >> typeIconFor: aType [
 	aType = OPBPMNNodeType Receive
-		ifTrue: [ ^ OPBPMNIcon current activityReceive ].
-			aType = OPBPMNNodeType Timer
+		ifTrue: [ ^ OPBPMNIcon current activityReceiveSquare ].
+	aType = OPBPMNNodeType Timer
 		ifTrue: [ ^ OPBPMNIcon current eventTimer ].
 	aType = OPBPMNNodeType None
 		ifTrue: [ ^ OPBPMNIcon current activityNone ]

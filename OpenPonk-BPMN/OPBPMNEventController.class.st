@@ -42,8 +42,7 @@ OPBPMNEventController >> renderFigureIn: aView [
 	figure renderIn: aView.
 	iconElement := (RTBitmap new form: self typeIconForModel) element.
 	iconConstraint := (RTConstraint on: iconElement background: figure)
-		left;
-		padding: 5;
+		center;
 		stick.
 	iconElement renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: iconElement).

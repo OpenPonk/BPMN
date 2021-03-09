@@ -8,7 +8,7 @@ Class {
 OPBPMNEndEventController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Message #Link #Cancel #Error #None);
+		items: #(#Send #Link #Cancel #Error #None);
 		iconHolder: [ :type | self typeIconFor: type ];
 		displayBlock: [ :type | type asString ];
 		setSelectedItem: self model type;
@@ -46,12 +46,12 @@ OPBPMNEndEventController >> modelClass [
 { #category : #hooks }
 OPBPMNEndEventController >> typeIconFor: aType [
 	aType = OPBPMNNodeType Send
-		ifTrue: [ ^ OPBPMNIcon current activitySend ].
+		ifTrue: [ ^ OPBPMNIcon current activitySendSquare ].
 	aType = OPBPMNNodeType Link
 		ifTrue: [ ^ OPBPMNIcon current eventLink ].
 	aType = OPBPMNNodeType Cancel
 		ifTrue: [ ^ OPBPMNIcon current eventCancel ].
-			aType = OPBPMNNodeType Error
+	aType = OPBPMNNodeType Error
 		ifTrue: [ ^ OPBPMNIcon current eventError ].
 	aType = OPBPMNNodeType None
 		ifTrue: [ ^ OPBPMNIcon current activityNone ]
