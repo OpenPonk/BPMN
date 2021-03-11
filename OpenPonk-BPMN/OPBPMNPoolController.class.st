@@ -120,6 +120,10 @@ OPBPMNPoolController >> renderFigureIn: aView [
 		addCallback:
 			(TRTranslationCallback
 				block: [ :shape :step | elements do: [ :e | e translateBy: step ] ]).
+					"figure trachelShape
+		addCallback:
+			(TRExtentCallback
+				block: [ :shape :step | innerBox height: shape height ])."
 	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
 ]
