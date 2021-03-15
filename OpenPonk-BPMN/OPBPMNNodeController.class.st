@@ -1,11 +1,23 @@
 Class {
 	#name : #OPBPMNNodeController,
 	#superclass : #OPElementController,
+	#instVars : [
+		'ownerParticipant'
+	],
 	#classInstVars : [
 		'PossibleOutgoing'
 	],
 	#category : #'OpenPonk-BPMN-Controllers'
 }
+
+{ #category : #connecting }
+OPBPMNNodeController >> addAsTargetFor: aController [
+	self assert: (self canBeTargetFor: aController).
+	aController target: self.
+	aController
+		createModelIn: self model
+		andShowInDiagram: self diagramController
+]
 
 { #category : #connecting }
 OPBPMNNodeController >> buildEditorForm: aForm [
@@ -49,10 +61,26 @@ OPBPMNNodeController >> modelAsParent [
 	^ self model owner
 ]
 
+{ #category : #accessing }
+OPBPMNNodeController >> ownerParticipant [
+	^ ownerParticipant
+]
+
+{ #category : #accessing }
+OPBPMNNodeController >> ownerParticipant: aParticipantController [
+	ownerParticipant := aParticipantController
+]
+
 { #category : #connecting }
 OPBPMNNodeController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 	^ super refreshFigure
+]
+
+{ #category : #connecting }
+OPBPMNNodeController >> removeFigure [
+	super removeFigure.
+	self ownerParticipant removedNodeFigure: figure
 ]
 
 { #category : #private }
@@ -75,6 +103,17 @@ OPBPMNNodeController >> renderFigureIn: aView [
 	figure @ OPRTFocusable.
 	figure renderIn: aView.
 	^ self diagramController addedFigureFor: self
+]
+
+{ #category : #construction }
+OPBPMNNodeController >> showInDiagram: aDiagramController [
+	super showInDiagram: aDiagramController.
+	self
+		ownerParticipant:
+			(aDiagramController
+				controllerForModel:
+					(aDiagramController model participants
+						detect: [ :any | any elements includes: model ]))
 ]
 
 { #category : #connecting }
