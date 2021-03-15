@@ -22,13 +22,14 @@ OPBPMNNodeModel >> defaultType [
 { #category : #accessing }
 OPBPMNNodeModel >> incoming [
 	owner ifNil: [ ^ #() ].
-	^ owner edges select: [ :each | each target = self ]
+	^ transitions select: [ :each | each target = self ]
 ]
 
 { #category : #accessing }
 OPBPMNNodeModel >> initialize [
 	super initialize.
-	type := self defaultType
+	type := self defaultType.
+	transitions := OrderedCollection new
 ]
 
 { #category : #testing }
