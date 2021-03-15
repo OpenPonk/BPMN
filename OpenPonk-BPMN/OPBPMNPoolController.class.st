@@ -68,7 +68,7 @@ OPBPMNPoolController >> refreshFigure [
 	innerConstraint move.
 	figure trachelShape pushBack.
 	self diagramController view signalUpdate.
-	^ self figure
+	^ super refreshFigure
 ]
 
 { #category : #accessing }
@@ -120,6 +120,7 @@ OPBPMNPoolController >> renderFigureIn: aView [
 		stick.
 	lane renderIn: aView."
 	elements := RTGroup new.
+	elements @ OPRTFocusable.
 	elements @ RTDraggable.
 	figure trachelShape
 		addCallback:

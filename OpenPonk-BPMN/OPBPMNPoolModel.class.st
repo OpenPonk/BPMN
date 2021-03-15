@@ -10,6 +10,12 @@ OPBPMNPoolModel >> @ aName [
 ]
 
 { #category : #accessing }
+OPBPMNPoolModel >> changed [
+	super changed.
+	owner changed
+]
+
+{ #category : #accessing }
 OPBPMNPoolModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]

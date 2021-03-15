@@ -50,8 +50,6 @@ OPBPMNGatewayController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 	iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
-	figure trachelShape pushBack.
-	self diagramController view signalUpdate.
 	^ super refreshFigure
 ]
 

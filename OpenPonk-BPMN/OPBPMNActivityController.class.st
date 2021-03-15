@@ -84,7 +84,6 @@ OPBPMNActivityController >> renderFigureIn: aView [
 		stick.
 	iconElement renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: iconElement).
-	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
 ]
 

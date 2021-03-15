@@ -73,8 +73,8 @@ OPBPMNNodeController >> ownerParticipant: aParticipantController [
 
 { #category : #connecting }
 OPBPMNNodeController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	^ super refreshFigure
+	figure update.
+	^ self figure
 ]
 
 { #category : #connecting }
