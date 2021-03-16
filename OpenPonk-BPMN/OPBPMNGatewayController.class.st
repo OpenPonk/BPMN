@@ -35,7 +35,7 @@ OPBPMNGatewayController >> canBeTargetFor: aController [
 OPBPMNGatewayController >> createRoassalShape [
 	^ RTBox new
 		size: 34;
-		color: Color transparent;
+		color: (Color fromHexString: 'bce2fe');
 		borderColor: Color black;
 		yourself
 ]

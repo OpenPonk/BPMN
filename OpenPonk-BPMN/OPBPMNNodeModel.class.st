@@ -89,11 +89,8 @@ OPBPMNNodeModel >> removeAllFlows [
 
 { #category : #accessing }
 OPBPMNNodeModel >> removeFlow: aFlow [
-	flows remove: aFlow.
-	aFlow source = self
-		ifTrue: [ 
-			aFlow removedFrom: self.
-			self announceRemoved: aFlow ]
+	flows remove: aFlow
+
 ]
 
 { #category : #accessing }
