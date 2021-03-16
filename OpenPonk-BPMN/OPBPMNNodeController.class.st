@@ -74,13 +74,13 @@ OPBPMNNodeController >> ownerParticipant: aParticipantController [
 { #category : #connecting }
 OPBPMNNodeController >> refreshFigure [
 	figure update.
-	^ self figure
+	^ super refreshFigure
 ]
 
 { #category : #connecting }
 OPBPMNNodeController >> removeFigure [
-	super removeFigure.
-	self ownerParticipant removedNodeFigure: figure
+	super removeFigure
+	"TODO vymazat z kolekce elements"
 ]
 
 { #category : #private }
@@ -112,7 +112,7 @@ OPBPMNNodeController >> showInDiagram: aDiagramController [
 		ownerParticipant:
 			(aDiagramController
 				controllerForModel:
-					(aDiagramController model participants
+					(aDiagramController model flows
 						detect: [ :any | any elements includes: model ]))
 ]
 

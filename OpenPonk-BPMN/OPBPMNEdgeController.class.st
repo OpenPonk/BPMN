@@ -97,7 +97,9 @@ OPBPMNEdgeController >> refreshFigure [
 
 { #category : #private }
 OPBPMNEdgeController >> removeModel [
-	self diagramController model remove: self model
+	self diagramController model remove: self model.
+	self model target removeFlow: self model.
+	self model source removeFlow: self model
 ]
 
 { #category : #accessing }

@@ -56,7 +56,6 @@ OPBPMNIntermediateEventController >> refreshFigure [
 	innerConstraint move.
 		iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
-	figure trachelShape pushBack.
 	self diagramController view signalUpdate.
 	^ super refreshFigure
 ]

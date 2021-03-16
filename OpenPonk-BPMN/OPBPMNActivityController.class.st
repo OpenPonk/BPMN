@@ -51,12 +51,12 @@ OPBPMNActivityController >> modelClass [
 { #category : #hooks }
 OPBPMNActivityController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	labelConstraint move.
 	figure trachelShape pushBack.
+	labelConstraint move.
 	iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
 	self diagramController view signalUpdate.
-	^ self figure
+	^ super refreshFigure
 ]
 
 { #category : #hooks }
