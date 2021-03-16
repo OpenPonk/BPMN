@@ -2,7 +2,7 @@ Class {
 	#name : #OPBPMNNodeModel,
 	#superclass : #OPBPMNModel,
 	#instVars : [
-		'transitions',
+		'flows',
 		'type'
 	],
 	#category : #'OpenPonk-BPMN-Models'
@@ -14,14 +14,14 @@ OPBPMNNodeModel >> -> aNode [
 ]
 
 { #category : #accessing }
-OPBPMNNodeModel >> addTransition: aTransition [
-	(transitions includes: aTransition)
+OPBPMNNodeModel >> addFlow: aFlow [
+	(flows includes: aFlow)
 		ifTrue: [ ^ self ].
-	transitions add: aTransition.
-	aTransition source = self
+	flows add: aFlow.
+	aFlow source = self
 		ifTrue: [ 
-			aTransition addedTo: self.
-			self announceAdded: aTransition ]
+			aFlow addedTo: self.
+			self announceAdded: aFlow ]
 		ifFalse: [ self changed ]
 ]
 
@@ -38,20 +38,25 @@ OPBPMNNodeModel >> defaultType [
 ]
 
 { #category : #accessing }
+OPBPMNNodeModel >> flows [
+	^ flows
+]
+
+{ #category : #accessing }
 OPBPMNNodeModel >> has: anElement [
-	^ transitions includes: anElement
+	^ flows includes: anElement
 ]
 
 { #category : #accessing }
 OPBPMNNodeModel >> incoming [
-	^ transitions select: [ :each | each target = self ]
+	^ flows select: [ :each | each target = self ]
 ]
 
 { #category : #accessing }
 OPBPMNNodeModel >> initialize [
 	super initialize.
 	type := self defaultType.
-	transitions := OrderedCollection new
+	flows := OrderedCollection new
 ]
 
 { #category : #testing }
@@ -66,7 +71,7 @@ OPBPMNNodeModel >> isNode [
 
 { #category : #accessing }
 OPBPMNNodeModel >> outgoing [
-	^ transitions select: [ :each | each source = self ]
+	^ flows select: [ :each | each source = self ]
 ]
 
 { #category : #accessing }
@@ -75,20 +80,20 @@ OPBPMNNodeModel >> relatedElements [
 ]
 
 { #category : #accessing }
-OPBPMNNodeModel >> removeAllTransitions [
-	transitions copy
+OPBPMNNodeModel >> removeAllFlows [
+	flows copy
 		do: [ :each | 
-			each source removeTransition: each.
-			each target removeTransition: each ]
+			each source removeFlow: each.
+			each target removeFlow: each ]
 ]
 
 { #category : #accessing }
-OPBPMNNodeModel >> removeTransition: aTransition [
-	transitions remove: aTransition.
-	aTransition source = self
+OPBPMNNodeModel >> removeFlow: aFlow [
+	flows remove: aFlow.
+	aFlow source = self
 		ifTrue: [ 
-			aTransition removedFrom: self.
-			self announceRemoved: aTransition ]
+			aFlow removedFrom: self.
+			self announceRemoved: aFlow ]
 ]
 
 { #category : #accessing }
@@ -97,11 +102,6 @@ OPBPMNNodeModel >> removedFrom: aDiagram [
 		removedFrom: aDiagram
 		do: [ self incoming do: [ :each | aDiagram remove: each ].
 			self outgoing do: [ :each | aDiagram remove: each ] ]
-]
-
-{ #category : #accessing }
-OPBPMNNodeModel >> transitions [
-	^ transitions
 ]
 
 { #category : #accessing }

@@ -48,6 +48,16 @@ OPBPMNEdgeController >> createEdgeFrom: fromElement to: toElement [
 		edgeFrom: fromElement to: toElement
 ]
 
+{ #category : #construction }
+OPBPMNEdgeController >> createModelIn: aParentModel [
+	self model: self modelClass new.
+	model source: self source model.
+	model target: self target model.
+	source model addFlow: model.
+	target model addFlow: model.
+	^ model
+]
+
 { #category : #private }
 OPBPMNEdgeController >> headShapeClass [
 	"line decoration shape class used as head"
