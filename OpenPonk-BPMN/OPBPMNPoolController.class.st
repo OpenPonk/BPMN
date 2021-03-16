@@ -16,7 +16,7 @@ OPBPMNPoolController >> addedNodeFigure: aFigure [
 	elements add: aFigure
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #construction }
 OPBPMNPoolController >> boxHeight [
 	^ 300
 ]
@@ -63,7 +63,7 @@ OPBPMNPoolController >> nodeFigures [
 
 { #category : #accessing }
 OPBPMNPoolController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
+	labeled trachelShape text: self model name.
 	labelConstraint move.
 	innerConstraint move.
 	figure trachelShape pushBack.
@@ -90,13 +90,21 @@ OPBPMNPoolController >> renderFigureIn: aView [
 	figure @ RTGhostDraggable.
 	figure @ RTResizable.
 	figure renderIn: aView.
-	(labeled := RTLabeled new)
-		view: aView;
-		top;
-		color: Color black.
-	figure @ labeled.
-	labelConstraint := (RTConstraint on: labeled lbl background: figure)
-		top;
+	labeled := (RTLabel new
+		height: 12;
+		text: self model name;
+		element)
+		rotateByDegrees: -90;
+		color: Color black;
+		yourself.
+	labeled model: figure.
+	figure trachelShape
+		addCallback:
+			(TRRemoveCallback new
+				block: [ :removedShape | labeled remove ]).
+	labeled renderIn: figure view.
+	labelConstraint := (RTConstraint on: labeled "lbl" background: figure)
+		center;
 		left;
 		padding: 2;
 		stick.
@@ -113,6 +121,10 @@ OPBPMNPoolController >> renderFigureIn: aView [
 		stick.
 	innerBox renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: innerBox).
+	figure trachelShape
+		addCallback:
+			(TRExtentCallback
+				block: [ :shape :step | innerBox height: shape height ]).
 	"lane := OPBPMNLaneController new createElement.
 	laneConstraint := (RTConstraint on: lane background: figure)
 		top;
@@ -126,10 +138,6 @@ OPBPMNPoolController >> renderFigureIn: aView [
 		addCallback:
 			(TRTranslationCallback
 				block: [ :shape :step | elements do: [ :e | e translateBy: step ] ]).
-	figure trachelShape
-		addCallback:
-			(TRExtentCallback
-				block: [ :shape :step | innerBox height: shape height ]).
 	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
 ]

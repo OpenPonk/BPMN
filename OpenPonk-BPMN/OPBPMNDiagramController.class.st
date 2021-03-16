@@ -61,6 +61,7 @@ OPBPMNDiagramController >> modelToControllerMapping [
 		at: OPBPMNEndEventModel put: OPBPMNEndEventController;
 		at: OPBPMNIntermediateEventModel put: OPBPMNIntermediateEventController;
 		at: OPBPMNGatewayModel put: OPBPMNGatewayController;
+		at: OPBPMNPoolModel put: OPBPMNPoolController;
 		at: OPBPMNFlowModel put: OPBPMNFlowController;
 		yourself
 ]
