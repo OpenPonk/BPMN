@@ -1,0 +1,32 @@
+Class {
+	#name : #OPBPMNXMLWriterVisitor,
+	#superclass : #Object,
+	#instVars : [
+		'writer'
+	],
+	#category : #'OpenPonk-BPMN-XML-Writer'
+}
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> contents [
+	^ writer contents
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> initialize [
+	super initialize.
+	writer := XMLWriter new.
+	writer formatter: OPXMLPrettyPrintingWriterFormatter new.
+	writer lineBreak: '&#10;'.
+	writer xml encoding: 'UTF-8'
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visit: anElement [
+	anElement accept: self
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> writer [
+	^ writer
+]

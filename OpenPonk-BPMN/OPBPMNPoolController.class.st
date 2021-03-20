@@ -68,7 +68,7 @@ OPBPMNPoolController >> refreshFigure [
 	innerConstraint move.
 	figure trachelShape pushBack.
 	self diagramController view signalUpdate.
-	^ super refreshFigure
+	^ self figure
 ]
 
 { #category : #accessing }
