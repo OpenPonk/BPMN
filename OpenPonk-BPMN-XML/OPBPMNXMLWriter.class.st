@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #writing }
+OPBPMNXMLWriter class >> write: anXML to: aStream [
+	^ self new write: anXML to: aStream
+]
+
+{ #category : #writing }
+OPBPMNXMLWriter class >> writeToString: anXML [
+	^ String streamContents: [ :stream | self write: anXML to: stream ]
+]
+
+{ #category : #writing }
 OPBPMNXMLWriter >> write: anXML to: aStream [
 	| visitor |
 	visitor := OPBPMNXMLWriterVisitor new.

@@ -16,7 +16,7 @@ OPBPMNXMLWriterVisitor >> contents [
 OPBPMNXMLWriterVisitor >> initialize [
 	super initialize.
 	writer := XMLWriter new.
-	writer formatter: OPXMLPrettyPrintingWriterFormatter new.
+	writer formatter: OPBPMNXMLPrettyWriter new.
 	writer lineBreak: '&#10;'.
 	writer xml encoding: 'UTF-8'
 ]
