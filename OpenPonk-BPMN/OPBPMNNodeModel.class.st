@@ -28,7 +28,7 @@ OPBPMNNodeModel >> addFlow: aFlow [
 { #category : #accessing }
 OPBPMNNodeModel >> connected [
 	owner ifNil: [ ^ #() ].
-	^ owner edges
+	^ owner flows
 		select: [ :each | each source = self or: [ each target = self ] ]
 ]
 

@@ -6,13 +6,16 @@ Class {
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> childrenMapping [
-	^ { (OPBPMNModel -> #participants) }
+	^ { (OPBPMNModel -> #nodes).
+			(OPBPMNNodeModel -> #connected) }
 ]
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
-	OPBPMNFlowModel -> 'Sequence Flow'}
+	(OPBPMNActivityModel -> 'Activity').
+	(OPBPMNStartEventModel -> 'Start Event').
+	(OPBPMNFlowModel -> 'Sequence Flow')}
 ]
 
 { #category : #'widget API' }
@@ -24,7 +27,14 @@ OPBPMNNavigatorAdapter >> hasMappingFor: anObject [
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> iconMapping [
-	^ { }
+	^ {(OPBPMNModel -> OPBPMNIcon current logo)}
+]
+
+{ #category : #'widget API' }
+OPBPMNNavigatorAdapter >> sort: modelObjects [
+	^ modelObjects
+		sorted:
+			[ :a :b | a name isNotNil and: [ b name isNil or: [ a name < b name ] ] ]
 ]
 
 { #category : #'widget API' }

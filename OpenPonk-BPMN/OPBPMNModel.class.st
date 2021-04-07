@@ -18,8 +18,3 @@ OPBPMNModel >> edges [
 OPBPMNModel >> nodes [
 	^ elements select: #isNode
 ]
-
-{ #category : #accessing }
-OPBPMNModel >> participants [
-	^ self elements
-]

@@ -10,6 +10,11 @@ OPBPMNPlugin >> diagramControllerClass [
 ]
 
 { #category : #accessing }
+OPBPMNPlugin >> icon [
+	^ OPBPMNIcon current logo
+]
+
+{ #category : #accessing }
 OPBPMNPlugin >> layouterClass [
 	"Create your own subclass of OPLayouter or use OPNoLayouter which does nothing"
 	^ OPBPMNLayouter
