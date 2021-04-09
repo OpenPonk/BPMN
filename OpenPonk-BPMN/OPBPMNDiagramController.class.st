@@ -14,6 +14,20 @@ OPBPMNDiagramController >> commonModelClassPrefix [
 	^ 'OPBPMN'
 ]
 
+{ #category : #'ui interaction' }
+OPBPMNDiagramController >> controllerFactory [
+	^ super controllerFactory
+		register: OPBPMNActivityController forModel: OPBPMNActivityModel;
+		register: OPBPMNStartEventController forModel: OPBPMNStartEventModel;
+		register: OPBPMNEndEventController forModel: OPBPMNEndEventModel;
+		register: OPBPMNIntermediateEventController forModel: OPBPMNIntermediateEventModel;
+		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
+		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
+		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
+		register: OPBPMNFlowController forModel: OPBPMNFlowModel
+		
+]
+
 { #category : #connecting }
 OPBPMNDiagramController >> elementsToShowInside [
 	^ model elements
@@ -51,17 +65,4 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 { #category : #'ui interaction' }
 OPBPMNDiagramController >> modelClass [
 	^ OPBPMNModel 
-]
-
-{ #category : #'ui interaction' }
-OPBPMNDiagramController >> modelToControllerMapping [
-	^ Dictionary new
-		at: OPBPMNActivityModel put: OPBPMNActivityController;
-		at: OPBPMNStartEventModel put: OPBPMNStartEventController;
-		at: OPBPMNEndEventModel put: OPBPMNEndEventController;
-		at: OPBPMNIntermediateEventModel put: OPBPMNIntermediateEventController;
-		at: OPBPMNGatewayModel put: OPBPMNGatewayController;
-		at: OPBPMNPoolModel put: OPBPMNPoolController;
-		at: OPBPMNFlowModel put: OPBPMNFlowController;
-		yourself
 ]

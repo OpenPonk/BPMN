@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNNodeModel,
-	#superclass : #OPBPMNModel,
+	#superclass : #OPModelObject,
 	#instVars : [
 		'flows',
 		'type'

@@ -7,14 +7,18 @@ Class {
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).
-			(OPBPMNNodeModel -> #connected) }
+		 (OPBPMNPoolModel -> #nodes).
+			(OPBPMNNodeModel -> #flows) }
 ]
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
+	(OPBPMNNodeModel -> 'Node').
+	(OPBPMNPoolModel -> 'Pool').
 	(OPBPMNActivityModel -> 'Activity').
 	(OPBPMNStartEventModel -> 'Start Event').
+	(OPBPMNEndEventModel -> 'End Event').
 	(OPBPMNFlowModel -> 'Sequence Flow')}
 ]
 
@@ -27,7 +31,15 @@ OPBPMNNavigatorAdapter >> hasMappingFor: anObject [
 
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> iconMapping [
-	^ {(OPBPMNModel -> OPBPMNIcon current logo)}
+	^ {(OPBPMNModel -> OPBPMNIcon current logo).
+		(OPBPMNActivityModel -> OPBPMNIcon current activity).
+		(OPBPMNStartEventModel -> OPBPMNIcon current startEvent).
+		(OPBPMNEndEventModel -> OPBPMNIcon current endEvent).
+		(OPBPMNIntermediateEventModel -> OPBPMNIcon current intermediateEvent).
+		(OPBPMNGatewayModel -> OPBPMNIcon current gateway).
+		(OPBPMNPoolModel -> OPBPMNIcon current pool).
+		(OPBPMNLaneModel -> OPBPMNIcon current lane).
+		(OPBPMNFlowModel -> OPBPMNIcon current sequenceFlow )}
 ]
 
 { #category : #'widget API' }
