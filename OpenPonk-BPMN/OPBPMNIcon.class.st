@@ -283,6 +283,17 @@ OPBPMNIcon >> logoContent [
 ]
 
 { #category : #initialization }
+OPBPMNIcon >> messageFlow [
+	^ Form
+		fromBinaryStream: (self messageFlowContent base64Decoded asByteArray readStream)
+]
+
+{ #category : #initialization }
+OPBPMNIcon >> messageFlowContent [
+	^ 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAARUlEQVQ4jWMYBfQH/6lh5X90g1oZGBg+Q2lSDQKDXwwMDN5QARYkGxiR2PxIbCYkNtgQkM1fKHEBqQAjDOhi67AFDAwMAOZ8F0XwHX9JAAAAAElFTkSuQmCC'
+]
+
+{ #category : #initialization }
 OPBPMNIcon >> pool [
 	^ Form
 		fromBinaryStream: self poolContent base64Decoded asByteArray readStream

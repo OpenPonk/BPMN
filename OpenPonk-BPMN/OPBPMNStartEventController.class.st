@@ -19,7 +19,7 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 
 { #category : #connecting }
 OPBPMNStartEventController >> canBeSourceFor: aController [
-	^ aController modelClass = OPBPMNFlowModel
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : #connecting }

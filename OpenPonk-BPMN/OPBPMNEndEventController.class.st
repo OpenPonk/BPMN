@@ -24,7 +24,7 @@ OPBPMNEndEventController >> canBeSourceFor: aController [
 
 { #category : #connecting }
 OPBPMNEndEventController >> canBeTargetFor: aController [
-	^ aController modelClass = OPBPMNFlowModel
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : #connecting }

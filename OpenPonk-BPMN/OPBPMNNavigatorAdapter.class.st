@@ -18,8 +18,10 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNPoolModel -> 'Pool').
 	(OPBPMNActivityModel -> 'Activity').
 	(OPBPMNStartEventModel -> 'Start Event').
+	(OPBPMNIntermediateEventModel -> 'Intermediate Event').
 	(OPBPMNEndEventModel -> 'End Event').
-	(OPBPMNFlowModel -> 'Sequence Flow')}
+	(OPBPMNFlowModel -> 'Sequence Flow').
+	(OPBPMNMessageFlowModel -> 'Message Flow')}
 ]
 
 { #category : #'widget API' }
@@ -39,7 +41,8 @@ OPBPMNNavigatorAdapter >> iconMapping [
 		(OPBPMNGatewayModel -> OPBPMNIcon current gateway).
 		(OPBPMNPoolModel -> OPBPMNIcon current pool).
 		(OPBPMNLaneModel -> OPBPMNIcon current lane).
-		(OPBPMNFlowModel -> OPBPMNIcon current sequenceFlow )}
+		(OPBPMNFlowModel -> OPBPMNIcon current sequenceFlow ).
+		(OPBPMNMessageFlowModel -> OPBPMNIcon current messageFlow )}
 ]
 
 { #category : #'widget API' }

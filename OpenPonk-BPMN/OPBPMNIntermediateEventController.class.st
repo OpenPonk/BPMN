@@ -26,12 +26,12 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 
 { #category : #accessing }
 OPBPMNIntermediateEventController >> canBeSourceFor: aController [
-	^ aController modelClass = OPBPMNFlowModel
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : #accessing }
 OPBPMNIntermediateEventController >> canBeTargetFor: aController [
-	^ aController modelClass = OPBPMNFlowModel
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : #connecting }

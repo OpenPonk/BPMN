@@ -24,8 +24,8 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
 		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
 		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
-		register: OPBPMNFlowController forModel: OPBPMNFlowModel
-		
+		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
+		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
 ]
 
 { #category : #connecting }
@@ -59,7 +59,10 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 			icon: OPBPMNIcon current lane;
 		newConnectionCreationTool: 'Sequence Flow'
 			factory: [ OPBPMNFlowController new ]
-			icon: OPBPMNIcon current sequenceFlow
+			icon: OPBPMNIcon current sequenceFlow;
+		newConnectionCreationTool: 'Message Flow'
+			factory: [ OPBPMNMessageFlowController new ]
+			icon: OPBPMNIcon current messageFlow
 ]
 
 { #category : #'ui interaction' }

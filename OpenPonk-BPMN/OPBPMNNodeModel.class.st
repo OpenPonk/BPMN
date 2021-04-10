@@ -3,7 +3,8 @@ Class {
 	#superclass : #OPModelObject,
 	#instVars : [
 		'flows',
-		'type'
+		'type',
+		'source'
 	],
 	#category : #'OpenPonk-BPMN-Models'
 }
@@ -99,6 +100,16 @@ OPBPMNNodeModel >> removedFrom: aDiagram [
 		removedFrom: aDiagram
 		do: [ self incoming do: [ :each | aDiagram remove: each ].
 			self outgoing do: [ :each | aDiagram remove: each ] ]
+]
+
+{ #category : #accessing }
+OPBPMNNodeModel >> source [
+	^ source
+]
+
+{ #category : #accessing }
+OPBPMNNodeModel >> source: aSource [
+	source := aSource 
 ]
 
 { #category : #accessing }

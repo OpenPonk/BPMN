@@ -22,8 +22,14 @@ OPBPMNPoolController >> boxHeight [
 ]
 
 { #category : #connecting }
+OPBPMNPoolController >> canBeSourceFor: aController [
+	^ aController isKindOf: OPBPMNMessageFlowController
+]
+
+{ #category : #connecting }
 OPBPMNPoolController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNNodeController
+	^ (aController isKindOf: OPBPMNElementController)
+		| (aController isKindOf: OPBPMNMessageFlowController)
 ]
 
 { #category : #connecting }
