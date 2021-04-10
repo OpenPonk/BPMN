@@ -19,7 +19,7 @@ OPBPMNEndEventController >> buildEditorForm: aForm [
 
 { #category : #connecting }
 OPBPMNEndEventController >> canBeSourceFor: aController [
-	^ false
+	^ aController isKindOf: OPBPMNMessageFlowController
 ]
 
 { #category : #connecting }
