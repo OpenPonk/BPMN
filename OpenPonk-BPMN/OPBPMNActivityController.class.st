@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNActivityController,
-	#superclass : #OPBPMNNodeController,
+	#superclass : #OPBPMNElementController,
 	#instVars : [
 		'labelConstraint',
 		'iconElement',
@@ -84,6 +84,9 @@ OPBPMNActivityController >> renderFigureIn: aView [
 		stick.
 	iconElement renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: iconElement).
+	"(self diagramController
+		showWithoutDependentInDiagramModel: self model owner)
+		addedNodeFigure: figure."
 	^ self diagramController addedFigureFor: self
 ]
 

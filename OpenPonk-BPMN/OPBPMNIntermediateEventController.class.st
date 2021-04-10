@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNIntermediateEventController,
-	#superclass : #OPBPMNNodeController,
+	#superclass : #OPBPMNElementController,
 	#instVars : [
 		'innerCircle',
 		'elements',

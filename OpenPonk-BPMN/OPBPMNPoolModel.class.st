@@ -29,3 +29,8 @@ OPBPMNPoolModel >> nodes [
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
 ]
+
+{ #category : #accessing }
+OPBPMNPoolModel >> removeNode: aNode [
+	elements remove: aNode
+]

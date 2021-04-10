@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNGatewayController,
-	#superclass : #OPBPMNNodeController,
+	#superclass : #OPBPMNElementController,
 	#instVars : [
 		'iconElement',
 		'iconConstraint'

@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNEventController,
-	#superclass : #OPBPMNNodeController,
+	#superclass : #OPBPMNElementController,
 	#instVars : [
 		'iconElement',
 		'iconConstraint'

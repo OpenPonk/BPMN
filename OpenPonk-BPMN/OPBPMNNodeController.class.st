@@ -1,9 +1,6 @@
 Class {
 	#name : #OPBPMNNodeController,
 	#superclass : #OPElementController,
-	#instVars : [
-		'ownerParticipant'
-	],
 	#classInstVars : [
 		'PossibleOutgoing'
 	],
@@ -34,11 +31,6 @@ OPBPMNNodeController >> createRoassalShape [
 ]
 
 { #category : #private }
-OPBPMNNodeController >> dependentElements [
-	^ (model incoming , model outgoing) asSet
-]
-
-{ #category : #private }
 OPBPMNNodeController >> internalSubscribeTo: aModel [
 	super internalSubscribeTo: aModel.
 	aModel when: OPElementRemoved do: [ :e | self removeController ]
@@ -61,28 +53,6 @@ OPBPMNNodeController >> modelAsParent [
 	^ self model owner
 ]
 
-{ #category : #accessing }
-OPBPMNNodeController >> ownerParticipant [
-	^ ownerParticipant
-]
-
-{ #category : #accessing }
-OPBPMNNodeController >> ownerParticipant: aParticipantController [
-	ownerParticipant := aParticipantController
-]
-
-{ #category : #connecting }
-OPBPMNNodeController >> refreshFigure [
-	figure update.
-	^ super refreshFigure
-]
-
-{ #category : #connecting }
-OPBPMNNodeController >> removeFigure [
-	super removeFigure
-	"TODO vymazat z kolekce elements"
-]
-
 { #category : #private }
 OPBPMNNodeController >> removeModel [
 	self diagramController model remove: self model
@@ -103,17 +73,6 @@ OPBPMNNodeController >> renderFigureIn: aView [
 	figure @ OPRTFocusable.
 	figure renderIn: aView.
 	^ self diagramController addedFigureFor: self
-]
-
-{ #category : #construction }
-OPBPMNNodeController >> showInDiagram: aDiagramController [
-	super showInDiagram: aDiagramController.
-	self
-		ownerParticipant:
-			(aDiagramController
-				controllerForModel:
-					(aDiagramController model flows
-						detect: [ :any | any elements includes: model ]))
 ]
 
 { #category : #connecting }

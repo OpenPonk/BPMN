@@ -68,12 +68,7 @@ OPBPMNPoolController >> refreshFigure [
 	innerConstraint move.
 	figure trachelShape pushBack.
 	self diagramController view signalUpdate.
-	^ self figure
-]
-
-{ #category : #accessing }
-OPBPMNPoolController >> removeModel [
-	self diagramController model remove: self model
+	^ super refreshFigure
 ]
 
 { #category : #connecting }
