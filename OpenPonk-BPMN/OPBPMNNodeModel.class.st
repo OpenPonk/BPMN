@@ -26,6 +26,11 @@ OPBPMNNodeModel >> addFlow: aFlow [
 		ifFalse: [ self changed ]
 ]
 
+{ #category : #associating }
+OPBPMNNodeModel >> allEntities [
+	^ Set with: self flows
+]
+
 { #category : #accessing }
 OPBPMNNodeModel >> connected [
 	owner ifNil: [ ^ #() ].
@@ -68,6 +73,11 @@ OPBPMNNodeModel >> isEdge [
 { #category : #testing }
 OPBPMNNodeModel >> isNode [
 	^ true
+]
+
+{ #category : #accessing }
+OPBPMNNodeModel >> nodes [
+	^ elements 
 ]
 
 { #category : #accessing }

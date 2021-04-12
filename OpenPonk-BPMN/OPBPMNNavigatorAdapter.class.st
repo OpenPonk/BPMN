@@ -8,7 +8,7 @@ Class {
 OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).
 		 (OPBPMNPoolModel -> #nodes).
-			(OPBPMNNodeModel -> #flows) }
+			(OPBPMNNodeModel -> #outgoing) }
 ]
 
 { #category : #'widget API' }
@@ -20,6 +20,7 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNStartEventModel -> 'Start Event').
 	(OPBPMNIntermediateEventModel -> 'Intermediate Event').
 	(OPBPMNEndEventModel -> 'End Event').
+	(OPBPMNGatewayModel -> 'Gateway').
 	(OPBPMNFlowModel -> 'Sequence Flow').
 	(OPBPMNMessageFlowModel -> 'Message Flow')}
 ]

@@ -22,7 +22,7 @@ OPBPMNPoolModel >> nodeNamed: aName [
 
 { #category : #accessing }
 OPBPMNPoolModel >> nodes [
-	^ self elements
+	^ elements
 ]
 
 { #category : #accessing }

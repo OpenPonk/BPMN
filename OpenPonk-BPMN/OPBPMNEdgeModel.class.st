@@ -24,15 +24,6 @@ OPBPMNEdgeModel class >> from: aSourceObject to: aTargetObject named: aString [
 ]
 
 { #category : #accessing }
-OPBPMNEdgeModel >> allEntities [
-	^ (Set with: self entity)
-		,
-			(self hasConstraint
-				ifTrue: [ self constraint allEntities ]
-				ifFalse: [ {} ])
-]
-
-{ #category : #accessing }
 OPBPMNEdgeModel >> constraint [
 	^ constraint
 ]

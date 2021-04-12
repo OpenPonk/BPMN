@@ -30,7 +30,13 @@ OPBPMNDiagramController >> controllerFactory [
 
 { #category : #connecting }
 OPBPMNDiagramController >> elementsToShowInside [
-	^ model elements
+	| poolNodes poolFlows |
+	poolNodes := (model nodes flatCollect: [ :each | each nodes ]).
+	poolFlows := (poolNodes flatCollect: [ :each | each outgoing ]).
+	^ model nodes, 
+	poolNodes,
+	poolFlows,
+	(model nodes flatCollect: [ :each | each outgoing ])
 ]
 
 { #category : #'ui interaction' }

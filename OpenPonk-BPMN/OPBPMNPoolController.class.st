@@ -77,6 +77,16 @@ OPBPMNPoolController >> refreshFigure [
 	^ super refreshFigure
 ]
 
+{ #category : #accessing }
+OPBPMNPoolController >> removeFigure [
+	super removeFigure
+]
+
+{ #category : #connecting }
+OPBPMNPoolController >> removeModel [
+	self diagramController model remove: self model
+]
+
 { #category : #connecting }
 OPBPMNPoolController >> removedNodeFigure: aFigure [
 	elements remove: aFigure

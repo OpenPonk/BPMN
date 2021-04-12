@@ -8,15 +8,6 @@ Class {
 }
 
 { #category : #connecting }
-OPBPMNElementController >> createModelIn: aParentModel [
-	self model: self modelClass new.
-	owner := aParentModel.
-	(owner isKindOf: OPBPMNPoolModel) ifTrue: [ aParentModel owner add: model ].
-	aParentModel add: model.
-	^ model
-]
-
-{ #category : #connecting }
 OPBPMNElementController >> createRoassalShape [
 	^ self subclassResponsibility
 ]
@@ -34,13 +25,16 @@ OPBPMNElementController >> refreshFigure [
 
 { #category : #connecting }
 OPBPMNElementController >> removeFigure [
-	super removeFigure
+	owner := self model owner.
+	super removeFigure.
+	(owner isKindOf: OPBPMNPoolModel) ifTrue: [ owner removeNode: self model]
+	
 ]
 
 { #category : #connecting }
 OPBPMNElementController >> removeModel [
-	(owner isKindOf: OPBPMNPoolModel) ifTrue: [ owner removeNode: self model].
-	self diagramController model remove: self model.
+	self diagramController model remove: self model
+	
 	
 	
 	

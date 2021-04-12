@@ -51,9 +51,9 @@ OPBPMNEdgeController >> createModelIn: aParentModel [
 	model target: self target model.
 	source model addFlow: model.
 	target model addFlow: model.
-	(aParentModel owner isKindOf: OPBPMNPoolModel) 
+	"(aParentModel owner isKindOf: OPBPMNPoolModel) 
 	ifTrue: [ (aParentModel owner) owner add: model ]
-	ifFalse: [ aParentModel owner add: model ].
+	ifFalse: [ aParentModel owner add: model ]."
 	^ model
 ]
 
