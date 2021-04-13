@@ -6,5 +6,5 @@ Class {
 
 { #category : #printing }
 OPBPMNMessageFlowModel >> printType [
-	^ 'messageFlow'
+	^ 'message'
 ]

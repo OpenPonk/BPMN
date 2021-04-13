@@ -10,7 +10,7 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 		whenSelected: [ :file | 
 			file
 				ensureDelete;
-				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage) ].
+				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage layout: layout) ].
 			self inform: 'Exported to ' , file fullName ];
 		extensionFilters:
 			{'XML files' -> #(bpmn xml).
