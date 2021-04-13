@@ -2,10 +2,21 @@ Class {
 	#name : #OPBPMNXMLWriterVisitor,
 	#superclass : #Object,
 	#instVars : [
-		'writer'
+		'writer',
+		'allFlows'
 	],
 	#category : #'OpenPonk-BPMN-XML-Writer'
 }
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> addFlow: aFlow [
+	allFlows add: aFlow.
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> allFlows [
+	^ allFlows
+]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> contents [
@@ -18,7 +29,8 @@ OPBPMNXMLWriterVisitor >> initialize [
 	writer := XMLWriter new.
 	writer formatter: OPBPMNXMLPrettyWriter new.
 	writer lineBreak: '&#10;'.
-	writer xml encoding: 'UTF-8'
+	writer xml encoding: 'UTF-8'.
+	allFlows := OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -43,7 +55,8 @@ OPBPMNXMLWriterVisitor >> visit: aRootElement [
 					attributes: (Array with: 'isExecutable' -> 'false'
 											with: 'id' -> aRootElement uuid asString)
 					with: 
-						[aRootElement nodes do: [ :each | self visitElement: each ]]]
+						[aRootElement nodes do: [ :each | self visitElement: each ]].
+						 self allFlows do: [ :each | self visitFlow: each].]
 ]
 
 { #category : #initialization }
@@ -51,7 +64,9 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 	writer tag: self namespace, anElement printType 
 			 attributes: (Array with: 'name' -> anElement name
 									  with: 'id' -> anElement uuid asString)
-			with: [(anElement isKindOf: OPBPMNPoolModel) ifTrue: [ anElement nodes do: [ :each | self visitElement: each ]]]
+			with: [(anElement isKindOf: OPBPMNPoolModel) ifTrue: [ anElement nodes do: [ :each | self visitElement: each ]].
+				anElement incoming do: [ :each | self visitFlowRef: each  inOut: 'incoming' ].
+				anElement outgoing do: [ :each | self visitFlowRef: each  inOut: 'outgoing' ]]
 ]
 
 { #category : #initialization }
@@ -61,6 +76,14 @@ OPBPMNXMLWriterVisitor >> visitFlow: aFlow [
 									 with: 'targetRef' -> aFlow target uuid asString
 									  with: 'name' -> aFlow name
 									  with: 'id' -> aFlow uuid asString)
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
+	(inOut = 'outgoing') ifTrue: [ self addFlow: aFlow ].
+	writer tag: self namespace, inOut
+			 with: aFlow source uuid asString
+									
 ]
 
 { #category : #initialization }
