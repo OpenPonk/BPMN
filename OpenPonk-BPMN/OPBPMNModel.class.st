@@ -21,5 +21,5 @@ OPBPMNModel >> nodes [
 
 { #category : #accessing }
 OPBPMNModel >> printType [
-	^ 'definitions'
+	^ 'process'
 ]
