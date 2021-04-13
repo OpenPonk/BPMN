@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #writing }
+OPBPMNXMLWriter class >> toString: aModel [
+	^ self writeToString: aModel
+]
+
+{ #category : #writing }
 OPBPMNXMLWriter class >> write: anXML to: aStream [
 	^ self new write: anXML to: aStream
 ]

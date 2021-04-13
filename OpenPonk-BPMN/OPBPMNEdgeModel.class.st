@@ -68,6 +68,11 @@ OPBPMNEdgeModel >> isNode [
 	^ false
 ]
 
+{ #category : #printing }
+OPBPMNEdgeModel >> printType [
+	^ self subclassResponsibility 
+]
+
 { #category : #testing }
 OPBPMNEdgeModel >> removeConstraint [
 	self hasConstraint

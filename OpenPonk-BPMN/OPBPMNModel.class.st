@@ -18,3 +18,8 @@ OPBPMNModel >> edges [
 OPBPMNModel >> nodes [
 	^ elements select: #isNode
 ]
+
+{ #category : #accessing }
+OPBPMNModel >> printType [
+	^ 'definitions'
+]

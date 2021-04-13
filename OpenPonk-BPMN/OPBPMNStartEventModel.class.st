@@ -3,3 +3,8 @@ Class {
 	#superclass : #OPBPMNNodeModel,
 	#category : #'OpenPonk-BPMN-Models'
 }
+
+{ #category : #printing }
+OPBPMNStartEventModel >> printType [
+	^ 'startEvent'
+]

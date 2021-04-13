@@ -23,7 +23,7 @@ OPBPMNXMLWriterVisitor >> initialize [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visit: anElement [
-	anElement accept: self
+	writer tag: 'semantic:', anElement printType with: anElement name
 ]
 
 { #category : #initialization }

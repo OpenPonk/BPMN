@@ -25,6 +25,11 @@ OPBPMNPoolModel >> nodes [
 	^ elements
 ]
 
+{ #category : #printing }
+OPBPMNPoolModel >> printType [
+	^ 'participant'
+]
+
 { #category : #accessing }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
