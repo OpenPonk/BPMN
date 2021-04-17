@@ -10,13 +10,21 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 		whenSelected: [ :file | 
 			file
 				ensureDelete;
-				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage layout: layout) ].
+				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage layout: OPBPMNDiagramController  )].
 			self inform: 'Exported to ' , file fullName ];
 		extensionFilters:
 			{'XML files' -> #(bpmn xml).
 			'All files' -> #()};
 		defaultFolder: FileLocator imageDirectory asFileReference;
 		open
+]
+
+{ #category : #accessing }
+OPBPMNPlugin class >> toolbarMenu: aBuilder [
+	<opEditorToolbarMenu: #OPBPMNPlugin>
+	(aBuilder item: 'Export do XML')
+		icon: (self iconNamed: #help);
+		action: [ HelpBrowser openOn: OPFsmHelp ]
 ]
 
 { #category : #accessing }

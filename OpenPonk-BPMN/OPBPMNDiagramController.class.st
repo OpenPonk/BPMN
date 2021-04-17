@@ -81,7 +81,10 @@ OPBPMNDiagramController >> updateView [
 	self controllers do: [ :each | each refreshFigure ].
 	self view edges
 		do: [ :each | 
-			each pushFront.
+			(each isKindOf: OPBPMNPoolController) 
+				ifTrue: [ each pushBack ] 
+				ifFalse: [ each pushFront ].
+			"each pushFront."
 			each update ].
 	self view signalUpdate
 ]
