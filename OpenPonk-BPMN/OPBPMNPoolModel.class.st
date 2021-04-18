@@ -27,7 +27,7 @@ OPBPMNPoolModel >> nodes [
 
 { #category : #printing }
 OPBPMNPoolModel >> printType [
-	^ 'participant'
+	^ 'process'
 ]
 
 { #category : #accessing }

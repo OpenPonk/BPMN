@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #printing }
+OPBPMNGatewayModel >> defaultType [
+	^ OPBPMNNodeType Exclusive
+]
+
+{ #category : #printing }
 OPBPMNGatewayModel >> printType [
-	^ 'gateway'
+	^ 'exclusiveGateway'
 ]

@@ -14,11 +14,11 @@ OPBPMNNavigatorAdapter >> childrenMapping [
 { #category : #accessing }
 OPBPMNNavigatorAdapter >> contextMenuMapping [
 	^ super contextMenuMapping
-		,
+	"	,
 			{([ :obj | obj isKindOf: OPBPMNModel  ]
 				->
 					{('Export as XML...'
-						-> [ :pkg | OPBPMNPlugin exportPackage: pkg ])})}.
+						-> [ :pkg | OPBPMNPlugin exportPackage: pkg ])})}."
 ]
 
 { #category : #'widget API' }

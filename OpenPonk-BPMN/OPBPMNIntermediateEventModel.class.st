@@ -6,5 +6,5 @@ Class {
 
 { #category : #printing }
 OPBPMNIntermediateEventModel >> printType [
-	^ 'intermediateEvent'
+	^ 'intermediateThrowEvent'
 ]

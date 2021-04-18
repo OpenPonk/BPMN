@@ -44,6 +44,16 @@ OPBPMNXMLWriterVisitor >> namespace [
 ]
 
 { #category : #initialization }
+OPBPMNXMLWriterVisitor >> removeAllFlows [
+	allFlows removeAll.
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> removeFlow: aFlow [
+	allFlows remove: aFlow.
+]
+
+{ #category : #initialization }
 OPBPMNXMLWriterVisitor >> visit: aRootElement [
 		writer 
 			tag: self namespace, 'definitions'
@@ -54,28 +64,62 @@ OPBPMNXMLWriterVisitor >> visit: aRootElement [
 									 with: 'xmlns:bpmndi' -> 'http://www.omg.org/spec/BPMN/20100524/DI'
 									 with: 'xmlns:dc' -> 'http://www.omg.org/spec/DD/20100524/DC'
 									 with: 'xmlns:semantic' -> 'http://www.omg.org/spec/BPMN/20100524/MODEL' ) 
-			with: [ self visitSemantic: aRootElement.
+			with: [ self visitSemantic: aRootElement model.
 					  self visitDiagram: aRootElement]
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 				writer 
-					tag: self diagramNamespace, aRootElement printType
-					attributes: (Array with: 'isExecutable' -> 'false'
-											with: 'id' -> aRootElement uuid asString)
-					"with: 
-						[aRootElement nodes do: [ :each | self visitElement: each ].
-						 self allFlows do: [ :each | self visitFlow: each]]"
+					tag: self diagramNamespace, 'BPMNDiagram'
+					attributes: (Array with: 'id' -> ('BPMNDiagram_', aRootElement model uuid asString)
+											with: 'name' -> aRootElement model name
+											with: 'resolution' -> '96.00000267028808')
+					with: 
+						[ writer tag: self diagramNamespace, 'BPMNPlane'
+						 			attributes: (Array with: 'bpmnElement' -> (aRootElement model printType, '_', aRootElement model uuid asString))
+									with: [ aRootElement controllers do: [ :each | self visitDiagramElement: each ]]]
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
+	(anElement isKindOf: OPBPMNNodeController) 
+	ifTrue: [  
+	writer tag: self diagramNamespace, 'BPMNShape'
+			 attributes: (Array with: 'bpmnElement' -> (anElement model printIdType, anElement model uuid asString))
+			 with: [ writer tag: 'dc:Bounds'
+								attributes: (Array with: 'height' -> anElement figure height asString
+														 with: 'width' -> anElement figure width asString
+														 with: 'x' -> anElement figure position x asString
+														 with: 'y' -> anElement figure position y asString).
+														writer tag: self diagramNamespace, 'BPMNLabel']]
+	ifFalse: [ self visitDiagramFlow: anElement ] 
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitDiagramFlow: anElement [
+	writer tag: self diagramNamespace, 'BPMNEdge'
+			 attributes: (Array with: 'bpmnElement' -> (anElement model printIdType, anElement model uuid asString))
+			 with: [ writer tag: 'di:waypoint'
+								attributes: (Array with: 'x' -> (anElement source figure position x
+																			+ ((anElement source figure height) / 2.0)) asString
+														 with: 'y' -> (anElement source figure position y 
+																			+ ((anElement source figure width) / 2.0)) asString).
+						writer tag: 'di:waypoint'
+								attributes: (Array with: 'x' -> (anElement target figure position x 
+																			+ ((anElement target figure width) / 2.0)) asString
+														 with: 'y' -> (anElement target figure position y 
+																			+ ((anElement target figure width) / 2.0)) asString )]
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElement: anElement [
 	writer tag: self namespace, anElement printType 
 			 attributes: (Array with: 'name' -> anElement name
-									  with: 'id' -> anElement uuid asString)
+									  with: 'id' -> (anElement printIdType, anElement uuid asString))
 			with: [((anElement isKindOf: OPBPMNPoolModel) | (anElement isKindOf: OPBPMNLaneModel)) 
-						ifTrue: [ anElement nodes do: [ :each | self visitElement: each ]].
+						ifTrue: [ anElement nodes do: [ :each | self visitElement: each ]. 
+									self allFlows do: [ :each | self visitFlow: each ] ].
 				anElement incoming do: [ :each | self visitFlowRef: each  inOut: 'incoming' ].
 				anElement outgoing do: [ :each | self visitFlowRef: each  inOut: 'outgoing' ]]
 ]
@@ -83,29 +127,53 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitFlow: aFlow [
 	writer tag: self namespace, aFlow printType 
-			 attributes: (Array with: 'sourceRef' -> aFlow source uuid asString
-									 with: 'targetRef' -> aFlow target uuid asString
+			 attributes: (Array with: 'sourceRef' -> (aFlow printIdType, aFlow source uuid asString)
+									 with: 'targetRef' -> (aFlow printIdType, aFlow target uuid asString)
 									  with: 'name' -> aFlow name
-									  with: 'id' -> aFlow uuid asString)
+									  with: 'id' -> (aFlow printIdType, aFlow uuid asString))
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
 	(inOut = 'outgoing') ifTrue: [ self addFlow: aFlow ].
 	writer tag: self namespace, inOut
-			 with: aFlow source uuid asString
+			 with: (aFlow printIdType, aFlow source uuid asString)
 									
 ]
 
 { #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [ 
+	writer tag: self namespace, 'participant'
+			 attributes: (Array with: 'id' -> ('Participant_', anElement uuid asString)
+										with: 'processRef' -> (anElement printIdType, anElement uuid asString))
+]
+
+{ #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
-				writer 
-					tag: self namespace, aRootElement printType
-					attributes: (Array with: 'isExecutable' -> 'false'
-											with: 'id' -> aRootElement uuid asString)
-					with: 
-						[aRootElement nodes do: [ :each | self visitElement: each ].
-						 self allFlows do: [ :each | self visitFlow: each]]
+	| counter |
+	counter := 0.
+	aRootElement nodes
+		do: [ :each | 
+			(each isKindOf: OPBPMNPoolModel)
+				ifTrue: [ counter := counter + 1 ] ].
+	counter = 0
+		ifTrue: [ writer
+				tag: self namespace , aRootElement printType
+				attributes:
+					(Array
+						with: 'isExecutable' -> 'false'
+						with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
+				with: [ aRootElement nodes do: [ :each | self visitElement: each ].
+					self allFlows do: [ :each | self visitFlow: each ] ] ]
+		ifFalse: [ writer
+				tag: self namespace , 'collaboration'
+				attributes:
+					(Array with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
+				with: [ aRootElement nodes
+						do: [ :each | 
+							(each isKindOf: OPBPMNPoolModel)
+								ifTrue: [ self visitParticipantRef: each ] ] ].
+			aRootElement nodes do: [ :each | self visitElement: each ] ]
 ]
 
 { #category : #initialization }

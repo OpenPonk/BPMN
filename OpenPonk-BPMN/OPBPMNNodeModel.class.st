@@ -85,6 +85,11 @@ OPBPMNNodeModel >> outgoing [
 	^ flows select: [ :each | each source = self ]
 ]
 
+{ #category : #printing }
+OPBPMNNodeModel >> printIdType [
+	^ '_6-'
+]
+
 { #category : #accessing }
 OPBPMNNodeModel >> relatedElements [
 	^ (self incoming , self outgoing) asSet asOrderedCollection

@@ -28,6 +28,16 @@ OPBPMNNodeType class >> Eventbased [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Exclusive [
+	^ #Exclusive
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Inclusive [
+	^ #Inclusive
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Link [
 	^ #Link
 ]
@@ -40,11 +50,6 @@ OPBPMNNodeType class >> Manual [
 { #category : #'as yet unclassified' }
 OPBPMNNodeType class >> None [
 	^ #None
-]
-
-{ #category : #'as yet unclassified' }
-OPBPMNNodeType class >> OR [
-	^ #OR
 ]
 
 { #category : #'as yet unclassified' }
@@ -75,9 +80,4 @@ OPBPMNNodeType class >> Timer [
 { #category : #'as yet unclassified' }
 OPBPMNNodeType class >> User [
 	^#User
-]
-
-{ #category : #'as yet unclassified' }
-OPBPMNNodeType class >> XOR [
-	^ #XOR
 ]

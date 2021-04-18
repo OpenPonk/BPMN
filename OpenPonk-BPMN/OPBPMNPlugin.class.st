@@ -10,7 +10,7 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 		whenSelected: [ :file | 
 			file
 				ensureDelete;
-				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage layout: OPBPMNDiagramController  )].
+				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage)].
 			self inform: 'Exported to ' , file fullName ];
 		extensionFilters:
 			{'XML files' -> #(bpmn xml).
@@ -22,9 +22,9 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 { #category : #accessing }
 OPBPMNPlugin class >> toolbarMenu: aBuilder [
 	<opEditorToolbarMenu: #OPBPMNPlugin>
-	(aBuilder item: 'Export do XML')
-		icon: (self iconNamed: #help);
-		action: [ HelpBrowser openOn: OPFsmHelp ]
+	(aBuilder item: 'Export as XML...')
+		"icon: (self iconNamed: #help);"
+		action: [ self exportPackage: aBuilder model diagramController ]
 ]
 
 { #category : #accessing }

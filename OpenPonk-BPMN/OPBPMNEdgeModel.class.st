@@ -68,6 +68,11 @@ OPBPMNEdgeModel >> isNode [
 	^ false
 ]
 
+{ #category : #accessing }
+OPBPMNEdgeModel >> printIdType [
+	^ '_6-'
+]
+
 { #category : #printing }
 OPBPMNEdgeModel >> printType [
 	^ self subclassResponsibility 

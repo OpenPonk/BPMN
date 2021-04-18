@@ -12,7 +12,7 @@ Class {
 OPBPMNGatewayController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Parallel #OR #XOR #Complex #Eventbased #None);
+		items: #(#Exclusive #Inclusive #Parallel #Complex #Eventbased);
 		iconHolder: [ :type | self typeIconFor: type ];
 		displayBlock: [ :type | type asString ];
 		setSelectedItem: self model type;
@@ -82,10 +82,10 @@ OPBPMNGatewayController >> renderFigureIn: aView [
 OPBPMNGatewayController >> typeIconFor: aType [
 	aType = OPBPMNNodeType Parallel
 		ifTrue: [ ^ OPBPMNIcon current gatewayParallel ].
-	aType = OPBPMNNodeType OR
-		ifTrue: [ ^ OPBPMNIcon current gatewayOr ].
-	aType = OPBPMNNodeType XOR
-		ifTrue: [ ^ OPBPMNIcon current gatewayXor ].
+	aType = OPBPMNNodeType Inclusive
+		ifTrue: [ ^ OPBPMNIcon current gatewayInclusive ].
+	aType = OPBPMNNodeType Exclusive
+		ifTrue: [ ^ OPBPMNIcon current gatewayExclusive ].
 	aType = OPBPMNNodeType Complex
 		ifTrue: [ ^ OPBPMNIcon current gatewayComplex ].
 	aType = OPBPMNNodeType Eventbased
