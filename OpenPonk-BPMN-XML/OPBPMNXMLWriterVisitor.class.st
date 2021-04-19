@@ -85,14 +85,19 @@ OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
 	(anElement isKindOf: OPBPMNNodeController) 
 	ifTrue: [  
+		(anElement isKindOf: OPBPMNPoolController) 
+		ifTrue: [ self visitDiagramParticipant: anElement ] 
+		ifFalse: [  
 	writer tag: self diagramNamespace, 'BPMNShape'
 			 attributes: (Array with: 'bpmnElement' -> (anElement model printIdType, anElement model uuid asString))
 			 with: [ writer tag: 'dc:Bounds'
 								attributes: (Array with: 'height' -> anElement figure height asString
 														 with: 'width' -> anElement figure width asString
-														 with: 'x' -> anElement figure position x asString
-														 with: 'y' -> anElement figure position y asString).
-														writer tag: self diagramNamespace, 'BPMNLabel']]
+														 with: 'x' -> (anElement figure position x 
+																			- ((anElement figure width) / 2.0)) asString
+														 with: 'y' -> (anElement figure position y 
+																			- ((anElement figure height) / 2.0)) asString).
+														writer tag: self diagramNamespace, 'BPMNLabel']]]
 	ifFalse: [ self visitDiagramFlow: anElement ] 
 ]
 
@@ -101,15 +106,25 @@ OPBPMNXMLWriterVisitor >> visitDiagramFlow: anElement [
 	writer tag: self diagramNamespace, 'BPMNEdge'
 			 attributes: (Array with: 'bpmnElement' -> (anElement model printIdType, anElement model uuid asString))
 			 with: [ writer tag: 'di:waypoint'
-								attributes: (Array with: 'x' -> (anElement source figure position x
-																			+ ((anElement source figure height) / 2.0)) asString
-														 with: 'y' -> (anElement source figure position y 
-																			+ ((anElement source figure width) / 2.0)) asString).
+								attributes: (Array with: 'x' -> (anElement source figure position x) asString
+														 with: 'y' -> (anElement source figure position y) asString).
 						writer tag: 'di:waypoint'
-								attributes: (Array with: 'x' -> (anElement target figure position x 
-																			+ ((anElement target figure width) / 2.0)) asString
-														 with: 'y' -> (anElement target figure position y 
-																			+ ((anElement target figure width) / 2.0)) asString )]
+								attributes: (Array with: 'x' -> (anElement target figure position x) asString
+														 with: 'y' -> (anElement target figure position y) asString )]
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
+	writer tag: self diagramNamespace, 'BPMNShape'
+			 attributes: (Array with: 'bpmnElement' -> ('participant_', anElement model uuid asString))
+			 with: [ writer tag: 'dc:Bounds'
+								attributes: (Array with: 'height' -> anElement figure height asString
+														 with: 'width' -> anElement figure width asString
+														 with: 'x' -> (anElement figure position x 
+																			- ((anElement figure width) / 2.0)) asString
+														 with: 'y' -> (anElement figure position y 
+																			- ((anElement figure height) / 2.0)) asString).
+														writer tag: self diagramNamespace, 'BPMNLabel']
 ]
 
 { #category : #initialization }
@@ -119,7 +134,8 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 									  with: 'id' -> (anElement printIdType, anElement uuid asString))
 			with: [((anElement isKindOf: OPBPMNPoolModel) | (anElement isKindOf: OPBPMNLaneModel)) 
 						ifTrue: [ anElement nodes do: [ :each | self visitElement: each ]. 
-									self allFlows do: [ :each | self visitFlow: each ] ].
+									self allFlows do: [ :each | self visitFlow: each ].
+									self allFlows do: [ :each | self removeFlow: each ] ].
 				anElement incoming do: [ :each | self visitFlowRef: each  inOut: 'incoming' ].
 				anElement outgoing do: [ :each | self visitFlowRef: each  inOut: 'outgoing' ]]
 ]
@@ -144,7 +160,7 @@ OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [ 
 	writer tag: self namespace, 'participant'
-			 attributes: (Array with: 'id' -> ('Participant_', anElement uuid asString)
+			 attributes: (Array with: 'id' -> ('participant_', anElement uuid asString)
 										with: 'processRef' -> (anElement printIdType, anElement uuid asString))
 ]
 
