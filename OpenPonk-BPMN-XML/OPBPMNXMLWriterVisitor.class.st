@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'writer',
-		'allFlows'
+		'allFlows',
+		'allMessageFlows'
 	],
 	#category : #'OpenPonk-BPMN-XML-Writer'
 }
@@ -14,8 +15,18 @@ OPBPMNXMLWriterVisitor >> addFlow: aFlow [
 ]
 
 { #category : #initialization }
+OPBPMNXMLWriterVisitor >> addMessageFlow: aFlow [
+	allMessageFlows add: aFlow.
+]
+
+{ #category : #initialization }
 OPBPMNXMLWriterVisitor >> allFlows [
 	^ allFlows
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> allMessageFlows [
+	^ allMessageFlows
 ]
 
 { #category : #initialization }
@@ -35,7 +46,8 @@ OPBPMNXMLWriterVisitor >> initialize [
 	writer formatter: OPBPMNXMLPrettyWriter new.
 	writer lineBreak: '&#10;'.
 	writer xml encoding: 'UTF-8'.
-	allFlows := OrderedCollection new
+	allFlows := OrderedCollection new.
+	allMessageFlows := OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -134,27 +146,34 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 									  with: 'id' -> (anElement printIdType, anElement uuid asString))
 			with: [((anElement isKindOf: OPBPMNPoolModel) | (anElement isKindOf: OPBPMNLaneModel)) 
 						ifTrue: [ anElement nodes do: [ :each | self visitElement: each ]. 
-									self allFlows do: [ :each | self visitFlow: each ].
+									self allFlows do: [ :each | self visitFlow: each type: 'sequenceFlow'].
 									self allFlows do: [ :each | self removeFlow: each ] ].
 				anElement incoming do: [ :each | self visitFlowRef: each  inOut: 'incoming' ].
 				anElement outgoing do: [ :each | self visitFlowRef: each  inOut: 'outgoing' ]]
 ]
 
 { #category : #initialization }
-OPBPMNXMLWriterVisitor >> visitFlow: aFlow [
-	writer tag: self namespace, aFlow printType 
-			 attributes: (Array with: 'sourceRef' -> (aFlow printIdType, aFlow source uuid asString)
-									 with: 'targetRef' -> (aFlow printIdType, aFlow target uuid asString)
-									  with: 'name' -> aFlow name
-									  with: 'id' -> (aFlow printIdType, aFlow uuid asString))
+OPBPMNXMLWriterVisitor >> visitFlow: aFlow type: aType [
+	aType = aFlow printType
+		ifTrue: [ writer
+				tag: self namespace , aFlow printType
+				attributes:
+					(Array
+						with: 'sourceRef' -> (aFlow printIdType , aFlow source uuid asString)
+						with: 'targetRef' -> (aFlow printIdType , aFlow target uuid asString)
+						with: 'name' -> aFlow name
+						with: 'id' -> (aFlow printIdType , aFlow uuid asString)) ]
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
-	(inOut = 'outgoing') ifTrue: [ self addFlow: aFlow ].
-	writer tag: self namespace, inOut
-			 with: (aFlow printIdType, aFlow source uuid asString)
-									
+	inOut = 'outgoing'
+		ifTrue: [ aFlow printType = 'messageFlow'
+				ifTrue: [ self addMessageFlow: aFlow ]
+				ifFalse: [ self addFlow: aFlow ] ].
+	writer
+		tag: self namespace , inOut
+		with: aFlow printIdType , aFlow source uuid asString
 ]
 
 { #category : #initialization }
@@ -180,16 +199,20 @@ OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
 						with: 'isExecutable' -> 'false'
 						with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
 				with: [ aRootElement nodes do: [ :each | self visitElement: each ].
-					self allFlows do: [ :each | self visitFlow: each ] ] ]
-		ifFalse: [ writer
+					self allFlows
+						do: [ :each | self visitFlow: each type: 'sequenceFlow' ] ] ]
+		ifFalse: [ aRootElement nodes do: [ :each | self visitElement: each ].
+			writer
 				tag: self namespace , 'collaboration'
 				attributes:
-					(Array with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
+					(Array
+						with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
 				with: [ aRootElement nodes
 						do: [ :each | 
 							(each isKindOf: OPBPMNPoolModel)
-								ifTrue: [ self visitParticipantRef: each ] ] ].
-			aRootElement nodes do: [ :each | self visitElement: each ] ]
+								ifTrue: [ self visitParticipantRef: each ] ].
+					self allMessageFlows
+						do: [ :each | self visitFlow: each type: 'messageFlow' ] ] ]
 ]
 
 { #category : #initialization }
