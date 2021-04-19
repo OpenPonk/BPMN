@@ -50,7 +50,7 @@ OPBPMNXMLWriterVisitor >> removeAllFlows [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> removeFlow: aFlow [
-	allFlows remove: aFlow.
+	aFlow ifNotNil: [ allFlows remove: aFlow ]
 ]
 
 { #category : #initialization }
@@ -74,7 +74,7 @@ OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 					tag: self diagramNamespace, 'BPMNDiagram'
 					attributes: (Array with: 'id' -> ('BPMNDiagram_', aRootElement model uuid asString)
 											with: 'name' -> aRootElement model name
-											with: 'resolution' -> '96.00000267028808')
+											with: 'resolution' -> '96.0')
 					with: 
 						[ writer tag: self diagramNamespace, 'BPMNPlane'
 						 			attributes: (Array with: 'bpmnElement' -> (aRootElement model printType, '_', aRootElement model uuid asString))

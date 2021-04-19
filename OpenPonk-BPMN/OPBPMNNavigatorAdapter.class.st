@@ -8,17 +8,8 @@ Class {
 OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).
 		 (OPBPMNPoolModel -> #nodes).
+		 (OPBPMNLaneModel -> #nodes).
 			(OPBPMNNodeModel -> #outgoing) }
-]
-
-{ #category : #accessing }
-OPBPMNNavigatorAdapter >> contextMenuMapping [
-	^ super contextMenuMapping
-	"	,
-			{([ :obj | obj isKindOf: OPBPMNModel  ]
-				->
-					{('Export as XML...'
-						-> [ :pkg | OPBPMNPlugin exportPackage: pkg ])})}."
 ]
 
 { #category : #'widget API' }
@@ -26,6 +17,7 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
 	(OPBPMNNodeModel -> 'Node').
 	(OPBPMNPoolModel -> 'Pool').
+	(OPBPMNLaneModel -> 'Lane').
 	(OPBPMNActivityModel -> 'Activity').
 	(OPBPMNStartEventModel -> 'Start Event').
 	(OPBPMNIntermediateEventModel -> 'Intermediate Event').

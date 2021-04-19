@@ -29,6 +29,7 @@ OPBPMNPoolController >> canBeSourceFor: aController [
 { #category : #connecting }
 OPBPMNPoolController >> canBeTargetFor: aController [
 	^ (aController isKindOf: OPBPMNElementController)
+		| (aController isKindOf: OPBPMNLaneController)
 		| (aController isKindOf: OPBPMNMessageFlowController)
 ]
 

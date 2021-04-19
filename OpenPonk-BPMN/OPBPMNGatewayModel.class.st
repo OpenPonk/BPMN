@@ -11,5 +11,16 @@ OPBPMNGatewayModel >> defaultType [
 
 { #category : #printing }
 OPBPMNGatewayModel >> printType [
-	^ 'exclusiveGateway'
+	type = OPBPMNNodeType Parallel
+		ifTrue: [ ^ 'parallelGateway' ].
+	type = OPBPMNNodeType Inclusive
+		ifTrue: [ ^ 'inclusiveGateway' ].
+	type = OPBPMNNodeType Exclusive
+		ifTrue: [ ^ 'exclusiveGateway' ].
+	type = OPBPMNNodeType Complex
+		ifTrue: [ ^ 'complexGateway' ].
+	type = OPBPMNNodeType Eventbased
+		ifTrue: [ ^ 'eventBasedGateway' ].
+	type = OPBPMNNodeType None
+		ifTrue: [ ^ 'exclusiveGateway' ]
 ]
