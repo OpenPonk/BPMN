@@ -24,7 +24,9 @@ OPBPMNStartEventController >> canBeSourceFor: aController [
 
 { #category : #connecting }
 OPBPMNStartEventController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNMessageFlowController
+	(aController isKindOf: OPBPMNMessageFlowController)
+		ifTrue: [ ^ aController source model owner ~= self model owner ]
+		ifFalse: [ ^ false ] 
 ]
 
 { #category : #connecting }

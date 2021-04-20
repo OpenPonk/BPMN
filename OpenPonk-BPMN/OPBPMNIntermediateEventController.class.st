@@ -31,7 +31,9 @@ OPBPMNIntermediateEventController >> canBeSourceFor: aController [
 
 { #category : #accessing }
 OPBPMNIntermediateEventController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNEdgeController
+		(aController isKindOf: OPBPMNMessageFlowController)
+		ifTrue: [ ^ (aController source model owner ~= self model owner)]
+		ifFalse: [ ^ aController isKindOf: OPBPMNEdgeController ]
 ]
 
 { #category : #connecting }
