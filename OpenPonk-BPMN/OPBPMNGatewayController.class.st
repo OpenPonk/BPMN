@@ -52,6 +52,7 @@ OPBPMNGatewayController >> refreshFigure [
 	iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
 	figure pushFront.
+	iconElement pushFront.
 	^ super refreshFigure
 ]
 

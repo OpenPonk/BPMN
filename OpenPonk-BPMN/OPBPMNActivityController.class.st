@@ -59,6 +59,7 @@ OPBPMNActivityController >> refreshFigure [
 	self diagramController view signalUpdate.
 	figure pushFront.
    (figure attributeAt: #RTLabelledLabel) trachelShape pushFront.
+	iconElement pushFront.
 	^ super refreshFigure
 ]
 
