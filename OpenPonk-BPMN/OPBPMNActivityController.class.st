@@ -57,6 +57,7 @@ OPBPMNActivityController >> refreshFigure [
 	iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
 	self diagramController view signalUpdate.
+	figure pushFront.
    (figure attributeAt: #RTLabelledLabel) trachelShape pushFront.
 	^ super refreshFigure
 ]

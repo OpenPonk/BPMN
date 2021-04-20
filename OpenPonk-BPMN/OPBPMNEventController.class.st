@@ -23,6 +23,7 @@ OPBPMNEventController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 		iconElement trachelShape form: self typeIconForModel.
 	iconConstraint move.
+	figure pushFront.
 	^ super refreshFigure
 ]
 
