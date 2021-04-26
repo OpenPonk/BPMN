@@ -1,9 +1,6 @@
 Class {
 	#name : #OPBPMNEdgeModel,
 	#superclass : #OPDirectedAssociation,
-	#instVars : [
-		'constraint'
-	],
 	#category : #'OpenPonk-BPMN-Models'
 }
 
@@ -23,39 +20,10 @@ OPBPMNEdgeModel class >> from: aSourceObject to: aTargetObject named: aString [
 		yourself
 ]
 
-{ #category : #accessing }
-OPBPMNEdgeModel >> constraint [
-	^ constraint
-]
-
-{ #category : #accessing }
-OPBPMNEdgeModel >> constraint: aConstraint [
-	self hasConstraint
-		ifTrue: [ ^ self ].
-	constraint := aConstraint.
-	aConstraint addedTo: self.
-	self announceAdded: aConstraint
-]
-
-{ #category : #accessing }
-OPBPMNEdgeModel >> constraints [
-	^ constraint ifNil: [ #() ] ifNotNil: [ ^ {constraint} ]
-]
-
 { #category : #'instance creation' }
 OPBPMNEdgeModel >> from: aSource to: aTarget [
 	self source: aSource.
 	self target: aTarget
-]
-
-{ #category : #testing }
-OPBPMNEdgeModel >> has: anEntity [
-	^ constraint = anEntity
-]
-
-{ #category : #testing }
-OPBPMNEdgeModel >> hasConstraint [
-	^ constraint isNotNil
 ]
 
 { #category : #testing }
@@ -76,15 +44,6 @@ OPBPMNEdgeModel >> printIdType [
 { #category : #printing }
 OPBPMNEdgeModel >> printType [
 	^ self subclassResponsibility 
-]
-
-{ #category : #testing }
-OPBPMNEdgeModel >> removeConstraint [
-	self hasConstraint
-		ifFalse: [ ^ self ].
-	constraint removedFrom: self.
-	self announceRemoved: constraint.
-	constraint := nil
 ]
 
 { #category : #accessing }

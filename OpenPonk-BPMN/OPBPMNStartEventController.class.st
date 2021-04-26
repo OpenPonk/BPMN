@@ -14,7 +14,20 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 		setSelectedItem: self model type;
 		whenSelectedItemChanged: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ]
+			self refreshFigure ].
+	self model type = OPBPMNNodeType Timer
+		ifTrue: [ (aForm addDroplist: 'Timer type')
+				items: #(#none #timeDate #timeDuration #timeCycle);
+				displayBlock: [ :type | type asString ];
+				setSelectedItem: self model timerType;
+				whenSelectedItemChanged: [ :newValue | 
+					self model timerType: newValue.
+					self refreshFigure ].
+			(aForm addText: 'Timer value')
+				text: self model timerValue;
+				whenTextIsAccepted: [ :newValue | 
+					self model timerValue: newValue asString.
+					self refreshFigure ] ]
 ]
 
 { #category : #connecting }

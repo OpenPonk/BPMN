@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNStartEventModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNEventModel,
 	#category : #'OpenPonk-BPMN-Models'
 }
 

@@ -19,7 +19,19 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 		setSelectedItem: self model type;
 		whenSelectedItemChanged: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ]
+			self refreshFigure ].
+	(self model type = OPBPMNNodeType Service) | (self model type = OPBPMNNodeType Send)
+		ifTrue: [ (aForm addText: 'Executable attribute')
+				text: self model executableAttribute;
+				whenTextIsAccepted: [ :newValue | 
+					self model executableAttribute:  newValue asString.
+					self refreshFigure ].
+				(aForm addText: 'Executable attribute value')
+				text: self model executableAttributeValue;
+				whenTextIsAccepted: [ :newValue | 
+					self model executableAttributeValue:  newValue asString.
+					self refreshFigure ] ]
+			ifFalse: [ self model executableAttribute: nil ]
 ]
 
 { #category : #connecting }

@@ -1,6 +1,9 @@
 Class {
 	#name : #OPBPMNModel,
 	#superclass : #OPModelObject,
+	#instVars : [
+		'isExecutable'
+	],
 	#category : #'OpenPonk-BPMN-Models'
 }
 
@@ -12,6 +15,22 @@ OPBPMNModel >> allEntities [
 { #category : #accessing }
 OPBPMNModel >> edges [
 	^ elements select: #isEdge
+]
+
+{ #category : #accessing }
+OPBPMNModel >> initialize [
+	super initialize.
+	isExecutable := false.
+]
+
+{ #category : #accessing }
+OPBPMNModel >> isExecutable [ 
+	^ isExecutable
+]
+
+{ #category : #accessing }
+OPBPMNModel >> isExecutable: aBoolean [
+	isExecutable := aBoolean 
 ]
 
 { #category : #accessing }

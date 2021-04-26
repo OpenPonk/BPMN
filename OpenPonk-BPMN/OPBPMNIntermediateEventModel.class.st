@@ -1,10 +1,13 @@
 Class {
 	#name : #OPBPMNIntermediateEventModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNEventModel,
 	#category : #'OpenPonk-BPMN-Models'
 }
 
 { #category : #printing }
 OPBPMNIntermediateEventModel >> printType [
-	^ 'intermediateThrowEvent'
+	(type = OPBPMNNodeType None) | (type = OPBPMNNodeType Link) | (type = OPBPMNNodeType Send)
+		ifTrue: [ ^ 'intermediateThrowEvent' ]
+		ifFalse: [ ^ 'intermediateCatchEvent' ].
+
 ]

@@ -4,6 +4,18 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
+{ #category : #userinterface }
+OPBPMNDiagramController >> buildEditorForm: aForm [
+	super buildEditorForm: aForm.
+	(aForm addDroplist: 'Is Executable?')
+		items: #(#false #true);
+		displayBlock: [ :isExecutable | isExecutable asString ];
+		setSelectedItem: self model isExecutable;
+		whenSelectedItemChanged: [ :newValue | 
+			self model isExecutable: newValue.
+			self refreshFigure ]
+]
+
 { #category : #connecting }
 OPBPMNDiagramController >> canBeTargetFor: aController [
 	^ aController isKindOf: OPBPMNNodeController 
@@ -88,7 +100,6 @@ OPBPMNDiagramController >> updateView [
 			(each isKindOf: OPBPMNPoolController) 
 				ifTrue: [ each pushBack ] 
 				ifFalse: [ each pushFront ].
-			"each pushFront."
 			each update ].
 	self view signalUpdate
 ]

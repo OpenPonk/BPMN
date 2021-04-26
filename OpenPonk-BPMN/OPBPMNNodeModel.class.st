@@ -4,14 +4,15 @@ Class {
 	#instVars : [
 		'flows',
 		'type',
-		'source'
+		'executableAttribute',
+		'executableAttributeValue'
 	],
 	#category : #'OpenPonk-BPMN-Models'
 }
 
 { #category : #associating }
 OPBPMNNodeModel >> -> aNode [
-	^ OPBPMNFactory transitionFrom: self to: aNode
+	^ OPBPMNFactory flowFrom: self to: aNode
 ]
 
 { #category : #accessing }
@@ -43,6 +44,26 @@ OPBPMNNodeModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
+{ #category : #printing }
+OPBPMNNodeModel >> executableAttribute [
+	^ executableAttribute
+]
+
+{ #category : #printing }
+OPBPMNNodeModel >> executableAttribute: anAttribute [
+	executableAttribute := anAttribute
+]
+
+{ #category : #printing }
+OPBPMNNodeModel >> executableAttributeValue [
+	^ executableAttributeValue
+]
+
+{ #category : #printing }
+OPBPMNNodeModel >> executableAttributeValue: anAttribute [
+	executableAttributeValue := anAttribute
+]
+
 { #category : #accessing }
 OPBPMNNodeModel >> flows [
 	^ flows
@@ -62,7 +83,8 @@ OPBPMNNodeModel >> incoming [
 OPBPMNNodeModel >> initialize [
 	super initialize.
 	type := self defaultType.
-	flows := OrderedCollection new
+	flows := OrderedCollection new.
+	executableAttributeValue := ''
 ]
 
 { #category : #testing }
@@ -115,16 +137,6 @@ OPBPMNNodeModel >> removedFrom: aDiagram [
 		removedFrom: aDiagram
 		do: [ self incoming do: [ :each | aDiagram remove: each ].
 			self outgoing do: [ :each | aDiagram remove: each ] ]
-]
-
-{ #category : #accessing }
-OPBPMNNodeModel >> source [
-	^ source
-]
-
-{ #category : #accessing }
-OPBPMNNodeModel >> source: aSource [
-	source := aSource 
 ]
 
 { #category : #accessing }

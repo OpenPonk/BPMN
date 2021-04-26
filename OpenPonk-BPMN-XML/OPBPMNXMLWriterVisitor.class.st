@@ -52,7 +52,7 @@ OPBPMNXMLWriterVisitor >> initialize [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> namespace [
-	^ 'semantic:'
+	^ 'bpmn:'
 ]
 
 { #category : #initialization }
@@ -180,22 +180,81 @@ OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElement: anElement [
+	(anElement isKindOf: OPBPMNActivityModel)
+		ifTrue: [ self visitElementActivity: anElement ]
+		ifFalse: [ (anElement isKindOf: OPBPMNEventModel)
+				ifTrue: [ self visitElementEvent: anElement ]
+				ifFalse: [ writer
+						tag: self namespace , anElement printType
+						attributes:
+							(Array
+								with: 'name' -> anElement name
+								with: 'id' -> (anElement printIdType , anElement uuid asString))
+						with: [ (anElement isKindOf: OPBPMNPoolModel)
+								| (anElement isKindOf: OPBPMNLaneModel)
+								ifTrue: [ anElement nodes do: [ :each | self visitElement: each ].
+									self allFlows
+										do: [ :each | self visitFlow: each type: 'sequenceFlow' ].
+									self allFlows do: [ :each | self removeFlow: each ] ].
+							anElement incoming
+								do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
+							anElement outgoing
+								do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ] ] ]
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitElementActivity: anElement [
 	writer
 		tag: self namespace , anElement printType
 		attributes:
-			(Array
-				with: 'name' -> anElement name
-				with: 'id' -> (anElement printIdType , anElement uuid asString))
-		with: [ (anElement isKindOf: OPBPMNPoolModel)
-				| (anElement isKindOf: OPBPMNLaneModel)
-				ifTrue: [ anElement nodes do: [ :each | self visitElement: each ].
-					self allFlows
-						do: [ :each | self visitFlow: each type: 'sequenceFlow' ].
-					self allFlows do: [ :each | self removeFlow: each ] ].
-			anElement incoming
+			(anElement executableAttribute
+				ifNotNil: [ Array
+						with: 'name' -> anElement name
+						with: 'id' -> (anElement printIdType , anElement uuid asString)
+						with: anElement executableAttribute -> anElement executableAttributeValue ]
+				ifNil: [ Array
+						with: 'name' -> anElement name
+						with: 'id' -> (anElement printIdType , anElement uuid asString) ])
+		with: [ anElement incoming
 				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
 			anElement outgoing
 				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ]
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitElementEvent: anElement [
+	writer
+		tag: self namespace , anElement printType
+		attributes:
+			(anElement executableAttribute
+				ifNotNil: [ Array
+						with: 'name' -> anElement name
+						with: 'id' -> (anElement printIdType , anElement uuid asString)
+						with: anElement executableAttribute -> anElement executableAttributeValue ]
+				ifNil: [ Array
+						with: 'name' -> anElement name
+						with: 'id' -> (anElement printIdType , anElement uuid asString) ])
+		with: [ 
+			anElement incoming
+				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
+			anElement outgoing
+				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ].
+			(anElement type = OPBPMNNodeType Timer)
+				ifTrue: [self visitElementEventTimer: anElement]
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
+	(anElement timerType isNotNil)
+		ifTrue: [ writer
+				tag: self namespace , 'timerEventDefinition'
+				attributes:
+					(Array
+						with: 'id' -> ('timerEventDefinition_' , anElement uuid asString))
+				with: [ writer
+						tag: self namespace , anElement timerType
+						attributes: (Array with: 'xsi:type' -> 'semantic:tFormalExpression')
+						with: anElement timerValue  ] ]
 ]
 
 { #category : #initialization }
@@ -245,7 +304,7 @@ OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
 				tag: self namespace , aRootElement printType
 				attributes:
 					(Array
-						with: 'isExecutable' -> 'false'
+						with: 'isExecutable' -> aRootElement isExecutable asString
 						with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
 				with: [ aRootElement nodes do: [ :each | self visitElement: each ].
 					self allFlows

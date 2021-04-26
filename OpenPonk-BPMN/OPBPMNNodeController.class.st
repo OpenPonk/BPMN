@@ -54,6 +54,11 @@ OPBPMNNodeController >> modelAsParent [
 ]
 
 { #category : #private }
+OPBPMNNodeController >> modelClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #private }
 OPBPMNNodeController >> removeModel [
 	self diagramController model remove: self model
 ]
