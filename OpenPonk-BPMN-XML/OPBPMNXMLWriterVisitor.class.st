@@ -273,6 +273,8 @@ OPBPMNXMLWriterVisitor >> visitFlow: aFlow type: aType [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
+"<bpmn:outgoing>_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6</bpmn:outgoing> or"
+"<bpmn:incoming>_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6</bpmn:incoming>"
 	inOut = 'outgoing'
 		ifTrue: [ aFlow printType = 'messageFlow'
 				ifTrue: [ self addMessageFlow: aFlow ]
@@ -284,6 +286,7 @@ OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [
+"<semantic:participant id=""participant_a96e59ae-477d-0d00-a841-8fa10a66547e"" 							 							processRef=""_6-a96e59ae-477d-0d00-a841-8fa10a66547e""/>"
 	writer
 		tag: self namespace , 'participant'
 		attributes:
@@ -294,6 +297,7 @@ OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
+"<semantic:process isExecutable=""false"" id=""process_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"">"
 	| counter |
 	counter := 0.
 	aRootElement nodes
@@ -310,6 +314,7 @@ OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
 				with: [ aRootElement nodes do: [ :each | self visitElement: each ].
 					self allFlows
 						do: [ :each | self visitFlow: each type: 'sequenceFlow' ] ] ]
+	"<semantic:collaboration id=""process_a96e59ae-477d-0d00-a842-a2480a66547e"">"
 		ifFalse: [ aRootElement nodes do: [ :each | self visitElement: each ].
 			writer
 				tag: self namespace , 'collaboration'
