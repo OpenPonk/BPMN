@@ -224,6 +224,7 @@ OPBPMNXMLWriterVisitor >> visitElementActivity: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElementEvent: anElement [
+"<semantic:intermediateThrowEvent name=""Send message"" id=""_6-0e5130ce-1e7d-0d00-a4c9-c9b00e3ea2c6"" 											camunda:class=""MessageClass"">"
 	writer
 		tag: self namespace , anElement printType
 		attributes:
@@ -239,13 +240,16 @@ OPBPMNXMLWriterVisitor >> visitElementEvent: anElement [
 			anElement incoming
 				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
 			anElement outgoing
-				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ].
+				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
 			(anElement type = OPBPMNNodeType Timer)
-				ifTrue: [self visitElementEventTimer: anElement]
+				ifTrue: [self visitElementEventTimer: anElement] ]
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
+"<semantic:timerEventDefinition id=""timerEventDefinition_0e5130ce-1e7d-0d00-a4c9-c9b00e3ea2c6"">
+ 	<semantic:timeDuration xsi:type=""semantic:tFormalExpression"">PT5M</semantic:timeDuration>
+ </semantic:timerEventDefinition>"
 	(anElement timerType isNotNil)
 		ifTrue: [ writer
 				tag: self namespace , 'timerEventDefinition'
@@ -260,6 +264,7 @@ OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitFlow: aFlow type: aType [
+"<semantic:sequenceFlow sourceRef=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"" targetRef=""_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6"" name="" id=""_6-0e5130ce-1e7d-0d00-a4cb-427f0e3ea2c6""/>"
 	aType = aFlow printType
 		ifTrue: [ writer
 				tag: self namespace , aFlow printType
