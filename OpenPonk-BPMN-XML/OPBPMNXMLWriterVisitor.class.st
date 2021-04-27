@@ -83,6 +83,9 @@ OPBPMNXMLWriterVisitor >> visit: aRootElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
+"<bpmndi:BPMNDiagram id=""BPMNDiagram_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"" 
+							name=""New Project"" resolution=""96.0"">
+        <bpmndi:BPMNPlane bpmnElement=""process_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"">"
 	writer
 		tag: self diagramNamespace , 'BPMNDiagram'
 		attributes:
