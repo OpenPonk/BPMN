@@ -1,5 +1,5 @@
 Class {
-	#name : #OPBPMNSFlowControllerTest,
+	#name : #OPBPMNFlowControllerTest,
 	#superclass : #OPBPMNControllerTest,
 	#instVars : [
 		'fromCtrl',
@@ -9,22 +9,22 @@ Class {
 }
 
 { #category : #accessing }
-OPBPMNSFlowControllerTest >> controllerClass [
+OPBPMNFlowControllerTest >> controllerClass [
 	^ OPBPMNFlowController 
 ]
 
 { #category : #tests }
-OPBPMNSFlowControllerTest >> fromClass [
+OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
 ]
 
 { #category : #accessing }
-OPBPMNSFlowControllerTest >> modelClass [
+OPBPMNFlowControllerTest >> modelClass [
 	^ OPBPMNFlowModel 
 ]
 
 { #category : #tests }
-OPBPMNSFlowControllerTest >> setUp [
+OPBPMNFlowControllerTest >> setUp [
 	super setUp.
 	fromCtrl := self fromClass new.
 	diagramController addController: fromCtrl.
@@ -37,7 +37,7 @@ OPBPMNSFlowControllerTest >> setUp [
 ]
 
 { #category : #tests }
-OPBPMNSFlowControllerTest >> testCreateFigure [
+OPBPMNFlowControllerTest >> testCreateFigure [
 	| figure previousElementsSize |
 	controller
 		source: fromCtrl;
@@ -59,7 +59,7 @@ OPBPMNSFlowControllerTest >> testCreateFigure [
 ]
 
 { #category : #tests }
-OPBPMNSFlowControllerTest >> testCreateModel [
+OPBPMNFlowControllerTest >> testCreateModel [
 	| createdModel |
 	controller source: fromCtrl.
 	controller target: toCtrl.
@@ -72,7 +72,7 @@ OPBPMNSFlowControllerTest >> testCreateModel [
 ]
 
 { #category : #tests }
-OPBPMNSFlowControllerTest >> testFigureRefresh [
+OPBPMNFlowControllerTest >> testFigureRefresh [
 	| label |
 	controller
 		source: fromCtrl;
@@ -88,6 +88,6 @@ OPBPMNSFlowControllerTest >> testFigureRefresh [
 ]
 
 { #category : #tests }
-OPBPMNSFlowControllerTest >> toClass [
+OPBPMNFlowControllerTest >> toClass [
 	^ OPBPMNEndEventController 
 ]
