@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'writer',
 		'allFlows',
-		'allMessageFlows'
+		'allMessageFlows',
+		'namespace'
 	],
 	#category : #'OpenPonk-BPMN-XML-Writer'
 }
@@ -46,13 +47,19 @@ OPBPMNXMLWriterVisitor >> initialize [
 	writer formatter: OPBPMNXMLPrettyWriter new.
 	writer lineBreak: '&#10;'.
 	writer xml encoding: 'UTF-8'.
+	namespace := 'bpmn:'.
 	allFlows := OrderedCollection new.
 	allMessageFlows := OrderedCollection new
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> namespace [
-	^ 'bpmn:'
+	^ namespace
+]
+
+{ #category : #initialization }
+OPBPMNXMLWriterVisitor >> namespace: aValue [
+	namespace := aValue
 ]
 
 { #category : #initialization }
