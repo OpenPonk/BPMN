@@ -103,6 +103,10 @@ OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
+"<bpmndi:BPMNShape bpmnElement=""_6-0e5130ce-1e7d-0d00-a4c8-c2f20e3ea2c6"">
+   <dc:Bounds height=""50.0"" width=""99.99720027997208"" x=""-54.998100189980946"" y=""-154.98700129987003""/>
+   <bpmndi:BPMNLabel/>
+</bpmndi:BPMNShape>"
 	(anElement isKindOf: OPBPMNEdgeController)
 		ifTrue: [ self visitDiagramFlow: anElement ]
 		ifFalse: [ (anElement isKindOf: OPBPMNPoolController)
@@ -134,6 +138,10 @@ OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagramFlow: anElement [
+"<bpmndi:BPMNEdge bpmnElement=""_6-0e5130ce-1e7d-0d00-a4cd-8bba0e3ea2c6"">
+     <di:waypoint x=""-4.9995000499949045"" y=""-129.98700129987003""/>
+     <di:waypoint x=""105.98940105989404"" y=""-129.98700129987""/>
+ </bpmndi:BPMNEdge>"
 	writer
 		tag: self diagramNamespace , 'BPMNEdge'
 		attributes:
@@ -181,6 +189,7 @@ OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElement: anElement [
+"<semantic:startEvent name=""Address placed"" id=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"">"
 	(anElement isKindOf: OPBPMNActivityModel)
 		ifTrue: [ self visitElementActivity: anElement ]
 		ifFalse: [ (anElement isKindOf: OPBPMNEventModel)
@@ -205,6 +214,7 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElementActivity: anElement [
+"<semantic:serviceTask name=""Ping address"" id=""_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6"" 							camunda:class=""PingAdapter"">"
 	writer
 		tag: self namespace , anElement printType
 		attributes:
