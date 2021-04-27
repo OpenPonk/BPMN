@@ -5,13 +5,8 @@ Class {
 }
 
 { #category : #writing }
-OPBPMNXMLWriter class >> toString: aModel [
-	^ self writeToString: aModel
-]
-
-{ #category : #writing }
-OPBPMNXMLWriter class >> toString: aModel layout: aLayout [
-	^ self writeToString: aModel
+OPBPMNXMLWriter class >> toString: aDiagramController [ 
+	^ self writeToString: aDiagramController
 ]
 
 { #category : #writing }
