@@ -69,13 +69,14 @@ OPBPMNXMLWriterVisitor >> removeFlow: aFlow [
 OPBPMNXMLWriterVisitor >> visit: aRootElement [
 		writer 
 			tag: self namespace, 'definitions'
-			attributes: (Array "with: 'id' -> aRootElement uuid asString"
-									 with: 'targetNamespace' -> 'https://openponk.org/' 
+			attributes: (Array  "with: 'targetNamespace' -> 'https://openponk.org/' "
 									 with: 'xmlns:xsi' -> 'http://www.w3.org/2001/XMLSchema-instance' 
 									 with: 'xmlns:di' -> 'http://www.omg.org/spec/DD/20100524/DI'
 									 with: 'xmlns:bpmndi' -> 'http://www.omg.org/spec/BPMN/20100524/DI'
 									 with: 'xmlns:dc' -> 'http://www.omg.org/spec/DD/20100524/DC'
-									 with: 'xmlns:semantic' -> 'http://www.omg.org/spec/BPMN/20100524/MODEL' ) 
+									 with: 'xmlns:semantic' -> 'http://www.omg.org/spec/BPMN/20100524/MODEL'
+									 with: 'xmlns:bpmn' -> 'http://www.omg.org/spec/BPMN/20100524/MODEL' ) 
+			
 			with: [ self visitSemantic: aRootElement model.
 					  self visitDiagram: aRootElement]
 ]
