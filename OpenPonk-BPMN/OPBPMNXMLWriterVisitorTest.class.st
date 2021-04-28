@@ -69,6 +69,41 @@ self assert: writerVisitor writer asString equals:
 ]
 
 { #category : #tests }
+OPBPMNXMLWriterVisitorTest >> testVisitFlowRefInOut [
+| model writerVisitor modelSource modelTarget |
+modelSource := OPBPMNActivityModel new.
+modelTarget := OPBPMNActivityModel new.
+model := OPBPMNFlowModel new.
+model name: 'Test name'.
+model source: modelSource.
+model target: modelTarget.
+writerVisitor := OPBPMNXMLWriterVisitor new.
+writerVisitor visitFlowRef: model inOut: 'outgoing'.
+self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:outgoing>_6-', model uuid asString ,'</bpmn:outgoing>'.
+
+writerVisitor := OPBPMNXMLWriterVisitor new.
+writerVisitor visitFlowRef: model inOut: 'incoming'.
+self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:incoming>_6-', model uuid asString ,'</bpmn:incoming>'
+]
+
+{ #category : #tests }
+OPBPMNXMLWriterVisitorTest >> testVisitFlowType [
+| model writerVisitor modelSource modelTarget |
+modelSource := OPBPMNActivityModel new.
+modelTarget := OPBPMNActivityModel new.
+model := OPBPMNFlowModel new.
+model name: 'Test name'.
+model source: modelSource.
+model target: modelTarget.
+writerVisitor := OPBPMNXMLWriterVisitor new.
+writerVisitor visitFlow: model type: 'sequenceFlow'.
+self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:sequenceFlow sourceRef="_6-', modelSource uuid asString ,'" targetRef="_6-', modelTarget uuid asString ,'" name="Test name" id="_6-', model uuid asString, '"/>'
+]
+
+{ #category : #tests }
 OPBPMNXMLWriterVisitorTest >> testVisitParticipantRef [
 | model writerVisitor|
 model := OPBPMNPoolModel new.

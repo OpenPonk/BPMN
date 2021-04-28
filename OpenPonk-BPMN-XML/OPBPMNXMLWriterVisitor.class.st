@@ -306,7 +306,7 @@ OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
 				ifFalse: [ self addFlow: aFlow ] ].
 	writer
 		tag: self namespace , inOut
-		with: aFlow printIdType , aFlow source uuid asString
+		with: aFlow printIdType , aFlow uuid asString
 ]
 
 { #category : #initialization }
