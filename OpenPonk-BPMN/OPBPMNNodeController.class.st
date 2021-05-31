@@ -8,6 +8,15 @@ Class {
 }
 
 { #category : #connecting }
+OPBPMNNodeController >> addAsTargetFor: aController [
+	self assert: (self canBeTargetFor: aController).
+	aController target: self.
+	aController
+		createModelIn: self model
+		andShowInDiagram: self diagramController
+]
+
+{ #category : #connecting }
 OPBPMNNodeController >> buildEditorForm: aForm [
 	(aForm addText: 'Name')
 		text: self model name;
@@ -19,11 +28,6 @@ OPBPMNNodeController >> buildEditorForm: aForm [
 { #category : #connecting }
 OPBPMNNodeController >> createRoassalShape [
 	^ self subclassResponsibility
-]
-
-{ #category : #private }
-OPBPMNNodeController >> dependentElements [
-	^ (model incoming , model outgoing) asSet
 ]
 
 { #category : #private }
@@ -49,10 +53,9 @@ OPBPMNNodeController >> modelAsParent [
 	^ self model owner
 ]
 
-{ #category : #connecting }
-OPBPMNNodeController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	^ super refreshFigure
+{ #category : #private }
+OPBPMNNodeController >> modelClass [
+	^ self subclassResponsibility
 ]
 
 { #category : #private }

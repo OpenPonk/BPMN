@@ -1,24 +1,21 @@
 Class {
 	#name : #OPBPMNActivityModel,
 	#superclass : #OPBPMNNodeModel,
-	#instVars : [
-		'type'
-	],
 	#category : #'OpenPonk-BPMN-Models'
 }
 
-{ #category : #accessing }
-OPBPMNActivityModel >> defaultType [
-	^ OPBPMNActivityType Service
-]
-
-{ #category : #accessing }
-OPBPMNActivityModel >> type [
-	^ type
-]
-
-{ #category : #accessing }
-OPBPMNActivityModel >> type: aParticipantType [
-	type := aParticipantType.
-	self changed
+{ #category : #printing }
+OPBPMNActivityModel >> printType [
+	type = OPBPMNNodeType Service
+		ifTrue: [ ^ 'serviceTask' ].
+	type = OPBPMNNodeType User
+		ifTrue: [ ^ 'userTask' ].
+	type = OPBPMNNodeType Manual
+		ifTrue: [ ^ 'manualTask' ].
+	type = OPBPMNNodeType Send
+		ifTrue: [ ^ 'sendTask' ].
+	type = OPBPMNNodeType Receive
+		ifTrue: [ ^ 'receiveTask'].
+	type = OPBPMNNodeType None
+		ifTrue: [ ^ 'task' ]
 ]

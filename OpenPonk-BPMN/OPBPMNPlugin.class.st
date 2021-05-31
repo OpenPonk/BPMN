@@ -4,9 +4,37 @@ Class {
 	#category : #'OpenPonk-BPMN-Adapters'
 }
 
+{ #category : #toolbar }
+OPBPMNPlugin class >> exportPackage: aPackage [
+	FDSaveFileDialog new
+		whenSelected: [ :file | 
+			file
+				ensureDelete;
+				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage)].
+			self inform: 'Exported to ' , file fullName ];
+		extensionFilters:
+			{'XML files' -> #(bpmn xml).
+			'All files' -> #()};
+		defaultFolder: FileLocator imageDirectory asFileReference;
+		open
+]
+
+{ #category : #accessing }
+OPBPMNPlugin class >> toolbarMenu: aBuilder [
+	<opEditorToolbarMenu: #OPBPMNPlugin>
+	(aBuilder item: 'Export as XML...')
+		"icon: (self iconNamed: #help);"
+		action: [ self exportPackage: aBuilder model diagramController ]
+]
+
 { #category : #accessing }
 OPBPMNPlugin >> diagramControllerClass [
 	^ OPBPMNDiagramController
+]
+
+{ #category : #accessing }
+OPBPMNPlugin >> icon [
+	^ OPBPMNIcon current logo
 ]
 
 { #category : #accessing }

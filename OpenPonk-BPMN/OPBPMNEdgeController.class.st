@@ -41,11 +41,20 @@ OPBPMNEdgeController >> constraintLabel: labelName balance: aFloat offset: aNumb
 
 { #category : #hooks }
 OPBPMNEdgeController >> createEdgeFrom: fromElement to: toElement [
-	^ OPRTStyledMultiLine new
-		head: self headShapeClass;
-		withBorderAttachPoint;
-		color: Color black;
-		edgeFrom: fromElement to: toElement
+	^ self subclassResponsibility 
+]
+
+{ #category : #construction }
+OPBPMNEdgeController >> createModelIn: aParentModel [
+	self model: self modelClass new.
+	model source: self source model.
+	model target: self target model.
+	source model addFlow: model.
+	target model addFlow: model.
+	"(aParentModel owner isKindOf: OPBPMNPoolModel) 
+	ifTrue: [ (aParentModel owner) owner add: model ]
+	ifFalse: [ aParentModel owner add: model ]."
+	^ model
 ]
 
 { #category : #private }
@@ -60,12 +69,6 @@ OPBPMNEdgeController >> hideSelectionFeedback [
 	self figure view
 		ifNotNil: [ self figure announce: OPTRUnfocused.
 			self figure view signalUpdate ]
-]
-
-{ #category : #accessing }
-OPBPMNEdgeController >> internalSubscribeTo: aModel [
-	super internalSubscribeTo: aModel.
-	aModel when: OPElementRemoved do: [ :e | self removeController ]
 ]
 
 { #category : #private }
@@ -87,7 +90,9 @@ OPBPMNEdgeController >> refreshFigure [
 
 { #category : #private }
 OPBPMNEdgeController >> removeModel [
-	self diagramController model remove: self model
+	self diagramController model remove: self model.
+	self model target removeFlow: self model.
+	self model source removeFlow: self model
 ]
 
 { #category : #accessing }

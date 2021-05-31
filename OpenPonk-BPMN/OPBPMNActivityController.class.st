@@ -1,31 +1,37 @@
 Class {
 	#name : #OPBPMNActivityController,
-	#superclass : #OPBPMNNodeController,
+	#superclass : #OPBPMNElementController,
 	#instVars : [
 		'labelConstraint',
 		'iconElement',
-		'iconConstraint',
-		'elements'
+		'iconConstraint'
 	],
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
 { #category : #connecting }
-OPBPMNActivityController >> addedNodeFigure: aFigure [
-	elements add: aFigure
-]
-
-{ #category : #connecting }
 OPBPMNActivityController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Service #User  #Manual #Send);
+		items: #(#Service #User #Manual #Send #Receive #None);
 		iconHolder: [ :type | self typeIconFor: type ];
 		displayBlock: [ :type | type asString ];
 		setSelectedItem: self model type;
 		whenSelectedItemChanged: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ]
+			self refreshFigure ].
+	(self model type = OPBPMNNodeType Service) | (self model type = OPBPMNNodeType Send)
+		ifTrue: [ (aForm addText: 'Executable attribute')
+				text: self model executableAttribute;
+				whenTextIsAccepted: [ :newValue | 
+					self model executableAttribute:  newValue asString.
+					self refreshFigure ].
+				(aForm addText: 'Executable attribute value')
+				text: self model executableAttributeValue;
+				whenTextIsAccepted: [ :newValue | 
+					self model executableAttributeValue:  newValue asString.
+					self refreshFigure ] ]
+			ifFalse: [ self model executableAttribute: nil ]
 ]
 
 { #category : #connecting }
@@ -35,7 +41,9 @@ OPBPMNActivityController >> canBeSourceFor: aController [
 
 { #category : #connecting }
 OPBPMNActivityController >> canBeTargetFor: aController [
-^ aController isKindOf: OPBPMNEdgeController
+	(aController isKindOf: OPBPMNMessageFlowController)
+		ifTrue: [ ^ (aController source model owner ~= self model owner)]
+		ifFalse: [ ^ aController isKindOf: OPBPMNEdgeController ]
 ]
 
 { #category : #connecting }
@@ -43,19 +51,10 @@ OPBPMNActivityController >> createRoassalShape [
 	^ RTRoundedBox new
 		height: 50;
 		borderRadius: 10;
-		width: 68;
+		width: 72;
 		color: (Color fromHexString: 'f2f2f2');
 		borderColor: Color black;
 		yourself
-]
-
-{ #category : #accessing }
-OPBPMNActivityController >> layout: anElementLayout [
-	self figure trachelShape
-		doWithoutCallbacks: [ super layout: anElementLayout ].
-	anElementLayout hasExtent
-		ifTrue: [ self figure extent: anElementLayout extent ].
-	self refreshFigure
 ]
 
 { #category : #accessing }
@@ -67,9 +66,13 @@ OPBPMNActivityController >> modelClass [
 OPBPMNActivityController >> refreshFigure [
 	(figure attributeAt: #RTLabelledLabel) text: self model name.
 	labelConstraint move.
-	figure trachelShape pushBack.
+	iconElement trachelShape form: self typeIconForModel.
+	iconConstraint move.
 	self diagramController view signalUpdate.
-	^ self figure
+	figure pushFront.
+   (figure attributeAt: #RTLabelledLabel) trachelShape pushFront.
+	iconElement pushFront.
+	^ super refreshFigure
 ]
 
 { #category : #hooks }
@@ -79,6 +82,7 @@ OPBPMNActivityController >> renderFigureIn: aView [
 	figure := self createRoassalShape elementOn: self model.
 	figure @ RTDraggable.
 	figure @ RTResizable.
+	figure @ OPRTFocusable.
 	(labeled := RTLabeled new)
 		view: aView;
 		top;
@@ -91,17 +95,31 @@ OPBPMNActivityController >> renderFigureIn: aView [
 	figure renderIn: aView.
 	iconElement := (RTBitmap new form: self typeIconForModel) element.
 	iconConstraint := (RTConstraint on: iconElement background: figure)
-		topRight;
-		padding: 5;
+		topLeft;
+		padding: 3;
 		stick.
-		iconElement renderIn: aView.
+	iconElement renderIn: aView.
+	figure addCallback: (TRRemoveCallback with: iconElement).
+	"(self diagramController
+		showWithoutDependentInDiagramModel: self model owner)
+		addedNodeFigure: figure."
 	^ self diagramController addedFigureFor: self
 ]
 
 { #category : #hooks }
 OPBPMNActivityController >> typeIconFor: aType [
-	aType = OPBPMNActivityType Service
-		ifTrue: [ ^ OPBPMNIcon current activity ]
+	aType = OPBPMNNodeType Service
+		ifTrue: [ ^ OPBPMNIcon current activityService ].
+	aType = OPBPMNNodeType User
+		ifTrue: [ ^ OPBPMNIcon current activityUser ].
+	aType = OPBPMNNodeType Manual
+		ifTrue: [ ^ OPBPMNIcon current activityManual ].
+			aType = OPBPMNNodeType Send
+		ifTrue: [ ^ OPBPMNIcon current activitySend ].
+			aType = OPBPMNNodeType Receive
+		ifTrue: [ ^ OPBPMNIcon current activityReceive ].
+			aType = OPBPMNNodeType None
+		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]
 
 { #category : #hooks }
