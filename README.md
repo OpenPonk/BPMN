@@ -10,6 +10,6 @@ In Playground, execute following script:
 ```
 Metacello new
     baseline: 'BPMN';
-    repository: 'github://primudav/OpenPonk-BPMN/repository';
+    repository: 'github://OpenPonk/OpenPonk-BPMN/repository';
     load
 ```
