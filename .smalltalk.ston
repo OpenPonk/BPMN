@@ -1,0 +1,18 @@
+SmalltalkCISpec {
+	#loading : [
+		SCIMetacelloLoadSpec {
+			#baseline : 'BPMN',
+			#directory : 'repository',
+			#platforms : [ #pharo ]
+		}
+	],
+	#postLoading : [
+		'.github/scripts/script.st'
+	],
+	#testing : {
+		#packages : [ 'OpenPonk*' ],
+		#coverage : {
+			#packages : [ 'OpenPonk-BPMN*' ]
+		}
+	}
+}
