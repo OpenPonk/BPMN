@@ -17,7 +17,7 @@ BaselineOfBPMN >> baseline: spec [
 				with: [ spec repository: 'github://OpenPonk/openponk-model/repository' ].
 			spec
 				package: 'OpenPonk-BPMN'
-				with: [ spec requires: #('OpenPonk') ].
+				with: [ spec requires: #('OpenPonk' 'OpenPonk' 'OpenPonkModel') ].
 			spec
 				package: 'OpenPonk-BPMN-XML'
 				with: [ spec requires: #('OpenPonk-BPMN') ].
