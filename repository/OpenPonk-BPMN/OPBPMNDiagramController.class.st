@@ -94,12 +94,12 @@ OPBPMNDiagramController >> modelClass [
 
 { #category : #userinterface }
 OPBPMNDiagramController >> updateView [
+
 	self controllers do: [ :each | each refreshFigure ].
-	self view edges
-		do: [ :each | 
-			(each isKindOf: OPBPMNPoolController) 
-				ifTrue: [ each pushBack ] 
-				ifFalse: [ each pushFront ].
-			each update ].
+	self view geomEdges do: [ :each | 
+		(each isKindOf: OPBPMNPoolController)
+			ifTrue: [ each pushBack ]
+			ifFalse: [ each pushFront ].
+		each update ].
 	self view signalUpdate
 ]
