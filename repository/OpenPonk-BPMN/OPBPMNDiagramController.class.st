@@ -96,7 +96,7 @@ OPBPMNDiagramController >> modelClass [
 OPBPMNDiagramController >> updateView [
 
 	self controllers do: [ :each | each refreshFigure ].
-	self view geomEdges do: [ :each | 
+	self view edges do: [ :each | 
 		(each isKindOf: OPBPMNPoolController)
 			ifTrue: [ each pushBack ]
 			ifFalse: [ each pushFront ].
