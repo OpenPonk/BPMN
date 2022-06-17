@@ -6,17 +6,17 @@ Class {
 
 { #category : #toolbar }
 OPBPMNPlugin class >> exportPackage: aPackage [
-	FDSaveFileDialog new
-		whenSelected: [ :file | 
+
+	StFBSaveFileDialog new
+		title: 'Choose a BPMN file to export to';
+		okAction: [ :file | 
 			file
 				ensureDelete;
-				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage)].
+				writeStreamDo: [ :stream | 
+					stream << (OPBPMNXMLWriter toString: aPackage) ].
 			self inform: 'Exported to ' , file fullName ];
-		extensionFilters:
-			{'XML files' -> #(bpmn xml).
-			'All files' -> #()};
-		defaultFolder: FileLocator imageDirectory asFileReference;
-		open
+		extensions: #( bpmn xml ) named: 'BPMN XML files';
+		openWithSpec
 ]
 
 { #category : #accessing }
