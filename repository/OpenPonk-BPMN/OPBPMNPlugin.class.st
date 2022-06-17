@@ -16,7 +16,7 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 					stream << (OPBPMNXMLWriter toString: aPackage) ].
 			self inform: 'Exported to ' , file fullName ];
 		extensions: #( bpmn xml ) named: 'BPMN XML files';
-		openWithSpec
+		open
 ]
 
 { #category : #accessing }
