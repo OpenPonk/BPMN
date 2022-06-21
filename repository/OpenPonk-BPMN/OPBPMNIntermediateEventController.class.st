@@ -13,30 +13,32 @@ Class {
 
 { #category : #hooks }
 OPBPMNIntermediateEventController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Send #Receive #Timer #Link #None);
-		iconHolder: [ :type | self typeIconFor: type ];
-		displayBlock: [ :type | type asString ];
-		setSelectedItem: self model type;
-		whenSelectedItemChanged: [ :newValue | 
+		items: #( #Send #Receive #Timer #Link #None );
+		displayIcon: [ :type | self typeIconFor: type ];
+		display: [ :type | type asString ];
+		selectItem: self model type;
+		whenSelectedDo: [ :newValue | 
 			self model type: newValue.
 			self refreshFigure ].
-	self model type = OPBPMNNodeType Timer
-		ifTrue: [ (aForm addDroplist: 'Timer type')
-				items: #(#none #timeDate #timeDuration #timeCycle);
-				displayBlock: [ :type | type asString ];
-				setSelectedItem: self model timerType;
-				whenSelectedItemChanged: [ :newValue | 
-					self model timerType: newValue.
-					self refreshFigure ].
-			(aForm addText: 'Timer value')
-				text: self model timerValue;
-				whenTextIsAccepted: [ :newValue | 
-					self model timerValue: newValue asString.
-					self refreshFigure ] ].
+	self model type = OPBPMNNodeType Timer ifTrue: [ 
+		(aForm addDroplist: 'Timer type')
+			items: #( #none #timeDate #timeDuration #timeCycle );
+			display: [ :type | type asString ];
+			selectItem: self model timerType;
+			whenSelectedDo: [ :newValue | 
+				self model timerType: newValue.
+				self refreshFigure ].
+		(aForm addText: 'Timer value')
+			text: self model timerValue;
+			whenTextIsAccepted: [ :newValue | 
+				self model timerValue: newValue asString.
+				self refreshFigure ] ].
 	self model type = OPBPMNNodeType Send
-		ifTrue: [ (aForm addText: 'Executable attribute')
+		ifTrue: [ 
+			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
 				whenTextIsAccepted: [ :newValue | 
 					self model executableAttribute: newValue asString.

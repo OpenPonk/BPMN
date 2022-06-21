@@ -10,13 +10,14 @@ Class {
 
 { #category : #connecting }
 OPBPMNGatewayController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Exclusive #Inclusive #Parallel #Complex #Eventbased);
-		iconHolder: [ :type | self typeIconFor: type ];
-		displayBlock: [ :type | type asString ];
-		setSelectedItem: self model type;
-		whenSelectedItemChanged: [ :newValue | 
+		items: #( #Exclusive #Inclusive #Parallel #Complex #Eventbased );
+		displayIcon: [ :type | self typeIconFor: type ];
+		display: [ :type | type asString ];
+		selectItem: self model type;
+		whenSelectedDo: [ :newValue | 
 			self model type: newValue.
 			self refreshFigure ]
 ]

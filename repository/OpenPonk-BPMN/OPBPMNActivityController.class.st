@@ -11,27 +11,30 @@ Class {
 
 { #category : #connecting }
 OPBPMNActivityController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Service #User #Manual #Send #Receive #None);
-		iconHolder: [ :type | self typeIconFor: type ];
-		displayBlock: [ :type | type asString ];
-		setSelectedItem: self model type;
-		whenSelectedItemChanged: [ :newValue | 
+		items: #( #Service #User #Manual #Send #Receive #None );
+		displayIcon: [ :type | self typeIconFor: type ];
+		display: [ :type | type asString ];
+		selectItem: self model type;
+		whenSelectedDo: [ :newValue | 
 			self model type: newValue.
 			self refreshFigure ].
-	(self model type = OPBPMNNodeType Service) | (self model type = OPBPMNNodeType Send)
-		ifTrue: [ (aForm addText: 'Executable attribute')
+	self model type = OPBPMNNodeType Service
+	| (self model type = OPBPMNNodeType Send)
+		ifTrue: [ 
+			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
 				whenTextIsAccepted: [ :newValue | 
-					self model executableAttribute:  newValue asString.
+					self model executableAttribute: newValue asString.
 					self refreshFigure ].
-				(aForm addText: 'Executable attribute value')
+			(aForm addText: 'Executable attribute value')
 				text: self model executableAttributeValue;
 				whenTextIsAccepted: [ :newValue | 
-					self model executableAttributeValue:  newValue asString.
+					self model executableAttributeValue: newValue asString.
 					self refreshFigure ] ]
-			ifFalse: [ self model executableAttribute: nil ]
+		ifFalse: [ self model executableAttribute: nil ]
 ]
 
 { #category : #connecting }

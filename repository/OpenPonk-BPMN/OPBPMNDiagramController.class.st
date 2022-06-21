@@ -6,12 +6,13 @@ Class {
 
 { #category : #userinterface }
 OPBPMNDiagramController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Is Executable?')
-		items: #(#false #true);
-		displayBlock: [ :isExecutable | isExecutable asString ];
-		setSelectedItem: self model isExecutable;
-		whenSelectedItemChanged: [ :newValue | 
+		items: #( #false #true );
+		display: [ :isExecutable | isExecutable asString ];
+		selectItem: self model isExecutable;
+		whenSelectedDo: [ :newValue | 
 			self model isExecutable: newValue.
 			self refreshFigure ]
 ]

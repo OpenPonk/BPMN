@@ -6,17 +6,19 @@ Class {
 
 { #category : #connecting }
 OPBPMNEndEventController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Send #Link #Cancel #Error #None);
-		iconHolder: [ :type | self typeIconFor: type ];
-		displayBlock: [ :type | type asString ];
-		setSelectedItem: self model type;
-		whenSelectedItemChanged: [ :newValue | 
+		items: #( #Send #Link #Cancel #Error #None );
+		displayIcon: [ :type | self typeIconFor: type ];
+		display: [ :type | type asString ];
+		selectItem: self model type;
+		whenSelectedDo: [ :newValue | 
 			self model type: newValue.
 			self refreshFigure ].
-		self model type = OPBPMNNodeType Send
-		ifTrue: [ (aForm addText: 'Executable attribute')
+	self model type = OPBPMNNodeType Send
+		ifTrue: [ 
+			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
 				whenTextIsAccepted: [ :newValue | 
 					self model executableAttribute: newValue asString.
