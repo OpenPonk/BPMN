@@ -4,6 +4,12 @@ Class {
 	#category : #'OpenPonk-BPMN-Adapters'
 }
 
+{ #category : #accessing }
+OPBPMNNavigatorAdapter class >> priority [
+
+	^ 10
+]
+
 { #category : #'widget API' }
 OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).

@@ -14,7 +14,14 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 				ensureDelete;
 				writeStreamDo: [ :stream | 
 					stream << (OPBPMNXMLWriter toString: aPackage) ].
-			self inform: 'Exported to ' , file fullName ];
+			UIManager default
+				inform: (String streamContents: [ :s | 
+						 s << 'Exported to ' << file pathString.
+						 s
+							 cr;
+							 cr.
+						 s << 'Click to open location' ])
+				actionOnClick: [ file openInOSFileBrowser ] ];
 		extensions: #( bpmn xml ) named: 'BPMN XML files';
 		open
 ]
