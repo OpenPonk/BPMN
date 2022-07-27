@@ -34,10 +34,12 @@ OPBPMNNavigatorAdapter >> displayMapping [
 ]
 
 { #category : #'widget API' }
-OPBPMNNavigatorAdapter >> hasMappingFor: anObject [
-	^ {OPBPMNModel.
-	OPBPMNNodeModel.
-	OPBPMNEdgeModel} anySatisfy: [ :any | anObject isKindOf: any ]
+OPBPMNNavigatorAdapter >> hasMappingFor: anObject in: aModel [
+
+	^ { 
+		  OPBPMNModel.
+		  OPBPMNNodeModel.
+		  OPBPMNEdgeModel } anySatisfy: [ :any | anObject isKindOf: any ]
 ]
 
 { #category : #'widget API' }
