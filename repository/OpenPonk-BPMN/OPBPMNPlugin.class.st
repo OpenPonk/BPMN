@@ -28,9 +28,10 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 
 { #category : #accessing }
 OPBPMNPlugin class >> toolbarMenu: aBuilder [
+
 	<opEditorToolbarMenu: #OPBPMNPlugin>
 	(aBuilder item: 'Export as XML...')
-		"icon: (self iconNamed: #help);"
+		icon: OPBPMNIcon current logo;
 		action: [ self exportPackage: aBuilder model diagramController ]
 ]
 

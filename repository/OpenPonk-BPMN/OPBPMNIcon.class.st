@@ -12,6 +12,8 @@ Class {
 
 { #category : #accessing }
 OPBPMNIcon class >> current [
+
+	<script: 'self current inspect'>
 	^ Current ifNil: [ Current := self new ]
 ]
 
