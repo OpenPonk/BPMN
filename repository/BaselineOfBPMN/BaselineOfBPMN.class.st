@@ -11,7 +11,7 @@ BaselineOfBPMN >> baseline: spec [
 		for: #common
 		do: [ spec
 				baseline: 'OpenPonk'
-				with: [ spec repository: 'github://openponk/openponk:dev/Roassal3' ].
+				with: [ spec repository: 'github://openponk/openponk:dev-roassal3' ].
 			spec
 				baseline: 'OpenPonkModel'
 				with: [ spec repository: 'github://OpenPonk/openponk-model/repository' ].
