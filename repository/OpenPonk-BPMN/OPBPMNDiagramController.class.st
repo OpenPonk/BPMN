@@ -94,13 +94,13 @@ OPBPMNDiagramController >> modelClass [
 ]
 
 { #category : #userinterface }
-OPBPMNDiagramController >> updateView [
+OPBPMNDiagramController >> updateCanvas [
 
 	self controllers do: [ :each | each refreshFigure ].
-	self view edges do: [ :each | 
+	self canvas edges do: [ :each | 
 		(each isKindOf: OPBPMNPoolController)
 			ifTrue: [ each pushBack ]
 			ifFalse: [ each pushFront ].
 		each update ].
-	self view signalUpdate
+	self canvas signalUpdate
 ]
