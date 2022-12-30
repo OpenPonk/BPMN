@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #hooks }
-OPBPMNMessageFlowController >> createEdgeFrom: fromElement to: toElement [
+OPBPMNMessageFlowController >> createLineFrom: fromElement to: toElement [
 	^ OPRTStyledMultiLine new
 		head: self headShapeClass;
 		tail: RTEmptyCircle;

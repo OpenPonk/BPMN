@@ -40,7 +40,7 @@ OPBPMNEdgeController >> constraintLabel: labelName balance: aFloat offset: aNumb
 ]
 
 { #category : #hooks }
-OPBPMNEdgeController >> createEdgeFrom: fromElement to: toElement [
+OPBPMNEdgeController >> createLineFrom: fromElement to: toElement [
 	^ self subclassResponsibility 
 ]
 
@@ -99,7 +99,7 @@ OPBPMNEdgeController >> removeModel [
 OPBPMNEdgeController >> renderFigureIn: aView [
 	self diagramController addingFigureFor: self.
 	figure := self
-		createEdgeFrom: self source figure
+		createLineFrom: self source figure
 		to: self target figure.
 	figure renderIn: aView.
 	self addLabels.

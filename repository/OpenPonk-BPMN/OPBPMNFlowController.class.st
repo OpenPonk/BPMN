@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-OPBPMNFlowController >> createEdgeFrom: fromElement to: toElement [
+OPBPMNFlowController >> createLineFrom: fromElement to: toElement [
 	^ OPRTStyledMultiLine new
 		head: self headShapeClass;
 		withBorderAttachPoint;
