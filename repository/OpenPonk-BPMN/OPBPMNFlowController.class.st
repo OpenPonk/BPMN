@@ -7,14 +7,14 @@ Class {
 { #category : #accessing }
 OPBPMNFlowController >> createLineFrom: fromElement to: toElement [
 	^ OPRTStyledMultiLine new
-		head: self headShapeClass;
+		head: self headMarker;
 		withBorderAttachPoint;
 		color: Color black;
 		edgeFrom: fromElement to: toElement
 ]
 
 { #category : #accessing }
-OPBPMNFlowController >> headShapeClass [
+OPBPMNFlowController >> headMarker [
 	^ RTSimpleArrow
 ]
 

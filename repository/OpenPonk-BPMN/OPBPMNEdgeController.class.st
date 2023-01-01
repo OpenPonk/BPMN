@@ -58,7 +58,7 @@ OPBPMNEdgeController >> createModelIn: aParentModel [
 ]
 
 { #category : #private }
-OPBPMNEdgeController >> headShapeClass [
+OPBPMNEdgeController >> headMarker [
 	"line decoration shape class used as head"
 
 	^ self subclassResponsibility

@@ -7,7 +7,7 @@ Class {
 { #category : #hooks }
 OPBPMNMessageFlowController >> createLineFrom: fromElement to: toElement [
 	^ OPRTStyledMultiLine new
-		head: self headShapeClass;
+		head: self headMarker;
 		tail: RTEmptyCircle;
 		dashedLine;
 		withBorderAttachPoint;
@@ -16,7 +16,7 @@ OPBPMNMessageFlowController >> createLineFrom: fromElement to: toElement [
 ]
 
 { #category : #hooks }
-OPBPMNMessageFlowController >> headShapeClass [
+OPBPMNMessageFlowController >> headMarker [
 	^ RTSimpleArrow
 ]
 
