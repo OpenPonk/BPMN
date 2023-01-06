@@ -17,7 +17,14 @@ OPBPMNMessageFlowController >> createLineFrom: fromElement to: toElement [
 
 { #category : #hooks }
 OPBPMNMessageFlowController >> headMarker [
-	^ RTSimpleArrow
+
+	^ (RSShapeFactory polygonWithPoints: (Array
+				    with: 5 @ 10
+				    with: 0 @ 5
+				    with: -5 @ 10
+				    with: 0 @ 0))
+		  color: Color black;
+		  yourself
 ]
 
 { #category : #hooks }
