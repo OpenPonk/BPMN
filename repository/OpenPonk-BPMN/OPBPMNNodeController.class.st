@@ -20,9 +20,9 @@ OPBPMNNodeController >> addAsTargetFor: aController [
 OPBPMNNodeController >> buildEditorForm: aForm [
 	(aForm addText: 'Name')
 		text: self model name;
-		whenTextIsAccepted: [ :newValue | 
+		whenTextChangedDo: [ :newValue | 
 			self model name: newValue asString.
-			self refreshFigure ]
+			self diagramElement updateRenderFromModel ]
 ]
 
 { #category : #connecting }
@@ -60,6 +60,7 @@ OPBPMNNodeController >> modelClass [
 
 { #category : #private }
 OPBPMNNodeController >> removeModel [
+	self model announcer unsubscribe: self.
 	self diagramController model remove: self model
 ]
 

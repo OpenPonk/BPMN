@@ -17,7 +17,7 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
 			self refreshFigure ]
 ]

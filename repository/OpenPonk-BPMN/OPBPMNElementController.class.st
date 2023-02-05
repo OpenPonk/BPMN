@@ -18,25 +18,9 @@ OPBPMNElementController >> dependentElements [
 ]
 
 { #category : #connecting }
-OPBPMNElementController >> refreshFigure [
-	figure update.
-	^ super refreshFigure
-]
-
-{ #category : #connecting }
 OPBPMNElementController >> removeFigure [
 	owner := self model owner.
 	super removeFigure.
 	(owner isKindOf: OPBPMNPoolModel) ifTrue: [ owner removeNode: self model]
-	
-]
-
-{ #category : #connecting }
-OPBPMNElementController >> removeModel [
-	self diagramController model remove: self model
-	
-	
-	
-	
 	
 ]

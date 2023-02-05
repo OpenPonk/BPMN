@@ -9,6 +9,20 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
+{ #category : #hooks }
+OPBPMNActivityController >> TODELrefreshFigure [
+	| figure |
+	(figure attributeAt: #RTLabelledLabel) text: self model name.
+	labelConstraint move.
+	iconElement trachelShape form: self typeIconForModel.
+	iconConstraint move.
+	self diagramController view signalUpdate.
+	figure pushFront.
+   (figure attributeAt: #RTLabelledLabel) trachelShape pushFront.
+	iconElement pushFront.
+	^ super refreshFigure
+]
+
 { #category : #connecting }
 OPBPMNActivityController >> buildEditorForm: aForm [
 
@@ -18,22 +32,22 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ].
+			self diagramElement updateRenderFromModel ].
 	self model type = OPBPMNNodeType Service
 	| (self model type = OPBPMNNodeType Send)
 		ifTrue: [ 
 			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
-				whenTextIsAccepted: [ :newValue | 
+				whenTextChangedDo: [ :newValue | 
 					self model executableAttribute: newValue asString.
-					self refreshFigure ].
+					self diagramElement updateRenderFromModel ].
 			(aForm addText: 'Executable attribute value')
 				text: self model executableAttributeValue;
-				whenTextIsAccepted: [ :newValue | 
+				whenTextChangedDo: [ :newValue | 
 					self model executableAttributeValue: newValue asString.
-					self refreshFigure ] ]
+					self diagramElement updateRenderFromModel ] ]
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
@@ -61,21 +75,26 @@ OPBPMNActivityController >> createRoassalShape [
 ]
 
 { #category : #accessing }
+OPBPMNActivityController >> dependentElements [
+	^ (model incoming , model outgoing) asSet
+]
+
+{ #category : #connecting }
+OPBPMNActivityController >> diagramElementClass [
+
+	^ OPBPMNActivityShape
+]
+
+{ #category : #accessing }
 OPBPMNActivityController >> modelClass [
 	^ OPBPMNActivityModel
 ]
 
 { #category : #hooks }
-OPBPMNActivityController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	labelConstraint move.
-	iconElement trachelShape form: self typeIconForModel.
-	iconConstraint move.
-	self diagramController view signalUpdate.
-	figure pushFront.
-   (figure attributeAt: #RTLabelledLabel) trachelShape pushFront.
-	iconElement pushFront.
-	^ super refreshFigure
+OPBPMNActivityController >> renderDiagramElement [
+
+	super renderDiagramElement.
+	model when: OPPlaceTokensChanged do: [ self diagramElement updateRenderFromModel ]
 ]
 
 { #category : #hooks }
