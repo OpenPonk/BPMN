@@ -18,15 +18,6 @@ OPBPMNEventController >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #connecting }
-OPBPMNEventController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-		iconElement trachelShape form: self typeIconForModel.
-	iconConstraint move.
-	figure pushFront.
-	^ super refreshFigure
-]
-
 { #category : #construction }
 OPBPMNEventController >> renderFigureIn: aView [
 	self diagramController addingFigureFor: self.
@@ -49,11 +40,6 @@ OPBPMNEventController >> renderFigureIn: aView [
 	figure addCallback: (TRRemoveCallback with: iconElement).
 	self saveStateOnDragEndFor: figure.
 	^ self diagramController addedFigureFor: self
-]
-
-{ #category : #hooks }
-OPBPMNEventController >> typeIconFor: aType [
-	^ self subclassResponsibility 
 ]
 
 { #category : #hooks }

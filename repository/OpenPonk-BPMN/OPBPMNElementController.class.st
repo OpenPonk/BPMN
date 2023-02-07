@@ -24,3 +24,10 @@ OPBPMNElementController >> removeFigure [
 	(owner isKindOf: OPBPMNPoolModel) ifTrue: [ owner removeNode: self model]
 	
 ]
+
+{ #category : #connecting }
+OPBPMNElementController >> renderDiagramElement [
+
+	super renderDiagramElement.
+	model when: OPPlaceTokensChanged do: [ self diagramElement updateRenderFromModel ]
+]

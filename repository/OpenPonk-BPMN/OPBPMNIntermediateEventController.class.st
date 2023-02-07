@@ -22,7 +22,7 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ].
+			self diagramElement updateRenderFromModel ].
 	self model type = OPBPMNNodeType Timer ifTrue: [ 
 		(aForm addDroplist: 'Timer type')
 			items: #( #none #timeDate #timeDuration #timeCycle );
@@ -74,20 +74,15 @@ OPBPMNIntermediateEventController >> createRoassalShape [
 		yourself
 ]
 
+{ #category : #connecting }
+OPBPMNIntermediateEventController >> diagramElementClass [
+
+	^ OPBPMNIntermediateEventShape
+]
+
 { #category : #accessing }
 OPBPMNIntermediateEventController >> modelClass [
 	^ OPBPMNIntermediateEventModel
-]
-
-{ #category : #connecting }
-OPBPMNIntermediateEventController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	innerConstraint move.
-		iconElement trachelShape form: self typeIconForModel.
-	iconConstraint move.
-	self diagramController view signalUpdate.
-	figure pushFront.
-	^ super refreshFigure
 ]
 
 { #category : #construction }

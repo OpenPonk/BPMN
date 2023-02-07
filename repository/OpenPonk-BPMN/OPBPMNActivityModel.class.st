@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #printing }
+OPBPMNActivityModel >> defaultType [
+	^ OPBPMNNodeType Manual
+]
+
+{ #category : #printing }
 OPBPMNActivityModel >> printType [
 	type = OPBPMNNodeType Service
 		ifTrue: [ ^ 'serviceTask' ].
