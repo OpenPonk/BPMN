@@ -48,14 +48,13 @@ OPBPMNNodeShape >> renderShapeDetails [
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 
-	icon := RSBitmap new 
-		form: self typeIconForModel; 
-		yourself.
+	icon := RSBitmap new
+		        form: self typeIconForModel;
+		        yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape when: RSShapeRemovedEvent do: [ 
-		icon remove ].
-	
+	self roassalShape when: RSShapeRemovedEvent do: [ icon remove ].
+
 	roassalShape @ OPRSSelectionDraggable.
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
@@ -84,7 +83,6 @@ OPBPMNNodeShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
 	self updateIcon.
-
 	super updateRenderFromModel.
 
 	roassalShape signalUpdate
@@ -95,5 +93,6 @@ OPBPMNNodeShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
+	
 	super updateRenderFromSelf
 ]
