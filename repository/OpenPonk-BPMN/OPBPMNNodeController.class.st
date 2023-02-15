@@ -42,13 +42,6 @@ OPBPMNNodeController >> isHideable [
 ]
 
 { #category : #connecting }
-OPBPMNNodeController >> layout [
-	^ OPElementLayout
-		withPosition: self figure position
-		extent: self figure extent
-]
-
-{ #category : #connecting }
 OPBPMNNodeController >> modelAsParent [
 	^ self model owner
 ]

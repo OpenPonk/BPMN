@@ -50,15 +50,6 @@ OPBPMNPoolController >> elementsToShowInside [
 	^ model nodes , (model nodes flatCollect: [ :each | each outgoing ])
 ]
 
-{ #category : #connecting }
-OPBPMNPoolController >> layout: anElementLayout [
-	self figure trachelShape
-		doWithoutCallbacks: [ super layout: anElementLayout ].
-	anElementLayout hasExtent
-		ifTrue: [ self figure extent: anElementLayout extent ].
-	self refreshFigure
-]
-
 { #category : #accessing }
 OPBPMNPoolController >> modelClass [
 	^ OPBPMNPoolModel
