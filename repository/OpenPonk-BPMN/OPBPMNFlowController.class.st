@@ -14,6 +14,12 @@ OPBPMNFlowController >> createLineFrom: fromElement to: toElement [
 ]
 
 { #category : #accessing }
+OPBPMNFlowController >> diagramElementClass [
+
+	^ OPBPMNFlowShape
+]
+
+{ #category : #accessing }
 OPBPMNFlowController >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array

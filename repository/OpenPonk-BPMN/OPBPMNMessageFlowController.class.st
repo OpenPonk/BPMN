@@ -15,6 +15,12 @@ OPBPMNMessageFlowController >> createLineFrom: fromElement to: toElement [
 		edgeFrom: fromElement to: toElement
 ]
 
+{ #category : #construction }
+OPBPMNMessageFlowController >> diagramElementClass [
+
+	^ OPBPMNMessageShape
+]
+
 { #category : #hooks }
 OPBPMNMessageFlowController >> headMarker [
 

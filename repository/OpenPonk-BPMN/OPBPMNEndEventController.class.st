@@ -13,19 +13,19 @@ OPBPMNEndEventController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ].
+			self diagramElement updateRenderFromModel ].
 	self model type = OPBPMNNodeType Send
 		ifTrue: [ 
 			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
-				whenTextIsAccepted: [ :newValue | 
+				whenTextChangedDo: [ :newValue | 
 					self model executableAttribute: newValue asString.
 					self refreshFigure ].
 			(aForm addText: 'Executable attribute value')
 				text: self model executableAttributeValue;
-				whenTextIsAccepted: [ :newValue | 
+				whenTextChangedDo: [ :newValue | 
 					self model executableAttributeValue: newValue asString.
 					self refreshFigure ] ]
 		ifFalse: [ self model executableAttribute: nil ]
@@ -52,6 +52,12 @@ OPBPMNEndEventController >> createRoassalShape [
 		borderColor: Color black;
 		borderWidth: 5;
 		yourself
+]
+
+{ #category : #construction }
+OPBPMNEndEventController >> diagramElementClass [
+
+	^ OPBPMNEndEventShape
 ]
 
 { #category : #accessing }

@@ -17,9 +17,9 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ]
+			self diagramElement updateRenderFromModel ]
 ]
 
 { #category : #connecting }
@@ -42,19 +42,15 @@ OPBPMNGatewayController >> createRoassalShape [
 		yourself
 ]
 
+{ #category : #connecting }
+OPBPMNGatewayController >> diagramElementClass [
+
+	^ OPBPMNGatewayShape 
+]
+
 { #category : #accessing }
 OPBPMNGatewayController >> modelClass [
 	^ OPBPMNGatewayModel
-]
-
-{ #category : #connecting }
-OPBPMNGatewayController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	iconElement trachelShape form: self typeIconForModel.
-	iconConstraint move.
-	figure pushFront.
-	iconElement pushFront.
-	^ super refreshFigure
 ]
 
 { #category : #construction }

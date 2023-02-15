@@ -5,21 +5,34 @@ Class {
 }
 
 { #category : #userinterface }
+OPBPMNDiagramController >> DELupdateView [
+
+	self controllers do: [ :each | each refreshFigure ].
+	self view edges do: [ :each | 
+		(each isKindOf: OPBPMNPoolController)
+			ifTrue: [ each pushBack ]
+			ifFalse: [ each pushFront ].
+		each update ].
+	self view signalUpdate
+]
+
+{ #category : #userinterface }
 OPBPMNDiagramController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Is Executable?')
+	"(aForm addDroplist: 'Is Executable?')
 		items: #( #false #true );
 		display: [ :isExecutable | isExecutable asString ];
 		selectItem: self model isExecutable;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model isExecutable: newValue.
-			self refreshFigure ]
+			self diagramElement updateRenderFromModel ]"
 ]
 
 { #category : #connecting }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNNodeController 
+	^ (super canBeTargetFor: aController)
+		or: [ aController isKindOf: OPBPMNNodeController ]
 ]
 
 { #category : #connecting }
@@ -91,16 +104,4 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 { #category : #'ui interaction' }
 OPBPMNDiagramController >> modelClass [
 	^ OPBPMNModel 
-]
-
-{ #category : #userinterface }
-OPBPMNDiagramController >> updateCanvas [
-
-	self controllers do: [ :each | each refreshFigure ].
-	self canvas edges do: [ :each | 
-		(each isKindOf: OPBPMNPoolController)
-			ifTrue: [ each pushBack ]
-			ifFalse: [ each pushFront ].
-		each update ].
-	self canvas signalUpdate
 ]

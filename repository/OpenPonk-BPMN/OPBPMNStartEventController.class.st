@@ -13,20 +13,20 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ].
+			self diagramElement updateRenderFromModel ].
 	self model type = OPBPMNNodeType Timer ifTrue: [ 
 		(aForm addDroplist: 'Timer type')
 			items: #( #none #timeDate #timeDuration #timeCycle );
 			display: [ :type | type asString ];
 			selectItem: self model timerType;
-			whenSelectedDo: [ :newValue | 
+			whenSelectedItemChangedDo: [ :newValue | 
 				self model timerType: newValue.
 				self refreshFigure ].
 		(aForm addText: 'Timer value')
 			text: self model timerValue;
-			whenTextIsAccepted: [ :newValue | 
+			whenTextChangedDo: [ :newValue | 
 				self model timerValue: newValue asString.
 				self refreshFigure ] ]
 ]
@@ -53,12 +53,18 @@ OPBPMNStartEventController >> createRoassalShape [
 		yourself
 ]
 
+{ #category : #hooks }
+OPBPMNStartEventController >> diagramElementClass [
+
+	^ OPBPMNStartEventShape
+]
+
 { #category : #connecting }
 OPBPMNStartEventController >> modelClass [
 	^ OPBPMNStartEventModel
 ]
 
-{ #category : #hooks }
+{ #category : #connecting }
 OPBPMNStartEventController >> typeIconFor: aType [
 	aType = OPBPMNNodeType Receive
 		ifTrue: [ ^ OPBPMNIcon current activityReceiveSquare ].

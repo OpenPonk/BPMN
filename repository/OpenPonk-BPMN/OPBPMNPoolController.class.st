@@ -46,6 +46,12 @@ OPBPMNPoolController >> createRoassalShape [
 ]
 
 { #category : #connecting }
+OPBPMNPoolController >> diagramElementClass [
+
+	^ OPBPMNPoolShape
+]
+
+{ #category : #connecting }
 OPBPMNPoolController >> elementsToShowInside [
 	^ model nodes , (model nodes flatCollect: [ :each | each outgoing ])
 ]

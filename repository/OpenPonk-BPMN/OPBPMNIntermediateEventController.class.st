@@ -20,32 +20,32 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self refreshFigure ].
+			self diagramElement updateRenderFromModel ].
 	self model type = OPBPMNNodeType Timer ifTrue: [ 
 		(aForm addDroplist: 'Timer type')
 			items: #( #none #timeDate #timeDuration #timeCycle );
 			display: [ :type | type asString ];
 			selectItem: self model timerType;
-			whenSelectedDo: [ :newValue | 
+			whenSelectedItemChangedDo: [ :newValue | 
 				self model timerType: newValue.
 				self refreshFigure ].
 		(aForm addText: 'Timer value')
 			text: self model timerValue;
-			whenTextIsAccepted: [ :newValue | 
+			whenTextChangedDo: [ :newValue | 
 				self model timerValue: newValue asString.
 				self refreshFigure ] ].
 	self model type = OPBPMNNodeType Send
 		ifTrue: [ 
 			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
-				whenTextIsAccepted: [ :newValue | 
+				whenTextChangedDo: [ :newValue | 
 					self model executableAttribute: newValue asString.
 					self refreshFigure ].
 			(aForm addText: 'Executable attribute value')
 				text: self model executableAttributeValue;
-				whenTextIsAccepted: [ :newValue | 
+				whenTextChangedDo: [ :newValue | 
 					self model executableAttributeValue: newValue asString.
 					self refreshFigure ] ]
 		ifFalse: [ self model executableAttribute: nil ]
@@ -74,20 +74,15 @@ OPBPMNIntermediateEventController >> createRoassalShape [
 		yourself
 ]
 
+{ #category : #connecting }
+OPBPMNIntermediateEventController >> diagramElementClass [
+
+	^ OPBPMNIntermediateEventShape
+]
+
 { #category : #accessing }
 OPBPMNIntermediateEventController >> modelClass [
 	^ OPBPMNIntermediateEventModel
-]
-
-{ #category : #connecting }
-OPBPMNIntermediateEventController >> refreshFigure [
-	(figure attributeAt: #RTLabelledLabel) text: self model name.
-	innerConstraint move.
-		iconElement trachelShape form: self typeIconForModel.
-	iconConstraint move.
-	self diagramController view signalUpdate.
-	figure pushFront.
-	^ super refreshFigure
 ]
 
 { #category : #construction }

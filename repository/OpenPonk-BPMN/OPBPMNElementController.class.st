@@ -18,12 +18,6 @@ OPBPMNElementController >> dependentElements [
 ]
 
 { #category : #connecting }
-OPBPMNElementController >> refreshFigure [
-	figure update.
-	^ super refreshFigure
-]
-
-{ #category : #connecting }
 OPBPMNElementController >> removeFigure [
 	owner := self model owner.
 	super removeFigure.
@@ -32,11 +26,8 @@ OPBPMNElementController >> removeFigure [
 ]
 
 { #category : #connecting }
-OPBPMNElementController >> removeModel [
-	self diagramController model remove: self model
-	
-	
-	
-	
-	
+OPBPMNElementController >> renderDiagramElement [
+
+	super renderDiagramElement.
+	model when: OPPlaceTokensChanged do: [ self diagramElement updateRenderFromModel ]
 ]

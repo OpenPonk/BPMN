@@ -57,6 +57,24 @@ OPBPMNEdgeController >> createModelIn: aParentModel [
 	^ model
 ]
 
+{ #category : #construction }
+OPBPMNEdgeController >> diagramElementClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+OPBPMNEdgeController >> ensureSourceAndTargetIn: aDiagramController [
+
+	source ifNil: [ 
+		self source:
+			(aDiagramController showWithoutDependentInDiagramModel:
+				 model source) ].
+	target ifNil: [ 
+		self target:
+			(aDiagramController showWithoutDependentInDiagramModel:
+				 model target) ]
+]
+
 { #category : #private }
 OPBPMNEdgeController >> headMarker [
 	"line decoration shape class used as head"
@@ -69,6 +87,12 @@ OPBPMNEdgeController >> hideSelectionFeedback [
 	self figure view
 		ifNotNil: [ self figure announce: OPTRUnfocused.
 			self figure view signalUpdate ]
+]
+
+{ #category : #private }
+OPBPMNEdgeController >> internalSubscribeTo: aModel [
+	super internalSubscribeTo: aModel.
+	aModel when: OPElementRemoved do: [ :e | self removeController ]
 ]
 
 { #category : #private }
