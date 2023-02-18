@@ -8,14 +8,14 @@ Class {
 OPBPMNLayouter >> allEdges [
 	^ diagramController controllers
 		select: [ :ctrl | ctrl isKindOf: OPBPMNEdgeController ]
-		thenCollect: #figure
+		thenCollect: #roassalShape
 ]
 
 { #category : #accessing }
 OPBPMNLayouter >> allNodes [
 	^ diagramController controllers
 		select: [ :ctrl | ctrl isKindOf: OPBPMNNodeController ]
-		thenCollect: #figure
+		thenCollect: #roassalShape
 ]
 
 { #category : #layouts }
