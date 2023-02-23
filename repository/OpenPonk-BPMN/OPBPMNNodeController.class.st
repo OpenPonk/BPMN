@@ -59,7 +59,7 @@ OPBPMNNodeController >> removeModel [
 
 { #category : #construction }
 OPBPMNNodeController >> renderFigureIn: aView [
-	self diagramController addingFigureFor: self.
+	self diagramController willRender: self.
 	figure := self createRoassalShape elementOn: self model.
 	figure
 		addInteraction:
@@ -71,7 +71,7 @@ OPBPMNNodeController >> renderFigureIn: aView [
 	figure @ RTDraggable.
 	figure @ OPRTFocusable.
 	figure renderIn: aView.
-	^ self diagramController addedFigureFor: self
+	^ self diagramController rendered: self
 ]
 
 { #category : #connecting }

@@ -55,7 +55,7 @@ OPBPMNGatewayController >> modelClass [
 
 { #category : #construction }
 OPBPMNGatewayController >> renderFigureIn: aView [
-	self diagramController addingFigureFor: self.
+	self diagramController willRender: self.
 	figure := self createRoassalShape elementOn: self model.
 	figure
 		addInteraction:
@@ -75,7 +75,7 @@ OPBPMNGatewayController >> renderFigureIn: aView [
 	iconElement renderIn: aView.
 	figure addCallback: (TRRemoveCallback with: iconElement).
 	self saveStateOnDragEndFor: figure.
-	^ self diagramController addedFigureFor: self
+	^ self diagramController rendered: self
 ]
 
 { #category : #connecting }

@@ -95,7 +95,7 @@ OPBPMNPoolController >> removedNodeFigure: aFigure [
 OPBPMNPoolController >> renderFigureIn: aView [
 	"| lane laneConstraint |"
 
-	self diagramController addingFigureFor: self.
+	self diagramController willRender: self.
 	figure := self createRoassalShape elementOn: self model.
 	figure @ RTGhostDraggable.
 	figure @ RTResizable.
@@ -149,7 +149,7 @@ OPBPMNPoolController >> renderFigureIn: aView [
 			(TRTranslationCallback
 				block: [ :shape :step | elements do: [ :e | e translateBy: step ] ]).
 	self saveStateOnDragEndFor: figure.
-	^ self diagramController addedFigureFor: self
+	^ self diagramController rendered: self
 ]
 
 { #category : #connecting }

@@ -101,7 +101,7 @@ OPBPMNActivityController >> renderDiagramElement [
 { #category : #hooks }
 OPBPMNActivityController >> renderFigureIn: aView [
 	| labeled |
-	self diagramController addingFigureFor: self.
+	self diagramController willRender: self.
 	figure := self createRoassalShape elementOn: self model.
 	figure @ RTDraggable.
 	figure @ RTResizable.
@@ -126,7 +126,7 @@ OPBPMNActivityController >> renderFigureIn: aView [
 	"(self diagramController
 		showWithoutDependentInDiagramModel: self model owner)
 		addedNodeFigure: figure."
-	^ self diagramController addedFigureFor: self
+	^ self diagramController rendered: self
 ]
 
 { #category : #hooks }
