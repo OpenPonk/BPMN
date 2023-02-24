@@ -19,7 +19,7 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self diagramElement updateRenderFromModel ]
+			self diagramElement modelChanged ]
 ]
 
 { #category : #connecting }

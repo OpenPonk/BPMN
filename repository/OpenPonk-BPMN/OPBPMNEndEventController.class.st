@@ -15,7 +15,7 @@ OPBPMNEndEventController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self diagramElement updateRenderFromModel ].
+			self diagramElement modelChanged ].
 	self model type = OPBPMNNodeType Send
 		ifTrue: [ 
 			(aForm addText: 'Executable attribute')

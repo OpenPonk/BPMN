@@ -34,7 +34,7 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self diagramElement updateRenderFromModel ].
+			self diagramElement modelChanged ].
 	self model type = OPBPMNNodeType Service
 	| (self model type = OPBPMNNodeType Send)
 		ifTrue: [ 
@@ -42,12 +42,12 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 				text: self model executableAttribute;
 				whenTextChangedDo: [ :newValue | 
 					self model executableAttribute: newValue asString.
-					self diagramElement updateRenderFromModel ].
+					self diagramElement modelChanged ].
 			(aForm addText: 'Executable attribute value')
 				text: self model executableAttributeValue;
 				whenTextChangedDo: [ :newValue | 
 					self model executableAttributeValue: newValue asString.
-					self diagramElement updateRenderFromModel ] ]
+					self diagramElement modelChanged ] ]
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
@@ -95,7 +95,7 @@ OPBPMNActivityController >> modelClass [
 OPBPMNActivityController >> renderDiagramElement [
 
 	super renderDiagramElement.
-	model when: OPPlaceTokensChanged do: [ self diagramElement updateRenderFromModel ]
+	model when: OPPlaceTokensChanged do: [ self diagramElement modelChanged ]
 ]
 
 { #category : #hooks }

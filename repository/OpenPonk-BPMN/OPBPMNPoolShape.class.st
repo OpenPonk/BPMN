@@ -47,7 +47,7 @@ OPBPMNPoolShape >> createRoassalShape [
 { #category : #accessing }
 OPBPMNPoolShape >> renderBasicShape [
 
-	roassalShape := self createRoassalShape model: self
+	^ self createRoassalShape model: self
 ]
 
 { #category : #accessing }

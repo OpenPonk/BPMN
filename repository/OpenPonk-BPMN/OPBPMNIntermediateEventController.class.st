@@ -22,7 +22,7 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self diagramElement updateRenderFromModel ].
+			self diagramElement modelChanged ].
 	self model type = OPBPMNNodeType Timer ifTrue: [ 
 		(aForm addDroplist: 'Timer type')
 			items: #( #none #timeDate #timeDuration #timeCycle );

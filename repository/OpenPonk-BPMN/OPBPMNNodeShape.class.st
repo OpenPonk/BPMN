@@ -36,7 +36,7 @@ OPBPMNNodeShape >> createRoassalShape [
 { #category : #hooks }
 OPBPMNNodeShape >> renderBasicShape [
 
-	roassalShape := self createRoassalShape model: self
+	^ self createRoassalShape model: self
 ]
 
 { #category : #hooks }
