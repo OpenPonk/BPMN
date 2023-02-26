@@ -26,12 +26,3 @@ OPBPMNEdgeShape >> renderBasicShape [
 
 	^ self subclassResponsibility 
 ]
-
-{ #category : #'as yet unclassified' }
-OPBPMNEdgeShape >> renderShapeDetails [
-
-	| selectable |
-	selectable := OPRSSelectable new.
-	selectable highlightColor: Color blue.
-	roassalShape @ selectable
-]

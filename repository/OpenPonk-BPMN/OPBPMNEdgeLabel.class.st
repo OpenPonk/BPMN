@@ -19,5 +19,5 @@ OPBPMNEdgeLabel >> defaultMinDistance [
 { #category : #'as yet unclassified' }
 OPBPMNEdgeLabel >> text [
 
-	^ self owningElement modelElement name
+	^ self modelElement name
 ]

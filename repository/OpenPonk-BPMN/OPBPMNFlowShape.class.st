@@ -22,8 +22,8 @@ OPBPMNFlowShape >> renderBasicShape [
 	^ OPRSPolyline new
 		  markerEnd: self headMarker;
 		  withBorderAttachPoint;
-		  controlPointsController: OPRSPolylineCPController new;
-		  addInteraction: OPRSPolylineHandles;
+		  controlPointsController: OPRSDraggableCPController new;
+		  addInteraction: OPRSDraggableControlPoints;
 		  color: Color black;
 		  from: self source roassalShape;
 		  to: self target roassalShape;

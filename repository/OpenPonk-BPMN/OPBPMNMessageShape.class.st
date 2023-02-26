@@ -24,8 +24,8 @@ OPBPMNMessageShape >> renderBasicShape [
 		  markerStart: self tailMarker;
 		  dashed;
 		  withBorderAttachPoint;
-		  controlPointsController: OPRSPolylineCPController new;
-		  addInteraction: OPRSPolylineHandles;
+		  controlPointsController: OPRSDraggableCPController new;
+		  addInteraction: OPRSDraggableControlPoints;
 		  color: Color black;
 		  from: self source roassalShape;
 		  to: self target roassalShape;
