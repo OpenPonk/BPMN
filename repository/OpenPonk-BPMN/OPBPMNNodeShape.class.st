@@ -44,7 +44,7 @@ OPBPMNNodeShape >> renderShapeDetails [
 
 	| label selectable |
 	label := RSLabeled new.
-	label location below.
+	label location below offset: 0 @ 4.
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 

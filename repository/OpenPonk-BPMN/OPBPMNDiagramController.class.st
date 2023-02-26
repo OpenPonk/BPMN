@@ -42,16 +42,24 @@ OPBPMNDiagramController >> commonModelClassPrefix [
 
 { #category : #'ui interaction' }
 OPBPMNDiagramController >> controllerFactory [
+
 	^ super controllerFactory
-		register: OPBPMNActivityController forModel: OPBPMNActivityModel;
-		register: OPBPMNStartEventController forModel: OPBPMNStartEventModel;
-		register: OPBPMNEndEventController forModel: OPBPMNEndEventModel;
-		register: OPBPMNIntermediateEventController forModel: OPBPMNIntermediateEventModel;
-		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
-		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
-		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
-		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
-		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
+		  register: OPBPMNActivityController forModel: OPBPMNActivityModel;
+		  register: OPBPMNStartEventController
+		  forModel: OPBPMNStartEventModel;
+		  register: OPBPMNEndEventController forModel: OPBPMNEndEventModel;
+		  register: OPBPMNIntermediateEventController
+		  forModel: OPBPMNIntermediateEventModel;
+		  register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
+		  register: OPBPMNPoolController forModel: OPBPMNPoolModel;
+		  register: OPBPMNLaneController forModel: OPBPMNLaneModel;
+		  register: OPBPMNSubProcessController
+		  forModel: OPBPMNSubProcessModel;
+		  register: OPBPMNBoundaryEventController
+		  forModel: OPBPMNBoundaryEventModel;
+		  register: OPBPMNFlowController forModel: OPBPMNFlowModel;
+		  register: OPBPMNMessageFlowController
+		  forModel: OPBPMNMessageFlowModel
 ]
 
 { #category : #connecting }
@@ -71,34 +79,41 @@ OPBPMNDiagramController >> elementsToShowInside [
 
 { #category : #'ui interaction' }
 OPBPMNDiagramController >> initializePalette: aPalette [
+
 	aPalette
 		newCreationTool: 'Activity'
-			factory: [ OPBPMNActivityController new ]
-			icon: OPBPMNIcon current activity;
+		factory: [ OPBPMNActivityController new ]
+		icon: OPBPMNIcon current activity;
 		newCreationTool: 'Start Event'
-			factory: [ OPBPMNStartEventController new ]
-			icon: OPBPMNIcon current startEvent;
+		factory: [ OPBPMNStartEventController new ]
+		icon: OPBPMNIcon current startEvent;
 		newCreationTool: 'Intermediate Event'
-			factory: [ OPBPMNIntermediateEventController new ]
-			icon: OPBPMNIcon current intermediateEvent;
+		factory: [ OPBPMNIntermediateEventController new ]
+		icon: OPBPMNIcon current intermediateEvent;
 		newCreationTool: 'End Event'
-			factory: [ OPBPMNEndEventController new ]
-			icon: OPBPMNIcon current endEvent;
+		factory: [ OPBPMNEndEventController new ]
+		icon: OPBPMNIcon current endEvent;
 		newCreationTool: 'Gateway'
-			factory: [ OPBPMNGatewayController new ]
-			icon: OPBPMNIcon current gateway;
+		factory: [ OPBPMNGatewayController new ]
+		icon: OPBPMNIcon current gateway;
 		newCreationTool: 'Pool'
-			factory: [ OPBPMNPoolController new ]
-			icon: OPBPMNIcon current pool;
+		factory: [ OPBPMNPoolController new ]
+		icon: OPBPMNIcon current pool;
 		"newCreationTool: 'Lane'
 			factory: [ OPBPMNLaneController new ]
 			icon: OPBPMNIcon current lane;"
+		newCreationTool: 'Expanded SubProcess'
+		factory: [ OPBPMNSubProcessController new ]
+		icon: OPBPMNIcon current expandedSubprocess;
+		newCreationTool: 'Boundary Event'
+		factory: [ OPBPMNBoundaryEventController new ]
+		icon: OPBPMNIcon current intermediateEvent;
 		newConnectionCreationTool: 'Sequence Flow'
-			factory: [ OPBPMNFlowController new ]
-			icon: OPBPMNIcon current sequenceFlow;
+		factory: [ OPBPMNFlowController new ]
+		icon: OPBPMNIcon current sequenceFlow;
 		newConnectionCreationTool: 'Message Flow'
-			factory: [ OPBPMNMessageFlowController new ]
-			icon: OPBPMNIcon current messageFlow
+		factory: [ OPBPMNMessageFlowController new ]
+		icon: OPBPMNIcon current messageFlow
 ]
 
 { #category : #'ui interaction' }
