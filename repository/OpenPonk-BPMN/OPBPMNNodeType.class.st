@@ -13,13 +13,37 @@ OPBPMNNodeType class >> Cancel [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> CatchCompensation [
+
+	^ #CatchCompensation
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Compensation [
+
+	^ #Compensation
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Complex [
 	^ #Complex
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Conditional [
+
+	^ #Conditional
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Error [
 	^ #Error
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Escalation [
+
+	^ #Escalation
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,6 +72,12 @@ OPBPMNNodeType class >> Manual [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Multiple [
+
+	^ #Multiple
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> None [
 	^ #None
 ]
@@ -58,18 +88,31 @@ OPBPMNNodeType class >> Parallel [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> ParallelMultiple [
+
+	^ #ParallelMultiple
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Receive [
 	^ #Receive
 ]
 
 { #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Send [
+
 	^ #Send
 ]
 
 { #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Service [
 	^ #Service
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Signal [
+
+	^ #Signal
 ]
 
 { #category : #'as yet unclassified' }
