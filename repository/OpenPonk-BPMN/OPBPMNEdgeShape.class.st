@@ -9,9 +9,9 @@ OPBPMNEdgeShape >> createOwnedElementsWithoutController [
 
 	super createOwnedElementsWithoutController.
 	self ownedElements
-		detect: [ :any | any isKindOf: OPBPMNEdgeLabel  ]
+		detect: [ :any | any isKindOf: OPBPMNEdgeLabel ]
 		ifFound: [ ^ self ].
-	OPBPMNEdgeLabel in: self forModelElement: self modelElement
+	OPBPMNEdgeLabel in: self
 ]
 
 { #category : #'as yet unclassified' }
