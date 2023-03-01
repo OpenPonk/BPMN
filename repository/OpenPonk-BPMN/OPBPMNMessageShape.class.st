@@ -1,8 +1,19 @@
 Class {
 	#name : #OPBPMNMessageShape,
-	#superclass : #OPBPMNEdgeShape,
+	#superclass : #OPEdge,
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #hooks }
+OPBPMNMessageShape >> createOwnedElementsWithoutController [
+
+	super createOwnedElementsWithoutController.
+	"self ownedElements
+		detect: [ :any | any isKindOf: OPBPMNEdgeLabel  ]
+		ifFound: [ ^ self ].
+	OPBPMNEdgeLabel in: self forModelElement: self modelElement"
+	OPBPMNMessageShape in: self
+]
 
 { #category : #hooks }
 OPBPMNMessageShape >> headMarker [

@@ -1,8 +1,19 @@
 Class {
 	#name : #OPBPMNFlowShape,
-	#superclass : #OPBPMNEdgeShape,
+	#superclass : #OPEdge,
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #'as yet unclassified' }
+OPBPMNFlowShape >> createOwnedElementsWithoutController [
+
+	super createOwnedElementsWithoutController.
+	"self ownedElements
+		detect: [ :any | any isKindOf: OPBPMNEdgeLabel  ]
+		ifFound: [ ^ self ].
+	OPBPMNEdgeLabel in: self forModelElement: self modelElement"
+	OPBPMNFlowShape in: self
+]
 
 { #category : #'as yet unclassified' }
 OPBPMNFlowShape >> headMarker [
@@ -19,7 +30,9 @@ OPBPMNFlowShape >> headMarker [
 { #category : #'as yet unclassified' }
 OPBPMNFlowShape >> renderBasicShape [
 
-	^ OPRSPolyline new
+	^ (self source = self target
+		   ifTrue: [ OPRSBezier ]
+		   ifFalse: [ OPRSPolyline ]) new
 		  markerEnd: self headMarker;
 		  withBorderAttachPoint;
 		  controlPointsController: OPRSDraggableCPController new;

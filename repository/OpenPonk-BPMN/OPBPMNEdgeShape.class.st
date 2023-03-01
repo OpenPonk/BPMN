@@ -13,16 +13,3 @@ OPBPMNEdgeShape >> createOwnedElementsWithoutController [
 		ifFound: [ ^ self ].
 	OPBPMNEdgeLabel in: self
 ]
-
-{ #category : #'as yet unclassified' }
-OPBPMNEdgeShape >> headMarker [
-	"line decoration shape used as head marker"
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
-OPBPMNEdgeShape >> renderBasicShape [
-
-	^ self subclassResponsibility 
-]

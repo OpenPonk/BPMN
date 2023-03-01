@@ -22,6 +22,16 @@ OPBPMNPoolController >> boxHeight [
 ]
 
 { #category : #connecting }
+OPBPMNPoolController >> buildEditorForm: aForm [
+	super buildEditorForm: aForm.
+	(aForm addTextInput: 'Lanes')
+		text: self model lanes asString;
+		whenTextChangedDo: [ :newValue | 
+			self model lanes: (newValue asString asInteger ifNil: [ 1 ]).
+			self diagramElement modelChanged ]
+]
+
+{ #category : #connecting }
 OPBPMNPoolController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNMessageFlowController
 ]
@@ -31,7 +41,8 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNMessageFlowController)
 		ifTrue: [ ^ (aController source model owner ~= self model) ]
 		ifFalse: [ ^ (aController isKindOf: OPBPMNElementController)
-				| (aController isKindOf: OPBPMNLaneController) ]
+				| (aController isKindOf: OPBPMNLaneController)
+				| (aController isKindOf: OPBPMNSubProcessController)]
 ]
 
 { #category : #connecting }
@@ -83,7 +94,8 @@ OPBPMNPoolController >> removeFigure [
 
 { #category : #connecting }
 OPBPMNPoolController >> removeModel [
-	self diagramController model remove: self model
+	self diagramController model remove: self model.
+	
 ]
 
 { #category : #connecting }

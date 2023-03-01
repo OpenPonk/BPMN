@@ -25,6 +25,16 @@ OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 ]
 
 { #category : #forms }
+OPBPMNBoundaryEventController >> canBeSourceFor: aController [
+	^ aController isKindOf: OPBPMNMessageFlowController
+]
+
+{ #category : #forms }
+OPBPMNBoundaryEventController >> canBeTargetFor: aController [
+	(aController isKindOf: OPBPMNMessageFlowController)
+]
+
+{ #category : #forms }
 OPBPMNBoundaryEventController >> diagramElementClass [
 
 	^ OPBPMNBoundaryEventShape

@@ -147,10 +147,7 @@ OPBPMNEdgeController >> showSelectionFeedback [
 
 { #category : #accessing }
 OPBPMNEdgeController >> showWithoutDependentInDiagram: aDiagramController [
-	source
-		ifNil:
-			[ self source: (aDiagramController showWithoutDependentInDiagramModel: model source) ].
-	target
-		ifNil: [ self target: (aDiagramController showWithoutDependentInDiagramModel: model target) ].
+
+	self ensureSourceAndTargetIn: aDiagramController.
 	^ super showWithoutDependentInDiagram: aDiagramController
 ]
