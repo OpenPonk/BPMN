@@ -15,6 +15,7 @@ OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).
 		 (OPBPMNPoolModel -> #nodes).
 		 (OPBPMNLaneModel -> #nodes).
+		 (OPBPMNSubProcessModel -> #nodes).
 			(OPBPMNNodeModel -> #outgoing) }
 ]
 
@@ -31,6 +32,7 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNIntermediateEventModel -> 'Intermediate Event').
 	(OPBPMNEndEventModel -> 'End Event').
 	(OPBPMNGatewayModel -> 'Gateway').
+	(OPBPMNDataObjectModel -> 'Data Object').
 	(OPBPMNFlowModel -> 'Sequence Flow').
 	(OPBPMNMessageFlowModel -> 'Message Flow')}
 ]
@@ -56,6 +58,7 @@ OPBPMNNavigatorAdapter >> iconMapping [
 		(OPBPMNLaneModel -> OPBPMNIcon current lane).
 		(OPBPMNSubProcessModel -> OPBPMNIcon current expandedSubprocess).
 		(OPBPMNBoundaryEventModel -> OPBPMNIcon current intermediateEvent).
+		(OPBPMNDataObjectModel -> OPBPMNIcon current dataObject16).
 		(OPBPMNFlowModel -> OPBPMNIcon current sequenceFlow ).
 		(OPBPMNMessageFlowModel -> OPBPMNIcon current messageFlow )}
 ]

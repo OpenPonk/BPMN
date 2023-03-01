@@ -36,6 +36,26 @@ OPBPMNNodeType class >> Conditional [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> DataInput [
+	^#DataInput
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> DataObject [
+	^#DataObject
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> DataOutput [
+	^#DataOutput
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> DataStore [
+	^#DataStore
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Error [
 	^ #Error
 ]

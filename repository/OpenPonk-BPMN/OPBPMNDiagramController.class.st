@@ -95,9 +95,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Expanded SubProcess'
 			factory: [ OPBPMNSubProcessController new ]
 			icon: OPBPMNIcon current expandedSubprocess;
-		newCreationTool: 'Boundary Event'
-			factory: [ OPBPMNBoundaryEventController new ]
-			icon: OPBPMNIcon current intermediateEvent;
+		newCreationTool: 'Data Object'
+			factory: [ OPBPMNDataObjectController new ]
+			icon: OPBPMNIcon current dataObject16;
 		"newCreationTool: 'Lane'
 			factory: [ OPBPMNLaneController new ]
 			icon: OPBPMNIcon current lane;"

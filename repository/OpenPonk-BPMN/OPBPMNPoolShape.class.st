@@ -48,13 +48,13 @@ OPBPMNPoolShape >> color: aColor [
 OPBPMNPoolShape >> createRoassalShape [
 | com |
 com := RSComposite new.
-b1 := RSBox new width: 500; height: 300; color: Color white; borderColor: Color black.
+b1 := RSBox new width: 550; height: 300; color: Color white; borderColor: Color black.
 b2 := RSBox new width: 30; height: 300; color: Color white; borderColor: Color black.
 com add: b1.
 com add: b2.
 
 com adjustToChildren.
-b2 position: -235@0. 
+b2 position: -260@0. 
 	^ com
 ]
 
