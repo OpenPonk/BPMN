@@ -20,12 +20,12 @@ OPBPMNDataObjectController >> buildEditorForm: aForm [
 
 { #category : #testing }
 OPBPMNDataObjectController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController isKindOf: OPBPMNDataFlowController
 ]
 
 { #category : #testing }
 OPBPMNDataObjectController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController isKindOf: OPBPMNDataFlowController
 ]
 
 { #category : #testing }

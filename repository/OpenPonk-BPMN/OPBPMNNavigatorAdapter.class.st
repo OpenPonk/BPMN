@@ -33,6 +33,7 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNEndEventModel -> 'End Event').
 	(OPBPMNGatewayModel -> 'Gateway').
 	(OPBPMNDataObjectModel -> 'Data Object').
+	(OPBPMNDataFlowModel -> 'Data Flow').
 	(OPBPMNFlowModel -> 'Sequence Flow').
 	(OPBPMNMessageFlowModel -> 'Message Flow')}
 ]
@@ -59,6 +60,7 @@ OPBPMNNavigatorAdapter >> iconMapping [
 		(OPBPMNSubProcessModel -> OPBPMNIcon current expandedSubprocess).
 		(OPBPMNBoundaryEventModel -> OPBPMNIcon current intermediateEvent).
 		(OPBPMNDataObjectModel -> OPBPMNIcon current dataObject16).
+		(OPBPMNDataFlowModel -> OPBPMNIcon current messageFlow ).
 		(OPBPMNFlowModel -> OPBPMNIcon current sequenceFlow ).
 		(OPBPMNMessageFlowModel -> OPBPMNIcon current messageFlow )}
 ]

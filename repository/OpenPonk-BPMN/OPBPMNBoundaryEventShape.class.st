@@ -1,8 +1,33 @@
 Class {
 	#name : #OPBPMNBoundaryEventShape,
 	#superclass : #OPBPMNNodeShape,
+	#instVars : [
+		'borderIn',
+		'borderOut'
+	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #connecting }
+OPBPMNBoundaryEventShape >> createBorder [
+
+	self modelElement
+		ifNil: [ 
+			borderIn := RSBorder new
+				            dashArray: #( 1 0 );
+				            color: Color black.
+			borderOut := RSBorder new
+				             dashArray: #( 1 0 );
+				             color: Color black ]
+		ifNotNil: [ 
+			self modelElement isNonInterrupting
+				ifTrue: [ 
+					borderIn dashArray: #( 9 7 ).
+					borderOut dashArray: #( 11 10 ) ]
+				ifFalse: [ 
+					borderIn dashArray: #( 1 0 ).
+					borderOut dashArray: #( 1 0 ) ] ]
+]
 
 { #category : #connecting }
 OPBPMNBoundaryEventShape >> createRoassalShape [
@@ -10,7 +35,14 @@ OPBPMNBoundaryEventShape >> createRoassalShape [
 	^ RSCircle new
 		  size: 39;
 		  borderColor: Color black;
+		  border: borderOut;
 		  yourself
+]
+
+{ #category : #connecting }
+OPBPMNBoundaryEventShape >> initialize [
+	super initialize.
+	self createBorder.
 ]
 
 { #category : #connecting }
@@ -33,6 +65,7 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 		               size: 31;
 		               borderColor: Color black;
 		               color: Color transparent;
+						   border: borderIn;
 		               yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape.
@@ -71,6 +104,17 @@ OPBPMNBoundaryEventShape >> typeIconFor: aType [
 		^ OPBPMNIcon current eventParallelMultiple ].
 	aType = OPBPMNNodeType CatchCompensation ifTrue: [ 
 		^ OPBPMNIcon current eventCatchCompensation ]
+]
+
+{ #category : #connecting }
+OPBPMNBoundaryEventShape >> updateRenderFromModel [
+
+	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
+	self updateIcon.
+	self createBorder.
+	super updateRenderFromModel.
+
+	roassalShape signalUpdate
 ]
 
 { #category : #connecting }

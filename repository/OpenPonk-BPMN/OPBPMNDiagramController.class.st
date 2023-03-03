@@ -106,6 +106,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 			icon: OPBPMNIcon current sequenceFlow;
 		newConnectionCreationTool: 'Message Flow'
 			factory: [ OPBPMNMessageFlowController new ]
+			icon: OPBPMNIcon current messageFlow;
+		newConnectionCreationTool: 'Data Flow'
+			factory: [ OPBPMNDataFlowController new ]
 			icon: OPBPMNIcon current messageFlow
 ]
 

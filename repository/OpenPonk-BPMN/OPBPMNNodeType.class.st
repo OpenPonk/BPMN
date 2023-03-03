@@ -25,6 +25,12 @@ OPBPMNNodeType class >> Compensation [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> CompensationThrow [
+
+	^ #CompensationThrow
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Complex [
 	^ #Complex
 ]
@@ -67,6 +73,12 @@ OPBPMNNodeType class >> Escalation [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> EscalationThrow [
+
+	^ #EscalationThrow
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Eventbased [
 	^ #Eventbased
 ]
@@ -87,6 +99,11 @@ OPBPMNNodeType class >> Link [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> LinkThrow [
+	^ #LinkThrow
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Manual [
 	^ #Manual
 ]
@@ -95,6 +112,12 @@ OPBPMNNodeType class >> Manual [
 OPBPMNNodeType class >> Multiple [
 
 	^ #Multiple
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MultipleThrow [
+
+	^ #MultipleThrow
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,6 +156,18 @@ OPBPMNNodeType class >> Service [
 OPBPMNNodeType class >> Signal [
 
 	^ #Signal
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> SignalThrow [
+
+	^ #SignalThrow
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> Terminate [
+
+	^ #Terminate
 ]
 
 { #category : #'as yet unclassified' }

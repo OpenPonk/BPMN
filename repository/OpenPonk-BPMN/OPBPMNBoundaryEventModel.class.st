@@ -2,7 +2,8 @@ Class {
 	#name : #OPBPMNBoundaryEventModel,
 	#superclass : #OPBPMNNodeModel,
 	#instVars : [
-		'subscribeDiagram'
+		'subscribeDiagram',
+		'isNonInterrupting'
 	],
 	#category : #'OpenPonk-BPMN-Models'
 }
@@ -24,6 +25,22 @@ OPBPMNBoundaryEventModel >> changed [
 OPBPMNBoundaryEventModel >> defaultType [
 
 	^ OPBPMNNodeType Error
+]
+
+{ #category : #accessing }
+OPBPMNBoundaryEventModel >> initialize [ 
+	super initialize.
+	isNonInterrupting := false.
+]
+
+{ #category : #accessing }
+OPBPMNBoundaryEventModel >> isNonInterrupting [
+	^ isNonInterrupting 
+]
+
+{ #category : #accessing }
+OPBPMNBoundaryEventModel >> isNonInterrupting: aValue [
+	isNonInterrupting := aValue. 
 ]
 
 { #category : #accessing }

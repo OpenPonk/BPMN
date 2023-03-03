@@ -40,11 +40,15 @@ OPBPMNSubProcessController >> canBeSourceFor: aController [
 { #category : #forms }
 OPBPMNSubProcessController >> canBeTargetFor: aController [
 
-	(aController isKindOf: OPBPMNMessageFlowController)
-		ifTrue: [ ^ aController source model owner ~= self model ]
-		ifFalse: [ 
-			^ (aController isKindOf: OPBPMNElementController)
+	^ (aController isKindOf: OPBPMNMessageFlowController)
+		  ifTrue: [ ^ aController source model owner ~= self model owner ]
+		  ifFalse: [
+		  		(aController isKindOf: OPBPMNDataFlowController)
+		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
+		 		ifFalse: [ ^ (aController isKindOf: OPBPMNElementController)
 			  | (aController isKindOf: OPBPMNEdgeController) ]
+			 ]
+	
 ]
 
 { #category : #forms }

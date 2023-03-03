@@ -1,29 +1,17 @@
 Class {
-	#name : #OPBPMNFlowShape,
+	#name : #OPBPMNDataFlowShape,
 	#superclass : #OPEdge,
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
 
-{ #category : #'as yet unclassified' }
-OPBPMNFlowShape >> headMarker [
-
-	^ (RSShapeFactory polygonWithPoints: (Array
-				    with: 5 @ 10
-				    with: 0 @ 5
-				    with: -5 @ 10
-				    with: 0 @ 0))
-		  color: Color black;
-		  yourself
-]
-
-{ #category : #'as yet unclassified' }
-OPBPMNFlowShape >> renderBasicShape [
+{ #category : #rendering }
+OPBPMNDataFlowShape >> renderBasicShape [
 
 	^ (self source = self target
 		   ifTrue: [ OPRSBezier ]
 		   ifFalse: [ OPRSPolyline ]) new
-		  markerEnd: self headMarker;
 		  withBorderAttachPoint;
+		  dashed;
 		  controlPointsController: OPRSDraggableCPController new;
 		  addInteraction: OPRSDraggableControlPoints;
 		  color: Color black;
