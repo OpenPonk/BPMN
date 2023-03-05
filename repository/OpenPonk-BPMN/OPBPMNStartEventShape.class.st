@@ -52,7 +52,7 @@ OPBPMNStartEventShape >> typeIconFor: aType [
 	aType = OPBPMNNodeType Error
 		ifTrue: [ ^ OPBPMNIcon current eventError ].
 	aType = OPBPMNNodeType Compensation
-		ifTrue: [ ^ OPBPMNIcon current eventCompensation ].
+		ifTrue: [ ^ OPBPMNIcon current eventCatchCompensation ].
 	aType = OPBPMNNodeType Signal
 		ifTrue: [ ^ OPBPMNIcon current eventSignal ].
 	aType = OPBPMNNodeType Multiple
