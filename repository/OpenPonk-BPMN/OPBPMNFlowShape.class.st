@@ -1,8 +1,17 @@
 Class {
 	#name : #OPBPMNFlowShape,
 	#superclass : #OPEdge,
+	#instVars : [
+		'shape'
+	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #'as yet unclassified' }
+OPBPMNFlowShape >> borderColor: aColor [
+
+	shape color: aColor.
+]
 
 { #category : #'as yet unclassified' }
 OPBPMNFlowShape >> headMarker [
@@ -18,8 +27,7 @@ OPBPMNFlowShape >> headMarker [
 
 { #category : #'as yet unclassified' }
 OPBPMNFlowShape >> renderBasicShape [
-
-	^ (self source = self target
+	shape := (self source = self target
 		   ifTrue: [ OPRSBezier ]
 		   ifFalse: [ OPRSPolyline ]) new
 		  markerEnd: self headMarker;
@@ -29,5 +37,6 @@ OPBPMNFlowShape >> renderBasicShape [
 		  color: Color black;
 		  from: self source roassalShape;
 		  to: self target roassalShape;
-		  yourself
+		  yourself.
+	^ shape
 ]

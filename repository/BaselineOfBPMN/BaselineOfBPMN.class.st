@@ -27,6 +27,9 @@ BaselineOfBPMN >> baseline: spec [
 				package: 'OpenPonk-BPMN-XML'
 				with: [ spec requires: #('OpenPonk-BPMN' 'XMLWriter') ].
 			spec
-				group: 'plugin' with: #('OpenPonk-BPMN' 'OpenPonk-BPMN-XML');
+				package: 'OpenPonk-BPMN-Validation'
+				with: [ spec requires: #('OpenPonk-BPMN') ].
+			spec
+				group: 'plugin' with: #('OpenPonk-BPMN' 'OpenPonk-BPMN-XML' 'OpenPonk-BPMN-Validation');
 				group: 'default' with: #('OpenPonk' 'plugin') ]
 ]

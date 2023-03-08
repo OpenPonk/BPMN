@@ -1,8 +1,17 @@
 Class {
 	#name : #OPBPMNMessageShape,
 	#superclass : #OPEdge,
+	#instVars : [
+		'shape'
+	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #hooks }
+OPBPMNMessageShape >> borderColor: aColor [
+
+	shape color: aColor.
+]
 
 { #category : #hooks }
 OPBPMNMessageShape >> headMarker [
@@ -18,8 +27,7 @@ OPBPMNMessageShape >> headMarker [
 
 { #category : #hooks }
 OPBPMNMessageShape >> renderBasicShape [
-
-	^ OPRSPolyline new
+	shape := OPRSPolyline new
 		  markerEnd: self headMarker;
 		  markerStart: self tailMarker;
 		  dashed;
@@ -29,7 +37,8 @@ OPBPMNMessageShape >> renderBasicShape [
 		  color: Color black;
 		  from: self source roassalShape;
 		  to: self target roassalShape;
-		  yourself
+		  yourself.
+		^  shape.
 ]
 
 { #category : #hooks }

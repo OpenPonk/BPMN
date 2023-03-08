@@ -2,7 +2,8 @@ Class {
 	#name : #OPBPMNNodeShape,
 	#superclass : #OPShape,
 	#instVars : [
-		'icon'
+		'icon',
+		'borderColor'
 	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
@@ -13,6 +14,18 @@ OPBPMNNodeShape class >> stonAllInstVarNames [
 	"Override to encode my instances using a custom set of instance variables or to define their order."
 
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
+]
+
+{ #category : #hooks }
+OPBPMNNodeShape >> borderColor [
+
+	^ borderColor
+]
+
+{ #category : #hooks }
+OPBPMNNodeShape >> borderColor: aColor [
+
+	borderColor := aColor
 ]
 
 { #category : #hooks }
@@ -31,6 +44,12 @@ OPBPMNNodeShape >> color: aColor [
 OPBPMNNodeShape >> createRoassalShape [
 	^ self subclassResponsibility 
 	
+]
+
+{ #category : #hooks }
+OPBPMNNodeShape >> initialize [ 
+	super initialize.
+	borderColor := Color black
 ]
 
 { #category : #hooks }
@@ -93,6 +112,7 @@ OPBPMNNodeShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
+	roassalShape borderColor: self borderColor.
 	
 	super updateRenderFromSelf
 ]

@@ -1,8 +1,24 @@
 Class {
 	#name : #OPBPMNDataFlowShape,
 	#superclass : #OPEdge,
+	#instVars : [
+		'shape',
+		'borderColor'
+	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #rendering }
+OPBPMNDataFlowShape >> borderColor [
+
+	^ borderColor
+]
+
+{ #category : #rendering }
+OPBPMNDataFlowShape >> borderColor: aColor [
+
+	borderColor := aColor
+]
 
 { #category : #rendering }
 OPBPMNDataFlowShape >> renderBasicShape [
@@ -18,4 +34,14 @@ OPBPMNDataFlowShape >> renderBasicShape [
 		  from: self source roassalShape;
 		  to: self target roassalShape;
 		  yourself
+]
+
+{ #category : #rendering }
+OPBPMNDataFlowShape >> updateRenderFromSelf [
+
+	self isRendered ifFalse: [ ^ self ].
+	roassalShape color: self color.
+	roassalShape borderColor: self borderColor.
+	
+	super updateRenderFromSelf
 ]

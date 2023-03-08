@@ -5,7 +5,8 @@ Class {
 		'label',
 		'laneLines',
 		'b1',
-		'b2'
+		'b2',
+		'borderColor'
 	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
@@ -30,6 +31,18 @@ OPBPMNPoolShape >> addLanes: aNumber [
 	self canvas add: e2.
 	laneLines add: e2.
 	]
+]
+
+{ #category : #accessing }
+OPBPMNPoolShape >> borderColor [
+
+	^ borderColor
+]
+
+{ #category : #accessing }
+OPBPMNPoolShape >> borderColor: aColor [
+
+	borderColor := aColor
 ]
 
 { #category : #accessing }
