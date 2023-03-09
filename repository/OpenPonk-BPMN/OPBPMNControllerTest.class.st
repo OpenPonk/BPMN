@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNControllerTest,
-	#superclass : #OPControllerTest,
+	#superclass : #OPElementControllerTest,
 	#category : #'OpenPonk-BPMN-Tests'
 }
 
