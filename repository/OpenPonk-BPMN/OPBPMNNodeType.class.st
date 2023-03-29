@@ -109,6 +109,36 @@ OPBPMNNodeType class >> Manual [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MarkerAdhoc [
+	^ #MarkerAdhoc
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MarkerCompensation [
+	^ #MarkerCompensation
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MarkerLoop [
+	^ #MarkerLoop
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MarkerParallel [
+	^ #MarkerParallel
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MarkerSequential [
+	^ #MarkerSequential
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNNodeType class >> MarkerSubProcess [	
+	^ #MarkerSubProcess
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNNodeType class >> Multiple [
 
 	^ #Multiple

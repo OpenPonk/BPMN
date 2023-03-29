@@ -26,6 +26,7 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNPoolModel -> 'Pool').
 	(OPBPMNLaneModel -> 'Lane').
 	(OPBPMNSubProcessModel -> 'Expanded SubProcess').
+	(OPBPMNCollapsedSubProcessModel -> 'Collapsed SubProcess').
 	(OPBPMNBoundaryEventModel -> 'Boundary Event').
 	(OPBPMNActivityModel -> 'Activity').
 	(OPBPMNStartEventModel -> 'Start Event').
@@ -58,6 +59,7 @@ OPBPMNNavigatorAdapter >> iconMapping [
 		(OPBPMNPoolModel -> OPBPMNIcon current pool).
 		(OPBPMNLaneModel -> OPBPMNIcon current lane).
 		(OPBPMNSubProcessModel -> OPBPMNIcon current expandedSubprocess).
+		(OPBPMNCollapsedSubProcessModel -> OPBPMNIcon current subProcessCollapsed).
 		(OPBPMNBoundaryEventModel -> OPBPMNIcon current intermediateEvent).
 		(OPBPMNDataObjectModel -> OPBPMNIcon current dataObject16).
 		(OPBPMNDataFlowModel -> OPBPMNIcon current messageFlow ).

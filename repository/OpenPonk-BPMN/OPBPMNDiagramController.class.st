@@ -51,6 +51,7 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
 		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
 		register: OPBPMNSubProcessController forModel: OPBPMNSubProcessModel;
+		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
 		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
@@ -95,6 +96,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Expanded SubProcess'
 			factory: [ OPBPMNSubProcessController new ]
 			icon: OPBPMNIcon current expandedSubprocess;
+		newCreationTool: 'Collapsed SubProcess'
+			factory: [ OPBPMNCollapsedSubProcessController new ]
+			icon: OPBPMNIcon current subProcessCollapsed;
 		newCreationTool: 'Data Object'
 			factory: [ OPBPMNDataObjectController new ]
 			icon: OPBPMNIcon current dataObject16;
