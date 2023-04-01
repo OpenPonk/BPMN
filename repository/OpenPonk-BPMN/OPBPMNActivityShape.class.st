@@ -1,6 +1,9 @@
 Class {
 	#name : #OPBPMNActivityShape,
 	#superclass : #OPBPMNNodeShape,
+	#instVars : [
+		'border'
+	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
 
@@ -13,14 +16,33 @@ OPBPMNActivityShape class >> stonAllInstVarNames [
 ]
 
 { #category : #rendering }
+OPBPMNActivityShape >> createBorder [
+
+	self modelElement
+		ifNil: [ 
+			border := RSBorder new
+							width: 1;
+				          color: Color black ]
+		ifNotNil: [ 
+			self modelElement isCallActivity 
+				ifTrue: [ border width: 5 ]
+				ifFalse: [ border width: 1 ] ]
+]
+
+{ #category : #rendering }
 OPBPMNActivityShape >> createRoassalShape [
 	^ RSBox new
 		extent: 85@55;
-		border: (RSBorder new
-		color: (Color black);
-		width: 1);
+		border: border;
 		cornerRadius: 10;
 		yourself
+	
+]
+
+{ #category : #rendering }
+OPBPMNActivityShape >> initialize [
+	super initialize.
+	self createBorder.
 	
 ]
 
@@ -64,4 +86,15 @@ OPBPMNActivityShape >> typeIconFor: aType [
 		ifTrue: [ ^ OPBPMNIcon current activityReceive ].
 			aType = OPBPMNNodeType None
 		ifTrue: [ ^ OPBPMNIcon current activityNone ]
+]
+
+{ #category : #rendering }
+OPBPMNActivityShape >> updateRenderFromModel [
+
+	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
+	self updateIcon.
+	self createBorder.
+	super updateRenderFromModel.
+
+	roassalShape signalUpdate
 ]

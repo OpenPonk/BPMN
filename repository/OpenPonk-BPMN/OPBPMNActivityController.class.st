@@ -35,6 +35,11 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
 			self diagramElement modelChanged ].
+	(aForm addCheckbox: 'Is Call Activity?')
+		state: self model isCallActivity;
+		whenChangedDo: [ :val | 
+			self model isCallActivity: val.
+			self diagramElement modelChanged ].
 	self model type = OPBPMNNodeType Service
 	| (self model type = OPBPMNNodeType Send)
 		ifTrue: [ 

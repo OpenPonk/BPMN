@@ -14,7 +14,7 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Marker')
-		items: #( #None #MarkerParallel #MarkerSequential );
+		items: #( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation #MarkerAdhoc);
 		displayIcon: [ :type | self typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
@@ -75,7 +75,13 @@ OPBPMNCollapsedSubProcessController >> typeIconFor: aType [
 	aType = OPBPMNNodeType MarkerParallel 
 		ifTrue: [ ^ OPBPMNIcon current markerParallel ].
 	aType = OPBPMNNodeType MarkerSequential 
-		ifTrue: [ ^ OPBPMNIcon current markerSequential ]
+		ifTrue: [ ^ OPBPMNIcon current markerSequential ].
+	aType = OPBPMNNodeType MarkerLoop
+		ifTrue: [ ^ OPBPMNIcon current markerLoop ].
+	aType = OPBPMNNodeType MarkerCompensation 
+		ifTrue: [ ^ OPBPMNIcon current markerCompensation ].
+	aType = OPBPMNNodeType MarkerAdhoc 
+		ifTrue: [ ^ OPBPMNIcon current markerAdhoc ]
 ]
 
 { #category : #testing }

@@ -1,12 +1,31 @@
 Class {
 	#name : #OPBPMNActivityModel,
 	#superclass : #OPBPMNNodeModel,
+	#instVars : [
+		'isCallActivity'
+	],
 	#category : #'OpenPonk-BPMN-Models'
 }
 
 { #category : #printing }
 OPBPMNActivityModel >> defaultType [
-	^ OPBPMNNodeType Manual
+	^ OPBPMNNodeType None
+]
+
+{ #category : #printing }
+OPBPMNActivityModel >> initialize [ 
+	super initialize.
+	isCallActivity := false.
+]
+
+{ #category : #printing }
+OPBPMNActivityModel >> isCallActivity [
+	^ isCallActivity
+]
+
+{ #category : #printing }
+OPBPMNActivityModel >> isCallActivity: aActivity [
+	isCallActivity := aActivity
 ]
 
 { #category : #printing }
