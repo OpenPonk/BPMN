@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNCollapsedSubProcessModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNFlowNodeModel,
 	#instVars : [
 		'isCallActivity'
 	],

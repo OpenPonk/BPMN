@@ -30,6 +30,7 @@ OPBPMNFlowShape >> renderBasicShape [
 	shape := (self source = self target
 		   ifTrue: [ OPRSBezier ]
 		   ifFalse: [ OPRSPolyline ]) new
+		  markerStart: self tailMarker;
 		  markerEnd: self headMarker;
 		  withBorderAttachPoint;
 		  controlPointsController: OPRSDraggableCPController new;
@@ -39,4 +40,36 @@ OPBPMNFlowShape >> renderBasicShape [
 		  to: self target roassalShape;
 		  yourself.
 	^ shape
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNFlowShape >> tailMarker [
+
+	self modelElement ifNil: [ 
+		^ (RSShapeFactory polygonWithPoints: (Array with: 0 @ 0))
+			  color: Color black;
+			  yourself ].
+	self modelElement type = 'Normal' ifTrue: [ 
+		^ (RSShapeFactory polygonWithPoints: (Array with: 0 @ 0))
+			  color: Color black;
+			  yourself ].
+	self modelElement type = 'Conditional' ifTrue: [ 
+		^ (RSShapeFactory polygonWithPoints: (Array
+					    with: 0 @ 20
+					    with: 6 @ 10
+					    with: 0 @ 0
+					    with: -6 @ 10))
+			  color: Color black;
+			  yourself ].
+	self modelElement type = 'Default' ifTrue: [ 
+		^ (RSShapeFactory polygonWithPoints:
+				   (Array with: 6 @ 12 with: 6 @ 10 with: -6 @ 20 with: -6 @ 22 ))
+			  color: Color black;
+			  yourself ]
+]
+
+{ #category : #'as yet unclassified' }
+OPBPMNFlowShape >> updateRenderFromModel [
+	shape markerStart: self tailMarker.
+	super updateRenderFromModel 
 ]

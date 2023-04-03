@@ -72,11 +72,24 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	self roassalShape
 		when: RSShapeRemovedEvent
 		do: [ innerCircle remove ].
-
+		"TODO for what are good bounds?????"
+	self bounds: nil.
 	"roassalShape @ OPRSSelectionDraggable."
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
 	roassalShape @ selectable
+]
+
+{ #category : #connecting }
+OPBPMNBoundaryEventShape >> testupdateRenderFromSelf [
+
+	self isRendered ifFalse: [ ^ self ].
+	roassalShape color: self color.
+	self modelElement subscribeDiagram ifNotNil: [ 
+		roassalShape translateTo:
+			self modelElement subscribeDiagram position ].
+
+	super updateRenderFromSelf
 ]
 
 { #category : #connecting }
@@ -115,16 +128,4 @@ OPBPMNBoundaryEventShape >> updateRenderFromModel [
 	super updateRenderFromModel.
 
 	roassalShape signalUpdate
-]
-
-{ #category : #connecting }
-OPBPMNBoundaryEventShape >> updateRenderFromSelf [
-
-	self isRendered ifFalse: [ ^ self ].
-	roassalShape color: self color.
-	self modelElement subscribeDiagram ifNotNil: [ 
-		roassalShape translateTo:
-			self modelElement subscribeDiagram position ].
-
-	super updateRenderFromSelf
 ]

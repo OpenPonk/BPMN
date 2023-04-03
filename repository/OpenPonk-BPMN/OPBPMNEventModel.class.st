@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNEventModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNFlowNodeModel,
 	#instVars : [
 		'timerType',
 		'timerValue'

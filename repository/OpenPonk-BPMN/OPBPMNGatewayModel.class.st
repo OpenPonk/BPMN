@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNGatewayModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNFlowNodeModel,
 	#category : #'OpenPonk-BPMN-Models'
 }
 

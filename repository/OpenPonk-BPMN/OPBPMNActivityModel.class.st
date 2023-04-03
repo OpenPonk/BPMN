@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNActivityModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNFlowNodeModel,
 	#instVars : [
 		'isCallActivity'
 	],

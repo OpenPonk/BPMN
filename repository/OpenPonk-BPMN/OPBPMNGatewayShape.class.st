@@ -17,6 +17,8 @@ OPBPMNGatewayShape >> createRoassalShape [
 OPBPMNGatewayShape >> renderShapeDetails [ 
 	super renderShapeDetails.
 	self color: (Color fromHexString: 'bce2fe').
+	"TODO for what are good bounds?????"
+	self bounds: nil.
 ]
 
 { #category : #connecting }

@@ -31,7 +31,8 @@ OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 
 { #category : #forms }
 OPBPMNBoundaryEventController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNMessageFlowController
+	^ (aController isKindOf: OPBPMNMessageFlowController) 
+	| (aController isKindOf: OPBPMNFlowController)
 ]
 
 { #category : #forms }

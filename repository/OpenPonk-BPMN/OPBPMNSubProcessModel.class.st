@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNSubProcessModel,
-	#superclass : #OPBPMNNodeModel,
+	#superclass : #OPBPMNFlowNodeModel,
 	#category : #'OpenPonk-BPMN-Models'
 }
 
