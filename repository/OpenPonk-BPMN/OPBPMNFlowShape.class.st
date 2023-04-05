@@ -14,6 +14,13 @@ OPBPMNFlowShape >> borderColor: aColor [
 ]
 
 { #category : #'as yet unclassified' }
+OPBPMNFlowShape >> createOwnedElementsWithoutController [
+
+	super createOwnedElementsWithoutController.
+	OPBPMNEdgeLabel in: self
+]
+
+{ #category : #'as yet unclassified' }
 OPBPMNFlowShape >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
@@ -70,6 +77,7 @@ OPBPMNFlowShape >> tailMarker [
 
 { #category : #'as yet unclassified' }
 OPBPMNFlowShape >> updateRenderFromModel [
+
 	shape markerStart: self tailMarker.
-	super updateRenderFromModel 
+	super updateRenderFromModel
 ]

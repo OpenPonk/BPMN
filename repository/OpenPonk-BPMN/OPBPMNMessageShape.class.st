@@ -14,6 +14,13 @@ OPBPMNMessageShape >> borderColor: aColor [
 ]
 
 { #category : #hooks }
+OPBPMNMessageShape >> createOwnedElementsWithoutController [
+
+	super createOwnedElementsWithoutController.
+	OPBPMNEdgeLabel in: self
+]
+
+{ #category : #hooks }
 OPBPMNMessageShape >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
