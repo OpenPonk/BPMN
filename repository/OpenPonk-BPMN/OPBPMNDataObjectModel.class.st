@@ -39,3 +39,15 @@ OPBPMNDataObjectModel >> removeAllNodes [
 OPBPMNDataObjectModel >> removeNode: aNode [
 	elements remove: aNode
 ]
+
+{ #category : #accessing }
+OPBPMNDataObjectModel >> typeIconFor: aType [
+	aType = OPBPMNNodeType DataObject
+		ifTrue: [ ^ OPBPMNIcon current dataObject ].
+	aType = OPBPMNNodeType DataInput
+		ifTrue: [ ^ OPBPMNIcon current dataInput ].
+	aType = OPBPMNNodeType DataOutput
+		ifTrue: [ ^ OPBPMNIcon current dataOutput ].
+	aType = OPBPMNNodeType DataStore
+		ifTrue: [ ^ OPBPMNIcon current dataStore ].
+]

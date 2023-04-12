@@ -10,7 +10,7 @@ OPBPMNEndEventController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
 		items: #( #Send #EscalationThrow #Error #Cancel #CompensationThrow #SignalThrow #MultipleThrow #Terminate #None );
-		displayIcon: [ :type | self typeIconFor: type ];
+		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
@@ -48,17 +48,6 @@ OPBPMNEndEventController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #connecting }
-OPBPMNEndEventController >> createRoassalShape [
-	^ RTRoundedBox new
-		size: 34;
-		borderRadius: 17;
-		color: Color transparent;
-		borderColor: Color black;
-		borderWidth: 5;
-		yourself
-]
-
 { #category : #construction }
 OPBPMNEndEventController >> diagramElementClass [
 
@@ -68,26 +57,4 @@ OPBPMNEndEventController >> diagramElementClass [
 { #category : #accessing }
 OPBPMNEndEventController >> modelClass [
 	^ OPBPMNEndEventModel
-]
-
-{ #category : #hooks }
-OPBPMNEndEventController >> typeIconFor: aType [
-	aType = OPBPMNNodeType Send
-		ifTrue: [ ^ OPBPMNIcon current activitySendSquare ].
-	aType = OPBPMNNodeType EscalationThrow
-		ifTrue: [ ^ OPBPMNIcon current eventEscalationThrow ].
-	aType = OPBPMNNodeType Error
-		ifTrue: [ ^ OPBPMNIcon current eventError ].
-	aType = OPBPMNNodeType Cancel
-		ifTrue: [ ^ OPBPMNIcon current eventCancel ].
-	aType = OPBPMNNodeType CompensationThrow
-		ifTrue: [ ^ OPBPMNIcon current eventCompensationThrow ].
-	aType = OPBPMNNodeType SignalThrow
-		ifTrue: [ ^ OPBPMNIcon current eventSignalThrow ].
-	aType = OPBPMNNodeType MultipleThrow
-		ifTrue: [ ^ OPBPMNIcon current eventMultipleThrow ].
-	aType = OPBPMNNodeType Terminate 
-		ifTrue: [ ^ OPBPMNIcon current eventTerminate ].
-	aType = OPBPMNNodeType None
-		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]

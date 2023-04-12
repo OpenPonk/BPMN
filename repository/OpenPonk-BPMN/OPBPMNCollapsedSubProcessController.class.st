@@ -11,11 +11,11 @@ Class {
 
 { #category : #testing }
 OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
-
+	| anEvent |
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Marker')
 		items: #( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation #MarkerAdhoc);
-		displayIcon: [ :type | self typeIconFor: type ];
+		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
@@ -26,6 +26,24 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 		whenChangedDo: [ :val | 
 			self model isCallActivity: val.
 			self diagramElement modelChanged ].
+		
+		(aForm addButton: 'Add Boundary Event') action: [ 
+		anEvent := OPBPMNBoundaryEventController new
+			           createModelIn: self model;
+			           showInDiagram: self diagramController;
+			           subscribeDiagram: self diagramElement;
+			           yourself.
+		"self diagramElement addBoundaryEvent: anEvent"
+		RSLocation new
+			stick: anEvent diagramElement roassalShape
+			on: self diagramElement roassalShape;
+			bottom;
+			right;
+			offset: -1 @ 22.
+		self diagramElement roassalShape
+			when: RSShapeRemovedEvent
+			do: [ anEvent diagramElement roassalShape remove ] ].
+	self diagramElement modelChanged
 ]
 
 { #category : #testing }
@@ -66,22 +84,6 @@ OPBPMNCollapsedSubProcessController >> renderDiagramElement [
 
 	super renderDiagramElement.
 	model when: OPPlaceTokensChanged do: [ self diagramElement modelChanged ]
-]
-
-{ #category : #testing }
-OPBPMNCollapsedSubProcessController >> typeIconFor: aType [
-	aType = OPBPMNNodeType None 
-		ifTrue: [ ^ OPBPMNIcon current activityNone ].
-	aType = OPBPMNNodeType MarkerParallel 
-		ifTrue: [ ^ OPBPMNIcon current markerParallel ].
-	aType = OPBPMNNodeType MarkerSequential 
-		ifTrue: [ ^ OPBPMNIcon current markerSequential ].
-	aType = OPBPMNNodeType MarkerLoop
-		ifTrue: [ ^ OPBPMNIcon current markerLoop ].
-	aType = OPBPMNNodeType MarkerCompensation 
-		ifTrue: [ ^ OPBPMNIcon current markerCompensation ].
-	aType = OPBPMNNodeType MarkerAdhoc 
-		ifTrue: [ ^ OPBPMNIcon current markerAdhoc ]
 ]
 
 { #category : #testing }

@@ -43,3 +43,19 @@ OPBPMNActivityModel >> printType [
 	type = OPBPMNNodeType None
 		ifTrue: [ ^ 'task' ]
 ]
+
+{ #category : #printing }
+OPBPMNActivityModel >> typeIconFor: aType [
+	aType = OPBPMNNodeType Service
+		ifTrue: [ ^ OPBPMNIcon current activityService ].
+	aType = OPBPMNNodeType User
+		ifTrue: [ ^ OPBPMNIcon current activityUser ].
+	aType = OPBPMNNodeType Manual
+		ifTrue: [ ^ OPBPMNIcon current activityManual ].
+			aType = OPBPMNNodeType Send
+		ifTrue: [ ^ OPBPMNIcon current activitySend ].
+			aType = OPBPMNNodeType Receive
+		ifTrue: [ ^ OPBPMNIcon current activityReceive ].
+			aType = OPBPMNNodeType None
+		ifTrue: [ ^ OPBPMNIcon current activityNone ]
+]

@@ -68,21 +68,9 @@ OPBPMNDataObjectShape >> setupHighlight: aHighlightable [
 ]
 
 { #category : #update }
-OPBPMNDataObjectShape >> typeIconFor: aType [
-	aType = OPBPMNNodeType DataObject
-		ifTrue: [ ^ OPBPMNIcon current dataObject ].
-	aType = OPBPMNNodeType DataInput
-		ifTrue: [ ^ OPBPMNIcon current dataInput ].
-	aType = OPBPMNNodeType DataOutput
-		ifTrue: [ ^ OPBPMNIcon current dataOutput ].
-	aType = OPBPMNNodeType DataStore
-		ifTrue: [ ^ OPBPMNIcon current dataStore ].
-]
-
-{ #category : #update }
 OPBPMNDataObjectShape >> typeIconForModel [
 
-	^ self typeIconFor: self modelElement type
+	^ self modelElement typeIconFor: self modelElement type
 ]
 
 { #category : #update }

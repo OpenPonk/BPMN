@@ -13,24 +13,30 @@ Class {
 
 { #category : #adding }
 OPBPMNPoolShape >> addLanes: aNumber [
-| b4 b5 e2 w h|
+
+	| b4 b5 e2 w h lb|
 	self removeLaneLines.
 	w := roassalShape width.
 	h := roassalShape height.
-	2 to: aNumber do: [ :i |  
-	b4 := RSBox new size: 0.1.
-	b5 := RSBox new size: 0.1.
-	roassalShape add: b4.
-	roassalShape add: b5.
-	roassalShape adjustToChildren.
-	b4 position: b1 width/2 @ (((i-1)/ aNumber*2*(b1 height))- b1 height/2).
-	b5 position: (b1 width/2)-b1 width+(b2 width) @ (((i-1)/ aNumber*2*(b1 height))- b1 height/2).
-	"b5 position: (w/2)-w+(30) @ (((i-1)/ aNumber*2*(b1 height))- b1 height/2)."
+	2 to: aNumber do: [ :i | 
+		b4 := RSBox new size: 0.1.
+		b5 := RSBox new size: 0.1.
+		roassalShape add: b4.
+		roassalShape add: b5.
+		roassalShape adjustToChildren.
+		b4 position:
+			b1 width / 2 @ (i - 1 / aNumber * 2 * b1 height - b1 height / 2).
+		b5 position: b1 width / 2 - b1 width + b2 width
+			@ (i - 1 / aNumber * 2 * b1 height - b1 height / 2).
+		"b5 position: (w/2)-w+(30) @ (((i-1)/ aNumber*2*(b1 height))- b1 height/2)."
 
-	e2 := RSLine new from: b4; to: b5.
-	self canvas add: e2.
-	laneLines add: e2.
-	]
+		e2 := RSLine new
+			      from: b4;
+			      to: b5.
+			"lb := RSLabel new.
+			self canvas add: lb."
+		self canvas add: e2.
+		laneLines add: e2 ]
 ]
 
 { #category : #accessing }

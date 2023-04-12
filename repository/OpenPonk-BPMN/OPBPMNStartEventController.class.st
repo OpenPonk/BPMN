@@ -12,7 +12,7 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 		items:
 			#( #None #Receive #Timer #Escalation #Conditional #Error #Compensation
 			   #Signal #Multiple #ParallelMultiple );
-		displayIcon: [ :type | self typeIconFor: type ];
+		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
@@ -56,16 +56,6 @@ OPBPMNStartEventController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #connecting }
-OPBPMNStartEventController >> createRoassalShape [
-	^ RTRoundedBox new
-		size: 36;
-		borderRadius: 18;
-		color: Color transparent;
-		borderColor: Color black;
-		yourself
-]
-
 { #category : #hooks }
 OPBPMNStartEventController >> diagramElementClass [
 
@@ -75,28 +65,4 @@ OPBPMNStartEventController >> diagramElementClass [
 { #category : #connecting }
 OPBPMNStartEventController >> modelClass [
 	^ OPBPMNStartEventModel
-]
-
-{ #category : #connecting }
-OPBPMNStartEventController >> typeIconFor: aType [
-	aType = OPBPMNNodeType None
-		ifTrue: [ ^ OPBPMNIcon current activityNone ].
-	aType = OPBPMNNodeType Receive
-		ifTrue: [ ^ OPBPMNIcon current activityReceiveSquare ].
-	aType = OPBPMNNodeType Timer
-		ifTrue: [ ^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType Escalation
-		ifTrue: [ ^ OPBPMNIcon current eventEscalation ].
-	aType = OPBPMNNodeType Conditional
-		ifTrue: [ ^ OPBPMNIcon current eventCondition ].
-	aType = OPBPMNNodeType Error
-		ifTrue: [ ^ OPBPMNIcon current eventError ].
-	aType = OPBPMNNodeType Compensation
-		ifTrue: [ ^ OPBPMNIcon current eventCatchCompensation ].
-	aType = OPBPMNNodeType Signal
-		ifTrue: [ ^ OPBPMNIcon current eventSignal ].
-	aType = OPBPMNNodeType Multiple
-		ifTrue: [ ^ OPBPMNIcon current eventMultiple ].
-	aType = OPBPMNNodeType ParallelMultiple
-		ifTrue: [ ^ OPBPMNIcon current eventParallelMultiple ].
 ]

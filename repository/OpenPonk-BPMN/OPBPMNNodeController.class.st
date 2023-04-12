@@ -25,11 +25,6 @@ OPBPMNNodeController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ]
 ]
 
-{ #category : #connecting }
-OPBPMNNodeController >> createRoassalShape [
-	^ self subclassResponsibility
-]
-
 { #category : #private }
 OPBPMNNodeController >> internalSubscribeTo: aModel [
 	super internalSubscribeTo: aModel.
@@ -55,23 +50,6 @@ OPBPMNNodeController >> modelClass [
 OPBPMNNodeController >> removeModel [
 	self model announcer unsubscribe: self.
 	self diagramController model remove: self model
-]
-
-{ #category : #construction }
-OPBPMNNodeController >> renderFigureIn: aView [
-	self diagramController willRender: self.
-	figure := self createRoassalShape elementOn: self model.
-	figure
-		addInteraction:
-			(OPRTMultilineLabeled new
-				view: aView;
-				below;
-				color: Color black;
-				yourself).
-	figure @ RTDraggable.
-	figure @ OPRTFocusable.
-	figure renderIn: aView.
-	^ self diagramController rendered: self
 ]
 
 { #category : #connecting }

@@ -5,18 +5,6 @@ Class {
 }
 
 { #category : #userinterface }
-OPBPMNDiagramController >> DELupdateView [
-
-	self controllers do: [ :each | each refreshFigure ].
-	self view edges do: [ :each | 
-		(each isKindOf: OPBPMNPoolController)
-			ifTrue: [ each pushBack ]
-			ifFalse: [ each pushFront ].
-		each update ].
-	self view signalUpdate
-]
-
-{ #category : #userinterface }
 OPBPMNDiagramController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -49,7 +37,6 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNIntermediateEventController forModel: OPBPMNIntermediateEventModel;
 		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
 		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
-		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
 		register: OPBPMNSubProcessController forModel: OPBPMNSubProcessModel;
 		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;

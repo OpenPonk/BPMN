@@ -20,19 +20,3 @@ OPBPMNGatewayShape >> renderShapeDetails [
 	"TODO for what are good bounds?????"
 	self bounds: nil.
 ]
-
-{ #category : #connecting }
-OPBPMNGatewayShape >> typeIconFor: aType [
-	aType = OPBPMNNodeType Parallel
-		ifTrue: [ ^ OPBPMNIcon current gatewayParallel ].
-	aType = OPBPMNNodeType Inclusive
-		ifTrue: [ ^ OPBPMNIcon current gatewayInclusive ].
-	aType = OPBPMNNodeType Exclusive
-		ifTrue: [ ^ OPBPMNIcon current gatewayExclusive ].
-	aType = OPBPMNNodeType Complex
-		ifTrue: [ ^ OPBPMNIcon current gatewayComplex ].
-	aType = OPBPMNNodeType Eventbased
-		ifTrue: [ ^ OPBPMNIcon current gatewayEvent ].
-	aType = OPBPMNNodeType None
-		ifTrue: [ ^ OPBPMNIcon current activityNone ]
-]

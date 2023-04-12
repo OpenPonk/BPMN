@@ -89,7 +89,7 @@ OPBPMNNodeShape >> setupHighlight: aHighlightable [
 { #category : #hooks }
 OPBPMNNodeShape >> typeIconForModel [
 
-	^ self typeIconFor: self modelElement type
+	^ self modelElement typeIconFor: self modelElement type
 ]
 
 { #category : #updating }

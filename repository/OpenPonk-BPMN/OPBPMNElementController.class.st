@@ -7,11 +7,6 @@ Class {
 	#category : #'OpenPonk-BPMN-Controllers'
 }
 
-{ #category : #connecting }
-OPBPMNElementController >> createRoassalShape [
-	^ self subclassResponsibility
-]
-
 { #category : #private }
 OPBPMNElementController >> dependentElements [
 	^ model flows

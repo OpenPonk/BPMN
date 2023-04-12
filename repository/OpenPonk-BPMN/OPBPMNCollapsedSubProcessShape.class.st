@@ -56,7 +56,7 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 	subprocessIcon := RSBitmap new
-		        form: (self typeIconFor: OPBPMNNodeType MarkerSubProcess);
+		        form: self typeBasicIcon;
 		        yourself.
 	icon := RSBitmap new
 		        form: self typeIconForModel;
@@ -80,21 +80,8 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 ]
 
 { #category : #connecting }
-OPBPMNCollapsedSubProcessShape >> typeIconFor: aType [
-	aType = OPBPMNNodeType None  
-		ifTrue: [ ^ OPBPMNIcon current activityNone ].
-	aType = OPBPMNNodeType MarkerSubProcess  
-		ifTrue: [ ^ OPBPMNIcon current markerSubProcess  ].
-	aType = OPBPMNNodeType MarkerParallel 
-		ifTrue: [ ^ OPBPMNIcon current markerParallel ].
-	aType = OPBPMNNodeType MarkerSequential 
-		ifTrue: [ ^ OPBPMNIcon current markerSequential ].
-	aType = OPBPMNNodeType MarkerLoop
-		ifTrue: [ ^ OPBPMNIcon current markerLoop ].
-	aType = OPBPMNNodeType MarkerCompensation 
-		ifTrue: [ ^ OPBPMNIcon current markerCompensation ].
-	aType = OPBPMNNodeType MarkerAdhoc 
-		ifTrue: [ ^ OPBPMNIcon current markerAdhoc ]
+OPBPMNCollapsedSubProcessShape >> typeBasicIcon [
+		^ OPBPMNIcon current markerSubProcess 
 ]
 
 { #category : #connecting }

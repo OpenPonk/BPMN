@@ -65,5 +65,5 @@ OPBPMNDataObjectController >> typeIconFor: aType [
 
 { #category : #testing }
 OPBPMNDataObjectController >> typeIconForModel [
-	^ self typeIconFor: self model type
+	^ self model typeIconFor: self model type
 ]

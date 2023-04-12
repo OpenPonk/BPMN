@@ -93,33 +93,6 @@ OPBPMNBoundaryEventShape >> testupdateRenderFromSelf [
 ]
 
 { #category : #connecting }
-OPBPMNBoundaryEventShape >> typeIconFor: aType [
-
-	aType = OPBPMNNodeType Receive ifTrue: [ 
-		^ OPBPMNIcon current activityReceiveSquare ].
-	aType = OPBPMNNodeType Timer ifTrue: [ 
-		^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType Escalation ifTrue: [ 
-		^ OPBPMNIcon current eventEscalation ].
-	aType = OPBPMNNodeType Conditional ifTrue: [ 
-		^ OPBPMNIcon current eventCondition ].
-	aType = OPBPMNNodeType Error ifTrue: [ 
-		^ OPBPMNIcon current eventError ].
-	aType = OPBPMNNodeType Cancel ifTrue: [ 
-		^ OPBPMNIcon current eventCancel ].
-	aType = OPBPMNNodeType Compensation ifTrue: [ 
-		^ OPBPMNIcon current eventCompensation ].
-	aType = OPBPMNNodeType Signal ifTrue: [ 
-		^ OPBPMNIcon current eventSignal ].
-	aType = OPBPMNNodeType Multiple ifTrue: [ 
-		^ OPBPMNIcon current eventMultiple ].
-	aType = OPBPMNNodeType ParallelMultiple ifTrue: [ 
-		^ OPBPMNIcon current eventParallelMultiple ].
-	aType = OPBPMNNodeType CatchCompensation ifTrue: [ 
-		^ OPBPMNIcon current eventCatchCompensation ]
-]
-
-{ #category : #connecting }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
