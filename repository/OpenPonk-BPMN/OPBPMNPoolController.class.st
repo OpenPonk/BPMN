@@ -18,12 +18,22 @@ OPBPMNPoolController >> boxHeight [
 
 { #category : #connecting }
 OPBPMNPoolController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addTextInput: 'Lanes')
 		text: self model lanes asString;
 		whenTextChangedDo: [ :newValue | 
 			self model lanes: (newValue asString asInteger ifNil: [ 1 ]).
-			self diagramElement modelChanged ]
+			self model laneNamesFitToLanesCount.
+			self diagramElement modelChanged ].
+
+	self model lanes > 1 ifTrue: [ 
+		1 to: self model lanes do: [ :i | 
+			(aForm addTextInput: 'Lane ')
+				text: (self model laneNames at: i) asString;
+				whenTextChangedDo: [ :newValue | 
+					self model laneNamesAt: i put: newValue.
+					self diagramElement modelChanged ] ] ]
 ]
 
 { #category : #connecting }

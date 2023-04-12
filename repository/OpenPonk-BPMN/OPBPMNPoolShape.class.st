@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'label',
 		'laneLines',
+		'laneLabels',
 		'b1',
 		'b2',
 		'borderColor'
@@ -14,7 +15,7 @@ Class {
 { #category : #adding }
 OPBPMNPoolShape >> addLanes: aNumber [
 
-	| b4 b5 e2 w h lb|
+	| b4 b5 e2 w h lb |
 	self removeLaneLines.
 	w := roassalShape width.
 	h := roassalShape height.
@@ -33,10 +34,17 @@ OPBPMNPoolShape >> addLanes: aNumber [
 		e2 := RSLine new
 			      from: b4;
 			      to: b5.
-			"lb := RSLabel new.
-			self canvas add: lb."
+
 		self canvas add: e2.
-		laneLines add: e2 ]
+		laneLines add: e2 ].
+
+	aNumber > 1 ifTrue: [ 
+		1 to: aNumber do: [ :i | 
+			lb := RSLabel new.
+			roassalShape add: lb.
+			laneLabels add: lb.
+			lb position:
+				0 @ (i - 1 / aNumber * 2 * b1 height - b1 height / 2 + 8) ] ]
 ]
 
 { #category : #accessing }
@@ -81,6 +89,7 @@ b2 position: -260@0.
 OPBPMNPoolShape >> initialize [
 	super initialize.
 	laneLines := OrderedCollection new.
+	laneLabels := OrderedCollection new.
 ]
 
 { #category : #adding }
@@ -93,7 +102,10 @@ OPBPMNPoolShape >> remove [
 OPBPMNPoolShape >> removeLaneLines [
 
 	laneLines do: [ :each | self canvas removeShape: each. ].
+	"laneLabels do: [ :each | self canvas removeShape: each. ]."
+	laneLabels do: [ :each | self roassalShape removeShape: each. ].
 	laneLines removeAll.
+	laneLabels removeAll.
 ]
 
 { #category : #accessing }
@@ -109,12 +121,14 @@ OPBPMNPoolShape >> renderShapeDetails [
 	label := RSLabel new
 		         rotateByDegrees: -90;
 		         color: Color black.
-	self canvas add: label.
+	self roassalShape add: label.
+	label position: b1 width / 2 - b1 width + 11 @ 0.
+	"self canvas add: label.
 	RSLocation new
 		stick: label on: self roassalShape;
 		left;
 		offset: 4 @ 0.
-	self roassalShape when: RSShapeRemovedEvent do: [ label remove ].
+	self roassalShape when: RSShapeRemovedEvent do: [ label remove ]."
 
 	"lane := 
 		RSBox new
@@ -143,7 +157,7 @@ OPBPMNPoolShape >> setupHighlight: aHighlightable [
 
 { #category : #accessing }
 OPBPMNPoolShape >> updateRenderFromModel [
-
+	| aCnt |
 	self modelElement name ifNotNil: [ 
 		label text: self modelElement name ].
 	"roassalShape width: self modelElement width.
@@ -151,6 +165,8 @@ OPBPMNPoolShape >> updateRenderFromModel [
 	lane width: self modelElement width.
 	lane height: self modelElement height/2."
 	self addLanes: self modelElement lanes.
+	aCnt := 1.
+	self modelElement laneNames do: [ :each | (laneLabels at: aCnt) text: each. aCnt := aCnt + 1. ].
 	super updateRenderFromModel.
 	roassalShape signalUpdate
 ]
@@ -160,9 +176,6 @@ OPBPMNPoolShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
-	
-	"RSLocation new
-		stick: lane on: self roassalShape;
-		offset: 0 @ self modelElement height/4."
+
 	super updateRenderFromSelf
 ]

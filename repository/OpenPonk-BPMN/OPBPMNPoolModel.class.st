@@ -3,8 +3,7 @@ Class {
 	#superclass : #OPBPMNNodeModel,
 	#instVars : [
 		'lanes',
-		'width',
-		'height'
+		'laneNames'
 	],
 	#category : #'OpenPonk-BPMN-Models'
 }
@@ -21,21 +20,39 @@ OPBPMNPoolModel >> changed [
 ]
 
 { #category : #accessing }
-OPBPMNPoolModel >> height [
-	^ height
-]
-
-{ #category : #accessing }
-OPBPMNPoolModel >> height: aHeight [
-	height := aHeight 
-]
-
-{ #category : #accessing }
 OPBPMNPoolModel >> initialize [ 
 	super initialize.
-	height := 300.
-	width := 500.
 	lanes := 1.
+	laneNames := OrderedCollection new.
+]
+
+{ #category : #accessing }
+OPBPMNPoolModel >> laneNames [
+	^ laneNames
+]
+
+{ #category : #accessing }
+OPBPMNPoolModel >> laneNames: aCollection [
+	laneNames := aCollection  
+]
+
+{ #category : #accessing }
+OPBPMNPoolModel >> laneNamesAt: aIndex put: aText [
+	laneNames at: aIndex put: aText
+]
+
+{ #category : #accessing }
+OPBPMNPoolModel >> laneNamesFitToLanesCount [
+
+	| text prevSize |
+	text := ''.
+	lanes < 2
+		ifTrue: [ laneNames removeAll ]
+		ifFalse: [ 
+			prevSize := laneNames size.
+			prevSize < (lanes - 1)
+				ifTrue: [ prevSize to: (lanes - 1) do: [ :i | laneNames add: text ] ]
+				ifFalse: [ (lanes + 1) to: prevSize do: [ :i | laneNames removeLast ] ] ]
 ]
 
 { #category : #accessing }
@@ -71,14 +88,4 @@ OPBPMNPoolModel >> removeAllNodes [
 { #category : #accessing }
 OPBPMNPoolModel >> removeNode: aNode [
 	elements remove: aNode
-]
-
-{ #category : #accessing }
-OPBPMNPoolModel >> width [
-	^ width
-]
-
-{ #category : #accessing }
-OPBPMNPoolModel >> width: aWidth [
-	width := aWidth 
 ]
