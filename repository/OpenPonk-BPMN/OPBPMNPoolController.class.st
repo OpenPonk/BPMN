@@ -29,7 +29,7 @@ OPBPMNPoolController >> buildEditorForm: aForm [
 
 	self model lanes > 1 ifTrue: [ 
 		1 to: self model lanes do: [ :i | 
-			(aForm addTextInput: 'Lane ')
+			(aForm addTextInput: 'Lane ', i asString)
 				text: (self model laneNames at: i) asString;
 				whenTextChangedDo: [ :newValue | 
 					self model laneNamesAt: i put: newValue.
