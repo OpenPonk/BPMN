@@ -45,7 +45,7 @@ OPBPMNPoolModel >> laneNamesAt: aIndex put: aText [
 OPBPMNPoolModel >> laneNamesFitToLanesCount [
 
 	| text prevSize |
-	text := ''.
+	text := 'Lane'.
 	lanes < 2
 		ifTrue: [ laneNames removeAll ]
 		ifFalse: [ 

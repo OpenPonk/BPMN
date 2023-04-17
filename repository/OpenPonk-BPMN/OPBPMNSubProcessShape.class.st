@@ -17,6 +17,13 @@ OPBPMNSubProcessShape >> createRoassalShape [
 ]
 
 { #category : #connecting }
+OPBPMNSubProcessShape >> initialize [
+
+	super initialize.
+	innerRoassalShapesBlock := [ :allNodes | self modelElement nodes ]
+]
+
+{ #category : #connecting }
 OPBPMNSubProcessShape >> renderShapeDetails [
 
 	| label selectable |
@@ -25,11 +32,19 @@ OPBPMNSubProcessShape >> renderShapeDetails [
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 
-	roassalShape @ OPRSSelectionDraggable.
+	"roassalShape @ OPRSSelectionDraggable.
 	roassalShape @ RSTransformable.
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
-	roassalShape @ selectable
+	roassalShape @ selectable"
+	
+	selectable := OPRSSelectable new.
+	selectable highlightBorderColor: Color blue.
+	roassalShape @ selectable.
+	self roassalShape
+@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
+		@ OPRSResizable;
+		@ OPRSResizable
 ]
 
 { #category : #connecting }

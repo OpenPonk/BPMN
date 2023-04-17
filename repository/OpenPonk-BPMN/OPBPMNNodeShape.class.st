@@ -74,10 +74,15 @@ OPBPMNNodeShape >> renderShapeDetails [
 	RSLocation new stick: icon on: self roassalShape.
 	self roassalShape when: RSShapeRemovedEvent do: [ icon remove ].
 
-	roassalShape @ OPRSSelectionDraggable.
+	"roassalShape @ OPRSSelectionDraggable.
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
-	roassalShape @ selectable
+	roassalShape @ selectable"
+		selectable := OPRSSelectable new.
+	selectable highlightBorderColor: Color blue.
+	roassalShape @ selectable.
+	roassalShape @ OPRSSelectionDraggable
+
 ]
 
 { #category : #hooks }

@@ -117,7 +117,7 @@ OPBPMNPoolShape >> renderBasicShape [
 { #category : #accessing }
 OPBPMNPoolShape >> renderShapeDetails [
 
-	| selectable |
+	| selectable resizable |
 	label := RSLabel new
 		         rotateByDegrees: -90;
 		         color: Color black.
@@ -130,23 +130,21 @@ OPBPMNPoolShape >> renderShapeDetails [
 		offset: 4 @ 0.
 	self roassalShape when: RSShapeRemovedEvent do: [ label remove ]."
 
-	"lane := 
-		RSBox new
-		extent: 550@200;
-		border: (RSBorder new
-		color: (Color black);
-		width: 2);
-		yourself.
-	self canvas add: lane.
-	RSLocation new stick: lane on: self roassalShape.
-	self roassalShape when: RSShapeRemovedEvent do: [ lane remove ]."
-
-	roassalShape @ OPRSSelectionDraggable.
+	"roassalShape @ OPRSSelectionDraggable.
 	roassalShape @ RSTransformable.
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
 	roassalShape @ selectable.
-	self updateRenderFromModel.
+	self updateRenderFromModel."
+	
+selectable := OPRSSelectable new.
+	selectable highlightBorderColor: Color blue.
+	resizable := OPRSResizable onShape: b1. "TODO use something like this"
+	roassalShape @ selectable.
+	self roassalShape
+@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
+		@ RSTransformable.
+		self updateRenderFromModel.
 ]
 
 { #category : #accessing }
