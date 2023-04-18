@@ -9,6 +9,7 @@ Class {
 
 { #category : #printing }
 OPBPMNFlowModel >> initialize [ 
+	super initialize.
 	type := 'Normal'
 ]
 

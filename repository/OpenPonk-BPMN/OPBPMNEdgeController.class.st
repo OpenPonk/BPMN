@@ -9,11 +9,6 @@ OPBPMNEdgeController >> addLabels [
 	self constraintLabel: #name balance: 0.4 offset: 12
 ]
 
-{ #category : #hooks }
-OPBPMNEdgeController >> createLineFrom: fromElement to: toElement [
-	^ self subclassResponsibility 
-]
-
 { #category : #construction }
 OPBPMNEdgeController >> createModelIn: aParentModel [
 	self model: self modelClass new.

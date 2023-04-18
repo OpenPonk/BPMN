@@ -13,16 +13,19 @@ OPBPMNNodeControllerTest class >> isAbstract [
 ]
 
 { #category : #accessing }
+OPBPMNNodeControllerTest >> testAssignmentToParent [
+	controller createModelIn: relationshipController model.
+	self assert: (relationshipController model elements includes: controller model)
+]
+
+{ #category : #accessing }
 OPBPMNNodeControllerTest >> testClassSideModelClass [
 	self assert: self controllerClass modelClass equals: self modelClass
 ]
 
 { #category : #accessing }
-OPBPMNNodeControllerTest >> testCreateFigure [
-	controller createModelIn: diagramController model.
-	diagramController addController: controller.
-	controller renderFigureIn: diagramController view.
-	self assert: controller figure class equals: RTElement
+OPBPMNNodeControllerTest >> testCreateController [
+	self assert: controller class = self controllerClass
 ]
 
 { #category : #accessing }
@@ -34,16 +37,18 @@ OPBPMNNodeControllerTest >> testCreateModel [
 
 { #category : #accessing }
 OPBPMNNodeControllerTest >> testFigureRefresh [
+
 	| text |
 	controller createModelIn: diagramController model.
 	diagramController addController: controller.
-	controller renderFigureIn: diagramController view.
-	self
-		assert: (controller figure attributeAt: #RTLabelledLabel) text
-		equals: ''.
+	controller
+		createDiagramElement;
+		renderDiagramElement.
+	self assert:
+		(controller roassalShape propertyAt: #RSLabeled) text = ''.
 	controller model name: 'new name'.
-	controller refreshFigure.
-	text := (controller figure attributeAt: #RTLabelledLabel) text.
-	self
-		assert: ((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
+	controller diagramElement modelChanged.
+	text := (controller roassalShape propertyAt: #RSLabeled) text.
+	self assert:
+		((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
 ]

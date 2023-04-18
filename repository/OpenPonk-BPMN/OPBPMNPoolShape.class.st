@@ -88,8 +88,21 @@ b2 position: -260@0.
 { #category : #accessing }
 OPBPMNPoolShape >> initialize [
 	super initialize.
+	label := ''.
 	laneLines := OrderedCollection new.
 	laneLabels := OrderedCollection new.
+]
+
+{ #category : #accessing }
+OPBPMNPoolShape >> label [
+
+	^ label
+]
+
+{ #category : #accessing }
+OPBPMNPoolShape >> label: aLabel [
+
+ label := aLabel
 ]
 
 { #category : #adding }

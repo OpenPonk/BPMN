@@ -40,6 +40,7 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNSubProcessController forModel: OPBPMNSubProcessModel;
 		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
+		register: OPBPMNDataObjectController forModel: OPBPMNDataObjectModel;
 		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
 ]

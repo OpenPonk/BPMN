@@ -18,15 +18,6 @@ OPBPMNFlowController >> buildEditorForm: aForm [
 ]
 
 { #category : #accessing }
-OPBPMNFlowController >> createLineFrom: fromElement to: toElement [
-	^ OPRTStyledMultiLine new
-		head: self headMarker;
-		withBorderAttachPoint;
-		color: Color black;
-		edgeFrom: fromElement to: toElement
-]
-
-{ #category : #accessing }
 OPBPMNFlowController >> diagramElementClass [
 
 	^ OPBPMNFlowShape
