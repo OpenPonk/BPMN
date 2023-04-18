@@ -2,10 +2,25 @@ Class {
 	#name : #OPBPMNDataObjectShape,
 	#superclass : #OPShape,
 	#instVars : [
-		'icon'
+		'icon',
+		'borderColor'
 	],
 	#category : #'OpenPonk-BPMN-DiagramElements'
 }
+
+{ #category : #update }
+OPBPMNDataObjectShape >> borderColor [
+
+	^ borderColor
+]
+
+{ #category : #update }
+OPBPMNDataObjectShape >> borderColor: aColor [
+
+	aColor = Color black
+		ifTrue: [ borderColor := Color transparent ]
+		ifFalse: [ borderColor := aColor ]
+]
 
 { #category : #update }
 OPBPMNDataObjectShape >> color [
@@ -21,9 +36,16 @@ OPBPMNDataObjectShape >> color: aColor [
 
 { #category : #update }
 OPBPMNDataObjectShape >> createRoassalShape [
-| com b1 |
+
+	| com b1 |
 	com := RSComposite new.
-	b1 := RSBox new width: 50; height: 50; color: Color transparent.
+	b1 := RSBox new
+		      width: 50;
+		      height: 50;
+				border: (RSBorder new
+							width: 1;
+				          color: Color transparent);
+		      color: Color transparent.
 	"bitmap := RSBitmap new
 		        form: self typeIconForModel.
 		
@@ -31,6 +53,12 @@ OPBPMNDataObjectShape >> createRoassalShape [
 	com add: b1.
 	com adjustToChildren.
 	^ com
+]
+
+{ #category : #update }
+OPBPMNDataObjectShape >> initialize [ 
+	super initialize.
+	borderColor := Color transparent
 ]
 
 { #category : #update }
@@ -93,6 +121,6 @@ OPBPMNDataObjectShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
-	
+	roassalShape borderColor: self borderColor.
 	super updateRenderFromSelf
 ]

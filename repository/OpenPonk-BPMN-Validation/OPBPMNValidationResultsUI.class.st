@@ -59,6 +59,17 @@ OPBPMNValidationResultsUI >> highlighted [
 ]
 
 { #category : #accessing }
+OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: composite [
+	<inspectorPresentationOrder: -14 title: 'Documentation'>
+	^ SpTablePresenter new
+		  beResizable;
+		  items:  { 'https://github.com/OpenPonk/OpenPonk-BPMN/blob/dev-validations-docs/docs/validation-rules.md' };
+			addColumn: (SpLinkTableColumn
+				   title: 'Rules' evaluated: #asString url: #asString)
+		  yourself.
+]
+
+{ #category : #accessing }
 OPBPMNValidationResultsUI >> inspectorTableIn: composite [
 
 	<inspectorPresentationOrder: -15 title: 'Results'>

@@ -42,6 +42,7 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
 		register: OPBPMNDataObjectController forModel: OPBPMNDataObjectModel;
 		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
+		register: OPBPMNDataFlowController forModel: OPBPMNDataFlowModel;
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
 ]
 

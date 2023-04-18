@@ -21,6 +21,13 @@ OPBPMNDataFlowShape >> borderColor: aColor [
 ]
 
 { #category : #rendering }
+OPBPMNDataFlowShape >> createOwnedElementsWithoutController [
+
+	super createOwnedElementsWithoutController.
+	OPBPMNEdgeLabel in: self
+]
+
+{ #category : #rendering }
 OPBPMNDataFlowShape >> renderBasicShape [
 
 	^ (self source = self target
@@ -34,14 +41,4 @@ OPBPMNDataFlowShape >> renderBasicShape [
 		  from: self source roassalShape;
 		  to: self target roassalShape;
 		  yourself
-]
-
-{ #category : #rendering }
-OPBPMNDataFlowShape >> updateRenderFromSelf [
-
-	self isRendered ifFalse: [ ^ self ].
-	roassalShape color: self color.
-	roassalShape borderColor: self borderColor.
-	
-	super updateRenderFromSelf
 ]
