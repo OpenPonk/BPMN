@@ -37,7 +37,7 @@ OPBPMNBoundaryEventController >> canBeSourceFor: aController [
 
 { #category : #forms }
 OPBPMNBoundaryEventController >> canBeTargetFor: aController [
-	(aController isKindOf: OPBPMNMessageFlowController)
+	^ (aController isKindOf: OPBPMNMessageFlowController)
 ]
 
 { #category : #forms }

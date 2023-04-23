@@ -91,9 +91,6 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Data Object'
 			factory: [ OPBPMNDataObjectController new ]
 			icon: OPBPMNIcon current dataObject16;
-		"newCreationTool: 'Lane'
-			factory: [ OPBPMNLaneController new ]
-			icon: OPBPMNIcon current lane;"
 		newConnectionCreationTool: 'Sequence Flow'
 			factory: [ OPBPMNFlowController new ]
 			icon: OPBPMNIcon current sequenceFlow;

@@ -13,14 +13,6 @@ OPBPMNElementController >> dependentElements [
 ]
 
 { #category : #connecting }
-OPBPMNElementController >> removeFigure [
-	owner := self model owner.
-	super removeFigure.
-	(owner isKindOf: OPBPMNPoolModel) ifTrue: [ owner removeNode: self model]
-	
-]
-
-{ #category : #connecting }
 OPBPMNElementController >> renderDiagramElement [
 
 	super renderDiagramElement.

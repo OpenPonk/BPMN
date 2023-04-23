@@ -14,7 +14,6 @@ OPBPMNNavigatorAdapter class >> priority [
 OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).
 		 (OPBPMNPoolModel -> #nodes).
-		 (OPBPMNLaneModel -> #nodes).
 		 (OPBPMNSubProcessModel -> #nodes).
 			(OPBPMNNodeModel -> #outgoing) }
 ]
@@ -24,7 +23,6 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
 	(OPBPMNNodeModel -> 'Node').
 	(OPBPMNPoolModel -> 'Pool').
-	(OPBPMNLaneModel -> 'Lane').
 	(OPBPMNSubProcessModel -> 'Expanded SubProcess').
 	(OPBPMNCollapsedSubProcessModel -> 'Collapsed SubProcess').
 	(OPBPMNBoundaryEventModel -> 'Boundary Event').
@@ -57,7 +55,6 @@ OPBPMNNavigatorAdapter >> iconMapping [
 		(OPBPMNIntermediateEventModel -> OPBPMNIcon current intermediateEvent).
 		(OPBPMNGatewayModel -> OPBPMNIcon current gateway).
 		(OPBPMNPoolModel -> OPBPMNIcon current pool).
-		(OPBPMNLaneModel -> OPBPMNIcon current lane).
 		(OPBPMNSubProcessModel -> OPBPMNIcon current expandedSubprocess).
 		(OPBPMNCollapsedSubProcessModel -> OPBPMNIcon current subProcessCollapsed).
 		(OPBPMNBoundaryEventModel -> OPBPMNIcon current intermediateEvent).
