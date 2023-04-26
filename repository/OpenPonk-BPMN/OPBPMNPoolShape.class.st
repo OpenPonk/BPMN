@@ -41,11 +41,12 @@ OPBPMNPoolShape >> addLanes: aNumber [
 
 	aNumber > 1 ifTrue: [ 
 		1 to: aNumber do: [ :i | 
-			lb := RSLabel new.
+			lb := RSLabel new
+				rotateByDegrees: -90.
 			roassalShape add: lb.
 			laneLabels add: lb.
 			lb position:
-				0 @ (i - 1 / aNumber * 2 * b1 height - b1 height / 2 + 8) ] ]
+				b1 width / 2 - b1 width + b2 width + 8 @ ((i - 1 / aNumber * 2 * b1 height - b1 height / 2) + (b1 height/aNumber/2)) ] ]
 ]
 
 { #category : #accessing }
@@ -76,13 +77,13 @@ OPBPMNPoolShape >> color: aColor [
 OPBPMNPoolShape >> createRoassalShape [
 | com |
 com := RSComposite new.
-b1 := RSBox new width: 550; height: 300; color: Color white; borderColor: Color black.
-b2 := RSBox new width: 30; height: 300; color: Color white; borderColor: Color black.
+b1 := RSBox new width: 650; height: 400; color: Color white; borderColor: Color black.
+b2 := RSBox new width: 30; height: 400; color: Color white; borderColor: Color black.
 com add: b1.
 com add: b2.
 
 com adjustToChildren.
-b2 position: -260@0. 
+b2 position: -310@0. 
 	^ com
 ]
 
