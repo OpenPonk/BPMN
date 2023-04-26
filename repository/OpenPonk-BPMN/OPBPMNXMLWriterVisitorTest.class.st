@@ -6,14 +6,17 @@ Class {
 
 { #category : #tests }
 OPBPMNXMLWriterVisitorTest >> testVisitElement [
-| model writerVisitor|
-model := OPBPMNGatewayModel new.
-model name: 'Test name'.
-writerVisitor := OPBPMNXMLWriterVisitor new.
-writerVisitor visitElementEvent: model.
-self assert: writerVisitor writer asString equals: 
-'<?xml version="1.0" encoding="UTF-8"?>
-<bpmn:exclusiveGateway name="Test name" id="_6-', model uuid asString,'"/>'
+
+	| model writerVisitor |
+	model := OPBPMNGatewayModel new.
+	model name: 'Test name'.
+	writerVisitor := OPBPMNXMLWriterVisitor new.
+	writerVisitor visitElementEvent: model.
+	self
+		assert: writerVisitor writer asString
+		equals: '<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:exclusiveGateway name="Test name" id="_6-' , model uuid asString
+			, '"/>'
 ]
 
 { #category : #tests }

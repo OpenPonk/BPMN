@@ -32,19 +32,19 @@ OPBPMNSubProcessShape >> renderShapeDetails [
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 
-	"roassalShape @ OPRSSelectionDraggable.
+	roassalShape @ OPRSSelectionDraggable.
 	roassalShape @ RSTransformable.
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
-	roassalShape @ selectable"
+	roassalShape @ selectable
 	
-	selectable := OPRSSelectable new.
+	"selectable := OPRSSelectable new.
 	selectable highlightBorderColor: Color blue.
 	roassalShape @ selectable.
 	self roassalShape
 @ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
 		@ OPRSResizable;
-		@ OPRSResizable
+		@ OPRSResizable"
 ]
 
 { #category : #connecting }

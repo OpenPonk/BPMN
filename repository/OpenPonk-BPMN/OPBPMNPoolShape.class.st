@@ -20,8 +20,8 @@ OPBPMNPoolShape >> addLanes: aNumber [
 	w := roassalShape width.
 	h := roassalShape height.
 	2 to: aNumber do: [ :i | 
-		b4 := RSBox new size: 0.1.
-		b5 := RSBox new size: 0.1.
+		b4 := RSBox new size: 0.01.
+		b5 := RSBox new size: 0.01.
 		roassalShape add: b4.
 		roassalShape add: b5.
 		roassalShape adjustToChildren.
@@ -33,7 +33,8 @@ OPBPMNPoolShape >> addLanes: aNumber [
 
 		e2 := RSLine new
 			      from: b4;
-			      to: b5.
+			      to: b5;
+					addInteraction: OPRSDraggableControlPoints.
 
 		self canvas add: e2.
 		laneLines add: e2 ].
@@ -152,7 +153,7 @@ OPBPMNPoolShape >> renderShapeDetails [
 	
 selectable := OPRSSelectable new.
 	selectable highlightBorderColor: Color blue.
-	resizable := OPRSResizable onShape: b1. "TODO use something like this"
+	resizable := OPRSResizable onShape: b1. 
 	roassalShape @ selectable.
 	self roassalShape
 @ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
@@ -187,6 +188,5 @@ OPBPMNPoolShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
-
 	super updateRenderFromSelf
 ]
