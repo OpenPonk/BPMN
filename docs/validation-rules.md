@@ -220,15 +220,67 @@ Intermediate Event with the outgoing Message Flow must be of Message Send or Mul
 <img src="https://user-images.githubusercontent.com/61189344/235225027-8d299959-b2d2-4462-9312-7b37e63c79fc.png" height="120px"/>
 
 ## Gateway
-### GW01
-### GW02
-### GW03
-### GW04
-### GW05
-### GW06
-### GW07
+### GW01 (Guaranteed)
+Boundary Event must not have incoming or outgoing Message Flow.
+
+### GW02 (Error)
+Splitting Gateway must have more than one outgoing Sequence Flow. Merging Gateway
+must have more than one incoming Sequence Flow.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235251173-002c1c54-798f-46bd-ba27-e49eb25e85ca.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235251617-acc9d74f-87f0-4e40-b3ec-29c52a6a7054.png" height="200px"/>
+
+### GW03 (Warning)
+Gateway should not be both merging and spliting.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235251929-49e0fc52-6dbc-4db8-af5b-2a2f8c49713e.png" height="200px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235252167-3e55d9f0-08b0-4f46-af13-86473015cc2e.png" height="200px"/>
+
+### GW04 (Error)
+Event Gateway can only contain Catching Intermediate Event or Receive Task in its branches.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235252702-269ebdc5-9e6a-4597-ae21-43e1aa0abb84.png" height="200px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235254484-6fa4d601-cf3e-4af3-8111-1a7f501fbd70.png" height="200px"/>
+
+### GW05 (Error)
+Sequence Flow leading from Parallel/Event Gateway must not contain condition. (Label)
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235254788-ea490825-d42e-49ba-9ce6-dfdf82058aa7.png" height="200px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235254484-6fa4d601-cf3e-4af3-8111-1a7f501fbd70.png" height="200px"/>
+
+### GW06 (Error)
+Sequence Flow leading from Gateway must not be of conditional type. (Diamont at the beggining of Flow)
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235255003-c3c07faa-89a5-47ba-ada4-336a75f5ecf0.png" height="200px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235255133-18993565-9ebd-44dc-84f8-777e1382ae5a.png" height="200px"/>
+
+### GW07 (Warning)
+Sequence Flow leading from Gateway (of a different type than Parallel and Event and beyond
+default edges) should be labeled.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235255305-281ad76c-397c-48aa-be0c-bab2de07f290.png" height="200px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235255133-18993565-9ebd-44dc-84f8-777e1382ae5a.png" height="200px"/>
+
 ## Activity
-### AC01
+### AC01 (Error)
 Activity of type Message Receive must have incoming Message Flow.
 
 **Incorrect:**  
@@ -237,7 +289,7 @@ Activity of type Message Receive must have incoming Message Flow.
 **Correct:**  
 <img src="https://user-images.githubusercontent.com/61189344/235226812-9dfff399-d541-4c00-a5e6-9034bfdcfd22.png" height="120px"/>
 
-### AC02
+### AC02 (Error)
 Activity of type Message Send must have outgoing Message Flow.
 
 **Incorrect:**  
@@ -246,7 +298,7 @@ Activity of type Message Send must have outgoing Message Flow.
 **Correct:**  
 <img src="https://user-images.githubusercontent.com/61189344/235227451-b35b0c77-22d8-46eb-8354-5c7049892e10.png" height="120px"/>
 
-### AC03
+### AC03 (Error)
 Activity with the incoming Message Flow must be of Message Receive type.
 
 **Incorrect:**  
@@ -255,7 +307,7 @@ Activity with the incoming Message Flow must be of Message Receive type.
 **Correct:**  
 <img src="https://user-images.githubusercontent.com/61189344/235226812-9dfff399-d541-4c00-a5e6-9034bfdcfd22.png" height="120px"/>
 
-### AC04
+### AC04 (Error)
 Activity with the outgoing Message Flow must be of Message Send type.
 
 **Incorrect:**  
@@ -264,7 +316,7 @@ Activity with the outgoing Message Flow must be of Message Send type.
 **Correct:**  
 <img src="https://user-images.githubusercontent.com/61189344/235227451-b35b0c77-22d8-46eb-8354-5c7049892e10.png" height="120px"/>
 
-### AC05
+### AC05 (Warning)
 Activity should not be used to merge or split flow.
 
 **Incorrect:**  
@@ -274,10 +326,25 @@ Activity should not be used to merge or split flow.
 <img src="https://user-images.githubusercontent.com/61189344/235228863-aa463f88-8db8-4b86-8972-a8d8a43f546d.png" height="200px"/>
 
 ## Process (Pool)
-### PR01
-### PR02
-### PR03
-### PR04
-### PR05
-### PR06
-### PR07
+### PR01 (Guaranteed)
+Pool cannot contain another Pool.
+
+### PR02 (Error)
+Process must have at least one Activity.
+
+### PR03 (Error)
+Elements of at most one process can be contained only in one Pool.
+
+### PR04 (Error)
+If the diagram contains only one participant, it does not have to be drawn. 
+If there is more, all elements must be drawn inside Pools.
+
+### PR05 (Error)
+Pool can be source of a Message Flow only as a Black-Box. - Cannot contain elements.
+
+### PR06 (Error)
+Pool can be target of a Message Flow only as a Black-Box. - Cannot contain elements. 
+Otherwise use Activity/Event as target.
+
+### PR07 (Warning)
+Process should contain Start and End Event.
