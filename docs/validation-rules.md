@@ -3,14 +3,14 @@ The best from BPMN Method and Style, bpmnlint validation rules
 
 ## Sequence Flow
 ### SF01 (Guaranteed)
-A sequence flow must connect to a flow node (activity, gateway, or event) at both ends.
+Sequence Flow must connect to a flow node (activity, gateway, or event) at both ends.
 
 ### SF02 (Guaranteed)
-A sequence flow may not cross a pool (process) boundary. 
+Sequence Flow may not cross a pool (process) boundary. 
 
 ## Message Flow
 ### MF01 (Guaranteed)
-A Message Flow may not connect nodes in the same process (pool). 
+Message Flow may not connect nodes in the same process (pool). 
 
 ## All Nodes
 ### AN01 (Error)
@@ -71,31 +71,96 @@ All nodes, except no type Start Event and Parallel Gateway, should be labeled.
 
 
 ### AN06 (Error)
-A Conditional Sequence Slow may not be used if it is the only outgoing Sequence Flow
+A Conditional Sequence Flow may not be used if it is the only outgoing Sequence Flow
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235211929-e5a1ad05-0d50-4056-b46e-83631c7ecf44.png" height="120px"/>
+
+**Correct:**  
+But you get Warning from the rule AC05.
+<img src="https://user-images.githubusercontent.com/61189344/235212295-598c7c5c-aa81-4ad8-8949-14d86da6869a.png" height="200px"/>
 
 ## Start Event
-### SE01
-### SE02
-### SE03
-### SE04
-### SE05
-### SE06
+### SE01 (Guaranteed)
+Start Event must not have an incoming Sequence Flow.
+
+### SE02 (Guaranteed)
+Start Event must not have an outgoing Message Flow. 
+
+### SE03 (Error)
+Start Event of type Message must have incoming Message Flow.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235218507-c0711acb-5c77-4185-9b54-d6f60f9f9f4c.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235218325-f1f98f42-b3f3-4e50-a6ef-c5819bd90f40.png" height="120px"/>
+
+### SE04 (Error)
+Start Event with the incoming Message Flow must be of Message or Multiple type.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235218663-0ebbfbd7-0308-48ae-9bef-3c44c771a9e2.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235218325-f1f98f42-b3f3-4e50-a6ef-c5819bd90f40.png" height="120px"/>
+
+### SE05 (Error)
+Start Event may not have an Error trigger. Except Event Subprocess Start Event. 
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235218901-9eeef02d-1eb8-4b53-bf44-6e356fb17af7.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235219357-a9a56008-b239-4944-b205-57758b2931d6.png" height="200px"/>
+
+### SE06 (Error) - Not implemented yet.
+Start Event in a Subprocess must not have a type unless it is triggered based on some Event from parent process
+
 ## End Event
-### EE01
-### EE02
-### EE03
-### EE04
+### EE01 (Guaranteed)
+End Event must not have an outgoing Sequence Flow.
+
+
+### EE02 (Guaranteed)
+End Event must not have an incoming Message Flow. 
+
+### EE03 (Error)
+End Event of type Message must have outgoing Message Flow.
+
+### EE04 (Error)
+End Event with the outgoing Message Flow must be of Message or Multiple type.
+
 ## Boundary Event
-### BE01
-### BE02
-### BE03
-### BE04
-### BE05
+### BE01 (Guaranteed)
+Boundary Event must not have an incoming Sequence Flow.
+
+### BE02 (Error)
+Boundary Event must not have exactly one outgoing Sequence Flow. Except Compensation Boundary Event.
+
+### BE03 (Warning)
+Error Boundary Event must contain a corresponding Error Throw
+Event in the Subprocess. 
+
+### BE04 (Warning)
+Escalation Boundary Event must contain a corresponding Escalation Throw
+Event in the Subprocess. 
+
+### BE05 (Error)
+Error Boundary Event may not be Non-Interrupting.
+
 ## Intermediate Event
-### IE01
-### IE02
-### IE03
-### IE04
+### IE01 (Error)
+Intermediate Event of type Message Receive must have incoming Message Flow.
+
+### IE02 (Error)
+Intermediate Event of type Message Send must have outgoing Message Flow.
+
+### IE03 (Error)
+Intermediate Event with the incoming Message Flow must be of Message Receive or Multiple type.
+
+### IE04 (Error)
+Intermediate Event with the outgoing Message Flow must be of Message Send or Multiple type.
+
 ## Gateway
 ### GW01
 ### GW02
