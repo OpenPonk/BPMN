@@ -37,7 +37,7 @@ PR2347ProcessErrors class >> PR07StartCounterError: aValidateModel [
 				   createFor: aValidateModel
 				   withValidation: self
 				   withText: '(PR07) ' , aValidateModel class name
-					   , ' should containt exactly one Start Event and at least one End Event.').
+					   , ' should containt at least one Start Event and at least one End Event.').
 ]
 
 { #category : #verification }

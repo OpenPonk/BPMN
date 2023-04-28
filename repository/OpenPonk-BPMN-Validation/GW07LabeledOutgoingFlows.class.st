@@ -13,7 +13,7 @@ GW07LabeledOutgoingFlows class >> validateClass [
 GW07LabeledOutgoingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 
+	(aVerifiedObject isKindOf: OPBPMNGatewayModel) & (aVerifiedObject outgoing size > 1) ifTrue: [ 
 		aVerifiedObject type = OPBPMNNodeType Parallel
 		| (aVerifiedObject type = OPBPMNNodeType Eventbased) ifFalse: [ 
 			counter := 0.

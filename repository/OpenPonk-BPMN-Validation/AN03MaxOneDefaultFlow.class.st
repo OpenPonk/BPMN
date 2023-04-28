@@ -12,15 +12,19 @@ AN03MaxOneDefaultFlow class >> validateClass [
 { #category : #verification }
 AN03MaxOneDefaultFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
-	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifTrue: [ 
-		aVerifiedObject outgoing size = 1 ifTrue: [ 
-			aVerifiedObject outgoing do: [ :each | 
-				(each isKindOf: OPBPMNFlowModel) ifTrue: [ 
-					each type = 'Conditional' ifTrue: [ 
-						^ { (OPBPMNValidationMessageError
-							   createFor: aVerifiedObject
-							   withValidation: self
-							   withText: '(AN03) ' , aVerifiedObject class name
-								   , ' could not have more than one Default Sequence Flow.') } ] ] ] ] ].
+	| aCounter |
+	aCounter := 0.
+	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifTrue: [
+		aVerifiedObject outgoing size > 0 ifTrue: [
+			aVerifiedObject outgoing do: [ :each |
+				(each isKindOf: OPBPMNFlowModel) ifTrue: [
+					each type = 'Default' ifTrue: [ aCounter := aCounter + 1 ] ] ].
+			(aCounter > 1) | ((aVerifiedObject outgoing size = 1) & (aCounter = 1))
+				ifTrue: [
+					^ { (OPBPMNValidationMessageError
+						   createFor: aVerifiedObject
+						   withValidation: self
+						   withText: '(AN03) ' , aVerifiedObject class name
+							   , ' could not have more than one Default Sequence Flow.') } ] ] ].
 	^ {  }
 ]

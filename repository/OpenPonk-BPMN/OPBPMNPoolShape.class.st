@@ -158,6 +158,7 @@ selectable := OPRSSelectable new.
 	roassalShape @ selectable.
 	self roassalShape
 @ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
+		pushBack;
 		@ RSTransformable.
 		self updateRenderFromModel.
 ]

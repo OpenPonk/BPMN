@@ -13,29 +13,27 @@ GW04Eventbased class >> validateClass [
 GW04Eventbased >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel) & aVerifiedObject type
-	= OPBPMNNodeType Eventbased 
-	ifTrue: [ 
+	(aVerifiedObject isKindOf: OPBPMNGatewayModel)
+	& (aVerifiedObject type = OPBPMNNodeType Eventbased)
+	& (aVerifiedObject outgoing size > 1) ifTrue: [
 		counter := 0.
-		aVerifiedObject outgoing do: [ :each | 
-			(each isKindOf: OPBPMNIntermediateEventModel)
-			| (each isKindOf: OPBPMNActivityModel)
-				ifTrue: [ 
-					each type = OPBPMNNodeType Receive
-					| (each type = OPBPMNNodeType Escalation)
-					| (each type = OPBPMNNodeType Link)
-					| (each type = OPBPMNNodeType Compensation)
-					| (each type = OPBPMNNodeType Signal)
-					| (each type = OPBPMNNodeType Multiple) ifFalse: [ counter := 1 ] ]
-				ifFalse: [ counter := 1 ] ] ].
-	counter = 1 ifTrue: [ 
-		aVerifiedObject type = OPBPMNNodeType Send
-		| (aVerifiedObject type = OPBPMNNodeType Multiple) ifFalse: [ 
-			^ { (OPBPMNValidationMessageError
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(GW04) ' , aVerifiedObject class name
-					   ,
-					   ' can have on outgoing flows only Intermediate Catching Events or Receive Task.') } ] ].
+		aVerifiedObject outgoing do: [ :each |
+			(each target isKindOf: OPBPMNIntermediateEventModel)
+			| (each target isKindOf: OPBPMNActivityModel)
+				ifTrue: [
+					each target type = OPBPMNNodeType Receive
+					| (each target type = OPBPMNNodeType Escalation)
+					| (each target type = OPBPMNNodeType Link)
+					| (each target type = OPBPMNNodeType Compensation)
+					| (each target type = OPBPMNNodeType Signal)
+					| (each target type = OPBPMNNodeType Multiple) ifFalse: [ counter := 1 ] ]
+				ifFalse: [ counter := 1 ].
+			counter = 1 ifTrue: [
+				^ { (OPBPMNValidationMessageError
+					   createFor: aVerifiedObject
+					   withValidation: self
+					   withText: '(GW04) ' , aVerifiedObject class name
+						   ,
+						   ' can have on outgoing flows only Intermediate Catching Events or Receive Task.') } ] ] ].
 	^ {  }
 ]

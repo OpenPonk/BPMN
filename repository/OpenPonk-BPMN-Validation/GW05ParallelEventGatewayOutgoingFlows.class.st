@@ -18,7 +18,7 @@ GW05ParallelEventGatewayOutgoingFlows >> validateObject: aVerifiedObject withMod
 	 ifTrue: [
 		counter := 0.
 		aVerifiedObject outgoing do: [ :each | (
-			(each isKindOf: OPBPMNFlowModel) ifTrue: [ (each name isNotNil) | (each type = 'Conditional')
+			(each isKindOf: OPBPMNFlowModel) ifTrue: [ (each name ~= '') | (each type = 'Conditional')
 				ifTrue: [  counter := 1 ]]) ] ].
 		counter = 1 ifTrue: [ 
 		 

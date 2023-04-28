@@ -36,7 +36,7 @@ OPBPMNSubProcessShape >> renderShapeDetails [
 	roassalShape @ RSTransformable.
 	selectable := OPRSSelectable new.
 	self setupHighlight: selectable.
-	roassalShape @ selectable
+	roassalShape @ selectable.
 	
 	"selectable := OPRSSelectable new.
 	selectable highlightBorderColor: Color blue.
@@ -44,7 +44,7 @@ OPBPMNSubProcessShape >> renderShapeDetails [
 	self roassalShape
 @ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
 		@ OPRSResizable;
-		@ OPRSResizable"
+		@ OPRSResizable" 
 ]
 
 { #category : #connecting }

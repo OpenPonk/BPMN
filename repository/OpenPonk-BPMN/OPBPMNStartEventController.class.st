@@ -15,26 +15,26 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue |
 			self model type: newValue.
 			self diagramElement modelChanged ].
 	(aForm addCheckbox: 'Is Non-Interrupting')
 		state: self model isNonInterrupting;
-		whenChangedDo: [ :val | 
+		whenChangedDo: [ :val |
 			self model isNonInterrupting: val.
 			self diagramElement modelChanged ].
 
-	self model type = OPBPMNNodeType Timer ifTrue: [ 
+	self model type = OPBPMNNodeType Timer ifTrue: [
 		(aForm addDroplist: 'Timer type')
 			items: #( #none #timeDate #timeDuration #timeCycle );
 			display: [ :type | type asString ];
 			selectItem: self model timerType;
-			whenSelectedItemChangedDo: [ :newValue | 
+			whenSelectedItemChangedDo: [ :newValue |
 				self model timerType: newValue.
-				self refreshFigure ].
+				self diagramElement modelChanged ].
 		(aForm addText: 'Timer value')
 			text: self model timerValue;
-			whenTextChangedDo: [ :newValue | 
+			whenTextChangedDo: [ :newValue |
 				self model timerValue: newValue asString.
 				self refreshFigure ] ]
 ]

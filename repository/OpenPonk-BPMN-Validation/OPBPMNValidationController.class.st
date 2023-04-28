@@ -83,7 +83,7 @@ OPBPMNValidationController >> validateProcess: aValidateModel [
 		ifFalse: [ 
 			activityAlone = 1 & (poolCounter > 0) ifTrue: [ 
 				results addResults: (PR2347ProcessErrors PR04AllInsidePool: aValidateModel) ] ].
-	startEventCounter = 0 | (startEventCounter > 1) ifTrue: [ 
+	startEventCounter = 0 ifTrue: [ 
 		results addResults: (PR2347ProcessErrors PR07StartCounterError: aValidateModel) ].
 	^ results
 ]
