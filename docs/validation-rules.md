@@ -78,6 +78,7 @@ A Conditional Sequence Flow may not be used if it is the only outgoing Sequence 
 
 **Correct:**  
 But you get Warning from the rule AC05.
+
 <img src="https://user-images.githubusercontent.com/61189344/235212295-598c7c5c-aa81-4ad8-8949-14d86da6869a.png" height="200px"/>
 
 ## Start Event
@@ -209,7 +210,6 @@ Intermediate Event with the incoming Message Flow must be of Message Receive or 
 **Correct:**  
 <img src="https://user-images.githubusercontent.com/61189344/235224497-153af81d-4267-443c-b733-5cf2daf5e366.png" height="120px"/>
 
-
 ### IE04 (Error)
 Intermediate Event with the outgoing Message Flow must be of Message Send or Multiple type.
 
@@ -229,10 +229,49 @@ Intermediate Event with the outgoing Message Flow must be of Message Send or Mul
 ### GW07
 ## Activity
 ### AC01
+Activity of type Message Receive must have incoming Message Flow.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235226708-a242a02e-74c3-47aa-99a3-e8a5c09084c6.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235226812-9dfff399-d541-4c00-a5e6-9034bfdcfd22.png" height="120px"/>
+
 ### AC02
+Activity of type Message Send must have outgoing Message Flow.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235227251-c3891446-dc42-414f-960c-2663e512fdfc.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235227451-b35b0c77-22d8-46eb-8354-5c7049892e10.png" height="120px"/>
+
 ### AC03
+Activity with the incoming Message Flow must be of Message Receive type.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235227006-ecb769d2-ee9e-4c9a-bdfb-24f18b12c79b.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235226812-9dfff399-d541-4c00-a5e6-9034bfdcfd22.png" height="120px"/>
+
 ### AC04
+Activity with the outgoing Message Flow must be of Message Send type.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235227780-b1c973f4-069d-4226-89ff-d30110786186.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235227451-b35b0c77-22d8-46eb-8354-5c7049892e10.png" height="120px"/>
+
 ### AC05
+Activity should not be used to merge or split flow.
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235212295-598c7c5c-aa81-4ad8-8949-14d86da6869a.png" height="200px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/232330011-797e189f-52e6-4ddf-be57-1a86c134fa63.png" height="120px"/>
+
 ## Process (Pool)
 ### PR01
 ### PR02
