@@ -158,19 +158,19 @@ Boundary Event must not have exactly one outgoing Sequence Flow. Except Compensa
 Error Boundary Event must contain a corresponding Error Throw Event in the Subprocess. 
 
 **Incorrect:**  
-<img src="https://user-images.githubusercontent.com/61189344/235221866-e615e443-e143-422d-a674-f1664fd596e0.png" height="200px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235223618-6b9e79b9-23e4-4114-8dd1-b481c2727780.png" height="200px"/>
 
 **Correct:**  
-<img src="https://user-images.githubusercontent.com/61189344/235222166-0db80ee0-2157-40f1-b335-d53de6d8350f.png" height="200px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235223694-8bb08391-f226-494f-8148-b34b600957fb.png" height="200px"/>
 
 ### BE04 (Warning)
 Escalation Boundary Event must contain a corresponding Escalation Throw Event in the Subprocess. 
 
 **Incorrect:**  
-<img src="https://user-images.githubusercontent.com/61189344/235222338-0d887665-e787-4e4e-8cab-e3f0a0e32e87.png" height="200px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235223889-166ab7f3-ec69-4b7b-b89f-97b0406b573b.png" height="200px"/>
 
 **Correct:**  
-<img src="https://user-images.githubusercontent.com/61189344/235222540-a09fc3aa-fab5-4632-b064-d927f354b040.png" height="200px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235223986-2a197441-5110-4a9a-bc2f-9618384814f5.png" height="200px"/>
 
 ### BE05 (Error)
 Error Boundary Event may not be Non-Interrupting.
@@ -185,14 +185,39 @@ Error Boundary Event may not be Non-Interrupting.
 ### IE01 (Error)
 Intermediate Event of type Message Receive must have incoming Message Flow.
 
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235224320-96db49df-7c93-4999-9836-2fae9a2b319f.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235224497-153af81d-4267-443c-b733-5cf2daf5e366.png" height="120px"/>
+
 ### IE02 (Error)
 Intermediate Event of type Message Send must have outgoing Message Flow.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235224886-323d858d-1436-4906-8427-439f33d69618.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235225027-8d299959-b2d2-4462-9312-7b37e63c79fc.png" height="120px"/>
 
 ### IE03 (Error)
 Intermediate Event with the incoming Message Flow must be of Message Receive or Multiple type.
 
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235225455-7104271d-fc0e-4fcc-ae49-89835a0ae5af.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235224497-153af81d-4267-443c-b733-5cf2daf5e366.png" height="120px"/>
+
+
 ### IE04 (Error)
 Intermediate Event with the outgoing Message Flow must be of Message Send or Multiple type.
+
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235225318-27dcf914-c328-4b41-a754-ff037035e716.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235225027-8d299959-b2d2-4462-9312-7b37e63c79fc.png" height="120px"/>
 
 ## Gateway
 ### GW01
