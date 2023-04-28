@@ -1,5 +1,11 @@
 # OpenPonk BPMN Validation rules
-The best from BPMN Method and Style, bpmnlint validation rules
+The best from BPMN Method and Style, bpmnlint validation rules and Signavio Best Practice.
+
+Severity of rules:
+
+- **Guaranteed** - You are not able to model this.
+- **Error** - You should remove the Error because it can cause fatal problems in running process.
+- **Warning** - Is better to make it clear but the model is still correct according to BPMN documentation.
 
 ## Sequence Flow
 ### SF01 (Guaranteed)
@@ -332,19 +338,47 @@ Pool cannot contain another Pool.
 ### PR02 (Error)
 Process must have at least one Activity.
 
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235256937-9d71dc19-bde1-4b45-9e61-92c24637e519.png" height="120px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/232330011-797e189f-52e6-4ddf-be57-1a86c134fa63.png" height="120px"/>
+
 ### PR03 (Error)
 Elements of at most one process can be contained only in one Pool.
+- You can get only one of PR03 and PR04 errors. - You get PR03 error if there is some Activity outside of Pool.
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235257272-46b4e59f-aa4a-450e-ac42-224478230a48.png" height="220px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235257483-10ee4245-defe-4fc1-8b41-cb19d2191e06.png" height="220px"/>
 
 ### PR04 (Error)
 If the diagram contains only one participant, it does not have to be drawn. 
 If there is more, all elements must be drawn inside Pools.
+- You can get only one of PR03 and PR04 errors. 
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235257806-106bde50-94c9-4f9a-926a-8fcdb94b3e21.png" height="220px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235257973-687f5200-812b-4d12-a7f0-9814eb3bb78b.png" height="220px"/>
 
 ### PR05 (Error)
 Pool can be source of a Message Flow only as a Black-Box. - Cannot contain elements.
+
+**Same as PR06**  
 
 ### PR06 (Error)
 Pool can be target of a Message Flow only as a Black-Box. - Cannot contain elements. 
 Otherwise use Activity/Event as target.
 
+**Incorrect:**  
+<img src="https://user-images.githubusercontent.com/61189344/235258664-53bf8d44-467b-47d7-adc0-0041fc3b0915.png" height="220px"/>
+
+**Correct:**  
+<img src="https://user-images.githubusercontent.com/61189344/235258936-d46977c5-a9f6-4bf5-b038-14140f5b28ef.png" height="220px"/>
+
 ### PR07 (Warning)
 Process should contain Start and End Event.
+
+**Mostly you get AN01 or AN02 Error to this.**
