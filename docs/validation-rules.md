@@ -20,8 +20,6 @@ Message Flow may not connect nodes in the same process (pool).
 
 ## All Nodes
 ### AN01 (Error)
-Class: AN01FlowNodeIncomingFlow
-
 All flow nodes other than Start Events, Boundary Events, and catching Link Events must have an incoming Sequence Flow. 
 
 **Incorrect:**  
@@ -32,8 +30,6 @@ All flow nodes other than Start Events, Boundary Events, and catching Link Event
 
 
 ### AN02 (Error)
-Class: AN02FlowNodeOutgoingFlow
-
 All flow nodes other than end events and throwing Link events must have an outgoing sequence flow.
 
 **Incorrect:**  
@@ -43,8 +39,6 @@ All flow nodes other than end events and throwing Link events must have an outgo
 <img src="https://user-images.githubusercontent.com/61189344/232330011-797e189f-52e6-4ddf-be57-1a86c134fa63.png" height="120px"/>
 
 ### AN03 (Error)
-Class: AN03MaxOneDefaultFlow
-
 Outgoing Default Sequence Flow can have only Exclusive, Inclusive, Complex Gateway or Activity. They can have only one Default Sequence Flow.
 
 **Incorrect:**  
@@ -54,8 +48,6 @@ Outgoing Default Sequence Flow can have only Exclusive, Inclusive, Complex Gatew
 <img src="https://user-images.githubusercontent.com/61189344/234986356-3d365506-444d-43cb-b126-c3a4f7675cc0.png" height="200px"/>
 
 ### AN04 (Warning)
-Class: AN04LabeledMessageFlow
-
 Outgoing Message Flow should be labeled by message name. 
 
 **Incorrect:**  
@@ -65,8 +57,6 @@ Outgoing Message Flow should be labeled by message name.
 <img src="https://user-images.githubusercontent.com/61189344/234990993-cd8788db-f132-43f5-8264-c6635d880ffb.png" height="200px"/>
 
 ### AN05 (Warning)
-Class: AN05LabelValidation
-
 All nodes, except no type Start Event and Parallel Gateway, should be labeled.
 
 **Incorrect:**  
@@ -338,6 +328,8 @@ Pool cannot contain another Pool.
 ### PR02 (Error)
 Process must have at least one Activity.
 
+Class: PR2347ProcessErrors - called from OPBPMNValidationController - validateProcess:
+
 **Incorrect:**  
 <img src="https://user-images.githubusercontent.com/61189344/235256937-9d71dc19-bde1-4b45-9e61-92c24637e519.png" height="120px"/>
 
@@ -347,6 +339,9 @@ Process must have at least one Activity.
 ### PR03 (Error)
 Elements of at most one process can be contained only in one Pool.
 - You can get only one of PR03 and PR04 errors. - You get PR03 error if there is some Activity outside of Pool.
+
+Class: PR2347ProcessErrors - called from OPBPMNValidationController - validateProcess:
+
 **Incorrect:**  
 <img src="https://user-images.githubusercontent.com/61189344/235257272-46b4e59f-aa4a-450e-ac42-224478230a48.png" height="220px"/>
 
@@ -357,11 +352,14 @@ Elements of at most one process can be contained only in one Pool.
 If the diagram contains only one participant, it does not have to be drawn. 
 If there is more, all elements must be drawn inside Pools.
 - You can get only one of PR03 and PR04 errors. 
+
+Class: PR2347ProcessErrors - called from OPBPMNValidationController - validateProcess:
+
 **Incorrect:**  
-<img src="https://user-images.githubusercontent.com/61189344/235257806-106bde50-94c9-4f9a-926a-8fcdb94b3e21.png" height="220px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235257806-106bde50-94c9-4f9a-926a-8fcdb94b3e21.png" height="250px"/>
 
 **Correct:**  
-<img src="https://user-images.githubusercontent.com/61189344/235257973-687f5200-812b-4d12-a7f0-9814eb3bb78b.png" height="220px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235257973-687f5200-812b-4d12-a7f0-9814eb3bb78b.png" height="250px"/>
 
 ### PR05 (Error)
 Pool can be source of a Message Flow only as a Black-Box. - Cannot contain elements.
@@ -373,12 +371,14 @@ Pool can be target of a Message Flow only as a Black-Box. - Cannot contain eleme
 Otherwise use Activity/Event as target.
 
 **Incorrect:**  
-<img src="https://user-images.githubusercontent.com/61189344/235258664-53bf8d44-467b-47d7-adc0-0041fc3b0915.png" height="220px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235258664-53bf8d44-467b-47d7-adc0-0041fc3b0915.png" height="250px"/>
 
 **Correct:**  
-<img src="https://user-images.githubusercontent.com/61189344/235258936-d46977c5-a9f6-4bf5-b038-14140f5b28ef.png" height="220px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235258936-d46977c5-a9f6-4bf5-b038-14140f5b28ef.png" height="250px"/>
 
 ### PR07 (Warning)
 Process should contain Start and End Event.
+
+Class: PR2347ProcessErrors - called from OPBPMNValidationController - validateProcess:
 
 **Mostly you get AN01 or AN02 Error to this.**
