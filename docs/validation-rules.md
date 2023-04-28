@@ -266,11 +266,12 @@ Activity with the outgoing Message Flow must be of Message Send type.
 
 ### AC05
 Activity should not be used to merge or split flow.
+
 **Incorrect:**  
 <img src="https://user-images.githubusercontent.com/61189344/235212295-598c7c5c-aa81-4ad8-8949-14d86da6869a.png" height="200px"/>
 
 **Correct:**  
-<img src="https://user-images.githubusercontent.com/61189344/232330011-797e189f-52e6-4ddf-be57-1a86c134fa63.png" height="120px"/>
+<img src="https://user-images.githubusercontent.com/61189344/235228863-aa463f88-8db8-4b86-8972-a8d8a43f546d.png" height="200px"/>
 
 ## Process (Pool)
 ### PR01
