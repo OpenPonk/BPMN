@@ -46,7 +46,8 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNMessageFlowController)
 		ifTrue: [ ^ (aController source model owner ~= self model) ]
 		ifFalse: [ ^ (aController isKindOf: OPBPMNElementController)
-				| (aController isKindOf: OPBPMNSubProcessController)]
+				| (aController isKindOf: OPBPMNSubProcessController)
+				| (aController isKindOf: OPBPMNDataObjectController)]
 ]
 
 { #category : #connecting }
