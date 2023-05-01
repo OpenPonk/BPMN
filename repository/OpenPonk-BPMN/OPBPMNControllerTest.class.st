@@ -30,6 +30,12 @@ OPBPMNControllerTest >> diagramControllerClass [
 ]
 
 { #category : #accessing }
+OPBPMNControllerTest >> diagramElementClass [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 OPBPMNControllerTest >> diagramModelClass [
 	^ OPBPMNModel 
 ]

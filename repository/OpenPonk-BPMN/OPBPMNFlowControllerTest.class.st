@@ -27,6 +27,12 @@ OPBPMNFlowControllerTest >> controllerClass [
 ]
 
 { #category : #tests }
+OPBPMNFlowControllerTest >> diagramElementClass [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #tests }
 OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
 ]
