@@ -40,7 +40,7 @@ OPBPMNValidationUI class >> toolbarMenu: aBuilder [
 OPBPMNValidationUI class >> toolbarMenuItemFor: aBuilder [
 
 	(aBuilder item: 'Validations')
-		icon: OntoUMLIcons ontoumlIcon;
+		icon: OPBPMNIcon current logo;
 		action: [  ];
 		with: [ 
 			(aBuilder item: 'Validate model') action: [ 
