@@ -13,7 +13,7 @@ OPBPMNFlowControllerTest class >> isAbstract [
 	"Override to true if a TestCase subclass is Abstract and should not have
 	TestCase instances built from it"
 
-	^ self = OPBPMNFlowControllerTest
+	^ self = OPBPMNFlowControllerTest | (self = OPBPMNControllerTest)
 ]
 
 { #category : #tests }
@@ -29,6 +29,11 @@ OPBPMNFlowControllerTest >> controllerClass [
 { #category : #tests }
 OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
+]
+
+{ #category : #tests }
+OPBPMNFlowControllerTest >> modelClass [
+	^ self subclassResponsibility
 ]
 
 { #category : #tests }

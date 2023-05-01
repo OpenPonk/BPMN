@@ -9,11 +9,16 @@ OPBPMNNodeControllerTest class >> isAbstract [
 	"Override to true if a TestCase subclass is Abstract and should not have
 	TestCase instances built from it"
 
-	^ self = OPBPMNNodeControllerTest
+	^ (self = OPBPMNNodeControllerTest) | (self = OPBPMNControllerTest)
 ]
 
 { #category : #accessing }
 OPBPMNNodeControllerTest >> controllerClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+OPBPMNNodeControllerTest >> modelClass [
 	^ self subclassResponsibility
 ]
 
