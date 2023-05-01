@@ -83,7 +83,7 @@ OPBPMNCollapsedSubProcessController >> modelClass [
 OPBPMNCollapsedSubProcessController >> renderDiagramElement [
 
 	super renderDiagramElement.
-	model when: OPPlaceTokensChanged do: [ self diagramElement modelChanged ]
+	model when: OPBPMNPlaceTokensChanged do: [ self diagramElement modelChanged ]
 ]
 
 { #category : #testing }
