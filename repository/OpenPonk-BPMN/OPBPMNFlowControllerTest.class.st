@@ -22,6 +22,11 @@ OPBPMNFlowControllerTest >> amountOfLabels [
 ]
 
 { #category : #tests }
+OPBPMNFlowControllerTest >> controllerClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #tests }
 OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
 ]

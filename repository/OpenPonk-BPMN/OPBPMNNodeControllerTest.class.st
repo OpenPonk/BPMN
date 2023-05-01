@@ -13,6 +13,11 @@ OPBPMNNodeControllerTest class >> isAbstract [
 ]
 
 { #category : #accessing }
+OPBPMNNodeControllerTest >> controllerClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 OPBPMNNodeControllerTest >> testAssignmentToParent [
 	controller createModelIn: relationshipController model.
 	self assert: (relationshipController model elements includes: controller model)
