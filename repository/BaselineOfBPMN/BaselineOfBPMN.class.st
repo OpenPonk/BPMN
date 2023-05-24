@@ -11,7 +11,7 @@ BaselineOfBPMN >> baseline: spec [
 		for: #common
 		do: [ spec
 				baseline: 'OpenPonk'
-				with: [ spec repository: 'github://openponk/openponk' ].
+				with: [ spec repository: 'github://openponk/openponk:dev-roassal3' ].
 			spec
 				baseline: 'OpenPonkModel'
 				with: [ spec repository: 'github://OpenPonk/openponk-model/repository' ].
@@ -27,6 +27,9 @@ BaselineOfBPMN >> baseline: spec [
 				package: 'OpenPonk-BPMN-XML'
 				with: [ spec requires: #('OpenPonk-BPMN' 'XMLWriter') ].
 			spec
-				group: 'plugin' with: #('OpenPonk-BPMN' 'OpenPonk-BPMN-XML');
+				package: 'OpenPonk-BPMN-Validation'
+				with: [ spec requires: #('OpenPonk-BPMN') ].
+			spec
+				group: 'plugin' with: #('OpenPonk-BPMN' 'OpenPonk-BPMN-XML' 'OpenPonk-BPMN-Validation');
 				group: 'default' with: #('OpenPonk' 'plugin') ]
 ]

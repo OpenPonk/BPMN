@@ -9,41 +9,6 @@ OPBPMNEdgeController >> addLabels [
 	self constraintLabel: #name balance: 0.4 offset: 12
 ]
 
-{ #category : #accessing }
-OPBPMNEdgeController >> constraintLabel: labelName balance: aFloat offset: aNumber [
-	| label |
-	label := (RTLabel new
-		height: 10;
-		color: figure shape color;
-		text: self model name;
-		element)
-		@ RTDraggable;
-		yourself.
-	label model: figure.
-	figure trachelShape
-		addCallback:
-			(TRRemoveCallback new
-				block: [ :removedShape | 
-					figure labels removeKey: labelName.
-					label remove ]).
-	figure labels at: labelName put: label.
-	label renderIn: figure view.
-	OPRTEdgeAlongConstraint
-		stick: label
-		alongEdge: figure
-		balance: aFloat
-		offset: aNumber.
-	OPRTElementsConstraint
-		whenDragging: label
-		drawLineToPoint: [ ((figure shape startingPointOf: figure)
-				+ (figure shape endingPointOf: figure)) / 2 ]
-]
-
-{ #category : #hooks }
-OPBPMNEdgeController >> createEdgeFrom: fromElement to: toElement [
-	^ self subclassResponsibility 
-]
-
 { #category : #construction }
 OPBPMNEdgeController >> createModelIn: aParentModel [
 	self model: self modelClass new.
@@ -57,8 +22,26 @@ OPBPMNEdgeController >> createModelIn: aParentModel [
 	^ model
 ]
 
+{ #category : #construction }
+OPBPMNEdgeController >> diagramElementClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+OPBPMNEdgeController >> ensureSourceAndTargetIn: aDiagramController [
+
+	source ifNil: [ 
+		self source:
+			(aDiagramController showWithoutDependentInDiagramModel:
+				 model source) ].
+	target ifNil: [ 
+		self target:
+			(aDiagramController showWithoutDependentInDiagramModel:
+				 model target) ]
+]
+
 { #category : #private }
-OPBPMNEdgeController >> headShapeClass [
+OPBPMNEdgeController >> headMarker [
 	"line decoration shape class used as head"
 
 	^ self subclassResponsibility
@@ -72,6 +55,12 @@ OPBPMNEdgeController >> hideSelectionFeedback [
 ]
 
 { #category : #private }
+OPBPMNEdgeController >> internalSubscribeTo: aModel [
+	super internalSubscribeTo: aModel.
+	aModel when: OPElementRemoved do: [ :e | self removeController ]
+]
+
+{ #category : #private }
 OPBPMNEdgeController >> isHideable [
 	^ true
 ]
@@ -81,29 +70,11 @@ OPBPMNEdgeController >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
-OPBPMNEdgeController >> refreshFigure [
-	super refreshFigure.
-	(figure labels at: #name) trachelShape text: self model name.
-	^ self figure
-]
-
 { #category : #private }
 OPBPMNEdgeController >> removeModel [
 	self diagramController model remove: self model.
 	self model target removeFlow: self model.
 	self model source removeFlow: self model
-]
-
-{ #category : #accessing }
-OPBPMNEdgeController >> renderFigureIn: aView [
-	self diagramController addingFigureFor: self.
-	figure := self
-		createEdgeFrom: self source figure
-		to: self target figure.
-	figure renderIn: aView.
-	self addLabels.
-	^ self diagramController addedFigureFor: self
 ]
 
 { #category : #accessing }
@@ -123,10 +94,7 @@ OPBPMNEdgeController >> showSelectionFeedback [
 
 { #category : #accessing }
 OPBPMNEdgeController >> showWithoutDependentInDiagram: aDiagramController [
-	source
-		ifNil:
-			[ self source: (aDiagramController showWithoutDependentInDiagramModel: model source) ].
-	target
-		ifNil: [ self target: (aDiagramController showWithoutDependentInDiagramModel: model target) ].
+
+	self ensureSourceAndTargetIn: aDiagramController.
 	^ super showWithoutDependentInDiagram: aDiagramController
 ]

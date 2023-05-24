@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #hooks }
-OPBPMNMessageFlowController >> createEdgeFrom: fromElement to: toElement [
+OPBPMNMessageFlowController >> createLineFrom: fromElement to: toElement [
 	^ OPRTStyledMultiLine new
-		head: self headShapeClass;
+		head: self headMarker;
 		tail: RTEmptyCircle;
 		dashedLine;
 		withBorderAttachPoint;
@@ -15,9 +15,22 @@ OPBPMNMessageFlowController >> createEdgeFrom: fromElement to: toElement [
 		edgeFrom: fromElement to: toElement
 ]
 
+{ #category : #construction }
+OPBPMNMessageFlowController >> diagramElementClass [
+
+	^ OPBPMNMessageShape
+]
+
 { #category : #hooks }
-OPBPMNMessageFlowController >> headShapeClass [
-	^ RTSimpleArrow
+OPBPMNMessageFlowController >> headMarker [
+
+	^ (RSShapeFactory polygonWithPoints: (Array
+				    with: 5 @ 10
+				    with: 0 @ 5
+				    with: -5 @ 10
+				    with: 0 @ 0))
+		  color: Color black;
+		  yourself
 ]
 
 { #category : #hooks }

@@ -10,6 +10,21 @@ OPBPMNActivityControllerTest >> controllerClass [
 ]
 
 { #category : #accessing }
+OPBPMNActivityControllerTest >> diagramElementClass [
+	^ OPBPMNActivityShape
+]
+
+{ #category : #accessing }
 OPBPMNActivityControllerTest >> modelClass [
 	^ OPBPMNActivityModel 
+]
+
+{ #category : #accessing }
+OPBPMNActivityControllerTest >> targetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : #accessing }
+OPBPMNActivityControllerTest >> targetModelClass [
+	^ OPBPMNPoolModel 
 ]

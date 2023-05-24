@@ -8,9 +8,28 @@ Class {
 	#category : #'OpenPonk-BPMN-Tests'
 }
 
-{ #category : #accessing }
+{ #category : #testing }
+OPBPMNFlowControllerTest class >> isAbstract [
+	"Override to true if a TestCase subclass is Abstract and should not have
+	TestCase instances built from it"
+
+	^ self = OPBPMNFlowControllerTest | (self = OPBPMNControllerTest)
+]
+
+{ #category : #tests }
+OPBPMNFlowControllerTest >> amountOfLabels [
+	^ 1
+]
+
+{ #category : #tests }
 OPBPMNFlowControllerTest >> controllerClass [
-	^ OPBPMNFlowController 
+	^ self subclassResponsibility
+]
+
+{ #category : #tests }
+OPBPMNFlowControllerTest >> diagramElementClass [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #tests }
@@ -18,44 +37,60 @@ OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
 ]
 
-{ #category : #accessing }
+{ #category : #tests }
 OPBPMNFlowControllerTest >> modelClass [
-	^ OPBPMNFlowModel 
+	^ self subclassResponsibility
 ]
 
 { #category : #tests }
 OPBPMNFlowControllerTest >> setUp [
+
 	super setUp.
 	fromCtrl := self fromClass new.
 	diagramController addController: fromCtrl.
 	fromCtrl createModelIn: diagramController model.
-	fromCtrl renderFigureIn: diagramController view.
+	fromCtrl
+		createDiagramElement;
+		renderDiagramElement.
 	toCtrl := self toClass new.
 	diagramController addController: toCtrl.
 	toCtrl createModelIn: diagramController model.
-	toCtrl renderFigureIn: diagramController view
+	toCtrl
+		createDiagramElement;
+		renderDiagramElement
+]
+
+{ #category : #tests }
+OPBPMNFlowControllerTest >> testCreateDiagramElement [
+
+	controller model: model.
+	controller model source: fromCtrl model.
+	controller model target: toCtrl model.
+
+	super testCreateDiagramElement
 ]
 
 { #category : #tests }
 OPBPMNFlowControllerTest >> testCreateFigure [
+
 	| figure previousElementsSize |
 	controller
 		source: fromCtrl;
 		target: toCtrl;
 		model: model.
 	diagramController addController: controller.
-	previousElementsSize := diagramController view elements size.
-	figure := controller renderFigureIn: diagramController view.
-	self assert: figure class equals: RTEdge.
-	self assert: figure from equals: fromCtrl figure.
-	self assert: figure to equals: toCtrl figure.
+	previousElementsSize := diagramController canvas nodes size.
+	figure := controller
+		          createDiagramElement;
+		          renderDiagramElement.
+	self assert: figure class equals: OPRSPolyline.
+	self assert: figure from equals: fromCtrl roassalShape.
+	self assert: figure to equals: toCtrl roassalShape.
 	self
-		assert: diagramController view elements size
-		equals: previousElementsSize + 1.
-	self assert: (figure shape isKindOf: RTStyledMultiLine).
+		assert: diagramController canvas nodes size
+		equals: previousElementsSize + self amountOfLabels.
 	self assert: figure shape color equals: Color black.
-	self assert: figure shape head shape equals: RTSimpleArrow.
-	self assert: figure shape dashes isNil
+	self assert: figure shape markerEnd isNotNil
 ]
 
 { #category : #tests }
@@ -73,18 +108,21 @@ OPBPMNFlowControllerTest >> testCreateModel [
 
 { #category : #tests }
 OPBPMNFlowControllerTest >> testFigureRefresh [
+
 	| label |
 	controller
 		source: fromCtrl;
 		target: toCtrl.
 	diagramController addController: controller.
 	controller createModelIn: diagramController model.
-	controller renderFigureIn: diagramController view.
-	label := controller figure labels at: #name.
-	self assert: label trachelShape text equals: ''.
+	controller
+		createDiagramElement;
+		renderDiagramElement.
+	label := controller diagramElement ownedElements first.
+	self assert: label roassalShape text equals: ''.
 	controller model name: 'new name'.
-	controller refreshFigure.
-	self assert: label trachelShape text equals: 'new name'
+	controller diagramElement modelChanged.
+	self assert: label roassalShape text equals: 'new name'
 ]
 
 { #category : #tests }

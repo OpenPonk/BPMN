@@ -9,7 +9,29 @@ OPBPMNNodeControllerTest class >> isAbstract [
 	"Override to true if a TestCase subclass is Abstract and should not have
 	TestCase instances built from it"
 
-	^ self = OPBPMNNodeControllerTest
+	^ (self = OPBPMNNodeControllerTest) | (self = OPBPMNControllerTest)
+]
+
+{ #category : #accessing }
+OPBPMNNodeControllerTest >> controllerClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+OPBPMNNodeControllerTest >> diagramElementClass [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+OPBPMNNodeControllerTest >> modelClass [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+OPBPMNNodeControllerTest >> testAssignmentToParent [
+	controller createModelIn: relationshipController model.
+	self assert: (relationshipController model elements includes: controller model)
 ]
 
 { #category : #accessing }
@@ -18,11 +40,8 @@ OPBPMNNodeControllerTest >> testClassSideModelClass [
 ]
 
 { #category : #accessing }
-OPBPMNNodeControllerTest >> testCreateFigure [
-	controller createModelIn: diagramController model.
-	diagramController addController: controller.
-	controller renderFigureIn: diagramController view.
-	self assert: controller figure class equals: RTElement
+OPBPMNNodeControllerTest >> testCreateController [
+	self assert: controller class = self controllerClass
 ]
 
 { #category : #accessing }
@@ -34,16 +53,18 @@ OPBPMNNodeControllerTest >> testCreateModel [
 
 { #category : #accessing }
 OPBPMNNodeControllerTest >> testFigureRefresh [
+
 	| text |
 	controller createModelIn: diagramController model.
 	diagramController addController: controller.
-	controller renderFigureIn: diagramController view.
-	self
-		assert: (controller figure attributeAt: #RTLabelledLabel) text
-		equals: ''.
+	controller
+		createDiagramElement;
+		renderDiagramElement.
+	self assert:
+		(controller roassalShape propertyAt: #RSLabeled) text = ''.
 	controller model name: 'new name'.
-	controller refreshFigure.
-	text := (controller figure attributeAt: #RTLabelledLabel) text.
-	self
-		assert: ((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
+	controller diagramElement modelChanged.
+	text := (controller roassalShape propertyAt: #RSLabeled) text.
+	self assert:
+		((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
 ]

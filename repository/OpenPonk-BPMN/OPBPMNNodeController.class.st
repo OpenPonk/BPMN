@@ -20,14 +20,9 @@ OPBPMNNodeController >> addAsTargetFor: aController [
 OPBPMNNodeController >> buildEditorForm: aForm [
 	(aForm addText: 'Name')
 		text: self model name;
-		whenTextIsAccepted: [ :newValue | 
+		whenTextChangedDo: [ :newValue | 
 			self model name: newValue asString.
-			self refreshFigure ]
-]
-
-{ #category : #connecting }
-OPBPMNNodeController >> createRoassalShape [
-	^ self subclassResponsibility
+			self diagramElement modelChanged ]
 ]
 
 { #category : #private }
@@ -42,13 +37,6 @@ OPBPMNNodeController >> isHideable [
 ]
 
 { #category : #connecting }
-OPBPMNNodeController >> layout [
-	^ OPElementLayout
-		withPosition: self figure position
-		extent: self figure extent
-]
-
-{ #category : #connecting }
 OPBPMNNodeController >> modelAsParent [
 	^ self model owner
 ]
@@ -60,24 +48,8 @@ OPBPMNNodeController >> modelClass [
 
 { #category : #private }
 OPBPMNNodeController >> removeModel [
+	self model announcer unsubscribe: self.
 	self diagramController model remove: self model
-]
-
-{ #category : #construction }
-OPBPMNNodeController >> renderFigureIn: aView [
-	self diagramController addingFigureFor: self.
-	figure := self createRoassalShape elementOn: self model.
-	figure
-		addInteraction:
-			(OPRTMultilineLabeled new
-				view: aView;
-				below;
-				color: Color black;
-				yourself).
-	figure @ RTDraggable.
-	figure @ OPRTFocusable.
-	figure renderIn: aView.
-	^ self diagramController addedFigureFor: self
 ]
 
 { #category : #connecting }

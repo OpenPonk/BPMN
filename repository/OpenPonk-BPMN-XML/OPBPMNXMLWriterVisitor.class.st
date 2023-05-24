@@ -113,87 +113,68 @@ OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
-"<bpmndi:BPMNShape bpmnElement=""_6-0e5130ce-1e7d-0d00-a4c8-c2f20e3ea2c6"">
+	"<bpmndi:BPMNShape bpmnElement=""_6-0e5130ce-1e7d-0d00-a4c8-c2f20e3ea2c6"">
    <dc:Bounds height=""50.0"" width=""99.99720027997208"" x=""-54.998100189980946"" y=""-154.98700129987003""/>
    <bpmndi:BPMNLabel/>
 </bpmndi:BPMNShape>"
+
 	(anElement isKindOf: OPBPMNEdgeController)
 		ifTrue: [ self visitDiagramFlow: anElement ]
-		ifFalse: [ (anElement isKindOf: OPBPMNPoolController)
+		ifFalse: [
+			(anElement isKindOf: OPBPMNPoolController)
 				ifTrue: [ self visitDiagramParticipant: anElement ]
-				ifFalse: [ writer
+				ifFalse: [
+					writer
 						tag: self diagramNamespace , 'BPMNShape'
-						attributes:
-							(Array
-								with:
-									'bpmnElement'
-										-> (anElement model printIdType , anElement model uuid asString))
-						with: [ writer
-								tag: 'dc:Bounds'
-								attributes:
-									(Array
-										with: 'height' -> anElement figure height asString
-										with: 'width' -> anElement figure width asString
-										with:
-											'x'
-												-> (anElement figure position x 
-													- (anElement figure width / 2.0)) asString
-										with:
-											'y'
-												-> (anElement figure position y 
-													- (anElement figure height / 2.0)) asString).
+						attributes: (Array with: 'bpmnElement'
+								 ->
+								 (anElement model printIdType , anElement model uuid asString))
+						with: [
+							writer tag: 'dc:Bounds' attributes: (Array
+									 with: 'height' -> anElement diagramElement height asString
+									 with: 'width' -> anElement diagramElement width asString
+									 with: 'x' -> (anElement diagramElement position x
+										  - (anElement diagramElement width / 2.0)) asString
+									 with: 'y' -> (anElement diagramElement position y
+										  - (anElement diagramElement height / 2.0)) asString).
 							writer tag: self diagramNamespace , 'BPMNLabel' ] ] ]
-		
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagramFlow: anElement [
-"<bpmndi:BPMNEdge bpmnElement=""_6-0e5130ce-1e7d-0d00-a4cd-8bba0e3ea2c6"">
+	"<bpmndi:BPMNEdge bpmnElement=""_6-0e5130ce-1e7d-0d00-a4cd-8bba0e3ea2c6"">
      <di:waypoint x=""-4.9995000499949045"" y=""-129.98700129987003""/>
      <di:waypoint x=""105.98940105989404"" y=""-129.98700129987""/>
  </bpmndi:BPMNEdge>"
+
 	writer
 		tag: self diagramNamespace , 'BPMNEdge'
-		attributes:
-			(Array
-				with:
-					'bpmnElement'
-						-> (anElement model printIdType , anElement model uuid asString))
-		with: [ writer
-				tag: 'di:waypoint'
-				attributes:
-					(Array
-						with: 'x' -> anElement source figure position x asString
-						with: 'y' -> anElement source figure position y asString).
-			writer
-				tag: 'di:waypoint'
-				attributes:
-					(Array
-						with: 'x' -> anElement target figure position x asString
-						with: 'y' -> anElement target figure position y asString) ]
+		attributes: (Array with: 'bpmnElement'
+				 -> (anElement model printIdType , anElement model uuid asString))
+		with: [
+			writer tag: 'di:waypoint' attributes: (Array
+					 with: 'x' -> anElement source diagramElement position x asString
+					 with: 'y' -> anElement source diagramElement position y asString).
+			writer tag: 'di:waypoint' attributes: (Array
+					 with: 'x' -> anElement target diagramElement position x asString
+					 with: 'y' -> anElement target diagramElement position y asString) ]
 ]
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
+
 	writer
 		tag: self diagramNamespace , 'BPMNShape'
-		attributes:
-			(Array
-				with: 'bpmnElement' -> ('participant_' , anElement model uuid asString))
-		with: [ writer
-				tag: 'dc:Bounds'
-				attributes:
-					(Array
-						with: 'height' -> anElement figure height asString
-						with: 'width' -> anElement figure width asString
-						with:
-							'x'
-								-> (anElement figure position x 
-									- (anElement figure width / 2.0)) asString
-						with:
-							'y'
-								-> (anElement figure position y 
-									- (anElement figure height / 2.0)) asString).
+		attributes: (Array with:
+				 'bpmnElement' -> ('participant_' , anElement model uuid asString))
+		with: [
+			writer tag: 'dc:Bounds' attributes: (Array
+					 with: 'height' -> anElement diagramElement height asString
+					 with: 'width' -> anElement diagramElement width asString
+					 with: 'x' -> (anElement diagramElement position x
+						  - (anElement diagramElement width / 2.0)) asString
+					 with: 'y' -> (anElement diagramElement position y
+						  - (anElement diagramElement height / 2.0)) asString).
 			writer tag: self diagramNamespace , 'BPMNLabel' ]
 ]
 
