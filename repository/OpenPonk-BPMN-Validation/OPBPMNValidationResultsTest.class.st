@@ -60,7 +60,7 @@ OPBPMNValidationResultsTest >> testInitialize [
 OPBPMNValidationResultsTest >> testResults [
 	| validationResults dummyMessage |
 	dummyMessage := 'dummyMessage'.	
-	validationResults := VerificationResults new.
+	validationResults := OPBPMNValidationResults new.
 	self assert: validationResults results size equals: 0.
 	validationResults addResult: dummyMessage.
 	self assert: validationResults results size equals: 1.
@@ -71,7 +71,7 @@ OPBPMNValidationResultsTest >> testResults [
 OPBPMNValidationResultsTest >> testSelectErrors [
 	| validationResults dummyMessage dummyObject dummyValidation |
 	dummyObject := Object new.
-	dummyValidation := Verification basicNew.
+	dummyValidation := OPBPMNValidation basicNew.
 	dummyMessage := OPBPMNValidationMessageError createFor: dummyObject withValidation: dummyValidation  withText: 'some text'.	
 	validationResults := OPBPMNValidationResults new.
 	self assert: validationResults selectErrors size equals: 0.
@@ -84,7 +84,7 @@ OPBPMNValidationResultsTest >> testSelectErrors [
 OPBPMNValidationResultsTest >> testSelectWarnings [
 	| validationResults dummyMessage dummyObject dummyValidation |
 	dummyObject := Object new.
-	dummyValidation := Verification basicNew.
+	dummyValidation := OPBPMNValidation basicNew.
 	dummyMessage := OPBPMNValidationMessageWarning createFor: dummyObject withValidation: dummyValidation  withText: 'some text'.	
 	validationResults := OPBPMNValidationResults new.
 	self assert: validationResults selectWarnings  size equals: 0.
