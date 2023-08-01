@@ -59,20 +59,24 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 		        yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape when: RSShapeRemovedEvent do: [ icon remove ].
+	self roassalShape
+		when: RSShapeRemovedEvent
+		do: [ icon remove ]
+		for: self.
 
 	innerCircle := RSCircle new
 		               size: 31;
 		               borderColor: Color black;
 		               color: Color transparent;
-						   border: borderIn;
+		               border: borderIn;
 		               yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape.
 	self roassalShape
 		when: RSShapeRemovedEvent
-		do: [ innerCircle remove ].
-		"TODO for what are good bounds?????"
+		do: [ innerCircle remove ]
+		for: self.
+	"TODO for what are good bounds?????"
 	self bounds: nil.
 	"roassalShape @ OPRSSelectionDraggable."
 	selectable := OPRSSelectable new.

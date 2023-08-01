@@ -62,10 +62,13 @@ OPBPMNActivityShape >> renderShapeDetails [
 	RSLocation new
 		stick: icon on: self roassalShape;
 		offset: -28 @ -16.
-	self roassalShape when: RSShapeRemovedEvent do: [ icon remove ].
+	self roassalShape
+		when: RSShapeRemovedEvent
+		do: [ icon remove ]
+		for: self.
 
 	self color: (Color fromHexString: 'f2f2f2').
-"TODO for what are good bounds?????"
+	"TODO for what are good bounds?????"
 	self bounds: nil.
 	roassalShape @ OPRSSelectionDraggable.
 	selectable := OPRSSelectable new.

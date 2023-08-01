@@ -56,8 +56,8 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 	subprocessIcon := RSBitmap new
-		        form: self typeBasicIcon;
-		        yourself.
+		                  form: self typeBasicIcon;
+		                  yourself.
 	icon := RSBitmap new
 		        form: self typeIconForModel;
 		        yourself.
@@ -66,11 +66,17 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	RSLocation new
 		stick: icon on: self roassalShape;
 		offset: -16 @ 18.
-	self roassalShape when: RSShapeRemovedEvent do: [ icon remove ].
+	self roassalShape
+		when: RSShapeRemovedEvent
+		do: [ icon remove ]
+		for: self.
 	RSLocation new
 		stick: subprocessIcon on: self roassalShape;
 		offset: 0 @ 18.
-	self roassalShape when: RSShapeRemovedEvent do: [ subprocessIcon remove ].
+	self roassalShape
+		when: RSShapeRemovedEvent
+		do: [ subprocessIcon remove ]
+		for: self.
 	self color: (Color fromHexString: 'f2f2f2').
 
 	roassalShape @ OPRSSelectionDraggable.

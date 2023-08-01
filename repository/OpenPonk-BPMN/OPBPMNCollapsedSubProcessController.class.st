@@ -11,23 +11,26 @@ Class {
 
 { #category : #testing }
 OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
+
 	| anEvent |
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Marker')
-		items: #( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation #MarkerAdhoc);
+		items:
+			#( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation
+			   #MarkerAdhoc );
 		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue |
 			self model type: newValue.
 			self diagramElement modelChanged ].
-		(aForm addCheckbox: 'Is Call Activity?')
+	(aForm addCheckbox: 'Is Call Activity?')
 		state: self model isCallActivity;
-		whenChangedDo: [ :val | 
+		whenChangedDo: [ :val |
 			self model isCallActivity: val.
 			self diagramElement modelChanged ].
-		
-		(aForm addButton: 'Add Boundary Event') action: [ 
+
+	(aForm addButton: 'Add Boundary Event') action: [
 		anEvent := OPBPMNBoundaryEventController new
 			           createModelIn: self model;
 			           showInDiagram: self diagramController;
@@ -42,7 +45,8 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 			offset: -1 @ 22.
 		self diagramElement roassalShape
 			when: RSShapeRemovedEvent
-			do: [ anEvent diagramElement roassalShape remove ] ].
+			do: [ anEvent diagramElement roassalShape remove ]
+			for: self ].
 	self diagramElement modelChanged
 ]
 
