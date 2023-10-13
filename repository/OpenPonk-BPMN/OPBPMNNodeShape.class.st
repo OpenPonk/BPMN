@@ -72,7 +72,10 @@ OPBPMNNodeShape >> renderShapeDetails [
 		        yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape when: RSShapeRemovedEvent do: [ icon remove ].
+	self roassalShape
+		when: RSShapeRemovedEvent
+		do: [ icon remove ]
+		for: self.
 
 	selectable := OPRSSelectable new.
 	selectable highlightBorderColor: Color blue.
