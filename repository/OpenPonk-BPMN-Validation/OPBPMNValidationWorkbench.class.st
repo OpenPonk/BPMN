@@ -40,21 +40,6 @@ OPBPMNValidationWorkbench class >> defaultLayout [
 ]
 
 { #category : #layout }
-OPBPMNValidationWorkbench class >> developerSettingsOn: aBuilder [
-
-	<systemsettings>
-	(aBuilder group: #'op-dev')
-		label: 'OpenPonk Development';
-		parent: #openponk;
-		order: 100.
-	(aBuilder setting: #isDevelopmentMode)
-		parent: #'op-dev';
-		target: self;
-		label: 'Enable Development Mode';
-		description: 'Add extra options useful for developers.'
-]
-
-{ #category : #layout }
 OPBPMNValidationWorkbench class >> initialExtent [
 
 	^ self currentWorld extent * 0.8 min: 1600 @ 1000
@@ -68,12 +53,8 @@ OPBPMNValidationWorkbench class >> initialListsWidth [
 
 { #category : #layout }
 OPBPMNValidationWorkbench class >> isDevelopmentMode [
-	^ isDevelopmentMode ifNil: [ false ]
-]
 
-{ #category : #layout }
-OPBPMNValidationWorkbench class >> isDevelopmentMode: aBoolean [
-	isDevelopmentMode := aBoolean
+	^ OPWorkbench isDevelopmentMode
 ]
 
 { #category : #layout }
@@ -102,13 +83,6 @@ OPBPMNValidationWorkbench class >> openProject: aProject [
 ]
 
 { #category : #layout }
-OPBPMNValidationWorkbench class >> settingsOn: aBuilder [
-
-	<systemsettings>
-	(aBuilder group: #openponk) label: 'OpenPonk'
-]
-
-{ #category : #layout }
 OPBPMNValidationWorkbench class >> verificationFrameworkSettingsGroups: aBuilder [
 
 	"I create groups for anti-patterns and verifications."
@@ -118,8 +92,8 @@ OPBPMNValidationWorkbench class >> verificationFrameworkSettingsGroups: aBuilder
 		label: 'Anti-patterns';
 		parent: #openponk;
 		order: 250."
-	(aBuilder group: #validations)
-		label: 'Validations';
+	(aBuilder group: #bpmnValidations)
+		label: 'BPMN Validations';
 		parent: #openponk;
 		order: 240
 ]
