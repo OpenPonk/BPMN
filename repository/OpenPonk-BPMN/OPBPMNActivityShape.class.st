@@ -49,7 +49,7 @@ OPBPMNActivityShape >> initialize [
 { #category : #rendering }
 OPBPMNActivityShape >> renderShapeDetails [
 
-	| label selectable |
+	| label |
 	label := RSLabeled new.
 	label location middle.
 	label shapeBuilder labelShape color: Color black.
@@ -69,11 +69,7 @@ OPBPMNActivityShape >> renderShapeDetails [
 
 	self color: (Color fromHexString: 'f2f2f2').
 	"TODO for what are good bounds?????"
-	self bounds: nil.
-	roassalShape @ OPRSSelectionDraggable.
-	selectable := OPRSSelectable new.
-	self setupHighlight: selectable.
-	roassalShape @ selectable
+	self bounds: nil
 ]
 
 { #category : #rendering }

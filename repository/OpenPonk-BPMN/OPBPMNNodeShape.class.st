@@ -61,7 +61,7 @@ OPBPMNNodeShape >> renderBasicShape [
 { #category : #hooks }
 OPBPMNNodeShape >> renderShapeDetails [
 
-	| label selectable |
+	| label |
 	label := RSLabeled new.
 	label location below.
 	label shapeBuilder labelShape color: Color black.
@@ -75,18 +75,19 @@ OPBPMNNodeShape >> renderShapeDetails [
 	self roassalShape
 		when: RSShapeRemovedEvent
 		do: [ icon remove ]
-		for: self.
-
-	selectable := OPRSSelectable new.
-	selectable highlightBorderColor: Color blue.
-	roassalShape @ selectable.
-	roassalShape @ OPRSSelectionDraggable
+		for: self
 ]
 
 { #category : #hooks }
-OPBPMNNodeShape >> setupHighlight: aHighlightable [
+OPBPMNNodeShape >> selectableInteraction [
 
-	aHighlightable highlightBorderColor: Color blue
+	^ OPRSSelectable highlightBorderColorBlue
+]
+
+{ #category : #hooks }
+OPBPMNNodeShape >> shouldBePositionableByUser [
+
+	^ true
 ]
 
 { #category : #hooks }

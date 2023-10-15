@@ -79,9 +79,6 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	"TODO for what are good bounds?????"
 	self bounds: nil.
 	"roassalShape @ OPRSSelectionDraggable."
-	selectable := OPRSSelectable new.
-	self setupHighlight: selectable.
-	roassalShape @ selectable
 ]
 
 { #category : #connecting }

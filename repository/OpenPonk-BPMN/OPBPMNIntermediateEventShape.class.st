@@ -41,10 +41,5 @@ OPBPMNIntermediateEventShape >> renderShapeDetails [
 	self roassalShape
 		when: RSShapeRemovedEvent
 		do: [ innerCircle remove ]
-		for: self.
-
-	roassalShape @ OPRSSelectionDraggable.
-	selectable := OPRSSelectable new.
-	self setupHighlight: selectable.
-	roassalShape @ selectable
+		for: self
 ]

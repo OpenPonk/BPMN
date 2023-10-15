@@ -26,17 +26,13 @@ OPBPMNSubProcessShape >> initialize [
 { #category : #connecting }
 OPBPMNSubProcessShape >> renderShapeDetails [
 
-	| label selectable |
+	| label |
 	label := RSLabeled new.
 	label location top offset: 0 @ 17.
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 
-	roassalShape @ OPRSSelectionDraggable.
 	roassalShape @ RSTransformable.
-	selectable := OPRSSelectable new.
-	self setupHighlight: selectable.
-	roassalShape @ selectable.
 	
 	"selectable := OPRSSelectable new.
 	selectable highlightBorderColor: Color blue.

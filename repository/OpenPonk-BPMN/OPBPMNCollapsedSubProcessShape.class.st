@@ -50,7 +50,7 @@ OPBPMNCollapsedSubProcessShape >> initialize [
 { #category : #connecting }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 
-	| label selectable |
+	| label |
 	label := RSLabeled new.
 	label location middle.
 	label shapeBuilder labelShape color: Color black.
@@ -77,12 +77,7 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 		when: RSShapeRemovedEvent
 		do: [ subprocessIcon remove ]
 		for: self.
-	self color: (Color fromHexString: 'f2f2f2').
-
-	roassalShape @ OPRSSelectionDraggable.
-	selectable := OPRSSelectable new.
-	self setupHighlight: selectable.
-	roassalShape @ selectable
+	self color: (Color fromHexString: 'f2f2f2')
 ]
 
 { #category : #connecting }

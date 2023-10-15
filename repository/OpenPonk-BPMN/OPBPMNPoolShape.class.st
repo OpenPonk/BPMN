@@ -50,6 +50,13 @@ OPBPMNPoolShape >> addLanes: aNumber [
 ]
 
 { #category : #accessing }
+OPBPMNPoolShape >> addSelectionDraggableInteraction [
+
+	roassalShape
+	@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes
+]
+
+{ #category : #accessing }
 OPBPMNPoolShape >> borderColor [
 
 	^ borderColor
@@ -132,7 +139,6 @@ OPBPMNPoolShape >> renderBasicShape [
 { #category : #accessing }
 OPBPMNPoolShape >> renderShapeDetails [
 
-	| selectable resizable |
 	label := RSLabel new
 		         rotateByDegrees: -90;
 		         color: Color black.
@@ -151,22 +157,35 @@ OPBPMNPoolShape >> renderShapeDetails [
 	self setupHighlight: selectable.
 	roassalShape @ selectable.
 	self updateRenderFromModel."
-	
-selectable := OPRSSelectable new.
-	selectable highlightBorderColor: Color blue.
-	resizable := OPRSResizable onShape: b1. 
-	roassalShape @ selectable.
+
 	self roassalShape
-@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes;
 		pushBack;
 		@ RSTransformable.
-		self updateRenderFromModel.
+	self updateRenderFromModel
+]
+
+{ #category : #interactions }
+OPBPMNPoolShape >> resizableInteractionTarget [
+
+	^ b1
 ]
 
 { #category : #accessing }
-OPBPMNPoolShape >> setupHighlight: aHighlightable [
+OPBPMNPoolShape >> selectableInteraction [
 
-	aHighlightable highlightBorderColor: Color blue
+	^ OPRSSelectable highlightBorderColorBlue
+]
+
+{ #category : #accessing }
+OPBPMNPoolShape >> shouldBePositionableByUser [
+
+	^ true
+]
+
+{ #category : #interactions }
+OPBPMNPoolShape >> shouldBeResizableByUser [
+
+	^ true
 ]
 
 { #category : #accessing }
