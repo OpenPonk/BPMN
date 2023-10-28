@@ -5,7 +5,7 @@ Class {
 		'subprocessIcon',
 		'border'
 	],
-	#category : #'OpenPonk-BPMN-DiagramElements'
+	#category : #'OpenPonk-BPMN-Shapes'
 }
 
 { #category : #'ston-core' }

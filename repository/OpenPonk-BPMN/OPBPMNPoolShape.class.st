@@ -1,6 +1,6 @@
 Class {
 	#name : #OPBPMNPoolShape,
-	#superclass : #OPShape,
+	#superclass : #OPBoundNode,
 	#instVars : [
 		'label',
 		'laneLines',
@@ -9,7 +9,7 @@ Class {
 		'b2',
 		'borderColor'
 	],
-	#category : #'OpenPonk-BPMN-DiagramElements'
+	#category : #'OpenPonk-BPMN-Shapes'
 }
 
 { #category : #adding }

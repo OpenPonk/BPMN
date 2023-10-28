@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'shape'
 	],
-	#category : #'OpenPonk-BPMN-DiagramElements'
+	#category : #'OpenPonk-BPMN-Shapes'
 }
 
 { #category : #hooks }

@@ -5,7 +5,7 @@ Class {
 		'shape',
 		'borderColor'
 	],
-	#category : #'OpenPonk-BPMN-DiagramElements'
+	#category : #'OpenPonk-BPMN-Shapes'
 }
 
 { #category : #rendering }

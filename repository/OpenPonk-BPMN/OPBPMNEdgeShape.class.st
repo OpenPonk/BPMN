@@ -1,7 +1,7 @@
 Class {
 	#name : #OPBPMNEdgeShape,
 	#superclass : #OPEdge,
-	#category : #'OpenPonk-BPMN-DiagramElements'
+	#category : #'OpenPonk-BPMN-Shapes'
 }
 
 { #category : #'as yet unclassified' }
