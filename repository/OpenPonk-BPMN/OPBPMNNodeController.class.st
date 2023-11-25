@@ -51,9 +51,3 @@ OPBPMNNodeController >> removeModel [
 	self model announcer unsubscribe: self.
 	self diagramController model remove: self model
 ]
-
-{ #category : #connecting }
-OPBPMNNodeController >> showSelectionFeedback [
-	super showSelectionFeedback.
-	self figure view signalUpdate
-]

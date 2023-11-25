@@ -47,13 +47,6 @@ OPBPMNEdgeController >> headMarker [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
-OPBPMNEdgeController >> hideSelectionFeedback [
-	self figure view
-		ifNotNil: [ self figure announce: OPTRUnfocused.
-			self figure view signalUpdate ]
-]
-
 { #category : #private }
 OPBPMNEdgeController >> internalSubscribeTo: aModel [
 	super internalSubscribeTo: aModel.
@@ -84,12 +77,6 @@ OPBPMNEdgeController >> showInDiagram: aDiagramController [
 	target
 		ifNil: [ self target: (aDiagramController showWithoutDependentInDiagramModel: model target) ].
 	^ super showInDiagram: aDiagramController
-]
-
-{ #category : #accessing }
-OPBPMNEdgeController >> showSelectionFeedback [
-	self figure announce: OPTRFocused.
-	self figure view signalUpdate
 ]
 
 { #category : #accessing }

@@ -180,27 +180,30 @@ OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
 
 { #category : #initialization }
 OPBPMNXMLWriterVisitor >> visitElement: anElement [
-"<semantic:startEvent name=""Address placed"" id=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"">"
+	"<semantic:startEvent name=""Address placed"" id=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"">"
+
 	(anElement isKindOf: OPBPMNActivityModel)
 		ifTrue: [ self visitElementActivity: anElement ]
-		ifFalse: [ (anElement isKindOf: OPBPMNEventModel)
+		ifFalse: [
+			(anElement isKindOf: OPBPMNEventModel)
 				ifTrue: [ self visitElementEvent: anElement ]
-				ifFalse: [ writer
+				ifFalse: [
+					writer
 						tag: self namespace , anElement printType
-						attributes:
-							(Array
-								with: 'name' -> anElement name
-								with: 'id' -> (anElement printIdType , anElement uuid asString))
-						with: [ (anElement isKindOf: OPBPMNPoolModel)
-								| (anElement isKindOf: OPBPMNLaneModel)
-								ifTrue: [ anElement nodes do: [ :each | self visitElement: each ].
-									self allFlows
-										do: [ :each | self visitFlow: each type: 'sequenceFlow' ].
-									self allFlows do: [ :each | self removeFlow: each ] ].
-							anElement incoming
-								do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
-							anElement outgoing
-								do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ] ] ]
+						attributes: (Array
+								 with: 'name' -> anElement name
+								 with:
+								 'id' -> (anElement printIdType , anElement uuid asString))
+						with: [
+							(anElement isKindOf: OPBPMNPoolModel) ifTrue: [
+								anElement nodes do: [ :each | self visitElement: each ].
+								self allFlows do: [ :each |
+									self visitFlow: each type: 'sequenceFlow' ].
+								self allFlows do: [ :each | self removeFlow: each ] ].
+							anElement incoming do: [ :each |
+								self visitFlowRef: each inOut: 'incoming' ].
+							anElement outgoing do: [ :each |
+								self visitFlowRef: each inOut: 'outgoing' ] ] ] ]
 ]
 
 { #category : #initialization }
