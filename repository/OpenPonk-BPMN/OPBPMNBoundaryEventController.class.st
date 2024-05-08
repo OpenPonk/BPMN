@@ -1,14 +1,16 @@
 Class {
-	#name : #OPBPMNBoundaryEventController,
-	#superclass : #OPBPMNElementController,
+	#name : 'OPBPMNBoundaryEventController',
+	#superclass : 'OPBPMNElementController',
 	#instVars : [
 		'iconElement',
 		'iconConstraint'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -29,36 +31,36 @@ OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ].
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> canBeSourceFor: aController [
 	^ (aController isKindOf: OPBPMNMessageFlowController) 
 	| (aController isKindOf: OPBPMNFlowController)
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> canBeTargetFor: aController [
 	^ (aController isKindOf: OPBPMNMessageFlowController)
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> diagramElementClass [
 
 	^ OPBPMNBoundaryEventShape
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> modelClass [
 
 	^ OPBPMNBoundaryEventModel
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> removeModel [
 
 	self diagramController model remove: self model
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNBoundaryEventController >> subscribeDiagram: aDiagram [
 
 	self model subscribeDiagram: aDiagram

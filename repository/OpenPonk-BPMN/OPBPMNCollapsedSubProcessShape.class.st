@@ -1,14 +1,16 @@
 Class {
-	#name : #OPBPMNCollapsedSubProcessShape,
-	#superclass : #OPBPMNNodeShape,
+	#name : 'OPBPMNCollapsedSubProcessShape',
+	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
 		'subprocessIcon',
 		'border'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #'ston-core' }
+{ #category : 'ston-core' }
 OPBPMNCollapsedSubProcessShape class >> stonAllInstVarNames [
 
 	"Override to encode my instances using a custom set of instance variables or to define their order."
@@ -16,7 +18,7 @@ OPBPMNCollapsedSubProcessShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> createBorder [
 
 	self modelElement
@@ -30,7 +32,7 @@ OPBPMNCollapsedSubProcessShape >> createBorder [
 				ifFalse: [ border width: 1 ] ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> createRoassalShape [
 	^ RSBox new
 		extent: 85@55;
@@ -40,14 +42,14 @@ OPBPMNCollapsedSubProcessShape >> createRoassalShape [
 	
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> initialize [
 	super initialize.
 	self createBorder.
 	
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 
 	| label |
@@ -80,12 +82,12 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	self color: (Color fromHexString: 'f2f2f2')
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> typeBasicIcon [
 		^ OPBPMNIcon current markerSubProcess 
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

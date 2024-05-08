@@ -1,6 +1,6 @@
 Class {
-	#name : #OPBPMNPoolShape,
-	#superclass : #OPBoundNode,
+	#name : 'OPBPMNPoolShape',
+	#superclass : 'OPBoundNode',
 	#instVars : [
 		'label',
 		'laneLines',
@@ -9,10 +9,12 @@ Class {
 		'b2',
 		'borderColor'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 OPBPMNPoolShape >> addLanes: aNumber [
 
 	| b4 b5 e2 w h lb |
@@ -49,38 +51,38 @@ OPBPMNPoolShape >> addLanes: aNumber [
 				b1 width / 2 - b1 width + b2 width + 8 @ ((i - 1 / aNumber * 2 * b1 height - b1 height / 2) + (b1 height/aNumber/2)) ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> addSelectionDraggableInteraction [
 
 	roassalShape
 	@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> borderColor [
 
 	^ borderColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> borderColor: aColor [
 
 	borderColor := aColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> color [
 
 	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> color: aColor [
 
 	^ self stylePropertyNamed: #fillColor put: aColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> createRoassalShape [
 | com |
 com := RSComposite new.
@@ -94,7 +96,7 @@ b2 position: -310@0.
 	^ com
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> initialize [
 	super initialize.
 	label := ''.
@@ -102,25 +104,25 @@ OPBPMNPoolShape >> initialize [
 	laneLabels := OrderedCollection new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> label [
 
 	^ label
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> label: aLabel [
 
  label := aLabel
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 OPBPMNPoolShape >> remove [
 	self removeLaneLines.
 	super remove.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> removeLaneLines [
 
 	laneLines do: [ :each | self canvas removeShape: each. ].
@@ -130,13 +132,13 @@ OPBPMNPoolShape >> removeLaneLines [
 	laneLabels removeAll.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> renderBasicShape [
 
 	^ self createRoassalShape model: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> renderShapeDetails [
 
 	label := RSLabel new
@@ -164,31 +166,31 @@ OPBPMNPoolShape >> renderShapeDetails [
 	self updateRenderFromModel
 ]
 
-{ #category : #interactions }
+{ #category : 'interactions' }
 OPBPMNPoolShape >> resizableInteractionTarget [
 
 	^ b1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> shouldBePositionableByUser [
 
 	^ true
 ]
 
-{ #category : #interactions }
+{ #category : 'interactions' }
 OPBPMNPoolShape >> shouldBeResizableByUser [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> updateRenderFromModel [
 	| aCnt |
 	self modelElement name ifNotNil: [ 
@@ -204,7 +206,7 @@ OPBPMNPoolShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

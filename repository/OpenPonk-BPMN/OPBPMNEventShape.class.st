@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNEventShape,
-	#superclass : #OPBPMNNodeShape,
-	#category : #'OpenPonk-BPMN-Shapes'
+	#name : 'OPBPMNEventShape',
+	#superclass : 'OPBPMNNodeShape',
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNEventShape >> createRoassalShape [
 	^ self subclassResponsibility 
 	

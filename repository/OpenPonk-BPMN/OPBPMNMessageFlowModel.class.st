@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNMessageFlowModel,
-	#superclass : #OPBPMNEdgeModel,
-	#category : #'OpenPonk-BPMN-Models'
+	#name : 'OPBPMNMessageFlowModel',
+	#superclass : 'OPBPMNEdgeModel',
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNMessageFlowModel >> printType [
 	^ 'messageFlow'
 ]

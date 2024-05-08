@@ -1,73 +1,75 @@
 Class {
-	#name : #OPBPMNBoundaryEventModel,
-	#superclass : #OPBPMNNodeModel,
+	#name : 'OPBPMNBoundaryEventModel',
+	#superclass : 'OPBPMNNodeModel',
 	#instVars : [
 		'subscribeDiagram',
 		'isNonInterrupting'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> @ aName [
 
 	^ self nodeNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> changed [
 
 	super changed.
 	owner changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> defaultType [
 
 	^ OPBPMNNodeType Error
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> initialize [ 
 	super initialize.
 	isNonInterrupting := false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> isNonInterrupting [
 	^ isNonInterrupting 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> isNonInterrupting: aValue [
 	isNonInterrupting := aValue. 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> nodeNamed: aName [
 
 	^ self elementNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> printType [
 
 	^ 'boundary'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> subscribeDiagram [
 
 	^ subscribeDiagram
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> subscribeDiagram: aDiagram [
 
 	subscribeDiagram := aDiagram
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventModel >> typeIconFor: aType [
 
 	aType = OPBPMNNodeType Receive ifTrue: [ 

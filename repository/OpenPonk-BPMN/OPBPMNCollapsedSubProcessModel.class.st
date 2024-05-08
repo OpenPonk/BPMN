@@ -1,34 +1,36 @@
 Class {
-	#name : #OPBPMNCollapsedSubProcessModel,
-	#superclass : #OPBPMNFlowNodeModel,
+	#name : 'OPBPMNCollapsedSubProcessModel',
+	#superclass : 'OPBPMNFlowNodeModel',
 	#instVars : [
 		'isCallActivity'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessModel >> initialize [ 
 	super initialize.
 	isCallActivity := false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessModel >> isCallActivity [
 	^ isCallActivity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessModel >> isCallActivity: aActivity [
 	isCallActivity := aActivity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessModel >> printType [
 	type = OPBPMNNodeType MarkerParallel 
 		ifTrue: [ ^ 'MarkerParallel' ].
@@ -42,7 +44,7 @@ OPBPMNCollapsedSubProcessModel >> printType [
 		ifTrue: [ ^ 'MarkerLoop']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType None 
 		ifTrue: [ ^ OPBPMNIcon current activityNone ].

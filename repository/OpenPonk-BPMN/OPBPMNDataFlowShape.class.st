@@ -1,33 +1,35 @@
 Class {
-	#name : #OPBPMNDataFlowShape,
-	#superclass : #OPEdge,
+	#name : 'OPBPMNDataFlowShape',
+	#superclass : 'OPEdge',
 	#instVars : [
 		'shape',
 		'borderColor'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNDataFlowShape >> borderColor [
 
 	^ borderColor
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNDataFlowShape >> borderColor: aColor [
 
 	borderColor := aColor
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNDataFlowShape >> createOwnedElementsWithoutController [
 
 	super createOwnedElementsWithoutController.
 	OPBPMNEdgeLabel in: self
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNDataFlowShape >> renderBasicShape [
 
 	^ (self source = self target

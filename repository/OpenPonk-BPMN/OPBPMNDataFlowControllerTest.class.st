@@ -1,36 +1,38 @@
 Class {
-	#name : #OPBPMNDataFlowControllerTest,
-	#superclass : #OPBPMNFlowControllerTest,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNDataFlowControllerTest',
+	#superclass : 'OPBPMNFlowControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNDataFlowControllerTest >> controllerClass [
 	^ OPBPMNDataFlowController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNDataFlowControllerTest >> diagramElementClass [
 
 	^ OPBPMNDataFlowShape 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNDataFlowControllerTest >> modelClass [
 	^ OPBPMNDataFlowModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNDataFlowControllerTest >> targetControllerClass [
 	^ OPBPMNDataObjectController  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNDataFlowControllerTest >> targetModelClass [
 	^ OPBPMNDataObjectModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNDataFlowControllerTest >> testCreateFigure [
 
 	| figure previousElementsSize |

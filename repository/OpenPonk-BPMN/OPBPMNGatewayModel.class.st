@@ -1,15 +1,17 @@
 Class {
-	#name : #OPBPMNGatewayModel,
-	#superclass : #OPBPMNFlowNodeModel,
-	#category : #'OpenPonk-BPMN-Models'
+	#name : 'OPBPMNGatewayModel',
+	#superclass : 'OPBPMNFlowNodeModel',
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNGatewayModel >> defaultType [
 	^ OPBPMNNodeType Exclusive
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNGatewayModel >> printType [
 	type = OPBPMNNodeType Parallel
 		ifTrue: [ ^ 'parallelGateway' ].
@@ -25,7 +27,7 @@ OPBPMNGatewayModel >> printType [
 		ifTrue: [ ^ 'exclusiveGateway' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNGatewayModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType Parallel
 		ifTrue: [ ^ OPBPMNIcon current gatewayParallel ].

@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNIntermediateEventShape,
-	#superclass : #OPBPMNEventShape,
-	#category : #'OpenPonk-BPMN-Shapes'
+	#name : 'OPBPMNIntermediateEventShape',
+	#superclass : 'OPBPMNEventShape',
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNIntermediateEventShape >> createRoassalShape [
 	^ RSCircle new
 		size: 39;
@@ -12,7 +14,7 @@ OPBPMNIntermediateEventShape >> createRoassalShape [
 		yourself
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNIntermediateEventShape >> renderShapeDetails [
 
 	| label selectable innerCircle |

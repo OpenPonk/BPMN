@@ -1,16 +1,18 @@
 Class {
-	#name : #OPBPMNMessageFlowController,
-	#superclass : #OPBPMNEdgeController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNMessageFlowController',
+	#superclass : 'OPBPMNEdgeController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNMessageFlowController >> diagramElementClass [
 
 	^ OPBPMNMessageShape
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageFlowController >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
@@ -22,7 +24,7 @@ OPBPMNMessageFlowController >> headMarker [
 		  yourself
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageFlowController >> modelClass [
 	^ OPBPMNMessageFlowModel
 ]

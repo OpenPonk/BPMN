@@ -1,15 +1,17 @@
 Class {
-	#name : #OPBPMNActivityController,
-	#superclass : #OPBPMNElementController,
+	#name : 'OPBPMNActivityController',
+	#superclass : 'OPBPMNElementController',
 	#instVars : [
 		'labelConstraint',
 		'iconElement',
 		'iconConstraint'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNActivityController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -42,12 +44,12 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNActivityController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNActivityController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -59,23 +61,23 @@ OPBPMNActivityController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNActivityController >> dependentElements [
 	^ (model incoming , model outgoing) asSet
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNActivityController >> diagramElementClass [
 
 	^ OPBPMNActivityShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNActivityController >> modelClass [
 	^ OPBPMNActivityModel
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNActivityController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

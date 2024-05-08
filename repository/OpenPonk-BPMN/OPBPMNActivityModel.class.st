@@ -1,34 +1,36 @@
 Class {
-	#name : #OPBPMNActivityModel,
-	#superclass : #OPBPMNFlowNodeModel,
+	#name : 'OPBPMNActivityModel',
+	#superclass : 'OPBPMNFlowNodeModel',
 	#instVars : [
 		'isCallActivity'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNActivityModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNActivityModel >> initialize [ 
 	super initialize.
 	isCallActivity := false.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNActivityModel >> isCallActivity [
 	^ isCallActivity
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNActivityModel >> isCallActivity: aActivity [
 	isCallActivity := aActivity
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNActivityModel >> printType [
 	type = OPBPMNNodeType Service
 		ifTrue: [ ^ 'serviceTask' ].
@@ -44,7 +46,7 @@ OPBPMNActivityModel >> printType [
 		ifTrue: [ ^ 'task' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNActivityModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType Service
 		ifTrue: [ ^ OPBPMNIcon current activityService ].

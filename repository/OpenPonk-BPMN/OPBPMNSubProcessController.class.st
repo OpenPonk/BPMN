@@ -1,13 +1,15 @@
 Class {
-	#name : #OPBPMNSubProcessController,
-	#superclass : #OPBPMNNodeController,
+	#name : 'OPBPMNSubProcessController',
+	#superclass : 'OPBPMNNodeController',
 	#instVars : [
 		'elements'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> buildEditorForm: aForm [
 
 	| anEvent |
@@ -31,13 +33,13 @@ OPBPMNSubProcessController >> buildEditorForm: aForm [
 	self diagramElement modelChanged
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> canBeSourceFor: aController [
 
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -51,37 +53,37 @@ OPBPMNSubProcessController >> canBeTargetFor: aController [
 	
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> dependentElements [
 
 	^ (model incoming , model outgoing) asSet
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> diagramElementClass [
 
 	^ OPBPMNSubProcessShape
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> elementsToShowInside [
 
 	^ model nodes , (model nodes flatCollect: [ :each | each outgoing ])
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> modelClass [
 
 	^ OPBPMNSubProcessModel
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> removeModel [
 
 	self diagramController model remove: self model
 ]
 
-{ #category : #forms }
+{ #category : 'forms' }
 OPBPMNSubProcessController >> showDenyFeedbackFor: aController [
 
 	^ nil

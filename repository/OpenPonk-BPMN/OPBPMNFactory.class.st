@@ -1,20 +1,22 @@
 Class {
-	#name : #OPBPMNFactory,
-	#superclass : #Object,
-	#category : #'OpenPonk-BPMN-Factory'
+	#name : 'OPBPMNFactory',
+	#superclass : 'Object',
+	#category : 'OpenPonk-BPMN-Factory',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Factory'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 OPBPMNFactory class >> addFqnFlows: aCollection in: aParticipant [
 	aCollection do: [ :pair | self fqnFlowFrom: pair key to: pair value in: aParticipant ]
 ]
 
-{ #category : #moving }
+{ #category : 'moving' }
 OPBPMNFactory class >> detachFLowsFrom: aDiagram [
 	aDiagram elements removeAll
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 OPBPMNFactory class >> flowFrom: fromNode to: toNode [
 	| flow |
 	flow := OPBPMNEdgeModel from: fromNode to: toNode.
@@ -23,12 +25,12 @@ OPBPMNFactory class >> flowFrom: fromNode to: toNode [
 	^ flow
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 OPBPMNFactory class >> fqnFlowFrom: fromName to: toName in: aParticipant [
 	^ self flowFrom: aParticipant @ fromName to: aParticipant @ toName
 ]
 
-{ #category : #moving }
+{ #category : 'moving' }
 OPBPMNFactory class >> moveFlowsFrom: aSourceDiagram to: aTargetDiagram [
 	aTargetDiagram removeAll.
 	"detach elements from old diagram without causing a cascade"

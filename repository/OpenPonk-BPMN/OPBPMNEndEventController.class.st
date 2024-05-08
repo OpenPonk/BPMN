@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNEndEventController,
-	#superclass : #OPBPMNEventController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNEndEventController',
+	#superclass : 'OPBPMNEventController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNEndEventController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -31,12 +33,12 @@ OPBPMNEndEventController >> buildEditorForm: aForm [
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNEndEventController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNMessageFlowController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNEndEventController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -48,13 +50,13 @@ OPBPMNEndEventController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNEndEventController >> diagramElementClass [
 
 	^ OPBPMNEndEventShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNEndEventController >> modelClass [
 	^ OPBPMNEndEventModel
 ]

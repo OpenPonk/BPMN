@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNSubProcessShape,
-	#superclass : #OPBPMNNodeShape,
-	#category : #'OpenPonk-BPMN-Shapes'
+	#name : 'OPBPMNSubProcessShape',
+	#superclass : 'OPBPMNNodeShape',
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNSubProcessShape >> createRoassalShape [
 
 	^ RSBox new
@@ -16,14 +18,7 @@ OPBPMNSubProcessShape >> createRoassalShape [
 		  yourself
 ]
 
-{ #category : #connecting }
-OPBPMNSubProcessShape >> initialize [
-
-	super initialize.
-	innerRoassalShapesBlock := [ :allNodes | self modelElement nodes ]
-]
-
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNSubProcessShape >> renderShapeDetails [
 
 	| label |
@@ -43,19 +38,19 @@ OPBPMNSubProcessShape >> renderShapeDetails [
 		@ OPRSResizable" 
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNSubProcessShape >> typeIconForModel [
 
 	
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNSubProcessShape >> updateIcon [
 
 	
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNSubProcessShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
@@ -64,7 +59,7 @@ OPBPMNSubProcessShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNSubProcessShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

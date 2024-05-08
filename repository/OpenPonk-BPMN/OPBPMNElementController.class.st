@@ -1,20 +1,25 @@
 Class {
-	#name : #OPBPMNElementController,
-	#superclass : #OPBPMNNodeController,
+	#name : 'OPBPMNElementController',
+	#superclass : 'OPBPMNNodeController',
 	#instVars : [
 		'owner'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNElementController >> dependentElements [
 	^ model flows
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNElementController >> renderDiagramElement [
 
 	super renderDiagramElement.
-	model when: OPBPMNPlaceTokensChanged do: [ self diagramElement modelChanged ]
+	model
+		when: OPBPMNPlaceTokensChanged
+		do: [ self diagramElement modelChanged ]
+		for: self
 ]

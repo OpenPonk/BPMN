@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNStartEventController,
-	#superclass : #OPBPMNEventController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNStartEventController',
+	#superclass : 'OPBPMNEventController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -39,12 +41,12 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 				self refreshFigure ] ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -56,13 +58,13 @@ OPBPMNStartEventController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNStartEventController >> diagramElementClass [
 
 	^ OPBPMNStartEventShape
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> modelClass [
 	^ OPBPMNStartEventModel
 ]

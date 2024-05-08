@@ -1,14 +1,16 @@
 Class {
-	#name : #OPBPMNBoundaryEventShape,
-	#superclass : #OPBPMNNodeShape,
+	#name : 'OPBPMNBoundaryEventShape',
+	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
 		'borderIn',
 		'borderOut'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventShape >> createBorder [
 
 	self modelElement
@@ -29,7 +31,7 @@ OPBPMNBoundaryEventShape >> createBorder [
 					borderOut dashArray: #( 1 0 ) ] ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventShape >> createRoassalShape [
 
 	^ RSCircle new
@@ -39,13 +41,13 @@ OPBPMNBoundaryEventShape >> createRoassalShape [
 		  yourself
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventShape >> initialize [
 	super initialize.
 	self createBorder.
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
 
 	| label selectable innerCircle |
@@ -81,7 +83,7 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventShape >> testupdateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].
@@ -93,7 +95,7 @@ OPBPMNBoundaryEventShape >> testupdateRenderFromSelf [
 	super updateRenderFromSelf
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

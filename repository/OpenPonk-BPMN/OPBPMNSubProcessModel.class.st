@@ -1,47 +1,49 @@
 Class {
-	#name : #OPBPMNSubProcessModel,
-	#superclass : #OPBPMNFlowNodeModel,
-	#category : #'OpenPonk-BPMN-Models'
+	#name : 'OPBPMNSubProcessModel',
+	#superclass : 'OPBPMNFlowNodeModel',
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> @ aName [
 
 	^ self nodeNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> changed [
 
 	super changed.
 	owner changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> nodeNamed: aName [
 
 	^ self elementNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> nodes [
 
 	^ elements
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> printType [
 
 	^ 'subprocess'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> removeAllNodes [
 
 	self removeAll
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSubProcessModel >> removeNode: aNode [
 
 	elements remove: aNode

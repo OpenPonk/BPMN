@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNXMLWriterVisitorTest,
-	#superclass : #TestCase,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNXMLWriterVisitorTest',
+	#superclass : 'TestCase',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitElement [
 
 	| model writerVisitor |
@@ -19,7 +21,7 @@ OPBPMNXMLWriterVisitorTest >> testVisitElement [
 			, '"/>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitElementActivity [
 | model writerVisitor|
 model := OPBPMNActivityModel new.
@@ -35,7 +37,7 @@ self assert: writerVisitor writer asString equals:
    
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitElementEvent [
 | model writerVisitor|
 model := OPBPMNStartEventModel new.
@@ -54,7 +56,7 @@ self assert: writerVisitor writer asString equals:
 </bpmn:startEvent>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitElementEventTimer [
 | model writerVisitor|
 model := OPBPMNStartEventModel new.
@@ -71,7 +73,7 @@ self assert: writerVisitor writer asString equals:
 </bpmn:timerEventDefinition>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitFlowRefInOut [
 | model writerVisitor modelSource modelTarget |
 modelSource := OPBPMNActivityModel new.
@@ -91,7 +93,7 @@ self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding
 <bpmn:incoming>_6-', model uuid asString ,'</bpmn:incoming>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitFlowType [
 | model writerVisitor modelSource modelTarget |
 modelSource := OPBPMNActivityModel new.
@@ -106,7 +108,7 @@ self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding
 <bpmn:sequenceFlow sourceRef="_6-', modelSource uuid asString ,'" targetRef="_6-', modelTarget uuid asString ,'" name="Test name" id="_6-', model uuid asString, '"/>'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitParticipantRef [
 | model writerVisitor|
 model := OPBPMNPoolModel new.

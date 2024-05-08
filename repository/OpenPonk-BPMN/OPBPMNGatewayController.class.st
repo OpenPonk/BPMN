@@ -1,14 +1,16 @@
 Class {
-	#name : #OPBPMNGatewayController,
-	#superclass : #OPBPMNElementController,
+	#name : 'OPBPMNGatewayController',
+	#superclass : 'OPBPMNElementController',
 	#instVars : [
 		'iconElement',
 		'iconConstraint'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -22,29 +24,29 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNFlowController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayController >> canBeTargetFor: aController [
 	^ (aController isKindOf: OPBPMNFlowController)
 		
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayController >> diagramElementClass [
 
 	^ OPBPMNGatewayShape 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNGatewayController >> modelClass [
 	^ OPBPMNGatewayModel
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

@@ -1,31 +1,33 @@
 Class {
-	#name : #OPBPMNMessageFlowControllerTest,
-	#superclass : #OPBPMNFlowControllerTest,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNMessageFlowControllerTest',
+	#superclass : 'OPBPMNFlowControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNMessageFlowControllerTest >> controllerClass [
 	^ OPBPMNMessageFlowController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNMessageFlowControllerTest >> diagramElementClass [
 
 	^ OPBPMNMessageShape 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNMessageFlowControllerTest >> modelClass [
 	^ OPBPMNMessageFlowModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNMessageFlowControllerTest >> targetControllerClass [
 	^ OPBPMNPoolController  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNMessageFlowControllerTest >> targetModelClass [
 	^ OPBPMNPoolModel 
 ]

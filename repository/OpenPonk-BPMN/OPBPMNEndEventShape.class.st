@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNEndEventShape,
-	#superclass : #OPBPMNEventShape,
-	#category : #'OpenPonk-BPMN-Shapes'
+	#name : 'OPBPMNEndEventShape',
+	#superclass : 'OPBPMNEventShape',
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNEndEventShape >> createRoassalShape [
 	^ RSCircle new
 		size: 36;

@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNDataObjectController,
-	#superclass : #OPBPMNNodeController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNDataObjectController',
+	#superclass : 'OPBPMNNodeController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -18,40 +20,43 @@ OPBPMNDataObjectController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ].
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNDataFlowController
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> canBeTargetFor: aController [
 	^ aController isKindOf: OPBPMNDataFlowController
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> dependentElements [
 	^ (model incoming , model outgoing) asSet
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> diagramElementClass [
 
 	^ OPBPMNDataObjectShape
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> modelClass [
 	^ OPBPMNDataObjectModel
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> renderDiagramElement [
 
 	super renderDiagramElement.
-	model when: OPBPMNPlaceTokensChanged do: [ self diagramElement modelChanged ]
+	model
+		when: OPBPMNPlaceTokensChanged
+		do: [ self diagramElement modelChanged ]
+		for: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> typeIconFor: aType [
 	aType = OPBPMNNodeType DataObject
 		ifTrue: [ ^ OPBPMNIcon current dataObject16 ].
@@ -63,7 +68,7 @@ OPBPMNDataObjectController >> typeIconFor: aType [
 		ifTrue: [ ^ OPBPMNIcon current dataStore16 ].
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNDataObjectController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

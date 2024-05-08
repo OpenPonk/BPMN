@@ -1,13 +1,15 @@
 Class {
-	#name : #OPBPMNStartEventShape,
-	#superclass : #OPBPMNEventShape,
+	#name : 'OPBPMNStartEventShape',
+	#superclass : 'OPBPMNEventShape',
 	#instVars : [
 		'border'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventShape >> createBorder [
 
 	self modelElement
@@ -21,7 +23,7 @@ OPBPMNStartEventShape >> createBorder [
 				ifFalse: [ border dashArray: #( 1 0 ) ] ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventShape >> createRoassalShape [
 	^ RSCircle new
 		size: 39;
@@ -30,14 +32,14 @@ OPBPMNStartEventShape >> createRoassalShape [
 		yourself
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventShape >> initialize [
 	super initialize.
 	self createBorder.
 	
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

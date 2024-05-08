@@ -1,14 +1,16 @@
 Class {
-	#name : #OPBPMNFlowControllerTest,
-	#superclass : #OPBPMNControllerTest,
+	#name : 'OPBPMNFlowControllerTest',
+	#superclass : 'OPBPMNControllerTest',
 	#instVars : [
 		'fromCtrl',
 		'toCtrl'
 	],
-	#category : #'OpenPonk-BPMN-Tests'
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNFlowControllerTest class >> isAbstract [
 	"Override to true if a TestCase subclass is Abstract and should not have
 	TestCase instances built from it"
@@ -16,33 +18,33 @@ OPBPMNFlowControllerTest class >> isAbstract [
 	^ self = OPBPMNFlowControllerTest | (self = OPBPMNControllerTest)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> amountOfLabels [
 	^ 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> controllerClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> diagramElementClass [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> setUp [
 
 	super setUp.
@@ -60,7 +62,7 @@ OPBPMNFlowControllerTest >> setUp [
 		renderDiagramElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> testCreateDiagramElement [
 
 	controller model: model.
@@ -70,7 +72,7 @@ OPBPMNFlowControllerTest >> testCreateDiagramElement [
 	super testCreateDiagramElement
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> testCreateFigure [
 
 	| figure previousElementsSize |
@@ -93,7 +95,7 @@ OPBPMNFlowControllerTest >> testCreateFigure [
 	self assert: figure shape markerEnd isNotNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> testCreateModel [
 	| createdModel |
 	controller source: fromCtrl.
@@ -106,7 +108,7 @@ OPBPMNFlowControllerTest >> testCreateModel [
 	self assert: createdModel target equals: toCtrl model
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> testFigureRefresh [
 
 	| label |
@@ -125,7 +127,7 @@ OPBPMNFlowControllerTest >> testFigureRefresh [
 	self assert: label roassalShape text equals: 'new name'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNFlowControllerTest >> toClass [
 	^ OPBPMNEndEventController 
 ]

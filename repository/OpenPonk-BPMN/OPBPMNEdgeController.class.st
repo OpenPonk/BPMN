@@ -1,15 +1,17 @@
 Class {
-	#name : #OPBPMNEdgeController,
-	#superclass : #OPDirectionalRelationshipController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNEdgeController',
+	#superclass : 'OPDirectionalRelationshipController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNEdgeController >> addLabels [
 	self constraintLabel: #name balance: 0.4 offset: 12
 ]
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNEdgeController >> createModelIn: aParentModel [
 	self model: self modelClass new.
 	model source: self source model.
@@ -22,12 +24,12 @@ OPBPMNEdgeController >> createModelIn: aParentModel [
 	^ model
 ]
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNEdgeController >> diagramElementClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNEdgeController >> ensureSourceAndTargetIn: aDiagramController [
 
 	source ifNil: [ 
@@ -40,37 +42,41 @@ OPBPMNEdgeController >> ensureSourceAndTargetIn: aDiagramController [
 				 model target) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNEdgeController >> headMarker [
 	"line decoration shape class used as head"
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNEdgeController >> internalSubscribeTo: aModel [
+
 	super internalSubscribeTo: aModel.
-	aModel when: OPElementRemoved do: [ :e | self removeController ]
+	aModel
+		when: OPElementRemoved
+		send: #removeController
+		to: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNEdgeController >> isHideable [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNEdgeController >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNEdgeController >> removeModel [
 	self diagramController model remove: self model.
 	self model target removeFlow: self model.
 	self model source removeFlow: self model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNEdgeController >> showInDiagram: aDiagramController [
 	source
 		ifNil: [ self source: (aDiagramController showWithoutDependentInDiagramModel: model source) ].
@@ -79,7 +85,7 @@ OPBPMNEdgeController >> showInDiagram: aDiagramController [
 	^ super showInDiagram: aDiagramController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNEdgeController >> showWithoutDependentInDiagram: aDiagramController [
 
 	self ensureSourceAndTargetIn: aDiagramController.

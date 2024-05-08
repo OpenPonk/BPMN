@@ -1,29 +1,31 @@
 Class {
-	#name : #OPBPMNFlowModel,
-	#superclass : #OPBPMNEdgeModel,
+	#name : 'OPBPMNFlowModel',
+	#superclass : 'OPBPMNEdgeModel',
 	#instVars : [
 		'type'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNFlowModel >> initialize [ 
 	super initialize.
 	type := 'Normal'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNFlowModel >> printType [
 	^ 'sequenceFlow'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNFlowModel >> type [
 	^ type
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNFlowModel >> type: aType [
 	type := aType
 ]

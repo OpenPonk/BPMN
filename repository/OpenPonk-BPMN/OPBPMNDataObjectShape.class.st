@@ -1,20 +1,22 @@
 Class {
-	#name : #OPBPMNDataObjectShape,
-	#superclass : #OPBoundNode,
+	#name : 'OPBPMNDataObjectShape',
+	#superclass : 'OPBoundNode',
 	#instVars : [
 		'icon',
 		'borderColor'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> borderColor [
 
 	^ borderColor
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> borderColor: aColor [
 
 	aColor = Color black
@@ -22,19 +24,19 @@ OPBPMNDataObjectShape >> borderColor: aColor [
 		ifFalse: [ borderColor := aColor ]
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> color [
 
 	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> color: aColor [
 
 	^ self stylePropertyNamed: #fillColor put: aColor
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> createRoassalShape [
 
 	| com b1 |
@@ -55,19 +57,19 @@ OPBPMNDataObjectShape >> createRoassalShape [
 	^ com
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> initialize [ 
 	super initialize.
 	borderColor := Color transparent
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> renderBasicShape [
 
 	^ self createRoassalShape model: self
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> renderShapeDetails [
 
 	| label |
@@ -87,30 +89,30 @@ OPBPMNDataObjectShape >> renderShapeDetails [
 		for: self
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> shouldBePositionableByUser [
 
 	^ true
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> typeIconForModel [
 
 	^ self modelElement typeIconFor: self modelElement type
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> updateIcon [
 	icon form: self typeIconForModel.
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
@@ -120,7 +122,7 @@ OPBPMNDataObjectShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : #update }
+{ #category : 'update' }
 OPBPMNDataObjectShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

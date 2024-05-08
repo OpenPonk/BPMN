@@ -1,6 +1,6 @@
 Class {
-	#name : #OPBPMNPoolController,
-	#superclass : #OPBPMNNodeController,
+	#name : 'OPBPMNPoolController',
+	#superclass : 'OPBPMNNodeController',
 	#instVars : [
 		'innerBox',
 		'innerConstraint',
@@ -8,15 +8,17 @@ Class {
 		'labelConstraint',
 		'elements'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNPoolController >> boxHeight [
 	^ 300
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -36,12 +38,12 @@ OPBPMNPoolController >> buildEditorForm: aForm [
 					self diagramElement modelChanged ] ] ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNMessageFlowController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNMessageFlowController)
 		ifTrue: [ ^ (aController source model owner ~= self model) ]
@@ -50,29 +52,29 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 				| (aController isKindOf: OPBPMNDataObjectController)]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> diagramElementClass [
 
 	^ OPBPMNPoolShape
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> elementsToShowInside [
 	^ model nodes , (model nodes flatCollect: [ :each | each outgoing ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolController >> modelClass [
 	^ OPBPMNPoolModel
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> removeModel [
 	self diagramController model remove: self model.
 	
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNPoolController >> showDenyFeedbackFor: aController [
 	^ nil
 ]

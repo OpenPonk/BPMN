@@ -1,34 +1,36 @@
 Class {
-	#name : #OPBPMNStartEventModel,
-	#superclass : #OPBPMNEventModel,
+	#name : 'OPBPMNStartEventModel',
+	#superclass : 'OPBPMNEventModel',
 	#instVars : [
 		'isNonInterrupting'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNStartEventModel >> initialize [ 
 	super initialize.
 	isNonInterrupting := false.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNStartEventModel >> isNonInterrupting [
 	^ isNonInterrupting 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNStartEventModel >> isNonInterrupting: aValue [
 	isNonInterrupting := aValue. 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNStartEventModel >> printType [
 	^ 'startEvent'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNStartEventModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType None
 		ifTrue: [ ^ OPBPMNIcon current activityNone ].

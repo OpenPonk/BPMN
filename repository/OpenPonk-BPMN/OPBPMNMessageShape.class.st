@@ -1,26 +1,28 @@
 Class {
-	#name : #OPBPMNMessageShape,
-	#superclass : #OPEdge,
+	#name : 'OPBPMNMessageShape',
+	#superclass : 'OPEdge',
 	#instVars : [
 		'shape'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageShape >> borderColor: aColor [
 
 	shape color: aColor.
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageShape >> createOwnedElementsWithoutController [
 
 	super createOwnedElementsWithoutController.
 	OPBPMNEdgeLabel in: self
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageShape >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
@@ -32,7 +34,7 @@ OPBPMNMessageShape >> headMarker [
 		  yourself
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageShape >> renderBasicShape [
 	shape := OPRSPolyline new
 		  markerEnd: self headMarker;
@@ -48,7 +50,7 @@ OPBPMNMessageShape >> renderBasicShape [
 		^  shape.
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNMessageShape >> tailMarker [
 
 	^ RSCircle new

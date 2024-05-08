@@ -1,15 +1,17 @@
 Class {
-	#name : #OPBPMNCollapsedSubProcessController,
-	#superclass : #OPBPMNElementController,
+	#name : 'OPBPMNCollapsedSubProcessController',
+	#superclass : 'OPBPMNElementController',
 	#instVars : [
 		'labelConstraint',
 		'iconElement',
 		'iconConstraint'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 
 	| anEvent |
@@ -50,12 +52,12 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 	self diagramElement modelChanged
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -67,30 +69,33 @@ OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> dependentElements [
 	^ (model incoming , model outgoing) asSet
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> diagramElementClass [
 
 	^ OPBPMNCollapsedSubProcessShape
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> modelClass [
 	^ OPBPMNCollapsedSubProcessModel
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> renderDiagramElement [
 
 	super renderDiagramElement.
-	model when: OPBPMNPlaceTokensChanged do: [ self diagramElement modelChanged ]
+	model
+		when: OPBPMNPlaceTokensChanged
+		do: [ self diagramElement modelChanged ]
+		for: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> typeIconForModel [
 	^ self typeIconFor: self model type
 ]

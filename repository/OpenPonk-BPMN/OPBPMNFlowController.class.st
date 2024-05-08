@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNFlowController,
-	#superclass : #OPBPMNEdgeController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNFlowController',
+	#superclass : 'OPBPMNEdgeController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNFlowController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -17,13 +19,13 @@ OPBPMNFlowController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNFlowController >> diagramElementClass [
 
 	^ OPBPMNFlowShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNFlowController >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
@@ -35,7 +37,7 @@ OPBPMNFlowController >> headMarker [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNFlowController >> modelClass [
 	^ OPBPMNFlowModel
 ]

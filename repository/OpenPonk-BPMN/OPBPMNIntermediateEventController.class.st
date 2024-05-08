@@ -1,6 +1,6 @@
 Class {
-	#name : #OPBPMNIntermediateEventController,
-	#superclass : #OPBPMNElementController,
+	#name : 'OPBPMNIntermediateEventController',
+	#superclass : 'OPBPMNElementController',
 	#instVars : [
 		'innerCircle',
 		'elements',
@@ -8,10 +8,12 @@ Class {
 		'iconElement',
 		'iconConstraint'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -55,12 +57,12 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNIntermediateEventController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNIntermediateEventController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -72,18 +74,18 @@ OPBPMNIntermediateEventController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNIntermediateEventController >> diagramElementClass [
 
 	^ OPBPMNIntermediateEventShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNIntermediateEventController >> modelClass [
 	^ OPBPMNIntermediateEventModel
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNIntermediateEventController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

@@ -1,13 +1,15 @@
 Class {
-	#name : #OPBPMNActivityShape,
-	#superclass : #OPBPMNNodeShape,
+	#name : 'OPBPMNActivityShape',
+	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
 		'border'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #'ston-core' }
+{ #category : 'ston-core' }
 OPBPMNActivityShape class >> stonAllInstVarNames [
 
 	"Override to encode my instances using a custom set of instance variables or to define their order."
@@ -15,7 +17,7 @@ OPBPMNActivityShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> createBorder [
 
 	self modelElement
@@ -29,7 +31,7 @@ OPBPMNActivityShape >> createBorder [
 				ifFalse: [ border width: 1 ] ]
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> createRoassalShape [
 	^ RSBox new
 		extent: 85@55;
@@ -39,14 +41,14 @@ OPBPMNActivityShape >> createRoassalShape [
 	
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> initialize [
 	super initialize.
 	self createBorder.
 	
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> renderShapeDetails [
 
 	| label |
@@ -72,7 +74,7 @@ OPBPMNActivityShape >> renderShapeDetails [
 	self bounds: nil
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

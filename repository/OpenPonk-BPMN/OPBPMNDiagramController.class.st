@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNDiagramController,
-	#superclass : #OPDiagramController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNDiagramController',
+	#superclass : 'OPDiagramController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #userinterface }
+{ #category : 'userinterface' }
 OPBPMNDiagramController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -17,18 +19,18 @@ OPBPMNDiagramController >> buildEditorForm: aForm [
 			self diagramElement updateRenderFromModel ]"
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
 	^ (super canBeTargetFor: aController)
 		or: [ aController isKindOf: OPBPMNNodeController ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNDiagramController >> commonModelClassPrefix [
 	^ 'OPBPMN'
 ]
 
-{ #category : #'ui interaction' }
+{ #category : 'ui interaction' }
 OPBPMNDiagramController >> controllerFactory [
 	^ super controllerFactory
 		register: OPBPMNActivityController forModel: OPBPMNActivityModel;
@@ -46,7 +48,7 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNDiagramController >> elementsToShowInside [
 	| poolNodes poolFlows laneNodes laneFlows |
 	poolNodes := (model nodes flatCollect: [ :each | each nodes ]).
@@ -61,7 +63,7 @@ OPBPMNDiagramController >> elementsToShowInside [
 	(model nodes flatCollect: [ :each | each outgoing ])
 ]
 
-{ #category : #'ui interaction' }
+{ #category : 'ui interaction' }
 OPBPMNDiagramController >> initializePalette: aPalette [
 	aPalette
 		newCreationTool: 'Activity'
@@ -102,7 +104,7 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 			icon: OPBPMNIcon current messageFlow
 ]
 
-{ #category : #'ui interaction' }
+{ #category : 'ui interaction' }
 OPBPMNDiagramController >> modelClass [
 	^ OPBPMNModel 
 ]

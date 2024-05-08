@@ -1,47 +1,49 @@
 Class {
-	#name : #OPBPMNPoolModel,
-	#superclass : #OPBPMNNodeModel,
+	#name : 'OPBPMNPoolModel',
+	#superclass : 'OPBPMNNodeModel',
 	#instVars : [
 		'lanes',
 		'laneNames'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> changed [
 	super changed.
 	owner changed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> initialize [ 
 	super initialize.
 	lanes := 1.
 	laneNames := OrderedCollection new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> laneNames [
 	^ laneNames
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> laneNames: aCollection [
 	laneNames := aCollection  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> laneNamesAt: aIndex put: aText [
 	laneNames at: aIndex put: aText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> laneNamesFitToLanesCount [
 
 	| text prevSize |
@@ -55,37 +57,37 @@ OPBPMNPoolModel >> laneNamesFitToLanesCount [
 				ifFalse: [ (lanes + 1) to: prevSize do: [ :i | laneNames removeLast ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> lanes [
 	^ lanes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> lanes: aNumber [
 	lanes := aNumber 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> nodes [
 	^ elements
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNPoolModel >> printType [
 	^ 'process'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolModel >> removeNode: aNode [
 	elements remove: aNode
 ]

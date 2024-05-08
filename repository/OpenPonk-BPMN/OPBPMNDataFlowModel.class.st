@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNDataFlowModel,
-	#superclass : #OPBPMNEdgeModel,
-	#category : #'OpenPonk-BPMN-Models'
+	#name : 'OPBPMNDataFlowModel',
+	#superclass : 'OPBPMNEdgeModel',
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNDataFlowModel >> printType [
 	^ 'dataFlow'
 ]

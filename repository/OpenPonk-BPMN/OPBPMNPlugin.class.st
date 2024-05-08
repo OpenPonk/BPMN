@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNPlugin,
-	#superclass : #OPPlugin,
-	#category : #'OpenPonk-BPMN-Adapters'
+	#name : 'OPBPMNPlugin',
+	#superclass : 'OPPlugin',
+	#category : 'OpenPonk-BPMN-Adapters',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Adapters'
 }
 
-{ #category : #toolbar }
+{ #category : 'toolbar' }
 OPBPMNPlugin class >> exportPackage: aPackage [
 
 	StFBSaveFileDialog new
@@ -26,7 +28,7 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 		open
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin class >> toolbarMenu: aBuilder [
 
 	<opEditorToolbarMenu: #OPBPMNPlugin>
@@ -35,38 +37,38 @@ OPBPMNPlugin class >> toolbarMenu: aBuilder [
 		action: [ self exportPackage: aBuilder model diagramController ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> diagramControllerClass [
 	^ OPBPMNDiagramController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> icon [
 	^ OPBPMNIcon current logo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> layouterClass [
 	"Create your own subclass of OPLayouter or use OPNoLayouter which does nothing"
 	^ OPBPMNLayouter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> modelClass [
 	^ OPBPMNModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> modelSerializerClass [
 	^ OPStonModelSerializer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> name [
 	^ 'BPMN'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> supportsHidingElements [
 	^ true
 ]

@@ -1,26 +1,28 @@
 Class {
-	#name : #OPBPMNFlowShape,
-	#superclass : #OPEdge,
+	#name : 'OPBPMNFlowShape',
+	#superclass : 'OPEdge',
 	#instVars : [
 		'shape'
 	],
-	#category : #'OpenPonk-BPMN-Shapes'
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> borderColor: aColor [
 
 	shape color: aColor.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> createOwnedElementsWithoutController [
 
 	super createOwnedElementsWithoutController.
 	OPBPMNEdgeLabel in: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
@@ -32,7 +34,7 @@ OPBPMNFlowShape >> headMarker [
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> renderBasicShape [
 	shape := (self source = self target
 		   ifTrue: [ OPRSBezier ]
@@ -49,7 +51,7 @@ OPBPMNFlowShape >> renderBasicShape [
 	^ shape
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> tailMarker [
 
 	self modelElement ifNil: [ 
@@ -75,7 +77,7 @@ OPBPMNFlowShape >> tailMarker [
 			  yourself ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> updateRenderFromModel [
 
 	shape markerStart: self tailMarker.

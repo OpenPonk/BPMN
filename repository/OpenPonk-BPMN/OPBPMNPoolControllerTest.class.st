@@ -1,40 +1,42 @@
 Class {
-	#name : #OPBPMNPoolControllerTest,
-	#superclass : #OPBPMNNodeControllerTest,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNPoolControllerTest',
+	#superclass : 'OPBPMNNodeControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> controllerClass [
 	^ OPBPMNPoolController 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> diagramElementClass [
 	^ OPBPMNPoolShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> modelClass [
 	^ OPBPMNPoolModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> targetControllerClass [
 	^ OPBPMNPoolController  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> targetModelClass [
 	^ OPBPMNPoolModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> testAssignmentToParent [
 	"not by pool"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> testFigureRefresh [
 
 	| text |

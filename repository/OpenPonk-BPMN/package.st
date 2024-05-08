@@ -1,1 +1,1 @@
-Package { #name : #'OpenPonk-BPMN' }
+Package { #name : 'OpenPonk-BPMN' }

@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNGatewayShape,
-	#superclass : #OPBPMNNodeShape,
-	#category : #'OpenPonk-BPMN-Shapes'
+	#name : 'OPBPMNGatewayShape',
+	#superclass : 'OPBPMNNodeShape',
+	#category : 'OpenPonk-BPMN-Shapes',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Shapes'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayShape >> createRoassalShape [
 
 	^  RSPolygon new
@@ -13,7 +15,7 @@ OPBPMNGatewayShape >> createRoassalShape [
 		yourself.
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNGatewayShape >> renderShapeDetails [ 
 	super renderShapeDetails.
 	self color: (Color fromHexString: 'bce2fe').

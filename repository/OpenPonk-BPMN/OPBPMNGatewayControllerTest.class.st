@@ -1,30 +1,32 @@
 Class {
-	#name : #OPBPMNGatewayControllerTest,
-	#superclass : #OPBPMNNodeControllerTest,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNGatewayControllerTest',
+	#superclass : 'OPBPMNNodeControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNGatewayControllerTest >> controllerClass [
 	^ OPBPMNGatewayController 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNGatewayControllerTest >> diagramElementClass [
 	^ OPBPMNGatewayShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNGatewayControllerTest >> modelClass [
 	^ OPBPMNGatewayModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNGatewayControllerTest >> targetControllerClass [
 	^ OPBPMNPoolController  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNGatewayControllerTest >> targetModelClass [
 	^ OPBPMNPoolModel 
 ]

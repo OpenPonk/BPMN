@@ -1,16 +1,18 @@
 Class {
-	#name : #OPBPMNDataFlowController,
-	#superclass : #OPBPMNEdgeController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNDataFlowController',
+	#superclass : 'OPBPMNEdgeController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNDataFlowController >> diagramElementClass [
 
 	^ OPBPMNDataFlowShape
 ]
 
-{ #category : #construction }
+{ #category : 'construction' }
 OPBPMNDataFlowController >> modelClass [
 
 	^ OPBPMNDataFlowModel

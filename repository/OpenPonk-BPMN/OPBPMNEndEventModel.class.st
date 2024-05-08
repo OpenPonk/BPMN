@@ -1,15 +1,17 @@
 Class {
-	#name : #OPBPMNEndEventModel,
-	#superclass : #OPBPMNEventModel,
-	#category : #'OpenPonk-BPMN-Models'
+	#name : 'OPBPMNEndEventModel',
+	#superclass : 'OPBPMNEventModel',
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNEndEventModel >> printType [
 	^ 'endEvent'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNEndEventModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType Send
 		ifTrue: [ ^ OPBPMNIcon current activitySendSquare ].

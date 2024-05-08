@@ -1,13 +1,15 @@
 Class {
-	#name : #OPBPMNNodeController,
-	#superclass : #OPElementController,
+	#name : 'OPBPMNNodeController',
+	#superclass : 'OPElementController',
 	#classInstVars : [
 		'PossibleOutgoing'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNNodeController >> addAsTargetFor: aController [
 	self assert: (self canBeTargetFor: aController).
 	aController target: self.
@@ -16,7 +18,7 @@ OPBPMNNodeController >> addAsTargetFor: aController [
 		andShowInDiagram: self diagramController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNNodeController >> buildEditorForm: aForm [
 	(aForm addText: 'Name')
 		text: self model name;
@@ -25,28 +27,32 @@ OPBPMNNodeController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNNodeController >> internalSubscribeTo: aModel [
+
 	super internalSubscribeTo: aModel.
-	aModel when: OPElementRemoved do: [ :e | self removeController ]
+	aModel
+		when: OPElementRemoved
+		send: #removeController
+		to: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNNodeController >> isHideable [
 	^ true
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNNodeController >> modelAsParent [
 	^ self model owner
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNNodeController >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 OPBPMNNodeController >> removeModel [
 	self model announcer unsubscribe: self.
 	self diagramController model remove: self model

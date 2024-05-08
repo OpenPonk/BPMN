@@ -1,16 +1,18 @@
 Class {
-	#name : #OPBPMNNavigatorAdapter,
-	#superclass : #OPNavigatorAdapter,
-	#category : #'OpenPonk-BPMN-Adapters'
+	#name : 'OPBPMNNavigatorAdapter',
+	#superclass : 'OPNavigatorAdapter',
+	#category : 'OpenPonk-BPMN-Adapters',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Adapters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNavigatorAdapter class >> priority [
 
 	^ 10
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 OPBPMNNavigatorAdapter >> childrenMapping [
 	^ { (OPBPMNModel -> #nodes).
 		 (OPBPMNPoolModel -> #nodes).
@@ -18,7 +20,7 @@ OPBPMNNavigatorAdapter >> childrenMapping [
 			(OPBPMNNodeModel -> #outgoing) }
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
 	(OPBPMNNodeModel -> 'Node').
@@ -37,7 +39,7 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNMessageFlowModel -> 'Message Flow')}
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 OPBPMNNavigatorAdapter >> hasMappingFor: anObject in: aModel [
 
 	^ { 
@@ -46,7 +48,7 @@ OPBPMNNavigatorAdapter >> hasMappingFor: anObject in: aModel [
 		  OPBPMNEdgeModel } anySatisfy: [ :any | anObject isKindOf: any ]
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 OPBPMNNavigatorAdapter >> iconMapping [
 	^ {(OPBPMNModel -> OPBPMNIcon current logo).
 		(OPBPMNActivityModel -> OPBPMNIcon current activity).
@@ -64,14 +66,14 @@ OPBPMNNavigatorAdapter >> iconMapping [
 		(OPBPMNMessageFlowModel -> OPBPMNIcon current messageFlow )}
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 OPBPMNNavigatorAdapter >> sort: modelObjects [
 	^ modelObjects
 		sorted:
 			[ :a :b | a name isNotNil and: [ b name isNil or: [ a name < b name ] ] ]
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 OPBPMNNavigatorAdapter >> typesByDependency [
 	^ {OPBPMNModel.
 	OPBPMNNodeModel.

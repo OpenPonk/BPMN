@@ -1,90 +1,92 @@
 Class {
-	#name : #OPBPMNControllerTest,
-	#superclass : #OPElementControllerTest,
+	#name : 'OPBPMNControllerTest',
+	#superclass : 'OPElementControllerTest',
 	#instVars : [
 		'relationshipController'
 	],
-	#category : #'OpenPonk-BPMN-Tests'
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNControllerTest class >> isAbstract [
 
 	^ self = OPBPMNControllerTest
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> controllerClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> createTargetModel [
 	^ self targetModelClass new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> diagramControllerClass [
 
 	^ OPBPMNDiagramController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> diagramElementClass [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> diagramModelClass [
 	^ OPBPMNModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> modelOwner [
 	^ diagramController model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> setUp [
 	super setUp.
 	self setUpTarget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> setUpTarget [
 	relationshipController := self targetControllerClass new.
 	relationshipController diagramController: diagramController.
 	relationshipController createModelIn: diagramController model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> targetControllerClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> targetModelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> testCreateController [
 	self assert: controller class equals: self controllerClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> testCreateModel [
 	controller createModelIn: relationshipController model.
 	self assert: controller model class equals: self modelClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNControllerTest >> testModelClass [
 	self assert: controller modelClass equals: self modelClass
 ]

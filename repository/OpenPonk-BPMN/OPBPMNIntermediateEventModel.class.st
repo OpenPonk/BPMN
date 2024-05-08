@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNIntermediateEventModel,
-	#superclass : #OPBPMNEventModel,
-	#category : #'OpenPonk-BPMN-Models'
+	#name : 'OPBPMNIntermediateEventModel',
+	#superclass : 'OPBPMNEventModel',
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNIntermediateEventModel >> printType [
 	(type = OPBPMNNodeType None) | (type = OPBPMNNodeType Link) | (type = OPBPMNNodeType Send)
 		ifTrue: [ ^ 'intermediateThrowEvent' ]
@@ -12,7 +14,7 @@ OPBPMNIntermediateEventModel >> printType [
 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNIntermediateEventModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType Send
 		ifTrue: [ ^ OPBPMNIcon current activitySendSquare ].

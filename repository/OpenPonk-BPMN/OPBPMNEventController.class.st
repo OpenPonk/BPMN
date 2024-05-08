@@ -1,19 +1,21 @@
 Class {
-	#name : #OPBPMNEventController,
-	#superclass : #OPBPMNElementController,
+	#name : 'OPBPMNEventController',
+	#superclass : 'OPBPMNElementController',
 	#instVars : [
 		'iconElement',
 		'iconConstraint'
 	],
-	#category : #'OpenPonk-BPMN-Controllers'
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNEventController >> modelClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OPBPMNEventController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

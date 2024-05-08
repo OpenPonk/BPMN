@@ -1,35 +1,37 @@
 Class {
-	#name : #OPBPMNBoundaryEventTest,
-	#superclass : #OPBPMNNodeControllerTest,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNBoundaryEventTest',
+	#superclass : 'OPBPMNNodeControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> controllerClass [
 	^ OPBPMNBoundaryEventController 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> diagramElementClass [
 	^ OPBPMNBoundaryEventShape 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> modelClass [
 	^ OPBPMNBoundaryEventModel 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> targetControllerClass [
 	^ OPBPMNSubProcessController 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> targetModelClass [
 	^ OPBPMNSubProcessModel  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> testCannotConnectByDefault [
 	controller model: model.
 	self deny: (controller canBeSourceFor: nil)
