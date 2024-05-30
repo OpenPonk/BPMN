@@ -18,7 +18,7 @@ OPBPMNNodeController >> addAsTargetFor: aController [
 		andShowInDiagram: self diagramController
 ]
 
-{ #category : 'connecting' }
+{ #category : 'forms' }
 OPBPMNNodeController >> buildEditorForm: aForm [
 	(aForm addText: 'Name')
 		text: self model name;
@@ -27,7 +27,7 @@ OPBPMNNodeController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ]
 ]
 
-{ #category : 'private' }
+{ #category : 'announcements' }
 OPBPMNNodeController >> internalSubscribeTo: aModel [
 
 	super internalSubscribeTo: aModel.
@@ -37,7 +37,7 @@ OPBPMNNodeController >> internalSubscribeTo: aModel [
 		to: self
 ]
 
-{ #category : 'private' }
+{ #category : 'testing' }
 OPBPMNNodeController >> isHideable [
 	^ true
 ]
@@ -45,11 +45,6 @@ OPBPMNNodeController >> isHideable [
 { #category : 'connecting' }
 OPBPMNNodeController >> modelAsParent [
 	^ self model owner
-]
-
-{ #category : 'private' }
-OPBPMNNodeController >> modelClass [
-	^ self subclassResponsibility
 ]
 
 { #category : 'private' }

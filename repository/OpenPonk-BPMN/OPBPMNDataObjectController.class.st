@@ -6,7 +6,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'testing' }
+{ #category : 'forms' }
 OPBPMNDataObjectController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -20,33 +20,33 @@ OPBPMNDataObjectController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ].
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNDataObjectController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNDataFlowController
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNDataObjectController >> canBeTargetFor: aController [
 	^ aController isKindOf: OPBPMNDataFlowController
 ]
 
-{ #category : 'testing' }
+{ #category : 'accessing' }
 OPBPMNDataObjectController >> dependentElements [
 	^ (model incoming , model outgoing) asSet
 ]
 
-{ #category : 'testing' }
+{ #category : 'construction' }
 OPBPMNDataObjectController >> diagramElementClass [
 
 	^ OPBPMNDataObjectShape
 ]
 
-{ #category : 'testing' }
+{ #category : 'accessing' }
 OPBPMNDataObjectController >> modelClass [
 	^ OPBPMNDataObjectModel
 ]
 
-{ #category : 'testing' }
+{ #category : 'construction' }
 OPBPMNDataObjectController >> renderDiagramElement [
 
 	super renderDiagramElement.
@@ -56,7 +56,7 @@ OPBPMNDataObjectController >> renderDiagramElement [
 		for: self
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNDataObjectController >> typeIconFor: aType [
 	aType = OPBPMNNodeType DataObject
 		ifTrue: [ ^ OPBPMNIcon current dataObject16 ].
@@ -68,7 +68,7 @@ OPBPMNDataObjectController >> typeIconFor: aType [
 		ifTrue: [ ^ OPBPMNIcon current dataStore16 ].
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNDataObjectController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]
