@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNValidationResultsTest,
-	#superclass : #TestCase,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNValidationResultsTest',
+	#superclass : 'TestCase',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testAddResult [
 	| validationResults dummyMessage |
 	dummyMessage := 'dummyMessage'.	
@@ -14,7 +16,7 @@ OPBPMNValidationResultsTest >> testAddResult [
 	self assert: (validationResults results anySatisfy: [ :item | item = dummyMessage ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testAddResults [
 	| validationResults dummyMessages |
 	dummyMessages := {'dummyMessage'.	'dummyMessage2'. }.
@@ -27,7 +29,7 @@ OPBPMNValidationResultsTest >> testAddResults [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testHasErrors [
 	| validationResults dummyMessage dummyObject dummyVerification |
 	dummyObject := Object new.
@@ -39,7 +41,7 @@ OPBPMNValidationResultsTest >> testHasErrors [
 	self assert: (validationResults hasErrors: dummyObject).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testHasWarnings [
 	| validationResults dummyMessage dummyObject dummyVerification |
 	dummyObject := Object new.
@@ -51,12 +53,12 @@ OPBPMNValidationResultsTest >> testHasWarnings [
 	self assert: (validationResults hasWarnings: dummyObject).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testInitialize [
 	self assert: OPBPMNValidationResults new results equals: Set new.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testResults [
 	| validationResults dummyMessage |
 	dummyMessage := 'dummyMessage'.	
@@ -67,7 +69,7 @@ OPBPMNValidationResultsTest >> testResults [
 	self assert: (validationResults results anySatisfy: [ :item | item = dummyMessage ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testSelectErrors [
 	| validationResults dummyMessage dummyObject dummyValidation |
 	dummyObject := Object new.
@@ -80,7 +82,7 @@ OPBPMNValidationResultsTest >> testSelectErrors [
 	self assert: (validationResults selectErrors anySatisfy: [ :item | item = dummyMessage ]).
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationResultsTest >> testSelectWarnings [
 	| validationResults dummyMessage dummyObject dummyValidation |
 	dummyObject := Object new.

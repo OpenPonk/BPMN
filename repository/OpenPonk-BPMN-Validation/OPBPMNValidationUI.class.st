@@ -1,13 +1,15 @@
 Class {
-	#name : #OPBPMNValidationUI,
-	#superclass : #Object,
+	#name : 'OPBPMNValidationUI',
+	#superclass : 'Object',
 	#classInstVars : [
 		'class'
 	],
-	#category : #'OpenPonk-BPMN-Validation-UI'
+	#category : 'OpenPonk-BPMN-Validation-UI',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'UI'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 OPBPMNValidationUI class >> changeElementColorTo: aColor using: aController [
 
 
@@ -16,7 +18,7 @@ OPBPMNValidationUI class >> changeElementColorTo: aColor using: aController [
 	aController diagramElement updateRenderFromSelf
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OPBPMNValidationUI class >> removeHighlightsFromElementsIn: aDiagramController [
 
 	aDiagramController controllers do: [ :controller | 
@@ -24,7 +26,7 @@ OPBPMNValidationUI class >> removeHighlightsFromElementsIn: aDiagramController [
 	aDiagramController updateCanvas
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OPBPMNValidationUI class >> toolbarMenu: aBuilder [
 
 	<opEditorToolbarMenu: #OPBPMNPlugin>
@@ -36,7 +38,7 @@ OPBPMNValidationUI class >> toolbarMenu: aBuilder [
 	"self toolbarMenuItemFor: aBuilder
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OPBPMNValidationUI class >> toolbarMenuItemFor: aBuilder [
 
 	(aBuilder item: 'Validations')
@@ -53,7 +55,7 @@ OPBPMNValidationUI class >> toolbarMenuItemFor: aBuilder [
 							aBuilder model diagramController ] ]
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OPBPMNValidationUI class >> updateValidatedElementStyle: aVerificationResults using: aController [
 
 	| color |
@@ -70,7 +72,7 @@ OPBPMNValidationUI class >> updateValidatedElementStyle: aVerificationResults us
 	aController diagramElement updateRenderFromSelf
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OPBPMNValidationUI class >> updateValidatedElements: aVerificationResults using: aDiagramController [
 
 	aDiagramController controllers do: [ :controller | 

@@ -1,6 +1,6 @@
 Class {
-	#name : #OPBPMNValidationWorkbench,
-	#superclass : #SpPresenter,
+	#name : 'OPBPMNValidationWorkbench',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'editors',
 		'notebook',
@@ -15,10 +15,12 @@ Class {
 	#classInstVars : [
 		'isDevelopmentMode'
 	],
-	#category : #'OpenPonk-BPMN-Validation-Extensions'
+	#category : 'OpenPonk-BPMN-Validation-Extensions',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Extensions'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -39,31 +41,31 @@ OPBPMNValidationWorkbench class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> initialExtent [
 
 	^ self currentWorld extent * 0.8 min: 1600 @ 1000
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> initialListsWidth [
 
 	^ 250
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> isDevelopmentMode [
 
 	^ OPWorkbench isDevelopmentMode
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> open [
 
 	^ (self newApplication: OPApplication new) open
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> openModel: aModel [
 	| project |
 	project := OPProject new.
@@ -74,7 +76,7 @@ OPBPMNValidationWorkbench class >> openModel: aModel [
 		yourself
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> openProject: aProject [
 
 	^ (self newApplication: OPApplication new)
@@ -82,7 +84,7 @@ OPBPMNValidationWorkbench class >> openProject: aProject [
 		  yourself
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OPBPMNValidationWorkbench class >> verificationFrameworkSettingsGroups: aBuilder [
 
 	"I create groups for anti-patterns and verifications."
@@ -98,7 +100,7 @@ OPBPMNValidationWorkbench class >> verificationFrameworkSettingsGroups: aBuilder
 		order: 240
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> closeEditorOfDiagram: aDiagram [
 
 	editors
@@ -107,7 +109,7 @@ OPBPMNValidationWorkbench >> closeEditorOfDiagram: aDiagram [
 		notebook removePage: (editorInfo at: #page) ]
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> closedTabOfEditor: anEditor [
 
 	self projectController updateDiagram:
@@ -122,7 +124,7 @@ OPBPMNValidationWorkbench >> closedTabOfEditor: anEditor [
 	self announce: (OPEditorClosed on: anEditor)
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> connectPresenters [
 
 	super connectPresenters.
@@ -133,18 +135,18 @@ OPBPMNValidationWorkbench >> connectPresenters [
 		whenPageRemovedDo: [ :page | self pageRemoved: page ]
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> deleteDiagram: aDiagram [
 	self closeEditorOfDiagram: aDiagram.
 	self projectController removeDiagram: aDiagram
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> diagramsList [
 	^ diagramsList
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> focusEditorOf: aDiagram [
 
 	| editorTabInfo |
@@ -169,19 +171,19 @@ OPBPMNValidationWorkbench >> focusEditorOf: aDiagram [
 	focusedEditor diagramController showElements
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> focusedEditor [
 	^ focusedEditor
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> initialize [
 	pluginRegistry := OPPluginRegistry default.
 	editors := IdentityDictionary new.
 	super initialize
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> initializePresenters [
 
 	topToolbar := self instantiate: OPWorkbenchToolbar.
@@ -195,7 +197,7 @@ OPBPMNValidationWorkbench >> initializePresenters [
 		add: notebook
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> initializeWindow: aWindow [
 
 	aWindow
@@ -204,18 +206,18 @@ OPBPMNValidationWorkbench >> initializeWindow: aWindow [
 		initialExtent: self class initialExtent
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> notebook [
 	^ notebook
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> openEditorOn: aModel [
 	self
 		openEditorOnDiagram: (project diagrams detect: [ :each | each model = aModel ])
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> openEditorOnDiagram: aDiagram [
 
 	| editor notebookPage plugin model |
@@ -246,7 +248,7 @@ OPBPMNValidationWorkbench >> openEditorOnDiagram: aDiagram [
 	^ editor
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> openProject: aProject [
 
 	project := aProject.
@@ -264,7 +266,7 @@ OPBPMNValidationWorkbench >> openProject: aProject [
 	projectController openDiagrams
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> pageRemoved: aPage [
 
 	"activePresenter is editor"
@@ -272,22 +274,22 @@ OPBPMNValidationWorkbench >> pageRemoved: aPage [
 	self closedTabOfEditor: aPage activePresenter
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> pluginRegistry [
 	^ pluginRegistry
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> projectController [
 	^ projectController
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> projectTree [
 	^ projectTree
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> showAllElementsInAllDiagrams [
 
 	self projectController controllers do: [ :each | 
@@ -301,7 +303,7 @@ OPBPMNValidationWorkbench >> showAllElementsInAllDiagrams [
 	self projectController controllers do: #zoomToFit
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> title [
 
 	^ project
@@ -309,18 +311,18 @@ OPBPMNValidationWorkbench >> title [
 		  ifNotNil: [ project name , ' - OpenPonk' ]
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> topToolbar [
 	^ topToolbar
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> updateTitle [
 
 	^ self withWindowDo: [ :window | window title: self title ]
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 OPBPMNValidationWorkbench >> workbench [
 	^ self
 ]

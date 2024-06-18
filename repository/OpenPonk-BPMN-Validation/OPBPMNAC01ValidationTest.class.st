@@ -1,30 +1,32 @@
 Class {
-	#name : #OPBPMNAC01ValidationTest,
-	#superclass : #OPBPMNAbstractValidationTest,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNAC01ValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAC01ValidationTest >> getTestedClass [
 	^ AC01MessageReceive.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAC01ValidationTest >> getValidatedClass [
 	^ OPBPMNActivityModel.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAC01ValidationTest >> testCanValidate [
 	self canValidateTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAC01ValidationTest >> testNew [
 	self newTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAC01ValidationTest >> testValidatedClass [
 	self validatedClassTest.
 ]

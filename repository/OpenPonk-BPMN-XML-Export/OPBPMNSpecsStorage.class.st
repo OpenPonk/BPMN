@@ -1,16 +1,18 @@
 Class {
-	#name : #OPBPMNSpecsStorage,
-	#superclass : #Object,
+	#name : 'OPBPMNSpecsStorage',
+	#superclass : 'Object',
 	#instVars : [
 		'storage'
 	],
 	#classVars : [
 		'Current'
 	],
-	#category : #'OpenPonk-BPMN-XML-Export-Utility'
+	#category : 'OpenPonk-BPMN-XML-Export-Utility',
+	#package : 'OpenPonk-BPMN-XML-Export',
+	#tag : 'Utility'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNSpecsStorage class >> current [
 	"
 	Current := nil
@@ -18,7 +20,7 @@ OPBPMNSpecsStorage class >> current [
 	^ Current ifNil: [ Current := self new ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNSpecsStorage >> initialize [
 	super initialize.
 	storage := Dictionary new

@@ -1,15 +1,17 @@
 Class {
-	#name : #GW04Eventbased,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'GW04Eventbased',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GW04Eventbased class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 GW04Eventbased >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |

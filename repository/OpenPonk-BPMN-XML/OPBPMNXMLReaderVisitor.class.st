@@ -1,27 +1,29 @@
 Class {
-	#name : #OPBPMNXMLReaderVisitor,
-	#superclass : #XMLDOMVisitor,
+	#name : 'OPBPMNXMLReaderVisitor',
+	#superclass : 'XMLDOMVisitor',
 	#instVars : [
 		'mapping',
 		'refIdMapping',
 		'unresolved'
 	],
-	#category : #'OpenPonk-BPMN-XML-Reader'
+	#category : 'OpenPonk-BPMN-XML-Reader',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'Reader'
 }
 
-{ #category : #factory }
+{ #category : 'factory' }
 OPBPMNXMLReaderVisitor >> attributeFor: aXMLAttribute [
 	(self isReferenceAttribute: aXMLAttribute)
 		ifTrue: [ ^ self referenceAttributeFor: aXMLAttribute ].
 	^ self valueAttributeFor: aXMLAttribute
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 OPBPMNXMLReaderVisitor >> elementAt: aXMLElement [
 	^ mapping at: aXMLElement
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 OPBPMNXMLReaderVisitor >> elementFor: aXMLElement [
 	(self isValueElement: aXMLElement)
 		ifTrue: [ ^ self valueElementFor: aXMLElement ].
@@ -30,7 +32,7 @@ OPBPMNXMLReaderVisitor >> elementFor: aXMLElement [
 	^ self objectElementFor: aXMLElement
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLReaderVisitor >> initialize [
 	super initialize.
 	mapping := Dictionary new.
@@ -38,12 +40,12 @@ OPBPMNXMLReaderVisitor >> initialize [
 	unresolved := OrderedCollection new
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 OPBPMNXMLReaderVisitor >> resolveAll [
 	unresolved do: #value
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 OPBPMNXMLReaderVisitor >> visitDocument: aDocument [
 	self visit: aDocument root.
 	self resolveAll.

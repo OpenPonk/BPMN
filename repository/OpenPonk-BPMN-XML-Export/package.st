@@ -1,1 +1,1 @@
-Package { #name : #'OpenPonk-BPMN-XML-Export' }
+Package { #name : 'OpenPonk-BPMN-XML-Export' }

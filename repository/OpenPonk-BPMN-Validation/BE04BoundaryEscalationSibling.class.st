@@ -1,15 +1,17 @@
 Class {
-	#name : #BE04BoundaryEscalationSibling,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'BE04BoundaryEscalationSibling',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BE04BoundaryEscalationSibling class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 BE04BoundaryEscalationSibling >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	| counter |
 	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 

@@ -1,34 +1,36 @@
 Class {
-	#name : #OPBPMNValidationFrameworkSettings,
-	#superclass : #Object,
+	#name : 'OPBPMNValidationFrameworkSettings',
+	#superclass : 'Object',
 	#instVars : [
 		'settings'
 	],
 	#classInstVars : [
 		'settingsInstance'
 	],
-	#category : #'OpenPonk-BPMN-Validation-Settings'
+	#category : 'OpenPonk-BPMN-Validation-Settings',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Settings'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationFrameworkSettings class >> getInstance [
 	settingsInstance ifNil: [ settingsInstance := self new. ].
 	^ settingsInstance.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationFrameworkSettings class >> settingsInstance [
  	settingsInstance ifNil: [ settingsInstance := self new. ].
 	^ settingsInstance.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPBPMNValidationFrameworkSettings >> getSettingFor: aVerificationClass [
 	(settings includesKey: aVerificationClass) ifFalse: [ settings add: (aVerificationClass -> true) ].
 	^ settings at: aVerificationClass.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPBPMNValidationFrameworkSettings >> initialize [
 	| controller |
 	controller := OPBPMNValidationController new.
@@ -36,7 +38,7 @@ OPBPMNValidationFrameworkSettings >> initialize [
 	controller getValidations do: [ :class | settings add: (class -> true). ]
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPBPMNValidationFrameworkSettings >> setSettingFor: aVerificationClass withValue: aValue [
 	settings at: aVerificationClass put: aValue.
 ]

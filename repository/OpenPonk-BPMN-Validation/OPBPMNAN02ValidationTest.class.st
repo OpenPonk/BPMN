@@ -1,30 +1,32 @@
 Class {
-	#name : #OPBPMNAN02ValidationTest,
-	#superclass : #OPBPMNAbstractValidationTest,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNAN02ValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAN02ValidationTest >> getTestedClass [
 	^ AN02FlowNodeOutgoingFlow.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAN02ValidationTest >> getValidatedClass [
 	^ OPBPMNFlowNodeModel.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAN02ValidationTest >> testCanValidate [
 	self canValidateTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAN02ValidationTest >> testNew [
 	self newTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAN02ValidationTest >> testValidatedClass [
 	self validatedClassTest.
 ]

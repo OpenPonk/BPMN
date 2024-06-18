@@ -1,46 +1,48 @@
 Class {
-	#name : #OPBPMNAbstractValidationTest,
-	#superclass : #TestCase,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNAbstractValidationTest',
+	#superclass : 'TestCase',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> canValidateTest [
 	self assert: (self getTestedClass canValidate: self getNotValidatedClassInstance) equals: false.
 	self assert: (self getTestedClass canValidate: self getValidatedClassInstance) equals: true.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> getNotValidatedClass [
 	^ Object.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> getNotValidatedClassInstance [
 	^ self getNotValidatedClass new.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> getTestedClass [
 	self subclassResponsibility.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> getValidatedClass [
 	self subclassResponsibility.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> getValidatedClassInstance [
 	^ self getValidatedClass new.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> newTest [
 	self should: [ self getTestedClass new. ] raise: ShouldNotImplement.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNAbstractValidationTest >> validatedClassTest [
 	self assert: self getTestedClass validateClass equals: self getValidatedClass.
 ]

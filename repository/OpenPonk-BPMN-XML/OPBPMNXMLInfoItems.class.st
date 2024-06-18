@@ -1,50 +1,52 @@
 Class {
-	#name : #OPBPMNXMLInfoItems,
-	#superclass : #Object,
-	#category : #'OpenPonk-BPMN-XML-DOM'
+	#name : 'OPBPMNXMLInfoItems',
+	#superclass : 'Object',
+	#category : 'OpenPonk-BPMN-XML-DOM',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isAttribute [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isElement [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isObjectElement [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isReferenceAttribute [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isReferenceElement [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isReferenceItem [
 	^ self isReferenceAttribute | self isReferenceElement
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isValueAttribute [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isValueElement [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLInfoItems >> isValueItem [
 	^ self isValueAttribute | self isValueElement
 ]

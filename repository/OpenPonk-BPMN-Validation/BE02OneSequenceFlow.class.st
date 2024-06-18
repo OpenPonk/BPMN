@@ -1,15 +1,17 @@
 Class {
-	#name : #BE02OneSequenceFlow,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'BE02OneSequenceFlow',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BE02OneSequenceFlow class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 BE02OneSequenceFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 

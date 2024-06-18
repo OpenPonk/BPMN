@@ -1,15 +1,17 @@
 Class {
-	#name : #IE02MessageSend,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'IE02MessageSend',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 IE02MessageSend class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 IE02MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |

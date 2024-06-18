@@ -1,6 +1,6 @@
 Class {
-	#name : #OPBPMNXMLWriterExport,
-	#superclass : #Object,
+	#name : 'OPBPMNXMLWriterExport',
+	#superclass : 'Object',
 	#instVars : [
 		'unresolved',
 		'identityCache',
@@ -8,15 +8,17 @@ Class {
 		'stereotypes',
 		'umlMetamodel'
 	],
-	#category : #'OpenPonk-BPMN-XML-Export-Writer'
+	#category : 'OpenPonk-BPMN-XML-Export-Writer',
+	#package : 'OpenPonk-BPMN-XML-Export',
+	#tag : 'Writer'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLWriterExport class >> toString: aModel [
 	^ OPBPMNXMLWriter writeToString: (self new write: aModel)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterExport >> initialize [
 	super initialize.
 	unresolved := OrderedCollection new.

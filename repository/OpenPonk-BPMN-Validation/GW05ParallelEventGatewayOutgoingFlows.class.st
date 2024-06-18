@@ -1,15 +1,17 @@
 Class {
-	#name : #GW05ParallelEventGatewayOutgoingFlows,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'GW05ParallelEventGatewayOutgoingFlows',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GW05ParallelEventGatewayOutgoingFlows class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 GW05ParallelEventGatewayOutgoingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	| counter |
 	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 

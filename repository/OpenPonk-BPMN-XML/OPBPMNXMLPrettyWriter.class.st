@@ -1,18 +1,20 @@
 Class {
-	#name : #OPBPMNXMLPrettyWriter,
-	#superclass : #XMLPrettyPrintingWriterFormatter,
+	#name : 'OPBPMNXMLPrettyWriter',
+	#superclass : 'XMLPrettyPrintingWriterFormatter',
 	#instVars : [
 		'lineBreak'
 	],
-	#category : #'OpenPonk-BPMN-XML-Writer'
+	#category : 'OpenPonk-BPMN-XML-Writer',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'Writer'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNXMLPrettyWriter >> lineBreak: aCharacterOrString [
 	lineBreak := aCharacterOrString asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNXMLPrettyWriter >> writeLineBreak [
 	self writer atBeginning
 		ifFalse: [ self writer nextPutAll: lineBreak.
@@ -20,7 +22,7 @@ OPBPMNXMLPrettyWriter >> writeLineBreak [
 				ifTrue: [ self writeIndent ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNXMLPrettyWriter >> writer: aWriter [
 	super writer: aWriter.
 	lineBreak ifNil: [ lineBreak := aWriter lineBreak ]

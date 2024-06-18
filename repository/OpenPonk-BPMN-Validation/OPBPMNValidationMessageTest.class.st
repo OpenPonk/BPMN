@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNValidationMessageTest,
-	#superclass : #TestCase,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNValidationMessageTest',
+	#superclass : 'TestCase',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testCreateForWithValidatinoWithText [
 	| validationMessage testObject testValidation testMessageText |
 	testObject := Object new.
@@ -16,7 +18,7 @@ OPBPMNValidationMessageTest >> testCreateForWithValidatinoWithText [
 	assert: validationMessage messageText  equals: testMessageText.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testMessageText [
 	| validationMessage testObject testValidation testMessageText secondText |
 	testObject := Object new.
@@ -30,12 +32,12 @@ OPBPMNValidationMessageTest >> testMessageText [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testNew [
 	self should: [ OPBPMNValidationMessage new. ] raise: ShouldNotImplement.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testObjectReference [
 	| validationMessage testObject testValidation testMessageText secondObject |
 	testObject := Object new.
@@ -48,7 +50,7 @@ OPBPMNValidationMessageTest >> testObjectReference [
 	self assert: validationMessage objectReference equals: secondObject.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testValidation [
 	| validationMessage testObject testValidation testMessageText secondVal |
 	testObject := Object new.
@@ -61,7 +63,7 @@ OPBPMNValidationMessageTest >> testValidation [
 	self assert: validationMessage validation equals: secondVal.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testValidationError [
 	| validationMessage testObject testValidation testMessageText |
 	testObject := Object new.
@@ -72,7 +74,7 @@ OPBPMNValidationMessageTest >> testValidationError [
 	self assert: validationMessage severity = 'Error'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationMessageTest >> testValidationWarning [
 	| validationMessage testObject testValidation testMessageText |
 	testObject := Object new.

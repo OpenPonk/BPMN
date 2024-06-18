@@ -1,46 +1,48 @@
 Class {
-	#name : #OPBPMNXMLWriterVisitor,
-	#superclass : #Object,
+	#name : 'OPBPMNXMLWriterVisitor',
+	#superclass : 'Object',
 	#instVars : [
 		'writer',
 		'allFlows',
 		'allMessageFlows',
 		'namespace'
 	],
-	#category : #'OpenPonk-BPMN-XML-Writer'
+	#category : 'OpenPonk-BPMN-XML-Writer',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'Writer'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> addFlow: aFlow [
 	allFlows add: aFlow.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> addMessageFlow: aFlow [
 	allMessageFlows add: aFlow.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> allFlows [
 	^ allFlows
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> allMessageFlows [
 	^ allMessageFlows
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> contents [
 	^ writer contents
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> diagramNamespace [
 	^ 'bpmndi:'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> initialize [
 	super initialize.
 	writer := XMLWriter new.
@@ -52,27 +54,27 @@ OPBPMNXMLWriterVisitor >> initialize [
 	allMessageFlows := OrderedCollection new
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> namespace [
 	^ namespace
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> namespace: aValue [
 	namespace := aValue
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> removeAllFlows [
 	allFlows removeAll.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> removeFlow: aFlow [
 	aFlow ifNotNil: [ allFlows remove: aFlow ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visit: aRootElement [
 		writer 
 			tag: self namespace, 'definitions'
@@ -88,7 +90,7 @@ OPBPMNXMLWriterVisitor >> visit: aRootElement [
 					  self visitDiagram: aRootElement]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 "<bpmndi:BPMNDiagram id=""BPMNDiagram_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"" 
 							name=""New Project"" resolution=""96.0"">
@@ -111,7 +113,7 @@ OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
 						do: [ :each | self visitDiagramElement: each ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
 	"<bpmndi:BPMNShape bpmnElement=""_6-0e5130ce-1e7d-0d00-a4c8-c2f20e3ea2c6"">
    <dc:Bounds height=""50.0"" width=""99.99720027997208"" x=""-54.998100189980946"" y=""-154.98700129987003""/>
@@ -140,7 +142,7 @@ OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
 							writer tag: self diagramNamespace , 'BPMNLabel' ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitDiagramFlow: anElement [
 	"<bpmndi:BPMNEdge bpmnElement=""_6-0e5130ce-1e7d-0d00-a4cd-8bba0e3ea2c6"">
      <di:waypoint x=""-4.9995000499949045"" y=""-129.98700129987003""/>
@@ -160,7 +162,7 @@ OPBPMNXMLWriterVisitor >> visitDiagramFlow: anElement [
 					 with: 'y' -> anElement target diagramElement position y asString) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
 
 	writer
@@ -178,7 +180,7 @@ OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
 			writer tag: self diagramNamespace , 'BPMNLabel' ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitElement: anElement [
 	"<semantic:startEvent name=""Address placed"" id=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"">"
 
@@ -206,7 +208,7 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 								self visitFlowRef: each inOut: 'outgoing' ] ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitElementActivity: anElement [
 "<semantic:serviceTask name=""Ping address"" id=""_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6"" 							camunda:class=""PingAdapter"">"
 	writer
@@ -226,7 +228,7 @@ OPBPMNXMLWriterVisitor >> visitElementActivity: anElement [
 				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitElementEvent: anElement [
 "<semantic:intermediateThrowEvent name=""Send message"" id=""_6-0e5130ce-1e7d-0d00-a4c9-c9b00e3ea2c6"" 											camunda:class=""MessageClass"">"
 	writer
@@ -249,7 +251,7 @@ OPBPMNXMLWriterVisitor >> visitElementEvent: anElement [
 				ifTrue: [self visitElementEventTimer: anElement] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
 "<semantic:timerEventDefinition id=""timerEventDefinition_0e5130ce-1e7d-0d00-a4c9-c9b00e3ea2c6"">
  	<semantic:timeDuration xsi:type=""semantic:tFormalExpression"">PT5M</semantic:timeDuration>
@@ -266,7 +268,7 @@ OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
 						with: anElement timerValue  ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitFlow: aFlow type: aType [
 "<semantic:sequenceFlow sourceRef=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"" targetRef=""_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6"" name="" id=""_6-0e5130ce-1e7d-0d00-a4cb-427f0e3ea2c6""/>"
 	aType = aFlow printType
@@ -280,7 +282,7 @@ OPBPMNXMLWriterVisitor >> visitFlow: aFlow type: aType [
 						with: 'id' -> (aFlow printIdType , aFlow uuid asString)) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
 "<bpmn:outgoing>_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6</bpmn:outgoing> or"
 "<bpmn:incoming>_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6</bpmn:incoming>"
@@ -293,7 +295,7 @@ OPBPMNXMLWriterVisitor >> visitFlowRef: aFlow inOut: inOut [
 		with: aFlow printIdType , aFlow uuid asString
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [
 "<semantic:participant id=""participant_a96e59ae-477d-0d00-a841-8fa10a66547e"" 							 							processRef=""_6-a96e59ae-477d-0d00-a841-8fa10a66547e""/>"
 	writer
@@ -304,7 +306,7 @@ OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [
 				with: 'processRef' -> (anElement printIdType , anElement uuid asString))
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
 "<semantic:process isExecutable=""false"" id=""process_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"">"
 	| counter |
@@ -338,7 +340,7 @@ OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
 						do: [ :each | self visitFlow: each type: 'messageFlow' ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> writer [
 	^ writer
 ]

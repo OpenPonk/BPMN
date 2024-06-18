@@ -1,15 +1,17 @@
 Class {
-	#name : #BE03BoundaryErrorSibling,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'BE03BoundaryErrorSibling',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BE03BoundaryErrorSibling class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 BE03BoundaryErrorSibling >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	| counter |
 	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 

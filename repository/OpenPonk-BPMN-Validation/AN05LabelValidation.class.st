@@ -1,15 +1,17 @@
 Class {
-	#name : #AN05LabelValidation,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'AN05LabelValidation',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AN05LabelValidation class >> validateClass [
 	^ OPBPMNNodeModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 AN05LabelValidation >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| size |

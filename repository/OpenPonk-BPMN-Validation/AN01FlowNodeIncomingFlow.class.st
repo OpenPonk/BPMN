@@ -1,15 +1,17 @@
 Class {
-	#name : #AN01FlowNodeIncomingFlow,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'AN01FlowNodeIncomingFlow',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AN01FlowNodeIncomingFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 AN01FlowNodeIncomingFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |

@@ -1,15 +1,17 @@
 Class {
-	#name : #GW02Splitting,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'GW02Splitting',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GW02Splitting class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 GW02Splitting >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 

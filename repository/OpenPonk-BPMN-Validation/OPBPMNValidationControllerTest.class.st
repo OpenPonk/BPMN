@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNValidationControllerTest,
-	#superclass : #TestCase,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNValidationControllerTest',
+	#superclass : 'TestCase',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationControllerTest >> testGetValidatedObjects [
 	| controller validations activity pool subprocess array model collection |
 	controller := OPBPMNValidationController new.
@@ -19,7 +21,7 @@ OPBPMNValidationControllerTest >> testGetValidatedObjects [
 	self assert: (controller getValidateObjects: model) equals: array.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationControllerTest >> testGetValidations [
 	| controller validations |
 	controller := OPBPMNValidationController new.
@@ -30,7 +32,7 @@ OPBPMNValidationControllerTest >> testGetValidations [
 	self assert: (validations allSatisfy: [ :validationClass | validationClass tags asSet includes: 'Validation-Classes'. ]) equals: true.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidate [
 	| activity array model controller results dataO |
 	activity := OPBPMNActivityModel new.
@@ -47,7 +49,7 @@ OPBPMNValidationControllerTest >> testValidate [
 	self assert: (results hasErrors: model) equals: false.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidateProcess [
 	| activity array model controller results dataO startE |
 	activity := OPBPMNActivityModel new.
@@ -75,7 +77,7 @@ OPBPMNValidationControllerTest >> testValidateProcess [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidateSingleObject [
 	| activity array model controller results |
 	activity := OPBPMNActivityModel new.

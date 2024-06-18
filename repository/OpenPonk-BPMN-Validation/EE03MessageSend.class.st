@@ -1,15 +1,17 @@
 Class {
-	#name : #EE03MessageSend,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'EE03MessageSend',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 EE03MessageSend class >> validateClass [
 	^ OPBPMNEndEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 EE03MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	(aVerifiedObject isKindOf: OPBPMNEndEventModel) ifTrue: [ 

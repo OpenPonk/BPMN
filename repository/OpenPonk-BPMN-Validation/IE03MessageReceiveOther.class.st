@@ -1,15 +1,17 @@
 Class {
-	#name : #IE03MessageReceiveOther,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'IE03MessageReceiveOther',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 IE03MessageReceiveOther class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 IE03MessageReceiveOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	| counter |
 	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifTrue: [ 

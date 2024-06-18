@@ -1,15 +1,17 @@
 Class {
-	#name : #PR06BlackBoxOutgoingMessage,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'PR06BlackBoxOutgoingMessage',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PR06BlackBoxOutgoingMessage class >> validateClass [
 	^ OPBPMNPoolModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 PR06BlackBoxOutgoingMessage >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	
 	(aVerifiedObject isKindOf: OPBPMNPoolModel ) ifTrue: [ 

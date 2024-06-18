@@ -1,16 +1,18 @@
 Class {
-	#name : #OPBPMNValidationResultsUI,
-	#superclass : #Object,
+	#name : 'OPBPMNValidationResultsUI',
+	#superclass : 'Object',
 	#instVars : [
 		'controller',
 		'validationResults',
 		'highlighted',
 		'prevColor'
 	],
-	#category : #'OpenPonk-BPMN-Validation-UI'
+	#category : 'OpenPonk-BPMN-Validation-UI',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'UI'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNValidationResultsUI class >> createUIFor: aVerificationResults withControllers: aControllers [
 	| verUI |
 	verUI := self new.
@@ -19,7 +21,7 @@ OPBPMNValidationResultsUI class >> createUIFor: aVerificationResults withControl
 	^ verUI.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> changeElementColor: aElement toColor: aColor [
 	| diagramElementArray |
 	diagramElementArray := (self controller controllers select: [ :aController | aController model = aElement ]) asArray.
@@ -27,23 +29,23 @@ OPBPMNValidationResultsUI >> changeElementColor: aElement toColor: aColor [
 		diagramElementArray first diagramElement updateRenderFromSelf. ] .
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> controller [
 	^ controller .
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> controller: aController [
 	controller := aController.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> getElementColor: aElement [
 	(self controller controllers select: [ :aController | aController model = aElement ])
 		do: [ :aController | ^ aController diagramElement borderColor. ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> highlightElement: aElement [
 
 	highlighted ifNotNil: [ 
@@ -53,12 +55,12 @@ OPBPMNValidationResultsUI >> highlightElement: aElement [
 	self changeElementColor: aElement toColor: Color green
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> highlighted [
 	^ highlighted
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: composite [
 	<inspectorPresentationOrder: -14 title: 'Documentation'>
 	^ SpTablePresenter new
@@ -69,7 +71,7 @@ OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: composite [
 		  yourself.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> inspectorTableIn: composite [
 
 	<inspectorPresentationOrder: -15 title: 'Results'>
@@ -87,17 +89,17 @@ OPBPMNValidationResultsUI >> inspectorTableIn: composite [
 		  (SpStringTableColumn title: 'Reason' evaluated: #messageText)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> notifySelectChanged: aSelection [
 	aSelection ifNotNil: [ self highlightElement: aSelection objectReference. ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> validationResults [
 	^ validationResults.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNValidationResultsUI >> validationResults: aValidationResults [ 
 	validationResults := aValidationResults.
 ]

@@ -1,30 +1,32 @@
 Class {
-	#name : #OPBPMNEE03ValidationTest,
-	#superclass : #OPBPMNAbstractValidationTest,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNEE03ValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNEE03ValidationTest >> getTestedClass [
 	^ EE03MessageSend.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNEE03ValidationTest >> getValidatedClass [
 	^ OPBPMNEndEventModel.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNEE03ValidationTest >> testCanValidate [
 	self canValidateTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNEE03ValidationTest >> testNew [
 	self newTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNEE03ValidationTest >> testValidatedClass [
 	self validatedClassTest.
 ]

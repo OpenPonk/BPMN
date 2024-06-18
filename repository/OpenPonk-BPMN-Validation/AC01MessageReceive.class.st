@@ -1,15 +1,17 @@
 Class {
-	#name : #AC01MessageReceive,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'AC01MessageReceive',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AC01MessageReceive class >> validateClass [
 	^ OPBPMNActivityModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 AC01MessageReceive >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |

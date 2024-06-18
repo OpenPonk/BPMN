@@ -1,15 +1,17 @@
 Class {
-	#name : #BE05ErrorNonInterrupting,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'BE05ErrorNonInterrupting',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BE05ErrorNonInterrupting class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 BE05ErrorNonInterrupting >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 

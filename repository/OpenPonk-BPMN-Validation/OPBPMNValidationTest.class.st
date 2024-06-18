@@ -1,35 +1,37 @@
 Class {
-	#name : #OPBPMNValidationTest,
-	#superclass : #OPBPMNAbstractValidationTest,
-	#category : #'OpenPonk-BPMN-Validation-Tests'
+	#name : 'OPBPMNValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Tests'
 }
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> getTestedClass [
 	^ OPBPMNValidation.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> getValidatedClass [
 	^ nil.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> getValidatedClassInstance [
 	^ nil.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> testCanValidate [
 	self assert: (self getTestedClass canValidate: self getNotValidatedClassInstance) equals: false.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> testNew [
 	self newTest.
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> testValidateObjectWithModel [
 	self
 		assertCollection:
@@ -39,7 +41,7 @@ OPBPMNValidationTest >> testValidateObjectWithModel [
 		hasSameElements: {}
 ]
 
-{ #category : #constants }
+{ #category : 'constants' }
 OPBPMNValidationTest >> testValidatedClass [
 	self assert: self getTestedClass validateClass equals: self getValidatedClass.
 ]

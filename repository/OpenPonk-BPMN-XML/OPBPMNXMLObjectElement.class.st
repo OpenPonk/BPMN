@@ -1,18 +1,20 @@
 Class {
-	#name : #OPBPMNXMLObjectElement,
-	#superclass : #OPBPMNXMLElement,
+	#name : 'OPBPMNXMLObjectElement',
+	#superclass : 'OPBPMNXMLElement',
 	#instVars : [
 		'containedItems'
 	],
-	#category : #'OpenPonk-BPMN-XML-DOM'
+	#category : 'OpenPonk-BPMN-XML-DOM',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'DOM'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 OPBPMNXMLObjectElement >> accept: aVisitor [
 	aVisitor visitObjectElement: self
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPBPMNXMLObjectElement >> initialize [
 	super initialize.
 	containedItems := OrderedCollection new

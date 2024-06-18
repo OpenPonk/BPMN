@@ -1,15 +1,17 @@
 Class {
-	#name : #GW06NoConditionalOutgoingFlows,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'GW06NoConditionalOutgoingFlows',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GW06NoConditionalOutgoingFlows class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 GW06NoConditionalOutgoingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |

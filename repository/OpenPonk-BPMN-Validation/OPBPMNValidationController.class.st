@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNValidationController,
-	#superclass : #Object,
-	#category : #'OpenPonk-BPMN-Validation-Controllers'
+	#name : 'OPBPMNValidationController',
+	#superclass : 'Object',
+	#category : 'OpenPonk-BPMN-Validation-Controllers',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Controllers'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNValidationController >> getValidateObjects: aValidateModel [
 | verifiedObjects |
 	verifiedObjects := aValidateModel nodes.
@@ -13,14 +15,14 @@ OPBPMNValidationController >> getValidateObjects: aValidateModel [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNValidationController >> getValidations [
 	^ (RPackageOrganizer default packageNamed: 'OpenPonk-BPMN-Validation')
 		definedClasses
 		select: [ :class |class tags asSet includes: 'Validation-Classes'].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNValidationController >> validate: aValidateModel [
 
 	| validateObjects validations results |
@@ -45,7 +47,7 @@ OPBPMNValidationController >> validate: aValidateModel [
 	^ results
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNValidationController >> validateProcess: aValidateModel [
 
 	| results validateObjects startEventCounter poolCounter activityCounter activityAlone |
@@ -88,7 +90,7 @@ OPBPMNValidationController >> validateProcess: aValidateModel [
 	^ results
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OPBPMNValidationController >> validateSingleObject: aValidateObject withValidations: aValidations withModel: aValidatedModel withResults: aValidationsResults [
 
 	^ aValidations do: [ :validations | 

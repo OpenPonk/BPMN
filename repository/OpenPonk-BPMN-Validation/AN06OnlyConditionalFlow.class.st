@@ -1,15 +1,17 @@
 Class {
-	#name : #AN06OnlyConditionalFlow,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'AN06OnlyConditionalFlow',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AN06OnlyConditionalFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 AN06OnlyConditionalFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifTrue: [ 

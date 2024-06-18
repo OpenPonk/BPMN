@@ -1,15 +1,17 @@
 Class {
-	#name : #AC05ActivityMergingFlows,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'AC05ActivityMergingFlows',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AC05ActivityMergingFlows class >> validateClass [
 	^ OPBPMNActivityModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 AC05ActivityMergingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	| counterIn counterOut |
 	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifTrue: [ 

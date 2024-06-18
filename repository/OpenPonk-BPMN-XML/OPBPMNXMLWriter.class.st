@@ -1,10 +1,12 @@
 Class {
-	#name : #OPBPMNXMLWriter,
-	#superclass : #Object,
-	#category : #'OpenPonk-BPMN-XML-Writer'
+	#name : 'OPBPMNXMLWriter',
+	#superclass : 'Object',
+	#category : 'OpenPonk-BPMN-XML-Writer',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'Writer'
 }
 
-{ #category : #writing }
+{ #category : 'writing' }
 OPBPMNXMLWriter class >> toString: anXML [
 
 	| visitor |
@@ -13,7 +15,7 @@ OPBPMNXMLWriter class >> toString: anXML [
 	^ visitor contents
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 OPBPMNXMLWriter class >> write: anXML toStream: aStream [
 
 	aStream << (self toString: anXML)

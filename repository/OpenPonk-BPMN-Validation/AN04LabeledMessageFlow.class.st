@@ -1,15 +1,17 @@
 Class {
-	#name : #AN04LabeledMessageFlow,
-	#superclass : #OPBPMNValidation,
-	#category : #'OpenPonk-BPMN-Validation-Validation-Classes'
+	#name : 'AN04LabeledMessageFlow',
+	#superclass : 'OPBPMNValidation',
+	#category : 'OpenPonk-BPMN-Validation-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation',
+	#tag : 'Validation-Classes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AN04LabeledMessageFlow class >> validateClass [
 	^ OPBPMNNodeModel.
 ]
 
-{ #category : #verification }
+{ #category : 'verification' }
 AN04LabeledMessageFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| counter |
