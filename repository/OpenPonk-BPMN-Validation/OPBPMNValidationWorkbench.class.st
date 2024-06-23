@@ -94,10 +94,10 @@ OPBPMNValidationWorkbench class >> verificationFrameworkSettingsGroups: aBuilder
 		label: 'Anti-patterns';
 		parent: #openponk;
 		order: 250."
-	(aBuilder group: #bpmnValidations)
+	"(aBuilder group: #bpmnValidations)
 		label: 'BPMN Validations';
 		parent: #openponk;
-		order: 240
+		order: 240"
 ]
 
 { #category : 'opening' }
