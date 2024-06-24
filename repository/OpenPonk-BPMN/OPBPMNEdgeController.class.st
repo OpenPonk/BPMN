@@ -29,19 +29,6 @@ OPBPMNEdgeController >> diagramElementClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
-OPBPMNEdgeController >> ensureSourceAndTargetIn: aDiagramController [
-
-	source ifNil: [ 
-		self source:
-			(aDiagramController showWithoutDependentInDiagramModel:
-				 model source) ].
-	target ifNil: [ 
-		self target:
-			(aDiagramController showWithoutDependentInDiagramModel:
-				 model target) ]
-]
-
 { #category : 'private' }
 OPBPMNEdgeController >> headMarker [
 	"line decoration shape class used as head"
@@ -74,20 +61,4 @@ OPBPMNEdgeController >> removeModel [
 	self diagramController model remove: self model.
 	self model target removeFlow: self model.
 	self model source removeFlow: self model
-]
-
-{ #category : 'accessing' }
-OPBPMNEdgeController >> showInDiagram: aDiagramController [
-	source
-		ifNil: [ self source: (aDiagramController showWithoutDependentInDiagramModel: model source) ].
-	target
-		ifNil: [ self target: (aDiagramController showWithoutDependentInDiagramModel: model target) ].
-	^ super showInDiagram: aDiagramController
-]
-
-{ #category : 'accessing' }
-OPBPMNEdgeController >> showWithoutDependentInDiagram: aDiagramController [
-
-	self ensureSourceAndTargetIn: aDiagramController.
-	^ super showWithoutDependentInDiagram: aDiagramController
 ]
