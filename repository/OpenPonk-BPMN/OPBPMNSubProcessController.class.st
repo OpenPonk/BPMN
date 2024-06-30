@@ -78,12 +78,6 @@ OPBPMNSubProcessController >> modelClass [
 ]
 
 { #category : 'forms' }
-OPBPMNSubProcessController >> removeModel [
-
-	self diagramController model remove: self model
-]
-
-{ #category : 'forms' }
 OPBPMNSubProcessController >> showDenyFeedbackFor: aController [
 
 	^ nil

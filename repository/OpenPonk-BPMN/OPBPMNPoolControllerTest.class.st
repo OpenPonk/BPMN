@@ -22,16 +22,6 @@ OPBPMNPoolControllerTest >> modelClass [
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolControllerTest >> targetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolControllerTest >> targetModelClass [
-	^ OPBPMNPoolModel 
-]
-
-{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> testAssignmentToParent [
 	"not by pool"
 ]

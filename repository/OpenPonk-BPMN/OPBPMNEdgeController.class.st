@@ -12,19 +12,6 @@ OPBPMNEdgeController >> addLabels [
 ]
 
 { #category : 'construction' }
-OPBPMNEdgeController >> createModelIn: aParentModel [
-	self model: self modelClass new.
-	model source: self source model.
-	model target: self target model.
-	source model addFlow: model.
-	target model addFlow: model.
-	"(aParentModel owner isKindOf: OPBPMNPoolModel) 
-	ifTrue: [ (aParentModel owner) owner add: model ]
-	ifFalse: [ aParentModel owner add: model ]."
-	^ model
-]
-
-{ #category : 'construction' }
 OPBPMNEdgeController >> diagramElementClass [
 	^ self subclassResponsibility
 ]
@@ -56,9 +43,25 @@ OPBPMNEdgeController >> modelClass [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'construction' }
+OPBPMNEdgeController >> modelSource: aModel in: aParentModel [
+
+	(super modelSource: aModel in: aParentModel) ifFalse: [ ^ false ].
+	self modelSource addFlow: model.
+	^ true
+]
+
+{ #category : 'construction' }
+OPBPMNEdgeController >> modelTarget: aModel in: aParentModel [
+
+	(super modelTarget: aModel in: aParentModel) ifFalse: [ ^ false ].
+	self modelTarget addFlow: model.
+	^ true
+]
+
 { #category : 'private' }
 OPBPMNEdgeController >> removeModel [
-	self diagramController model remove: self model.
+	self model owner remove: self model.
 	self model target removeFlow: self model.
 	self model source removeFlow: self model
 ]

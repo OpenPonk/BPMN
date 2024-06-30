@@ -26,11 +26,12 @@ OPBPMNEdgeLabel >> defaultMinDistance [
 
 { #category : 'accessing' }
 OPBPMNEdgeLabel >> defaultText [
-	self modelElement name ifNil: [ ^'' ].
-	^ self modelElement name
+
+	^ self modelElement name ifNil: [ ^ '' ] ifNotNil: [ :name | name ]
 ]
 
 { #category : 'as yet unclassified' }
 OPBPMNEdgeLabel >> text [
+
 	^ self modelElement name
 ]

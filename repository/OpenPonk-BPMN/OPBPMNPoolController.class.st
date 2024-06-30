@@ -69,12 +69,6 @@ OPBPMNPoolController >> modelClass [
 ]
 
 { #category : 'connecting' }
-OPBPMNPoolController >> removeModel [
-	self diagramController model remove: self model.
-	
-]
-
-{ #category : 'connecting' }
 OPBPMNPoolController >> showDenyFeedbackFor: aController [
 	^ nil
 ]

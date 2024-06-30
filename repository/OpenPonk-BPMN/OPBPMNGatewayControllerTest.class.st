@@ -12,6 +12,16 @@ OPBPMNGatewayControllerTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNGatewayControllerTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'accessing' }
+OPBPMNGatewayControllerTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
 OPBPMNGatewayControllerTest >> diagramElementClass [
 	^ OPBPMNGatewayShape
 ]
@@ -19,14 +29,4 @@ OPBPMNGatewayControllerTest >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNGatewayControllerTest >> modelClass [
 	^ OPBPMNGatewayModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNGatewayControllerTest >> targetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNGatewayControllerTest >> targetModelClass [
-	^ OPBPMNPoolModel 
 ]

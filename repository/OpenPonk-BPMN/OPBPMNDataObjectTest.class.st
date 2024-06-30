@@ -12,6 +12,16 @@ OPBPMNDataObjectTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNDataObjectTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController    
+]
+
+{ #category : 'accessing' }
+OPBPMNDataObjectTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
 OPBPMNDataObjectTest >> diagramElementClass [
 	^ OPBPMNDataObjectShape 
 ]
@@ -19,14 +29,4 @@ OPBPMNDataObjectTest >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNDataObjectTest >> modelClass [
 	^ OPBPMNDataObjectModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNDataObjectTest >> targetControllerClass [
-	^ OPBPMNPoolController    
-]
-
-{ #category : 'accessing' }
-OPBPMNDataObjectTest >> targetModelClass [
-	^ OPBPMNPoolModel 
 ]

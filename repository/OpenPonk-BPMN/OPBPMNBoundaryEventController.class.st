@@ -55,12 +55,6 @@ OPBPMNBoundaryEventController >> modelClass [
 ]
 
 { #category : 'forms' }
-OPBPMNBoundaryEventController >> removeModel [
-
-	self diagramController model remove: self model
-]
-
-{ #category : 'forms' }
 OPBPMNBoundaryEventController >> subscribeDiagram: aDiagram [
 
 	self model subscribeDiagram: aDiagram

@@ -61,11 +61,6 @@ OPBPMNActivityController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : 'accessing' }
-OPBPMNActivityController >> dependentElements [
-	^ (model incoming , model outgoing) asSet
-]
-
 { #category : 'connecting' }
 OPBPMNActivityController >> diagramElementClass [
 

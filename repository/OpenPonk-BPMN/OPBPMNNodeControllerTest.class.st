@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNNodeControllerTest',
-	#superclass : 'OPBPMNControllerTest',
+	#superclass : 'OPAbstractElementControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
@@ -11,46 +11,18 @@ OPBPMNNodeControllerTest class >> isAbstract [
 	"Override to true if a TestCase subclass is Abstract and should not have
 	TestCase instances built from it"
 
-	^ (self = OPBPMNNodeControllerTest) | (self = OPBPMNControllerTest)
+	^ self = OPBPMNNodeControllerTest
 ]
 
 { #category : 'accessing' }
-OPBPMNNodeControllerTest >> controllerClass [
-	^ self subclassResponsibility
+OPBPMNNodeControllerTest >> diagramControllerClass [
+
+	^ OPBPMNDiagramController
 ]
 
 { #category : 'accessing' }
-OPBPMNNodeControllerTest >> diagramElementClass [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> modelClass [
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> testAssignmentToParent [
-	controller createModelIn: relationshipController model.
-	self assert: (relationshipController model elements includes: controller model)
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> testClassSideModelClass [
-	self assert: self controllerClass modelClass equals: self modelClass
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> testCreateController [
-	self assert: controller class = self controllerClass
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> testCreateModel [
-	self
-		assert: (controller createModelIn: diagramController model) class
-		equals: self modelClass
+OPBPMNNodeControllerTest >> diagramModelClass [
+	^ OPBPMNModel 
 ]
 
 { #category : 'accessing' }

@@ -12,6 +12,16 @@ OPBPMNCollapsedSubProcessTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNCollapsedSubProcessTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'accessing' }
+OPBPMNCollapsedSubProcessTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessTest >> diagramElementClass [
 	^ OPBPMNCollapsedSubProcessShape 
 ]
@@ -19,14 +29,4 @@ OPBPMNCollapsedSubProcessTest >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNCollapsedSubProcessTest >> modelClass [
 	^ OPBPMNCollapsedSubProcessModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNCollapsedSubProcessTest >> targetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNCollapsedSubProcessTest >> targetModelClass [
-	^ OPBPMNPoolModel 
 ]

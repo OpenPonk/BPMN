@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNMessageFlowControllerTest',
-	#superclass : 'OPBPMNFlowControllerTest',
+	#superclass : 'OPBPMNEdgeControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
@@ -23,11 +23,11 @@ OPBPMNMessageFlowControllerTest >> modelClass [
 ]
 
 { #category : 'accessing' }
-OPBPMNMessageFlowControllerTest >> targetControllerClass [
+OPBPMNMessageFlowControllerTest >> sourceControllerClass [
 	^ OPBPMNPoolController  
 ]
 
 { #category : 'accessing' }
-OPBPMNMessageFlowControllerTest >> targetModelClass [
+OPBPMNMessageFlowControllerTest >> sourceModelClass [
 	^ OPBPMNPoolModel 
 ]
