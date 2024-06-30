@@ -70,11 +70,6 @@ OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 ]
 
 { #category : 'testing' }
-OPBPMNCollapsedSubProcessController >> dependentElements [
-	^ (model incoming , model outgoing) asSet
-]
-
-{ #category : 'testing' }
 OPBPMNCollapsedSubProcessController >> diagramElementClass [
 
 	^ OPBPMNCollapsedSubProcessShape

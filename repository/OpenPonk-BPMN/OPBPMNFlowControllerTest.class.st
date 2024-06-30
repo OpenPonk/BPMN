@@ -1,10 +1,6 @@
 Class {
 	#name : 'OPBPMNFlowControllerTest',
-	#superclass : 'OPBPMNControllerTest',
-	#instVars : [
-		'fromCtrl',
-		'toCtrl'
-	],
+	#superclass : 'OPAbstractDirectionalRelationshipControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
@@ -23,25 +19,20 @@ OPBPMNFlowControllerTest >> amountOfLabels [
 	^ 1
 ]
 
-{ #category : 'tests' }
-OPBPMNFlowControllerTest >> controllerClass [
-	^ self subclassResponsibility
+{ #category : 'accessing' }
+OPBPMNFlowControllerTest >> diagramControllerClass [
+
+	^ OPBPMNDiagramController
 ]
 
-{ #category : 'tests' }
-OPBPMNFlowControllerTest >> diagramElementClass [
-
-	^ self subclassResponsibility
+{ #category : 'accessing' }
+OPBPMNFlowControllerTest >> diagramModelClass [
+	^ OPBPMNModel 
 ]
 
 { #category : 'tests' }
 OPBPMNFlowControllerTest >> fromClass [
 	^ OPBPMNStartEventController 
-]
-
-{ #category : 'tests' }
-OPBPMNFlowControllerTest >> modelClass [
-	^ self subclassResponsibility
 ]
 
 { #category : 'tests' }

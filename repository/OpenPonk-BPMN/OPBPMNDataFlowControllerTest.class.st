@@ -23,12 +23,12 @@ OPBPMNDataFlowControllerTest >> modelClass [
 ]
 
 { #category : 'accessing' }
-OPBPMNDataFlowControllerTest >> targetControllerClass [
+OPBPMNDataFlowControllerTest >> sourceControllerClass [
 	^ OPBPMNDataObjectController  
 ]
 
 { #category : 'accessing' }
-OPBPMNDataFlowControllerTest >> targetModelClass [
+OPBPMNDataFlowControllerTest >> sourceModelClass [
 	^ OPBPMNDataObjectModel 
 ]
 

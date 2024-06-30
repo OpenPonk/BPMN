@@ -12,6 +12,16 @@ OPBPMNBoundaryEventTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNBoundaryEventTest >> creationTargetControllerClass [
+	^ OPBPMNSubProcessController 
+]
+
+{ #category : 'accessing' }
+OPBPMNBoundaryEventTest >> creationTargetModelClass [
+	^ OPBPMNSubProcessModel  
+]
+
+{ #category : 'accessing' }
 OPBPMNBoundaryEventTest >> diagramElementClass [
 	^ OPBPMNBoundaryEventShape 
 ]
@@ -19,16 +29,6 @@ OPBPMNBoundaryEventTest >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNBoundaryEventTest >> modelClass [
 	^ OPBPMNBoundaryEventModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNBoundaryEventTest >> targetControllerClass [
-	^ OPBPMNSubProcessController 
-]
-
-{ #category : 'accessing' }
-OPBPMNBoundaryEventTest >> targetModelClass [
-	^ OPBPMNSubProcessModel  
 ]
 
 { #category : 'accessing' }

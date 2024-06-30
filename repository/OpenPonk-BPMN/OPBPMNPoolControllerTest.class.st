@@ -12,22 +12,22 @@ OPBPMNPoolControllerTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNPoolControllerTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'accessing' }
+OPBPMNPoolControllerTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
 OPBPMNPoolControllerTest >> diagramElementClass [
 	^ OPBPMNPoolShape
 ]
 
 { #category : 'accessing' }
 OPBPMNPoolControllerTest >> modelClass [
-	^ OPBPMNPoolModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolControllerTest >> targetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolControllerTest >> targetModelClass [
 	^ OPBPMNPoolModel 
 ]
 

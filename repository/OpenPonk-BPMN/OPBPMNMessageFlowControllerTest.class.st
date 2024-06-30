@@ -23,11 +23,11 @@ OPBPMNMessageFlowControllerTest >> modelClass [
 ]
 
 { #category : 'accessing' }
-OPBPMNMessageFlowControllerTest >> targetControllerClass [
+OPBPMNMessageFlowControllerTest >> sourceControllerClass [
 	^ OPBPMNPoolController  
 ]
 
 { #category : 'accessing' }
-OPBPMNMessageFlowControllerTest >> targetModelClass [
+OPBPMNMessageFlowControllerTest >> sourceModelClass [
 	^ OPBPMNPoolModel 
 ]

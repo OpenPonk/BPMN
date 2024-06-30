@@ -23,11 +23,12 @@ OPBPMNBasicFlowControllerTest >> modelClass [
 ]
 
 { #category : 'accessing' }
-OPBPMNBasicFlowControllerTest >> targetControllerClass [
-	^ OPBPMNActivityController  
+OPBPMNBasicFlowControllerTest >> sourceControllerClass [
+
+	^ OPBPMNActivityController
 ]
 
 { #category : 'accessing' }
-OPBPMNBasicFlowControllerTest >> targetModelClass [
+OPBPMNBasicFlowControllerTest >> sourceModelClass [
 	^ OPBPMNActivityModel 
 ]

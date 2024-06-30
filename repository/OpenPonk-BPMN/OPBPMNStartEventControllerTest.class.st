@@ -12,6 +12,16 @@ OPBPMNStartEventControllerTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNStartEventControllerTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'accessing' }
+OPBPMNStartEventControllerTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
 OPBPMNStartEventControllerTest >> diagramElementClass [
 	^ OPBPMNStartEventShape 
 ]
@@ -19,14 +29,4 @@ OPBPMNStartEventControllerTest >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNStartEventControllerTest >> modelClass [
 	^ OPBPMNStartEventModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNStartEventControllerTest >> targetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNStartEventControllerTest >> targetModelClass [
-	^ OPBPMNPoolModel 
 ]

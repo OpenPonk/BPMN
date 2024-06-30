@@ -12,6 +12,16 @@ OPBPMNActivityControllerTest >> controllerClass [
 ]
 
 { #category : 'accessing' }
+OPBPMNActivityControllerTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'accessing' }
+OPBPMNActivityControllerTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
 OPBPMNActivityControllerTest >> diagramElementClass [
 	^ OPBPMNActivityShape
 ]
@@ -19,14 +29,4 @@ OPBPMNActivityControllerTest >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNActivityControllerTest >> modelClass [
 	^ OPBPMNActivityModel 
-]
-
-{ #category : 'accessing' }
-OPBPMNActivityControllerTest >> targetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNActivityControllerTest >> targetModelClass [
-	^ OPBPMNPoolModel 
 ]

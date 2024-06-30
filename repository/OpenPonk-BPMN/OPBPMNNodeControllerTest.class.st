@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNNodeControllerTest',
-	#superclass : 'OPBPMNControllerTest',
+	#superclass : 'OPAbstractElementControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
@@ -15,35 +15,14 @@ OPBPMNNodeControllerTest class >> isAbstract [
 ]
 
 { #category : 'accessing' }
-OPBPMNNodeControllerTest >> controllerClass [
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> diagramElementClass [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> modelClass [
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
 OPBPMNNodeControllerTest >> testAssignmentToParent [
-	controller createModelIn: relationshipController model.
-	self assert: (relationshipController model elements includes: controller model)
+	controller createModelIn: ownerController model.
+	self assert: (ownerController model elements includes: controller model)
 ]
 
 { #category : 'accessing' }
 OPBPMNNodeControllerTest >> testClassSideModelClass [
 	self assert: self controllerClass modelClass equals: self modelClass
-]
-
-{ #category : 'accessing' }
-OPBPMNNodeControllerTest >> testCreateController [
-	self assert: controller class = self controllerClass
 ]
 
 { #category : 'accessing' }
