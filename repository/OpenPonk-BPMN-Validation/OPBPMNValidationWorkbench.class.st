@@ -168,7 +168,7 @@ OPBPMNValidationWorkbench >> focusEditorOf: aDiagram [
 	self announce: (OPEditorFocused on: focusedEditor).
 	topToolbar activeEditor: focusedEditor.
 	focusedEditor diagramController diagramElement: aDiagram.
-	focusedEditor diagramController showElements
+	focusedEditor diagramController diagramFocused
 ]
 
 { #category : 'opening' }
