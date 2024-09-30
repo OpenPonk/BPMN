@@ -1,28 +1,30 @@
 Class {
-	#name : #OPBPMNXMLElement,
-	#superclass : #OPBPMNXMLInfoItems,
+	#name : 'OPBPMNXMLElement',
+	#superclass : 'OPBPMNXMLInfoItems',
 	#instVars : [
 		'xmlName'
 	],
-	#category : #'OpenPonk-BPMN-XML-DOM'
+	#category : 'OpenPonk-BPMN-XML-DOM',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'DOM'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNXMLElement >> isElement [
 	^ true
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 OPBPMNXMLElement >> writeXMLOn: aWriter [
 	aWriter tag: self xmlName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNXMLElement >> xmlName [
 	^ xmlName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNXMLElement >> xmlName: aString [
 	xmlName := aString
 ]

@@ -1,64 +1,74 @@
 Class {
-	#name : #OPBPMNPlugin,
-	#superclass : #OPPlugin,
-	#category : #'OpenPonk-BPMN-Adapters'
+	#name : 'OPBPMNPlugin',
+	#superclass : 'OPPlugin',
+	#category : 'OpenPonk-BPMN-Adapters',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Adapters'
 }
 
-{ #category : #toolbar }
+{ #category : 'toolbar' }
 OPBPMNPlugin class >> exportPackage: aPackage [
-	FDSaveFileDialog new
-		whenSelected: [ :file | 
+
+	StFBSaveFileDialog new
+		title: 'Choose a BPMN file to export to';
+		okAction: [ :file | 
 			file
 				ensureDelete;
-				writeStreamDo: [ :stream | stream << (OPBPMNXMLWriter toString: aPackage)].
-			self inform: 'Exported to ' , file fullName ];
-		extensionFilters:
-			{'XML files' -> #(bpmn xml).
-			'All files' -> #()};
-		defaultFolder: FileLocator imageDirectory asFileReference;
+				writeStreamDo: [ :stream | 
+					stream << (OPBPMNXMLWriter toString: aPackage) ].
+			UIManager default
+				inform: (String streamContents: [ :s | 
+						 s << 'Exported to ' << file pathString.
+						 s
+							 cr;
+							 cr.
+						 s << 'Click to open location' ])
+				actionOnClick: [ file openInOSFileBrowser ] ];
+		extensions: #( bpmn xml ) named: 'BPMN XML files';
 		open
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin class >> toolbarMenu: aBuilder [
+
 	<opEditorToolbarMenu: #OPBPMNPlugin>
 	(aBuilder item: 'Export as XML...')
-		"icon: (self iconNamed: #help);"
+		icon: OPBPMNIcon current logo;
 		action: [ self exportPackage: aBuilder model diagramController ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> diagramControllerClass [
 	^ OPBPMNDiagramController
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> icon [
 	^ OPBPMNIcon current logo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> layouterClass [
 	"Create your own subclass of OPLayouter or use OPNoLayouter which does nothing"
 	^ OPBPMNLayouter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> modelClass [
 	^ OPBPMNModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> modelSerializerClass [
 	^ OPStonModelSerializer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> name [
 	^ 'BPMN'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNPlugin >> supportsHidingElements [
 	^ true
 ]

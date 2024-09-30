@@ -1,21 +1,23 @@
 Class {
-	#name : #OPBPMNNodeModel,
-	#superclass : #OPModelObject,
+	#name : 'OPBPMNNodeModel',
+	#superclass : 'OPModelObject',
 	#instVars : [
 		'flows',
 		'type',
 		'executableAttribute',
 		'executableAttributeValue'
 	],
-	#category : #'OpenPonk-BPMN-Models'
+	#category : 'OpenPonk-BPMN-Models',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Models'
 }
 
-{ #category : #associating }
+{ #category : 'associating' }
 OPBPMNNodeModel >> -> aNode [
 	^ OPBPMNFactory flowFrom: self to: aNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> addFlow: aFlow [
 	(flows includes: aFlow)
 		ifTrue: [ ^ self ].
@@ -27,59 +29,59 @@ OPBPMNNodeModel >> addFlow: aFlow [
 		ifFalse: [ self changed ]
 ]
 
-{ #category : #associating }
+{ #category : 'associating' }
 OPBPMNNodeModel >> allEntities [
 	^ Set with: self flows
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> connected [
 	owner ifNil: [ ^ #() ].
 	^ owner flows
 		select: [ :each | each source = self or: [ each target = self ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNNodeModel >> executableAttribute [
 	^ executableAttribute
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNNodeModel >> executableAttribute: anAttribute [
 	executableAttribute := anAttribute
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNNodeModel >> executableAttributeValue [
 	^ executableAttributeValue
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNNodeModel >> executableAttributeValue: anAttribute [
 	executableAttributeValue := anAttribute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> flows [
 	^ flows
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> has: anElement [
 	^ flows includes: anElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> incoming [
 	^ flows select: [ :each | each target = self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> initialize [
 	super initialize.
 	type := self defaultType.
@@ -87,37 +89,37 @@ OPBPMNNodeModel >> initialize [
 	executableAttributeValue := ''
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNNodeModel >> isEdge [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 OPBPMNNodeModel >> isNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> nodes [
 	^ elements 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> outgoing [
 	^ flows select: [ :each | each source = self ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 OPBPMNNodeModel >> printIdType [
 	^ '_6-'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> relatedElements [
 	^ (self incoming , self outgoing) asSet asOrderedCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> removeAllFlows [
 	flows copy
 		do: [ :each | 
@@ -125,13 +127,13 @@ OPBPMNNodeModel >> removeAllFlows [
 			each target removeFlow: each ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> removeFlow: aFlow [
 	flows remove: aFlow
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> removedFrom: aDiagram [
 	self
 		removedFrom: aDiagram
@@ -139,12 +141,12 @@ OPBPMNNodeModel >> removedFrom: aDiagram [
 			self outgoing do: [ :each | aDiagram remove: each ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> type [
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> type: aParticipantType [
 	type := aParticipantType.
 	self changed

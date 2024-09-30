@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfBPMN,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfBPMN
+	#name : 'BaselineOfBPMN',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfBPMN',
+	#package : 'BaselineOfBPMN'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfBPMN >> baseline: spec [
 	<baseline>
 	spec

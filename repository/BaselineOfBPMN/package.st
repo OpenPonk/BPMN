@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfBPMN }
+Package { #name : 'BaselineOfBPMN' }

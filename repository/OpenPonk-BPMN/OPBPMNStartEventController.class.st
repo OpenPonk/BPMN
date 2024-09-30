@@ -1,68 +1,70 @@
 Class {
-	#name : #OPBPMNStartEventController,
-	#superclass : #OPBPMNEventController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNStartEventController',
+	#superclass : 'OPBPMNEventController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #(#Receive #Timer #None);
-		iconHolder: [ :type | self typeIconFor: type ];
-		displayBlock: [ :type | type asString ];
-		setSelectedItem: self model type;
-		whenSelectedItemChanged: [ :newValue | 
+		items:
+			#( #None #Receive #Timer #Escalation #Conditional #Error #Compensation
+			   #Signal #Multiple #ParallelMultiple );
+		displayIcon: [ :type | self model typeIconFor: type ];
+		display: [ :type | type asString ];
+		selectItem: self model type;
+		whenSelectedItemChangedDo: [ :newValue |
 			self model type: newValue.
-			self refreshFigure ].
-	self model type = OPBPMNNodeType Timer
-		ifTrue: [ (aForm addDroplist: 'Timer type')
-				items: #(#none #timeDate #timeDuration #timeCycle);
-				displayBlock: [ :type | type asString ];
-				setSelectedItem: self model timerType;
-				whenSelectedItemChanged: [ :newValue | 
-					self model timerType: newValue.
-					self refreshFigure ].
-			(aForm addText: 'Timer value')
-				text: self model timerValue;
-				whenTextIsAccepted: [ :newValue | 
-					self model timerValue: newValue asString.
-					self refreshFigure ] ]
+			self diagramElement modelChanged ].
+	(aForm addCheckbox: 'Is Non-Interrupting')
+		state: self model isNonInterrupting;
+		whenChangedDo: [ :val |
+			self model isNonInterrupting: val.
+			self diagramElement modelChanged ].
+
+	self model type = OPBPMNNodeType Timer ifTrue: [
+		(aForm addDroplist: 'Timer type')
+			items: #( #none #timeDate #timeDuration #timeCycle );
+			display: [ :type | type asString ];
+			selectItem: self model timerType;
+			whenSelectedItemChangedDo: [ :newValue |
+				self model timerType: newValue.
+				self diagramElement modelChanged ].
+		(aForm addText: 'Timer value')
+			text: self model timerValue;
+			whenTextChangedDo: [ :newValue |
+				self model timerValue: newValue asString.
+				self refreshFigure ] ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> canBeTargetFor: aController [
-	(aController isKindOf: OPBPMNMessageFlowController)
-		ifTrue: [ ^ aController source model owner ~= self model owner ]
-		ifFalse: [ ^ false ] 
+
+	^ (aController isKindOf: OPBPMNMessageFlowController)
+		  ifTrue: [ ^ aController source model owner ~= self model owner ]
+		  ifFalse: [
+		  		(aController isKindOf: OPBPMNDataFlowController)
+		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
+		 		ifFalse: [ ^ false]
+			 ]
 ]
 
-{ #category : #connecting }
-OPBPMNStartEventController >> createRoassalShape [
-	^ RTRoundedBox new
-		size: 36;
-		borderRadius: 18;
-		color: Color transparent;
-		borderColor: Color black;
-		yourself
+{ #category : 'hooks' }
+OPBPMNStartEventController >> diagramElementClass [
+
+	^ OPBPMNStartEventShape
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNStartEventController >> modelClass [
 	^ OPBPMNStartEventModel
-]
-
-{ #category : #hooks }
-OPBPMNStartEventController >> typeIconFor: aType [
-	aType = OPBPMNNodeType Receive
-		ifTrue: [ ^ OPBPMNIcon current activityReceiveSquare ].
-	aType = OPBPMNNodeType Timer
-		ifTrue: [ ^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType None
-		ifTrue: [ ^ OPBPMNIcon current activityNone ]
 ]

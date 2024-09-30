@@ -1,24 +1,26 @@
 Class {
-	#name : #OPBPMNLayouter,
-	#superclass : #OPLayouter,
-	#category : #'OpenPonk-BPMN-Adapters'
+	#name : 'OPBPMNLayouter',
+	#superclass : 'OPLayouter',
+	#category : 'OpenPonk-BPMN-Adapters',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Adapters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNLayouter >> allEdges [
 	^ diagramController controllers
 		select: [ :ctrl | ctrl isKindOf: OPBPMNEdgeController ]
-		thenCollect: #figure
+		thenCollect: #roassalShape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNLayouter >> allNodes [
 	^ diagramController controllers
 		select: [ :ctrl | ctrl isKindOf: OPBPMNNodeController ]
-		thenCollect: #figure
+		thenCollect: #roassalShape
 ]
 
-{ #category : #layouts }
+{ #category : 'layouts' }
 OPBPMNLayouter >> defaultLayout [
 	self sugiyamaLayout
 ]

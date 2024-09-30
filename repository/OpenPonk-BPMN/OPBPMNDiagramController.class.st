@@ -1,32 +1,36 @@
 Class {
-	#name : #OPBPMNDiagramController,
-	#superclass : #OPDiagramController,
-	#category : #'OpenPonk-BPMN-Controllers'
+	#name : 'OPBPMNDiagramController',
+	#superclass : 'OPDiagramController',
+	#category : 'OpenPonk-BPMN-Controllers',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Controllers'
 }
 
-{ #category : #userinterface }
+{ #category : 'userinterface' }
 OPBPMNDiagramController >> buildEditorForm: aForm [
+
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Is Executable?')
-		items: #(#false #true);
-		displayBlock: [ :isExecutable | isExecutable asString ];
-		setSelectedItem: self model isExecutable;
-		whenSelectedItemChanged: [ :newValue | 
+	"(aForm addDroplist: 'Is Executable?')
+		items: #( #false #true );
+		display: [ :isExecutable | isExecutable asString ];
+		selectItem: self model isExecutable;
+		whenSelectedItemChangedDo: [ :newValue | 
 			self model isExecutable: newValue.
-			self refreshFigure ]
+			self diagramElement updateRenderFromModel ]"
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNNodeController 
+	^ (super canBeTargetFor: aController)
+		or: [ aController isKindOf: OPBPMNNodeController ]
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNDiagramController >> commonModelClassPrefix [
 	^ 'OPBPMN'
 ]
 
-{ #category : #'ui interaction' }
+{ #category : 'ui interaction' }
 OPBPMNDiagramController >> controllerFactory [
 	^ super controllerFactory
 		register: OPBPMNActivityController forModel: OPBPMNActivityModel;
@@ -35,12 +39,16 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNIntermediateEventController forModel: OPBPMNIntermediateEventModel;
 		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
 		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
-		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
+		register: OPBPMNSubProcessController forModel: OPBPMNSubProcessModel;
+		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
+		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
+		register: OPBPMNDataObjectController forModel: OPBPMNDataObjectModel;
 		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
+		register: OPBPMNDataFlowController forModel: OPBPMNDataFlowModel;
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
 ]
 
-{ #category : #connecting }
+{ #category : 'connecting' }
 OPBPMNDiagramController >> elementsToShowInside [
 	| poolNodes poolFlows laneNodes laneFlows |
 	poolNodes := (model nodes flatCollect: [ :each | each nodes ]).
@@ -55,7 +63,7 @@ OPBPMNDiagramController >> elementsToShowInside [
 	(model nodes flatCollect: [ :each | each outgoing ])
 ]
 
-{ #category : #'ui interaction' }
+{ #category : 'ui interaction' }
 OPBPMNDiagramController >> initializePalette: aPalette [
 	aPalette
 		newCreationTool: 'Activity'
@@ -76,30 +84,27 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Pool'
 			factory: [ OPBPMNPoolController new ]
 			icon: OPBPMNIcon current pool;
-		"newCreationTool: 'Lane'
-			factory: [ OPBPMNLaneController new ]
-			icon: OPBPMNIcon current lane;"
+		newCreationTool: 'Expanded SubProcess'
+			factory: [ OPBPMNSubProcessController new ]
+			icon: OPBPMNIcon current expandedSubprocess;
+		newCreationTool: 'Collapsed SubProcess'
+			factory: [ OPBPMNCollapsedSubProcessController new ]
+			icon: OPBPMNIcon current subProcessCollapsed;
+		newCreationTool: 'Data Object'
+			factory: [ OPBPMNDataObjectController new ]
+			icon: OPBPMNIcon current dataObject16;
 		newConnectionCreationTool: 'Sequence Flow'
 			factory: [ OPBPMNFlowController new ]
 			icon: OPBPMNIcon current sequenceFlow;
 		newConnectionCreationTool: 'Message Flow'
 			factory: [ OPBPMNMessageFlowController new ]
+			icon: OPBPMNIcon current messageFlow;
+		newConnectionCreationTool: 'Data Flow'
+			factory: [ OPBPMNDataFlowController new ]
 			icon: OPBPMNIcon current messageFlow
 ]
 
-{ #category : #'ui interaction' }
+{ #category : 'ui interaction' }
 OPBPMNDiagramController >> modelClass [
 	^ OPBPMNModel 
-]
-
-{ #category : #userinterface }
-OPBPMNDiagramController >> updateView [
-
-	self controllers do: [ :each | each refreshFigure ].
-	self view edges do: [ :each | 
-		(each isKindOf: OPBPMNPoolController)
-			ifTrue: [ each pushBack ]
-			ifFalse: [ each pushFront ].
-		each update ].
-	self view signalUpdate
 ]

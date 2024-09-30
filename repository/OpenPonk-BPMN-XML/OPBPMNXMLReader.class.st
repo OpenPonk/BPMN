@@ -1,34 +1,36 @@
 Class {
-	#name : #OPBPMNXMLReader,
-	#superclass : #Object,
-	#category : #'OpenPonk-BPMN-XML-Reader'
+	#name : 'OPBPMNXMLReader',
+	#superclass : 'Object',
+	#category : 'OpenPonk-BPMN-XML-Reader',
+	#package : 'OpenPonk-BPMN-XML',
+	#tag : 'Reader'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLReader class >> read: aStream mapping: aMapping [
 	aMapping at: 'result' put: aStream contents.
 	^ (self readFromMapping: aMapping) at: 'result'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLReader class >> readFrom: aStream [
 	^ self new readFrom: aStream
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLReader class >> readFromMapping: aMapping [
 	"aMapping is a Dictionary of HREF URI -> XMI contents"
 
 	^ self new readFromMapping: aMapping
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLReader >> read: aStream mapping: aMapping [
 	aMapping at: 'result' put: aStream contents.
 	^ (self readFromMapping: aMapping) at: 'result'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLReader >> readFrom: aStream [
 	| dom root |
 	dom := XMLDOMParser parse: aStream usingNamespaces: false.
@@ -36,7 +38,7 @@ OPBPMNXMLReader >> readFrom: aStream [
 	^ root
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPBPMNXMLReader >> readFromMapping: aMapping [
 	| graphs |
 	graphs := OrderedDictionary new.

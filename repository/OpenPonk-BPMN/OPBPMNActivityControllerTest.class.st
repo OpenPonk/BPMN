@@ -1,15 +1,32 @@
 Class {
-	#name : #OPBPMNActivityControllerTest,
-	#superclass : #OPBPMNNodeControllerTest,
-	#category : #'OpenPonk-BPMN-Tests'
+	#name : 'OPBPMNActivityControllerTest',
+	#superclass : 'OPBPMNNodeControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
+	#package : 'OpenPonk-BPMN',
+	#tag : 'Tests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPBPMNActivityControllerTest >> controllerClass [
 	^ OPBPMNActivityController 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+OPBPMNActivityControllerTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'accessing' }
+OPBPMNActivityControllerTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel 
+]
+
+{ #category : 'accessing' }
+OPBPMNActivityControllerTest >> diagramElementClass [
+	^ OPBPMNActivityShape
+]
+
+{ #category : 'accessing' }
 OPBPMNActivityControllerTest >> modelClass [
 	^ OPBPMNActivityModel 
 ]
