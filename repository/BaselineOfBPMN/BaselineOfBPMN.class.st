@@ -16,11 +16,11 @@ BaselineOfBPMN >> baseline: spec [
 		spec
 			baseline: 'OpenPonkModel'
 			with: [
-			spec repository: 'github://OpenPonk/openponk-model/repository' ].
+			spec repository: 'github://OpenPonk/openponk-model' ].
 		spec
 			baseline: 'XMLDOMVisitor'
 			with: [
-			spec repository: 'github://OpenPonk/xml-dom-visitor/repository' ].
+			spec repository: 'github://OpenPonk/xml-dom-visitor' ].
 		spec
 			package: 'OpenPonk-BPMN'
 			with: [ spec requires: #( 'OpenPonk' 'OpenPonkModel' ) ].
