@@ -6,7 +6,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'connecting' }
+{ #category : 'forms' }
 OPBPMNStartEventController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -38,7 +38,7 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 			text: self model timerValue;
 			whenTextChangedDo: [ :newValue |
 				self model timerValue: newValue asString.
-				self refreshFigure ] ]
+				self diagramElement modelChanged ] ]
 ]
 
 { #category : 'connecting' }
@@ -58,13 +58,13 @@ OPBPMNStartEventController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : 'hooks' }
+{ #category : 'construction' }
 OPBPMNStartEventController >> diagramElementClass [
 
 	^ OPBPMNStartEventShape
 ]
 
-{ #category : 'connecting' }
+{ #category : 'accessing' }
 OPBPMNStartEventController >> modelClass [
 	^ OPBPMNStartEventModel
 ]

@@ -11,7 +11,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'testing' }
+{ #category : 'forms' }
 OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 
 	| anEvent |
@@ -52,12 +52,12 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 	self diagramElement modelChanged
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> canBeSourceFor: aController [
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNMessageFlowController)
@@ -69,18 +69,18 @@ OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : 'testing' }
+{ #category : 'construction' }
 OPBPMNCollapsedSubProcessController >> diagramElementClass [
 
 	^ OPBPMNCollapsedSubProcessShape
 ]
 
-{ #category : 'testing' }
+{ #category : 'construction' }
 OPBPMNCollapsedSubProcessController >> modelClass [
 	^ OPBPMNCollapsedSubProcessModel
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> renderDiagramElement [
 
 	super renderDiagramElement.
@@ -90,7 +90,7 @@ OPBPMNCollapsedSubProcessController >> renderDiagramElement [
 		for: self
 ]
 
-{ #category : 'testing' }
+{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> typeIconForModel [
-	^ self typeIconFor: self model type
+	^ self model typeIconFor: self model type
 ]

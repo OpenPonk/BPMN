@@ -11,7 +11,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'connecting' }
+{ #category : 'forms' }
 OPBPMNActivityController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -61,7 +61,7 @@ OPBPMNActivityController >> canBeTargetFor: aController [
 			 ]
 ]
 
-{ #category : 'connecting' }
+{ #category : 'construction' }
 OPBPMNActivityController >> diagramElementClass [
 
 	^ OPBPMNActivityShape
@@ -72,7 +72,7 @@ OPBPMNActivityController >> modelClass [
 	^ OPBPMNActivityModel
 ]
 
-{ #category : 'hooks' }
+{ #category : 'connecting' }
 OPBPMNActivityController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

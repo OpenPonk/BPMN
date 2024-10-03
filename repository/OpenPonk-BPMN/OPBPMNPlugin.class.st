@@ -9,7 +9,7 @@ Class {
 { #category : 'toolbar' }
 OPBPMNPlugin class >> exportPackage: aPackage [
 
-	StFBSaveFileDialog new
+	StSaveFilePresenter new
 		title: 'Choose a BPMN file to export to';
 		okAction: [ :file | 
 			file

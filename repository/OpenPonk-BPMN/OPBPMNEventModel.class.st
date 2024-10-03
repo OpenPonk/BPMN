@@ -12,21 +12,20 @@ Class {
 
 { #category : 'printing' }
 OPBPMNEventModel >> timerType [
-	^ timerType
 
+	^ timerType ifNil: [ #none ]
 ]
 
 { #category : 'printing' }
 OPBPMNEventModel >> timerType: aType [
-	(aType = 'none')
-		ifTrue: [ timerType := nil ]
-		ifFalse: [ timerType := aType ]
+
+	timerType := aType
 ]
 
 { #category : 'printing' }
 OPBPMNEventModel >> timerValue [
-	^ timerValue
 
+	^ timerValue ifNil: [ '' ]
 ]
 
 { #category : 'printing' }

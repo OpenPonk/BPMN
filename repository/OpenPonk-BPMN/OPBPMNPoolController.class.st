@@ -18,7 +18,7 @@ OPBPMNPoolController >> boxHeight [
 	^ 300
 ]
 
-{ #category : 'connecting' }
+{ #category : 'forms' }
 OPBPMNPoolController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -52,7 +52,7 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 				| (aController isKindOf: OPBPMNDataObjectController)]
 ]
 
-{ #category : 'connecting' }
+{ #category : 'construction' }
 OPBPMNPoolController >> diagramElementClass [
 
 	^ OPBPMNPoolShape
