@@ -18,7 +18,7 @@ OPBPMNXMLWriterVisitorTest >> testVisitElement [
 		assert: writerVisitor writer asString
 		equals: '<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:exclusiveGateway name="Test name" id="_6-' , model uuid asString
-			, '"/>'
+			, '" =""/>'
 ]
 
 { #category : 'tests' }
@@ -49,7 +49,7 @@ writerVisitor := OPBPMNXMLWriterVisitor new.
 writerVisitor visitElementEvent: model.
 self assert: writerVisitor writer asString equals: 
 '<?xml version="1.0" encoding="UTF-8"?>
-<bpmn:startEvent name="Test name" id="_6-', model uuid asString,'">
+<bpmn:startEvent name="Test name" id="_6-', model uuid asString,'" ="">
     <bpmn:timerEventDefinition id="timerEventDefinition_', model uuid asString,'">
         <bpmn:timeDuration xsi:type="semantic:tFormalExpression">PT5M</bpmn:timeDuration>
     </bpmn:timerEventDefinition>

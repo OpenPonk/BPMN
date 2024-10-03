@@ -48,7 +48,8 @@ OPBPMNNodeModel >> defaultType [
 
 { #category : 'printing' }
 OPBPMNNodeModel >> executableAttribute [
-	^ executableAttribute
+
+	^ executableAttribute ifNil: [ '' ]
 ]
 
 { #category : 'printing' }
@@ -58,7 +59,8 @@ OPBPMNNodeModel >> executableAttribute: anAttribute [
 
 { #category : 'printing' }
 OPBPMNNodeModel >> executableAttributeValue [
-	^ executableAttributeValue
+
+	^ executableAttributeValue ifNil: [ '' ]
 ]
 
 { #category : 'printing' }

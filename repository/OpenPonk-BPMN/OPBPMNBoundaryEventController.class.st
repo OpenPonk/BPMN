@@ -31,18 +31,18 @@ OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 			self diagramElement modelChanged ].
 ]
 
-{ #category : 'forms' }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventController >> canBeSourceFor: aController [
 	^ (aController isKindOf: OPBPMNMessageFlowController) 
 	| (aController isKindOf: OPBPMNFlowController)
 ]
 
-{ #category : 'forms' }
+{ #category : 'connecting' }
 OPBPMNBoundaryEventController >> canBeTargetFor: aController [
 	^ (aController isKindOf: OPBPMNMessageFlowController)
 ]
 
-{ #category : 'forms' }
+{ #category : 'construction' }
 OPBPMNBoundaryEventController >> diagramElementClass [
 
 	^ OPBPMNBoundaryEventShape
@@ -54,7 +54,7 @@ OPBPMNBoundaryEventController >> modelClass [
 	^ OPBPMNBoundaryEventModel
 ]
 
-{ #category : 'forms' }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventController >> subscribeDiagram: aDiagram [
 
 	self model subscribeDiagram: aDiagram

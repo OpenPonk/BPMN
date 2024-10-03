@@ -10,7 +10,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'connecting' }
+{ #category : 'forms' }
 OPBPMNGatewayController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -35,7 +35,7 @@ OPBPMNGatewayController >> canBeTargetFor: aController [
 		
 ]
 
-{ #category : 'connecting' }
+{ #category : 'construction' }
 OPBPMNGatewayController >> diagramElementClass [
 
 	^ OPBPMNGatewayShape 

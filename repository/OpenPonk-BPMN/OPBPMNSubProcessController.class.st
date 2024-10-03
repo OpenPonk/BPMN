@@ -14,7 +14,7 @@ OPBPMNSubProcessController >> buildEditorForm: aForm [
 
 	| anEvent |
 	super buildEditorForm: aForm.
-	(aForm addButton: 'Add Boundary Event') action: [ 
+	(aForm addButton: 'Add Boundary Event') action: [
 		anEvent := OPBPMNBoundaryEventController new
 			           createModelIn: self model;
 			           showInDiagram: self diagramController;
@@ -29,7 +29,8 @@ OPBPMNSubProcessController >> buildEditorForm: aForm [
 			offset: -5 @ 20.
 		self diagramElement roassalShape
 			when: RSShapeRemovedEvent
-			do: [ anEvent diagramElement roassalShape remove ] ].
+			do: [ anEvent diagramElement roassalShape remove ]
+			for: self ].
 	self diagramElement modelChanged
 ]
 
