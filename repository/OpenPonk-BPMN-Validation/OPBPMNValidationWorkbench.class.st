@@ -114,7 +114,7 @@ OPBPMNValidationWorkbench >> closedTabOfEditor: anEditor [
 
 	self projectController updateDiagram:
 		anEditor diagramController diagramElement.
-	anEditor tabDeleted.
+	anEditor tabClosed.
 	topToolbar activeEditor: nil.
 	editors removeKey: anEditor diagramController diagram.
 	anEditor diagramController diagram isSelected: false.
