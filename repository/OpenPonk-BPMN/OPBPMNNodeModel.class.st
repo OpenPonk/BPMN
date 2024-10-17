@@ -13,11 +13,12 @@ Class {
 }
 
 { #category : 'associating' }
-OPBPMNNodeModel >> -> aNode [
+OPBPMNNodeModel >> => aNode [
+
 	^ OPBPMNFactory flowFrom: self to: aNode
 ]
 
-{ #category : 'accessing' }
+{ #category : 'adding' }
 OPBPMNNodeModel >> addFlow: aFlow [
 	(flows includes: aFlow)
 		ifTrue: [ ^ self ].
@@ -29,7 +30,7 @@ OPBPMNNodeModel >> addFlow: aFlow [
 		ifFalse: [ self changed ]
 ]
 
-{ #category : 'associating' }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> allEntities [
 	^ Set with: self flows
 ]
@@ -46,24 +47,24 @@ OPBPMNNodeModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> executableAttribute [
 
 	^ executableAttribute ifNil: [ '' ]
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> executableAttribute: anAttribute [
 	executableAttribute := anAttribute
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> executableAttributeValue [
 
 	^ executableAttributeValue ifNil: [ '' ]
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNNodeModel >> executableAttributeValue: anAttribute [
 	executableAttributeValue := anAttribute
 ]
@@ -73,7 +74,7 @@ OPBPMNNodeModel >> flows [
 	^ flows
 ]
 
-{ #category : 'accessing' }
+{ #category : 'testing' }
 OPBPMNNodeModel >> has: anElement [
 	^ flows includes: anElement
 ]
@@ -83,7 +84,7 @@ OPBPMNNodeModel >> incoming [
 	^ flows select: [ :each | each target = self ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNNodeModel >> initialize [
 	super initialize.
 	type := self defaultType.
@@ -121,7 +122,7 @@ OPBPMNNodeModel >> relatedElements [
 	^ (self incoming , self outgoing) asSet asOrderedCollection
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNNodeModel >> removeAllFlows [
 	flows copy
 		do: [ :each | 
@@ -129,13 +130,13 @@ OPBPMNNodeModel >> removeAllFlows [
 			each target removeFlow: each ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNNodeModel >> removeFlow: aFlow [
 	flows remove: aFlow
 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNNodeModel >> removedFrom: aDiagram [
 	self
 		removedFrom: aDiagram
