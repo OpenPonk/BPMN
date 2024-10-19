@@ -63,6 +63,13 @@ OPBPMNDataObjectShape >> initialize [
 	borderColor := Color transparent
 ]
 
+{ #category : 'removing' }
+OPBPMNDataObjectShape >> removeRender [
+
+	super removeRender.
+	icon := nil
+]
+
 { #category : 'update' }
 OPBPMNDataObjectShape >> renderBasicShape [
 

@@ -2,7 +2,6 @@ Class {
 	#name : 'OPBPMNDataFlowShape',
 	#superclass : 'OPEdge',
 	#instVars : [
-		'shape',
 		'borderColor'
 	],
 	#category : 'OpenPonk-BPMN-Shapes',

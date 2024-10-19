@@ -41,7 +41,7 @@ OPBPMNActivityShape >> createRoassalShape [
 	
 ]
 
-{ #category : 'rendering' }
+{ #category : 'initialization' }
 OPBPMNActivityShape >> initialize [
 	super initialize.
 	self createBorder.

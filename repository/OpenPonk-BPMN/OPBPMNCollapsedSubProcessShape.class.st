@@ -49,6 +49,13 @@ OPBPMNCollapsedSubProcessShape >> initialize [
 	
 ]
 
+{ #category : 'removing' }
+OPBPMNCollapsedSubProcessShape >> removeRender [
+
+	super removeRender.
+	subprocessIcon := nil
+]
+
 { #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 

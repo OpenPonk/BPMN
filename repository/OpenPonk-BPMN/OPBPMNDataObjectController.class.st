@@ -41,19 +41,19 @@ OPBPMNDataObjectController >> diagramElementClass [
 	^ OPBPMNDataObjectShape
 ]
 
+{ #category : 'announcements' }
+OPBPMNDataObjectController >> internalSubscribeTo: aModel [
+
+	super internalSubscribeTo: aModel.
+	aModel
+		when: OPBPMNPlaceTokensChanged
+		send: #modelChanged
+		to: self
+]
+
 { #category : 'accessing' }
 OPBPMNDataObjectController >> modelClass [
 	^ OPBPMNDataObjectModel
-]
-
-{ #category : 'construction' }
-OPBPMNDataObjectController >> renderDiagramElement [
-
-	super renderDiagramElement.
-	model
-		when: OPBPMNPlaceTokensChanged
-		do: [ self diagramElement modelChanged ]
-		for: self
 ]
 
 { #category : 'connecting' }
