@@ -18,5 +18,5 @@ OPBPMNElementController >> dependentElements [
 OPBPMNElementController >> internalSubscribeTo: aModel [
 
 	super internalSubscribeTo: aModel.
-	aModel when: OPBPMNPlaceTokensChanged send: #modelChanged to: self
+	aModel weakWhen: OPBPMNPlaceTokensChanged send: #modelChanged to: self
 ]

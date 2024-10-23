@@ -27,7 +27,7 @@ OPBPMNEdgeController >> headMarker [
 OPBPMNEdgeController >> internalSubscribeTo: aModel [
 
 	super internalSubscribeTo: aModel.
-	aModel when: OPElementRemoved send: #removeControllerAndDiagramElement to: self
+	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
 ]
 
 { #category : 'private' }

@@ -46,7 +46,7 @@ OPBPMNDataObjectController >> internalSubscribeTo: aModel [
 
 	super internalSubscribeTo: aModel.
 	aModel
-		when: OPBPMNPlaceTokensChanged
+		weakWhen: OPBPMNPlaceTokensChanged
 		send: #modelChanged
 		to: self
 ]
