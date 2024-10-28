@@ -48,10 +48,17 @@ OPBPMNNodeShape >> createRoassalShape [
 	
 ]
 
-{ #category : 'hooks' }
+{ #category : 'initialization' }
 OPBPMNNodeShape >> initialize [ 
 	super initialize.
 	borderColor := Color black
+]
+
+{ #category : 'removing' }
+OPBPMNNodeShape >> removeRender [
+
+	super removeRender.
+	icon := nil
 ]
 
 { #category : 'hooks' }

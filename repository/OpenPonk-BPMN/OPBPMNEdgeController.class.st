@@ -23,24 +23,16 @@ OPBPMNEdgeController >> headMarker [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'private' }
+{ #category : 'announcements' }
 OPBPMNEdgeController >> internalSubscribeTo: aModel [
 
 	super internalSubscribeTo: aModel.
-	aModel
-		when: OPElementRemoved
-		send: #removeController
-		to: self
+	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
 ]
 
 { #category : 'private' }
 OPBPMNEdgeController >> isHideable [
 	^ true
-]
-
-{ #category : 'private' }
-OPBPMNEdgeController >> modelClass [
-	^ self subclassResponsibility
 ]
 
 { #category : 'construction' }
@@ -59,7 +51,7 @@ OPBPMNEdgeController >> modelTarget: aModel in: aParentModel [
 	^ true
 ]
 
-{ #category : 'private' }
+{ #category : 'destruction' }
 OPBPMNEdgeController >> removeModel [
 	self model owner remove: self model.
 	self model target removeFlow: self model.

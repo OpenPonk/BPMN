@@ -14,12 +14,9 @@ OPBPMNElementController >> dependentElements [
 	^ model flows
 ]
 
-{ #category : 'connecting' }
-OPBPMNElementController >> renderDiagramElement [
+{ #category : 'announcements' }
+OPBPMNElementController >> internalSubscribeTo: aModel [
 
-	super renderDiagramElement.
-	model
-		when: OPBPMNPlaceTokensChanged
-		do: [ self diagramElement modelChanged ]
-		for: self
+	super internalSubscribeTo: aModel.
+	aModel weakWhen: OPBPMNPlaceTokensChanged send: #modelChanged to: self
 ]

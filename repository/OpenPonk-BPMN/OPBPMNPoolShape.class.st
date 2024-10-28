@@ -96,10 +96,9 @@ b2 position: -310@0.
 	^ com
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNPoolShape >> initialize [
 	super initialize.
-	label := ''.
 	laneLines := OrderedCollection new.
 	laneLabels := OrderedCollection new.
 ]
@@ -110,19 +109,7 @@ OPBPMNPoolShape >> label [
 	^ label
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolShape >> label: aLabel [
-
- label := aLabel
-]
-
-{ #category : 'adding' }
-OPBPMNPoolShape >> remove [
-	self removeLaneLines.
-	super remove.
-]
-
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNPoolShape >> removeLaneLines [
 
 	laneLines do: [ :each | self canvas removeShape: each. ].
@@ -130,6 +117,16 @@ OPBPMNPoolShape >> removeLaneLines [
 	laneLabels do: [ :each | self roassalShape removeShape: each. ].
 	laneLines removeAll.
 	laneLabels removeAll.
+]
+
+{ #category : 'removing' }
+OPBPMNPoolShape >> removeRender [
+
+	self removeLaneLines.
+	super removeRender.
+	label := nil.
+	b1 := nil.
+	b2 := nil
 ]
 
 { #category : 'accessing' }

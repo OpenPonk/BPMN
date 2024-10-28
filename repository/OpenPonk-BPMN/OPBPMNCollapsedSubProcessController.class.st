@@ -81,16 +81,6 @@ OPBPMNCollapsedSubProcessController >> modelClass [
 ]
 
 { #category : 'connecting' }
-OPBPMNCollapsedSubProcessController >> renderDiagramElement [
-
-	super renderDiagramElement.
-	model
-		when: OPBPMNPlaceTokensChanged
-		do: [ self diagramElement modelChanged ]
-		for: self
-]
-
-{ #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> typeIconForModel [
 	^ self model typeIconFor: self model type
 ]

@@ -22,10 +22,7 @@ OPBPMNNodeController >> buildEditorForm: aForm [
 OPBPMNNodeController >> internalSubscribeTo: aModel [
 
 	super internalSubscribeTo: aModel.
-	aModel
-		when: OPElementRemoved
-		send: #removeController
-		to: self
+	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
 ]
 
 { #category : 'testing' }
@@ -36,6 +33,5 @@ OPBPMNNodeController >> isHideable [
 { #category : 'private' }
 OPBPMNNodeController >> removeModel [
 
-	self model announcer unsubscribe: self.
 	self model owner remove: self model
 ]
