@@ -1,10 +1,19 @@
 Class {
 	#name : 'OPBPMNIntermediateEventShape',
 	#superclass : 'OPBPMNEventShape',
+	#instVars : [
+		'innerCircle'
+	],
 	#category : 'OpenPonk-BPMN-Shapes',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Shapes'
 }
+
+{ #category : 'accessing' }
+OPBPMNIntermediateEventShape >> attachedShapes [
+
+	^ super attachedShapes , { innerCircle }
+]
 
 { #category : 'connecting' }
 OPBPMNIntermediateEventShape >> createRoassalShape [
@@ -14,10 +23,17 @@ OPBPMNIntermediateEventShape >> createRoassalShape [
 		yourself
 ]
 
+{ #category : 'removing' }
+OPBPMNIntermediateEventShape >> removeRender [
+
+	super removeRender.
+	innerCircle := nil
+]
+
 { #category : 'connecting' }
 OPBPMNIntermediateEventShape >> renderShapeDetails [
 
-	| label selectable innerCircle |
+	| label |
 	label := RSLabeled new.
 	label location below.
 	label shapeBuilder labelShape color: Color black.
@@ -28,10 +44,6 @@ OPBPMNIntermediateEventShape >> renderShapeDetails [
 		        yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ icon remove ]
-		for: self.
 
 	innerCircle := RSCircle new
 		               size: 31;
@@ -39,9 +51,5 @@ OPBPMNIntermediateEventShape >> renderShapeDetails [
 		               color: Color transparent;
 		               yourself.
 	self canvas add: innerCircle.
-	RSLocation new stick: innerCircle on: self roassalShape.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ innerCircle remove ]
-		for: self
+	RSLocation new stick: innerCircle on: self roassalShape
 ]

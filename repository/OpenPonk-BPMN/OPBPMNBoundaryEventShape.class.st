@@ -3,12 +3,19 @@ Class {
 	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
 		'borderIn',
-		'borderOut'
+		'borderOut',
+		'innerCircle'
 	],
 	#category : 'OpenPonk-BPMN-Shapes',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Shapes'
 }
+
+{ #category : 'removing' }
+OPBPMNBoundaryEventShape >> attachedShapes [
+
+	^ super attachedShapes , { innerCircle }
+]
 
 { #category : 'connecting' }
 OPBPMNBoundaryEventShape >> createBorder [
@@ -47,10 +54,17 @@ OPBPMNBoundaryEventShape >> initialize [
 	self createBorder.
 ]
 
+{ #category : 'removing' }
+OPBPMNBoundaryEventShape >> removeRender [
+
+	super removeRender.
+	innerCircle := nil
+]
+
 { #category : 'connecting' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
 
-	| label selectable innerCircle |
+	| label |
 	label := RSLabeled new.
 	label location below offset: 0 @ 2.
 	label shapeBuilder labelShape color: Color black.
@@ -61,10 +75,6 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 		        yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ icon remove ]
-		for: self.
 
 	innerCircle := RSCircle new
 		               size: 31;
@@ -74,12 +84,8 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 		               yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ innerCircle remove ]
-		for: self.
 	"TODO for what are good bounds?????"
-	self bounds: nil.
+	self bounds: nil
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 

@@ -39,7 +39,7 @@ OPBPMNEdgeController >> isHideable [
 OPBPMNEdgeController >> modelSource: aModel in: aParentModel [
 
 	(super modelSource: aModel in: aParentModel) ifFalse: [ ^ false ].
-	self modelSource addFlow: model.
+	self modelSource addFlow: self model.
 	^ true
 ]
 
@@ -47,7 +47,7 @@ OPBPMNEdgeController >> modelSource: aModel in: aParentModel [
 OPBPMNEdgeController >> modelTarget: aModel in: aParentModel [
 
 	(super modelTarget: aModel in: aParentModel) ifFalse: [ ^ false ].
-	self modelTarget addFlow: model.
+	self modelTarget addFlow: self model.
 	^ true
 ]
 

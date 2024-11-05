@@ -10,6 +10,12 @@ Class {
 	#tag : 'Shapes'
 }
 
+{ #category : 'removing' }
+OPBPMNDataObjectShape >> attachedShapes [
+
+	^ super attachedShapes , { icon }
+]
+
 { #category : 'update' }
 OPBPMNDataObjectShape >> borderColor [
 
@@ -89,11 +95,7 @@ OPBPMNDataObjectShape >> renderShapeDetails [
 		        form: self typeIconForModel;
 		        yourself.
 	self canvas add: icon.
-	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ icon remove ]
-		for: self
+	RSLocation new stick: icon on: self roassalShape
 ]
 
 { #category : 'update' }
