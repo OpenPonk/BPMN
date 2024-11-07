@@ -30,11 +30,6 @@ OPBPMNEdgeController >> internalSubscribeTo: aModel [
 	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
 ]
 
-{ #category : 'private' }
-OPBPMNEdgeController >> isHideable [
-	^ true
-]
-
 { #category : 'construction' }
 OPBPMNEdgeController >> modelSource: aModel in: aParentModel [
 
