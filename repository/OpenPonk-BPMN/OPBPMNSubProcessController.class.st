@@ -57,7 +57,7 @@ OPBPMNSubProcessController >> canBeTargetFor: aController [
 { #category : 'forms' }
 OPBPMNSubProcessController >> dependentElements [
 
-	^ (model incoming , model outgoing) asSet
+	^ (self model incoming , self model outgoing) asSet
 ]
 
 { #category : 'forms' }
@@ -69,7 +69,8 @@ OPBPMNSubProcessController >> diagramElementClass [
 { #category : 'forms' }
 OPBPMNSubProcessController >> elementsToShowInside [
 
-	^ model nodes , (model nodes flatCollect: [ :each | each outgoing ])
+	^ self model nodes
+	  , (self model nodes flatCollect: [ :each | each outgoing ])
 ]
 
 { #category : 'forms' }

@@ -18,6 +18,12 @@ OPBPMNNodeShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
+{ #category : 'accessing' }
+OPBPMNNodeShape >> attachedShapes [
+
+	^ super attachedShapes , { icon }
+]
+
 { #category : 'hooks' }
 OPBPMNNodeShape >> borderColor [
 
@@ -80,11 +86,7 @@ OPBPMNNodeShape >> renderShapeDetails [
 		        form: self typeIconForModel;
 		        yourself.
 	self canvas add: icon.
-	RSLocation new stick: icon on: self roassalShape.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ icon remove ]
-		for: self
+	RSLocation new stick: icon on: self roassalShape
 ]
 
 { #category : 'hooks' }

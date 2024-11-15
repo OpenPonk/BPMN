@@ -1,7 +1,7 @@
 SmalltalkCISpec {
 	#loading : [
 		SCIMetacelloLoadSpec {
-			#baseline : 'BPMN',
+			#baseline : 'OpenPonkBPMN',
 			#directory : 'repository',
 			#platforms : [ #pharo ]
 		}

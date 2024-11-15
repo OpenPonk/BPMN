@@ -32,7 +32,7 @@ OPBPMNDataObjectController >> canBeTargetFor: aController [
 
 { #category : 'accessing' }
 OPBPMNDataObjectController >> dependentElements [
-	^ (model incoming , model outgoing) asSet
+	^ (self model incoming , self model outgoing) asSet
 ]
 
 { #category : 'construction' }

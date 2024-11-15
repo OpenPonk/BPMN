@@ -11,7 +11,8 @@ Class {
 
 { #category : 'private' }
 OPBPMNElementController >> dependentElements [
-	^ model flows
+
+	^ self model flows
 ]
 
 { #category : 'announcements' }

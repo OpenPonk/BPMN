@@ -58,6 +58,15 @@ OPBPMNPoolShape >> addSelectionDraggableInteraction [
 	@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes
 ]
 
+{ #category : 'removing' }
+OPBPMNPoolShape >> attachedShapes [
+
+	^ super attachedShapes , laneLines , laneLabels , {
+		  label.
+		  b1.
+		  b2 }
+]
+
 { #category : 'accessing' }
 OPBPMNPoolShape >> borderColor [
 

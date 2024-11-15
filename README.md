@@ -4,12 +4,12 @@ This is an unoffical updated version of BPMN extension for [OpenPonk tool](https
 
 ## Installation
 
-Requires Pharo 7 or 8 image - clean or with loaded OpenPonk.
+Requires Pharo 12 image - clean or with loaded OpenPonk.
 
 In Playground, execute following script:
 ```
 Metacello new
     baseline: 'BPMN';
-    repository: 'github://OpenPonk/OpenPonk-BPMN/repository';
+    repository: 'github://OpenPonk/BPMN';
     load
 ```

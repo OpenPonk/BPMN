@@ -1,32 +1,32 @@
 Class {
-	#name : 'BaselineOfBPMN',
+	#name : 'BaselineOfOpenPonkBPMN',
 	#superclass : 'BaselineOf',
-	#category : 'BaselineOfBPMN',
-	#package : 'BaselineOfBPMN'
+	#category : 'BaselineOfOpenPonkBPMN',
+	#package : 'BaselineOfOpenPonkBPMN'
 }
 
 { #category : 'baselines' }
-BaselineOfBPMN >> baseline: spec [
+BaselineOfOpenPonkBPMN >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
 		spec
 			baseline: 'OpenPonk'
-			with: [ spec repository: 'github://openponk/openponk:v4.0.x' ].
+			with: [ spec repository: 'github://openponk/openponk' ].
 		spec
 			baseline: 'OpenPonkModel'
 			with: [
-			spec repository: 'github://OpenPonk/openponk-model:v4.0.x' ].
+			spec repository: 'github://OpenPonk/openponk-model' ].
 		spec
-			baseline: 'XMLDOMVisitor'
+			baseline: 'OpenPonkXMLDOMVisitor'
 			with: [
-			spec repository: 'github://OpenPonk/xml-dom-visitor:v4.0.x' ].
+			spec repository: 'github://OpenPonk/xml-dom-visitor' ].
 		spec
 			package: 'OpenPonk-BPMN'
 			with: [ spec requires: #( 'OpenPonk' 'OpenPonkModel' ) ].
 		spec
 			package: 'OpenPonk-BPMN-XML'
-			with: [ spec requires: #( 'OpenPonk-BPMN' 'XMLDOMVisitor' ) ].
+			with: [ spec requires: #( 'OpenPonk-BPMN' 'OpenPonkXMLDOMVisitor' ) ].
 		spec
 			package: 'OpenPonk-BPMN-Validation'
 			with: [ spec requires: #( 'OpenPonk-BPMN' ) ].

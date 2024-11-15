@@ -25,11 +25,6 @@ OPBPMNNodeController >> internalSubscribeTo: aModel [
 	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
 ]
 
-{ #category : 'testing' }
-OPBPMNNodeController >> isHideable [
-	^ true
-]
-
 { #category : 'private' }
 OPBPMNNodeController >> removeModel [
 

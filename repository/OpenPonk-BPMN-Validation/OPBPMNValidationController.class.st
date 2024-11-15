@@ -17,9 +17,10 @@ OPBPMNValidationController >> getValidateObjects: aValidateModel [
 
 { #category : 'as yet unclassified' }
 OPBPMNValidationController >> getValidations [
-	^ (RPackageOrganizer default packageNamed: 'OpenPonk-BPMN-Validation')
-		definedClasses
-		select: [ :class |class tags asSet includes: 'Validation-Classes'].
+
+	^ (self packageOrganizer packageNamed: 'OpenPonk-BPMN-Validation')
+		  definedClasses select: [ :class |
+		  class tags asSet includes: 'Validation-Classes' ]
 ]
 
 { #category : 'as yet unclassified' }

@@ -18,6 +18,12 @@ OPBPMNCollapsedSubProcessShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
+{ #category : 'removing' }
+OPBPMNCollapsedSubProcessShape >> attachedShapes [
+
+	^ super attachedShapes , { subprocessIcon }
+]
+
 { #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> createBorder [
 
@@ -75,17 +81,9 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	RSLocation new
 		stick: icon on: self roassalShape;
 		offset: -16 @ 18.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ icon remove ]
-		for: self.
 	RSLocation new
 		stick: subprocessIcon on: self roassalShape;
 		offset: 0 @ 18.
-	self roassalShape
-		when: RSShapeRemovedEvent
-		do: [ subprocessIcon remove ]
-		for: self.
 	self color: (Color fromHexString: 'f2f2f2')
 ]
 
