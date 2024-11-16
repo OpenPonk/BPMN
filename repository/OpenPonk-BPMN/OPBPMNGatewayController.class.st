@@ -19,9 +19,9 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
+		whenSelectedItemChangedDo: [ :newValue |
 			self model type: newValue.
-			self diagramElement modelChanged ]
+			self modelChanged ]
 ]
 
 { #category : 'connecting' }

@@ -35,11 +35,10 @@ OPBPMNPoolControllerTest >> testFigureRefresh [
 	controller
 		createDiagramElement;
 		renderDiagramElement.
-	self assert:
-		(controller diagramElement label text) = ''.
+	self assert: controller diagramElement label text = ''.
 	controller model name: 'new name'.
-	controller diagramElement modelChanged.
-	text := (controller diagramElement label text).
+	controller modelChanged.
+	text := controller diagramElement label text.
 	self assert:
 		((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
 ]

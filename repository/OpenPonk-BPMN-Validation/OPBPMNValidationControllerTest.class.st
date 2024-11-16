@@ -23,13 +23,17 @@ OPBPMNValidationControllerTest >> testGetValidatedObjects [
 
 { #category : 'tests' }
 OPBPMNValidationControllerTest >> testGetValidations [
+
 	| controller validations |
 	controller := OPBPMNValidationController new.
 	validations := controller getValidations.
 	self assert: (validations isKindOf: Collection).
-	self assert: (validations isEmpty) equals: false.
-	
-	self assert: (validations allSatisfy: [ :validationClass | validationClass tags asSet includes: 'Validation-Classes'. ]) equals: true.
+	self assert: validations isEmpty equals: false.
+
+	self
+		assert: (validations allSatisfy: [ :validationClass |
+				 validationClass packageTag name = 'Validation-Classes' ])
+		equals: true
 ]
 
 { #category : 'tests' }

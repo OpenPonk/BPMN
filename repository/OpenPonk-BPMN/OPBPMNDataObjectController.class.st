@@ -17,7 +17,7 @@ OPBPMNDataObjectController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 ]
 
 { #category : 'connecting' }

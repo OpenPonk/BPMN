@@ -19,12 +19,12 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue |
 			self model type: newValue.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 	(aForm addCheckbox: 'Is Non-Interrupting')
 		state: self model isNonInterrupting;
 		whenChangedDo: [ :val |
 			self model isNonInterrupting: val.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 
 	self model type = OPBPMNNodeType Timer ifTrue: [
 		(aForm addDroplist: 'Timer type')
@@ -33,12 +33,12 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 			selectItem: self model timerType;
 			whenSelectedItemChangedDo: [ :newValue |
 				self model timerType: newValue.
-				self diagramElement modelChanged ].
+				self modelChanged ].
 		(aForm addText: 'Timer value')
 			text: self model timerValue;
 			whenTextChangedDo: [ :newValue |
 				self model timerValue: newValue asString.
-				self diagramElement modelChanged ] ]
+				self modelChanged ] ]
 ]
 
 { #category : 'connecting' }

@@ -22,16 +22,15 @@ OPBPMNSubProcessController >> buildEditorForm: aForm [
 			           yourself.
 		"self diagramElement addBoundaryEvent: anEvent"
 		RSLocation new
-			stick: anEvent diagramElement roassalShape
-			on: self diagramElement roassalShape;
+			stick: anEvent roassalShape on: self roassalShape;
 			bottom;
 			right;
 			offset: -5 @ 20.
-		self diagramElement roassalShape
+		self roassalShape
 			when: RSShapeRemovedEvent
-			do: [ anEvent diagramElement roassalShape remove ]
+			do: [ anEvent roassalShape remove ]
 			for: self ].
-	self diagramElement modelChanged
+	self modelChanged
 ]
 
 { #category : 'forms' }
