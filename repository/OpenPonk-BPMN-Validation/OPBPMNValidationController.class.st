@@ -20,7 +20,7 @@ OPBPMNValidationController >> getValidations [
 
 	^ (self packageOrganizer packageNamed: 'OpenPonk-BPMN-Validation')
 		  definedClasses select: [ :class |
-		  class tags asSet includes: 'Validation-Classes' ]
+		  class packageTag name = 'Validation-Classes' ]
 ]
 
 { #category : 'as yet unclassified' }

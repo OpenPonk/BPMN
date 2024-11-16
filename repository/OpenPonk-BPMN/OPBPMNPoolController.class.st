@@ -24,18 +24,18 @@ OPBPMNPoolController >> buildEditorForm: aForm [
 	super buildEditorForm: aForm.
 	(aForm addTextInput: 'Lanes')
 		text: self model lanes asString;
-		whenTextChangedDo: [ :newValue | 
+		whenTextChangedDo: [ :newValue |
 			self model lanes: (newValue asString asInteger ifNil: [ 1 ]).
 			self model laneNamesFitToLanesCount.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 
-	self model lanes > 1 ifTrue: [ 
-		1 to: self model lanes do: [ :i | 
-			(aForm addTextInput: 'Lane ', i asString)
+	self model lanes > 1 ifTrue: [
+		1 to: self model lanes do: [ :i |
+			(aForm addTextInput: 'Lane ' , i asString)
 				text: (self model laneNames at: i) asString;
-				whenTextChangedDo: [ :newValue | 
+				whenTextChangedDo: [ :newValue |
 					self model laneNamesAt: i put: newValue.
-					self diagramElement modelChanged ] ] ]
+					self modelChanged ] ] ]
 ]
 
 { #category : 'connecting' }

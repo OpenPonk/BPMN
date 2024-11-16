@@ -64,6 +64,6 @@ OPBPMNEdgeControllerTest >> testFigureRefresh [
 	label := controller diagramElement ownedElements first.
 	self assert: label roassalShape text equals: ''.
 	controller model name: 'new name'.
-	controller diagramElement modelChanged.
+	controller modelChanged.
 	self assert: label roassalShape text equals: 'new name'
 ]

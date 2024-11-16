@@ -25,12 +25,12 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue |
 			self model type: newValue.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 	(aForm addCheckbox: 'Is Call Activity?')
 		state: self model isCallActivity;
 		whenChangedDo: [ :val |
 			self model isCallActivity: val.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 
 	(aForm addButton: 'Add Boundary Event') action: [
 		anEvent := OPBPMNBoundaryEventController new
@@ -41,15 +41,15 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 		"self diagramElement addBoundaryEvent: anEvent"
 		RSLocation new
 			stick: anEvent diagramElement roassalShape
-			on: self diagramElement roassalShape;
+			on: self roassalShape;
 			bottom;
 			right;
 			offset: -1 @ 22.
 		self diagramElement roassalShape
 			when: RSShapeRemovedEvent
-			do: [ anEvent diagramElement roassalShape remove ]
+			do: [ anEvent roassalShape remove ]
 			for: self ].
-	self diagramElement modelChanged
+	self modelChanged
 ]
 
 { #category : 'connecting' }

@@ -23,12 +23,12 @@ OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue | 
 			self model type: newValue.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 		(aForm addCheckbox: 'Is Non-Interrupting')
 		state: self model isNonInterrupting;
 		whenChangedDo: [ :val | 
 			self model isNonInterrupting: val.
-			self diagramElement modelChanged ].
+			self modelChanged ].
 ]
 
 { #category : 'connecting' }

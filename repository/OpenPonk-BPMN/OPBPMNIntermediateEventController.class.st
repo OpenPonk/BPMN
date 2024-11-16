@@ -36,24 +36,24 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 			selectItem: self model timerType;
 			whenSelectedItemChangedDo: [ :newValue |
 				self model timerType: newValue.
-				self diagramElement modelChanged ].
+				self modelChanged ].
 		(aForm addText: 'Timer value')
 			text: self model timerValue;
 			whenTextChangedDo: [ :newValue |
 				self model timerValue: newValue asString.
-				self diagramElement modelChanged ] ].
+				self modelChanged ] ].
 	self model type = OPBPMNNodeType Send
 		ifTrue: [
 			(aForm addText: 'Executable attribute')
 				text: self model executableAttribute;
 				whenTextChangedDo: [ :newValue |
 					self model executableAttribute: newValue asString.
-					self diagramElement modelChanged ].
+					self modelChanged ].
 			(aForm addText: 'Executable attribute value')
 				text: self model executableAttributeValue;
 				whenTextChangedDo: [ :newValue |
 					self model executableAttributeValue: newValue asString.
-					self diagramElement modelChanged ] ]
+					self modelChanged ] ]
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
