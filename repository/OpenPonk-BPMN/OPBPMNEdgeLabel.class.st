@@ -1,9 +1,9 @@
 Class {
 	#name : 'OPBPMNEdgeLabel',
 	#superclass : 'OPEdgeLabel',
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'as yet unclassified' }

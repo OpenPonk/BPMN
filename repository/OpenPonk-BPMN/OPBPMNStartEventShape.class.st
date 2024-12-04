@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'border'
 	],
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'connecting' }

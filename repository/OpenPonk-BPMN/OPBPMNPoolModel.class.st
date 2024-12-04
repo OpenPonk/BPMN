@@ -72,11 +72,6 @@ OPBPMNPoolModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolModel >> nodes [
-	^ elements
-]
-
 { #category : 'printing' }
 OPBPMNPoolModel >> printType [
 	^ 'process'

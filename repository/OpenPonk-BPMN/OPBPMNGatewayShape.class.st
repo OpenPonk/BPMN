@@ -1,9 +1,9 @@
 Class {
 	#name : 'OPBPMNGatewayShape',
 	#superclass : 'OPBPMNNodeShape',
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'connecting' }
@@ -20,5 +20,6 @@ OPBPMNGatewayShape >> renderShapeDetails [
 	super renderShapeDetails.
 	self color: (Color fromHexString: 'bce2fe').
 	"TODO for what are good bounds?????"
-	self bounds: nil.
+	"JanBliznicenko: To persist position and size for persistence"
+	"self bounds: nil"
 ]

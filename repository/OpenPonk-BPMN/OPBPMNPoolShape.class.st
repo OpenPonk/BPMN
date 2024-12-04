@@ -9,9 +9,9 @@ Class {
 		'b2',
 		'borderColor'
 	],
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'adding' }

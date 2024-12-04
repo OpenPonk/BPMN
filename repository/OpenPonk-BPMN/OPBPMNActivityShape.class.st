@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'border'
 	],
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'ston-core' }
@@ -43,9 +43,9 @@ OPBPMNActivityShape >> createRoassalShape [
 
 { #category : 'initialization' }
 OPBPMNActivityShape >> initialize [
+
 	super initialize.
-	self createBorder.
-	
+	self createBorder
 ]
 
 { #category : 'rendering' }
@@ -67,7 +67,8 @@ OPBPMNActivityShape >> renderShapeDetails [
 
 	self color: (Color fromHexString: 'f2f2f2').
 	"TODO for what are good bounds?????"
-	self bounds: nil
+	"JanBliznicenko: To persist position and size for persistence"
+	"self bounds: nil"
 ]
 
 { #category : 'rendering' }

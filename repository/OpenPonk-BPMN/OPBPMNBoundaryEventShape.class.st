@@ -6,9 +6,9 @@ Class {
 		'borderOut',
 		'innerCircle'
 	],
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'removing' }
@@ -85,7 +85,8 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape.
 	"TODO for what are good bounds?????"
-	self bounds: nil
+	"JanBliznicenko: To persist position and size for persistence"
+	"self bounds: nil"
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 

@@ -1,9 +1,9 @@
 Class {
 	#name : 'OPBPMNMessageShape',
 	#superclass : 'OPEdge',
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }
 
 { #category : 'hooks' }
