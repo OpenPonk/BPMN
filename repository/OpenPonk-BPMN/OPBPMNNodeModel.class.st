@@ -31,11 +31,6 @@ OPBPMNNodeModel >> addFlow: aFlow [
 ]
 
 { #category : 'accessing' }
-OPBPMNNodeModel >> allEntities [
-	^ Set with: self flows
-]
-
-{ #category : 'accessing' }
 OPBPMNNodeModel >> connected [
 	owner ifNil: [ ^ #() ].
 	^ owner flows

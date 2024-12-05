@@ -14,10 +14,10 @@ OPBPMNNavigatorAdapter class >> priority [
 
 { #category : 'widget API' }
 OPBPMNNavigatorAdapter >> childrenMapping [
-	^ { (OPBPMNModel -> #nodes).
-		 (OPBPMNPoolModel -> #nodes).
-		 (OPBPMNSubProcessModel -> #nodes).
-			(OPBPMNNodeModel -> #outgoing) }
+
+	^ {
+		  (OPBPMNModel -> [ :o | o nodes ]).
+		  (OPBPMNNodeModel -> [ :o | o nodes , o outgoing ]) }
 ]
 
 { #category : 'widget API' }

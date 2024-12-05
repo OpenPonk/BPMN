@@ -26,12 +26,6 @@ OPBPMNSubProcessModel >> nodeNamed: aName [
 ]
 
 { #category : 'accessing' }
-OPBPMNSubProcessModel >> nodes [
-
-	^ elements
-]
-
-{ #category : 'accessing' }
 OPBPMNSubProcessModel >> printType [
 
 	^ 'subprocess'

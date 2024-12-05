@@ -1,7 +1,7 @@
 Class {
 	#name : 'OPBPMNEventShape',
 	#superclass : 'OPBPMNNodeShape',
-	#category : 'OpenPonk-BPMN-Shapes',
+	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Shapes'
+	#tag : 'DiagramElements'
 }

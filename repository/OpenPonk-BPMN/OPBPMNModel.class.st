@@ -11,11 +11,6 @@ Class {
 }
 
 { #category : 'accessing' }
-OPBPMNModel >> allEntities [
-	^ Set with: self nodes
-]
-
-{ #category : 'accessing' }
 OPBPMNModel >> edges [
 	^ elements select: #isEdge
 ]
