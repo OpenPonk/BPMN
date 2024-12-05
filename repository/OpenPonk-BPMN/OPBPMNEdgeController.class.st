@@ -46,6 +46,12 @@ OPBPMNEdgeController >> modelTarget: aModel in: aParentModel [
 	^ true
 ]
 
+{ #category : 'construction' }
+OPBPMNEdgeController >> registerModelInContainer: aParentModel [
+
+	"do nothing"
+]
+
 { #category : 'destruction' }
 OPBPMNEdgeController >> removeModel [
 	self model owner remove: self model.
