@@ -31,6 +31,13 @@ OPBPMNNodeModel >> addFlow: aFlow [
 ]
 
 { #category : 'accessing' }
+OPBPMNNodeModel >> allElements [
+
+	^ super allElements , self flows
+	  , (self flows flatCollect: [ :each | each allElements ])
+]
+
+{ #category : 'accessing' }
 OPBPMNNodeModel >> connected [
 	owner ifNil: [ ^ #() ].
 	^ owner flows
