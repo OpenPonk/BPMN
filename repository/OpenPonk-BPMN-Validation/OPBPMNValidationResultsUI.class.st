@@ -61,21 +61,25 @@ OPBPMNValidationResultsUI >> highlighted [
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: composite [
+OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: aBuilder [
+
 	<inspectorPresentationOrder: -14 title: 'Documentation'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  beResizable;
-		  items:  { 'https://github.com/OpenPonk/OpenPonk-BPMN/blob/dev-validations-docs/docs/validation-rules.md' };
-			addColumn: (SpLinkTableColumn
-				   title: 'Rules' evaluated: #asString url: #asString)
-		  yourself.
+		  items:
+			  { 'https://github.com/OpenPonk/OpenPonk-BPMN/blob/dev-validations-docs/docs/validation-rules.md' };
+		  addColumn:
+			  (SpLinkTableColumn
+				   title: 'Rules'
+				   evaluated: #asString
+				   url: #asString) yourself
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> inspectorTableIn: composite [
+OPBPMNValidationResultsUI >> inspectorTableIn: aBuilder [
 
 	<inspectorPresentationOrder: -15 title: 'Results'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  beResizable;
 		  items: self validationResults results asArray;
 		  whenSelectedDo: [ :item | self notifySelectChanged: item ];
