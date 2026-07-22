@@ -44,7 +44,7 @@ OPBPMNEndEventController >> canBeSourceFor: aController [
 OPBPMNEndEventController >> canBeTargetFor: aController [
 
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model owner ~= self model owner ].
+		^ false ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
 		^ aController source model isKindOf: OPBPMNDataObjectModel ].

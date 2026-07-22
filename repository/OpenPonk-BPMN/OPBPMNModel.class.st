@@ -15,6 +15,12 @@ OPBPMNModel >> edges [
 	^ elements select: #isEdge
 ]
 
+{ #category : 'hooks' }
+OPBPMNModel >> enclosingPool [
+
+	^ self
+]
+
 { #category : 'accessing' }
 OPBPMNModel >> initialize [
 	super initialize.

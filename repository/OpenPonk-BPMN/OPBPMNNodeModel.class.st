@@ -49,6 +49,12 @@ OPBPMNNodeModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
+{ #category : 'hooks' }
+OPBPMNNodeModel >> enclosingPool [
+
+	^ self owner ifNotNil: [ self owner enclosingPool ]
+]
+
 { #category : 'accessing' }
 OPBPMNNodeModel >> executableAttribute [
 

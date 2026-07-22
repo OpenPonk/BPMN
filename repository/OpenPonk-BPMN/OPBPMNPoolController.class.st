@@ -48,11 +48,11 @@ OPBPMNPoolController >> canBeSourceFor: aController [
 OPBPMNPoolController >> canBeTargetFor: aController [
 
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model owner ~= self model ].
+		^ aController source model enclosingPool ~= self model enclosingPool ].
 
-	^ (aController isKindOf: OPBPMNElementController)
-	  | (aController isKindOf: OPBPMNSubProcessController)
-	  | (aController isKindOf: OPBPMNDataObjectController)
+	^ (aController isKindOf: OPBPMNElementController) or: [
+			  (aController isKindOf: OPBPMNSubProcessController) or: [
+				  aController isKindOf: OPBPMNDataObjectController ] ]
 ]
 
 { #category : 'construction' }

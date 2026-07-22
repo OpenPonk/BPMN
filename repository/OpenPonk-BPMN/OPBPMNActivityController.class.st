@@ -46,6 +46,7 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeSourceFor: aController [
+
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
@@ -53,7 +54,7 @@ OPBPMNActivityController >> canBeSourceFor: aController [
 OPBPMNActivityController >> canBeTargetFor: aController [
 
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model owner ~= self model owner ].
+		^ aController source model enclosingPool ~= self model enclosingPool ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
 		^ aController source model isKindOf: OPBPMNDataObjectModel ].

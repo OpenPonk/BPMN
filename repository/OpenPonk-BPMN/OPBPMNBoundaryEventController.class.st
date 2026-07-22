@@ -33,13 +33,15 @@ OPBPMNBoundaryEventController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNBoundaryEventController >> canBeSourceFor: aController [
-	^ (aController isKindOf: OPBPMNMessageFlowController) 
-	| (aController isKindOf: OPBPMNFlowController)
+
+	^ aController isKindOf: OPBPMNFlowController
 ]
 
 { #category : 'connecting' }
 OPBPMNBoundaryEventController >> canBeTargetFor: aController [
-	^ (aController isKindOf: OPBPMNMessageFlowController)
+
+	^ (aController isKindOf: OPBPMNMessageFlowController) and: [
+		  aController source model enclosingPool ~= self model enclosingPool ]
 ]
 
 { #category : 'construction' }

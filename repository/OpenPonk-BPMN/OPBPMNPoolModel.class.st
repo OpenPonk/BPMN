@@ -21,6 +21,12 @@ OPBPMNPoolModel >> changed [
 	owner changed
 ]
 
+{ #category : 'hooks' }
+OPBPMNPoolModel >> enclosingPool [
+
+	^ self
+]
+
 { #category : 'initialization' }
 OPBPMNPoolModel >> initialize [ 
 	super initialize.
