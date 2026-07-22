@@ -32,14 +32,14 @@ OPBPMNStartEventShape >> createRoassalShape [
 		yourself
 ]
 
-{ #category : 'connecting' }
+{ #category : 'initialization' }
 OPBPMNStartEventShape >> initialize [
 	super initialize.
 	self createBorder.
 	
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNStartEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

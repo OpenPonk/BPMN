@@ -8,10 +8,12 @@ Class {
 
 { #category : 'printing' }
 OPBPMNIntermediateEventModel >> printType [
-	(type = OPBPMNNodeType None) | (type = OPBPMNNodeType Link) | (type = OPBPMNNodeType Send)
-		ifTrue: [ ^ 'intermediateThrowEvent' ]
-		ifFalse: [ ^ 'intermediateCatchEvent' ].
 
+	(type = OPBPMNNodeType None or: [
+		 type = OPBPMNNodeType Link or: [ type = OPBPMNNodeType Send ] ])
+		ifTrue: [ ^ 'intermediateThrowEvent' ].
+
+	^ 'intermediateCatchEvent'
 ]
 
 { #category : 'printing' }

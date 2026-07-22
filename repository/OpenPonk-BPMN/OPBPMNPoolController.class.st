@@ -40,16 +40,19 @@ OPBPMNPoolController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNPoolController >> canBeSourceFor: aController [
+
 	^ aController isKindOf: OPBPMNMessageFlowController
 ]
 
 { #category : 'connecting' }
 OPBPMNPoolController >> canBeTargetFor: aController [
-	(aController isKindOf: OPBPMNMessageFlowController)
-		ifTrue: [ ^ (aController source model owner ~= self model) ]
-		ifFalse: [ ^ (aController isKindOf: OPBPMNElementController)
-				| (aController isKindOf: OPBPMNSubProcessController)
-				| (aController isKindOf: OPBPMNDataObjectController)]
+
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ aController source model owner ~= self model ].
+
+	^ (aController isKindOf: OPBPMNElementController)
+	  | (aController isKindOf: OPBPMNSubProcessController)
+	  | (aController isKindOf: OPBPMNDataObjectController)
 ]
 
 { #category : 'construction' }

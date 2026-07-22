@@ -68,7 +68,7 @@ OPBPMNPlugin >> name [
 	^ 'BPMN'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'testing' }
 OPBPMNPlugin >> supportsHidingElements [
 	^ true
 ]

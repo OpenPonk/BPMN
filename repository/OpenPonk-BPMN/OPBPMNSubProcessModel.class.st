@@ -12,7 +12,7 @@ OPBPMNSubProcessModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'announcing' }
 OPBPMNSubProcessModel >> changed [
 
 	super changed.
@@ -25,19 +25,19 @@ OPBPMNSubProcessModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNSubProcessModel >> printType [
 
 	^ 'subprocess'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNSubProcessModel >> removeAllNodes [
 
 	self removeAll
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNSubProcessModel >> removeNode: aNode [
 
 	elements remove: aNode

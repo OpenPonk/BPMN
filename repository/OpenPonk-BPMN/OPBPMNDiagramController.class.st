@@ -6,7 +6,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'userinterface' }
+{ #category : 'forms' }
 OPBPMNDiagramController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -25,12 +25,12 @@ OPBPMNDiagramController >> canBeTargetFor: aController [
 		or: [ aController isKindOf: OPBPMNNodeController ]
 ]
 
-{ #category : 'connecting' }
+{ #category : 'accessing' }
 OPBPMNDiagramController >> commonModelClassPrefix [
 	^ 'OPBPMN'
 ]
 
-{ #category : 'ui interaction' }
+{ #category : 'accessing' }
 OPBPMNDiagramController >> controllerFactory [
 	^ super controllerFactory
 		register: OPBPMNActivityController forModel: OPBPMNActivityModel;
@@ -48,7 +48,7 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
 ]
 
-{ #category : 'connecting' }
+{ #category : 'accessing' }
 OPBPMNDiagramController >> elementsToShowInside [
 
 	| poolNodes poolFlows laneNodes laneFlows |
@@ -101,7 +101,7 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 			icon: OPBPMNIcon current messageFlow
 ]
 
-{ #category : 'ui interaction' }
+{ #category : 'accessing' }
 OPBPMNDiagramController >> modelClass [
 	^ OPBPMNModel 
 ]

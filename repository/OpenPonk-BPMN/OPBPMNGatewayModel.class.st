@@ -6,7 +6,7 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNGatewayModel >> defaultType [
 	^ OPBPMNNodeType Exclusive
 ]

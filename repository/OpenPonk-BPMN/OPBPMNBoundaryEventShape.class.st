@@ -11,7 +11,7 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'removing' }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventShape >> attachedShapes [
 
 	^ super attachedShapes , { innerCircle }
@@ -48,7 +48,7 @@ OPBPMNBoundaryEventShape >> createRoassalShape [
 		  yourself
 ]
 
-{ #category : 'connecting' }
+{ #category : 'initialization' }
 OPBPMNBoundaryEventShape >> initialize [
 	super initialize.
 	self createBorder.
@@ -61,7 +61,7 @@ OPBPMNBoundaryEventShape >> removeRender [
 	innerCircle := nil
 ]
 
-{ #category : 'connecting' }
+{ #category : 'hooks' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
 
 	| label |
@@ -90,19 +90,7 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 
-{ #category : 'connecting' }
-OPBPMNBoundaryEventShape >> testupdateRenderFromSelf [
-
-	self isRendered ifFalse: [ ^ self ].
-	roassalShape color: self color.
-	self modelElement subscribeDiagram ifNotNil: [ 
-		roassalShape translateTo:
-			self modelElement subscribeDiagram position ].
-
-	super updateRenderFromSelf
-]
-
-{ #category : 'connecting' }
+{ #category : 'updating' }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

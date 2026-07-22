@@ -15,13 +15,13 @@ OPBPMNPoolModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'announcing' }
 OPBPMNPoolModel >> changed [
 	super changed.
 	owner changed
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNPoolModel >> initialize [ 
 	super initialize.
 	lanes := 1.
@@ -48,13 +48,14 @@ OPBPMNPoolModel >> laneNamesFitToLanesCount [
 
 	| text prevSize |
 	text := 'Lane'.
-	lanes < 2
-		ifTrue: [ laneNames removeAll ]
-		ifFalse: [ 
-			prevSize := laneNames size.
-			prevSize < (lanes - 1)
-				ifTrue: [ prevSize to: (lanes - 1) do: [ :i | laneNames add: text ] ]
-				ifFalse: [ (lanes + 1) to: prevSize do: [ :i | laneNames removeLast ] ] ]
+	lanes < 2 ifTrue: [
+			laneNames removeAll.
+			^ self ].
+		
+	prevSize := laneNames size.
+	prevSize < (lanes - 1)
+		ifTrue: [ prevSize to: lanes - 1 do: [ :i | laneNames add: text ] ]
+		ifFalse: [ lanes + 1 to: prevSize do: [ :i | laneNames removeLast ] ]
 ]
 
 { #category : 'accessing' }

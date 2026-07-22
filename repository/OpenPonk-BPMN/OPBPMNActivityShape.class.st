@@ -17,7 +17,7 @@ OPBPMNActivityShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
-{ #category : 'rendering' }
+{ #category : 'connecting' }
 OPBPMNActivityShape >> createBorder [
 
 	self modelElement
@@ -31,7 +31,7 @@ OPBPMNActivityShape >> createBorder [
 				ifFalse: [ border width: 1 ] ]
 ]
 
-{ #category : 'rendering' }
+{ #category : 'connecting' }
 OPBPMNActivityShape >> createRoassalShape [
 	^ RSBox new
 		extent: 85@55;
@@ -48,7 +48,7 @@ OPBPMNActivityShape >> initialize [
 	self createBorder
 ]
 
-{ #category : 'rendering' }
+{ #category : 'hooks' }
 OPBPMNActivityShape >> renderShapeDetails [
 
 	| label |
@@ -71,7 +71,7 @@ OPBPMNActivityShape >> renderShapeDetails [
 	"self bounds: nil"
 ]
 
-{ #category : 'rendering' }
+{ #category : 'updating' }
 OPBPMNActivityShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

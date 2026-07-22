@@ -24,25 +24,25 @@ OPBPMNNodeShape >> attachedShapes [
 	^ super attachedShapes , { icon }
 ]
 
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> borderColor [
 
 	^ borderColor
 ]
 
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> borderColor: aColor [
 
 	borderColor := aColor
 ]
 
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> color [
 
 	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
 ]
 
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> color: aColor [
 
 	^ self stylePropertyNamed: #fillColor put: aColor
@@ -67,13 +67,13 @@ OPBPMNNodeShape >> removeRender [
 	icon := nil
 ]
 
-{ #category : 'hooks' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> renderBasicShape [
 
 	^ self createRoassalShape model: self
 ]
 
-{ #category : 'hooks' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> renderShapeDetails [
 
 	| label |
@@ -89,30 +89,30 @@ OPBPMNNodeShape >> renderShapeDetails [
 	RSLocation new stick: icon on: self roassalShape
 ]
 
-{ #category : 'hooks' }
+{ #category : 'interactions' }
 OPBPMNNodeShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : 'hooks' }
+{ #category : 'interactions' }
 OPBPMNNodeShape >> shouldBePositionableByUser [
 
 	^ true
 ]
 
-{ #category : 'hooks' }
+{ #category : 'connecting' }
 OPBPMNNodeShape >> typeIconForModel [
 
 	^ self modelElement typeIconFor: self modelElement type
 ]
 
-{ #category : 'updating' }
+{ #category : 'update' }
 OPBPMNNodeShape >> updateIcon [
 	icon form: self typeIconForModel.
 ]
 
-{ #category : 'updating' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
@@ -122,7 +122,7 @@ OPBPMNNodeShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : 'updating' }
+{ #category : 'roassal' }
 OPBPMNNodeShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

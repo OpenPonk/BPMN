@@ -57,21 +57,22 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'connecting' }
 OPBPMNIntermediateEventController >> canBeSourceFor: aController [
+
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'connecting' }
 OPBPMNIntermediateEventController >> canBeTargetFor: aController [
 
-	^ (aController isKindOf: OPBPMNMessageFlowController)
-		  ifTrue: [ ^ aController source model owner ~= self model owner ]
-		  ifFalse: [
-		  		(aController isKindOf: OPBPMNDataFlowController)
-		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
-		 		ifFalse: [ ^ aController isKindOf: OPBPMNEdgeController ]
-			 ]
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ aController source model owner ~= self model owner ].
+
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'construction' }

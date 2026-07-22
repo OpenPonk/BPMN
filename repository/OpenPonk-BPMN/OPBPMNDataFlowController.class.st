@@ -12,7 +12,7 @@ OPBPMNDataFlowController >> diagramElementClass [
 	^ OPBPMNDataFlowShape
 ]
 
-{ #category : 'construction' }
+{ #category : 'accessing' }
 OPBPMNDataFlowController >> modelClass [
 
 	^ OPBPMNDataFlowModel

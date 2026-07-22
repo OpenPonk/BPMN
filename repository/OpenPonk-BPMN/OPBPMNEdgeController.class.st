@@ -6,20 +6,8 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'accessing' }
-OPBPMNEdgeController >> addLabels [
-	self constraintLabel: #name balance: 0.4 offset: 12
-]
-
 { #category : 'construction' }
 OPBPMNEdgeController >> diagramElementClass [
-	^ self subclassResponsibility
-]
-
-{ #category : 'private' }
-OPBPMNEdgeController >> headMarker [
-	"line decoration shape class used as head"
-
 	^ self subclassResponsibility
 ]
 

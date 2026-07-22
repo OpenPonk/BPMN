@@ -11,7 +11,7 @@ OPBPMNDataObjectModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'announcing' }
 OPBPMNDataObjectModel >> changed [
 	super changed.
 	owner changed
@@ -27,22 +27,22 @@ OPBPMNDataObjectModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNDataObjectModel >> printType [
 	^ 'dataObject'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNDataObjectModel >> removeAllNodes [
 	self removeAll
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNDataObjectModel >> removeNode: aNode [
 	elements remove: aNode
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNDataObjectModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType DataObject
 		ifTrue: [ ^ OPBPMNIcon current dataObject ].

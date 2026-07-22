@@ -6,7 +6,7 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'accessing' }
+{ #category : 'forms' }
 OPBPMNFlowController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
@@ -19,22 +19,10 @@ OPBPMNFlowController >> buildEditorForm: aForm [
 			self modelChanged ].
 ]
 
-{ #category : 'accessing' }
+{ #category : 'construction' }
 OPBPMNFlowController >> diagramElementClass [
 
 	^ OPBPMNFlowShape
-]
-
-{ #category : 'accessing' }
-OPBPMNFlowController >> headMarker [
-
-	^ (RSShapeFactory polygonWithPoints: (Array
-				    with: 5 @ 10
-				    with: 0 @ 5
-				    with: -5 @ 10
-				    with: 0 @ 0))
-		  color: Color black;
-		  yourself
 ]
 
 { #category : 'accessing' }

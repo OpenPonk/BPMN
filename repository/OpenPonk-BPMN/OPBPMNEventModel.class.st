@@ -10,25 +10,25 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerType [
 
 	^ timerType ifNil: [ #none ]
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerType: aType [
 
 	timerType := aType
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerValue [
 
 	^ timerValue ifNil: [ '' ]
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerValue: aValue [
 	timerValue := aValue
 

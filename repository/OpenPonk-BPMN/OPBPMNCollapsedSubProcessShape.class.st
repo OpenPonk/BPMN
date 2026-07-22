@@ -18,7 +18,7 @@ OPBPMNCollapsedSubProcessShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
-{ #category : 'removing' }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessShape >> attachedShapes [
 
 	^ super attachedShapes , { subprocessIcon }
@@ -48,7 +48,7 @@ OPBPMNCollapsedSubProcessShape >> createRoassalShape [
 	
 ]
 
-{ #category : 'connecting' }
+{ #category : 'initialization' }
 OPBPMNCollapsedSubProcessShape >> initialize [
 	super initialize.
 	self createBorder.
@@ -62,7 +62,7 @@ OPBPMNCollapsedSubProcessShape >> removeRender [
 	subprocessIcon := nil
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 
 	| label |
@@ -87,12 +87,12 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	self color: (Color fromHexString: 'f2f2f2')
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> typeBasicIcon [
 		^ OPBPMNIcon current markerSubProcess 
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

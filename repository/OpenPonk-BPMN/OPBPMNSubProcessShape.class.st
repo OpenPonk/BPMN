@@ -18,7 +18,7 @@ OPBPMNSubProcessShape >> createRoassalShape [
 		  yourself
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNSubProcessShape >> renderShapeDetails [
 
 	| label |
@@ -44,13 +44,13 @@ OPBPMNSubProcessShape >> typeIconForModel [
 	
 ]
 
-{ #category : 'connecting' }
+{ #category : 'update' }
 OPBPMNSubProcessShape >> updateIcon [
 
 	
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNSubProcessShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
@@ -59,7 +59,7 @@ OPBPMNSubProcessShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : 'connecting' }
+{ #category : 'roassal' }
 OPBPMNSubProcessShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

@@ -25,9 +25,9 @@ OPBPMNDataObjectShape >> borderColor [
 { #category : 'update' }
 OPBPMNDataObjectShape >> borderColor: aColor [
 
-	aColor = Color black
-		ifTrue: [ borderColor := Color transparent ]
-		ifFalse: [ borderColor := aColor ]
+	borderColor := aColor = Color black
+		               ifTrue: [ Color transparent ]
+		               ifFalse: [ aColor ]
 ]
 
 { #category : 'update' }

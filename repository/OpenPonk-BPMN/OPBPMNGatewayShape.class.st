@@ -15,7 +15,7 @@ OPBPMNGatewayShape >> createRoassalShape [
 		yourself.
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNGatewayShape >> renderShapeDetails [ 
 	super renderShapeDetails.
 	self color: (Color fromHexString: 'bce2fe').

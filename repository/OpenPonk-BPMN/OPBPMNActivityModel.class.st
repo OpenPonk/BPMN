@@ -9,23 +9,23 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNActivityModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
-{ #category : 'printing' }
+{ #category : 'initialization' }
 OPBPMNActivityModel >> initialize [ 
 	super initialize.
 	isCallActivity := false.
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNActivityModel >> isCallActivity [
 	^ isCallActivity
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNActivityModel >> isCallActivity: aActivity [
 	isCallActivity := aActivity
 ]

@@ -9,18 +9,18 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
+{ #category : 'initialization' }
 OPBPMNStartEventModel >> initialize [ 
 	super initialize.
 	isNonInterrupting := false.
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNStartEventModel >> isNonInterrupting [
 	^ isNonInterrupting 
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNStartEventModel >> isNonInterrupting: aValue [
 	isNonInterrupting := aValue. 
 ]

@@ -16,7 +16,7 @@ OPBPMNBoundaryEventModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'announcing' }
 OPBPMNBoundaryEventModel >> changed [
 
 	super changed.
@@ -29,7 +29,7 @@ OPBPMNBoundaryEventModel >> defaultType [
 	^ OPBPMNNodeType Error
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNBoundaryEventModel >> initialize [ 
 	super initialize.
 	isNonInterrupting := false.
@@ -51,7 +51,7 @@ OPBPMNBoundaryEventModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNBoundaryEventModel >> printType [
 
 	^ 'boundary'
@@ -69,7 +69,7 @@ OPBPMNBoundaryEventModel >> subscribeDiagram: aDiagram [
 	subscribeDiagram := aDiagram
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNBoundaryEventModel >> typeIconFor: aType [
 
 	aType = OPBPMNNodeType Receive ifTrue: [ 

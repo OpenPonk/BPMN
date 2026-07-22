@@ -33,52 +33,51 @@ OPBPMNSubProcessController >> buildEditorForm: aForm [
 	self modelChanged
 ]
 
-{ #category : 'forms' }
+{ #category : 'connecting' }
 OPBPMNSubProcessController >> canBeSourceFor: aController [
 
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
-{ #category : 'forms' }
+{ #category : 'connecting' }
 OPBPMNSubProcessController >> canBeTargetFor: aController [
 
-	^ (aController isKindOf: OPBPMNMessageFlowController)
-		  ifTrue: [ ^ aController source model owner ~= self model owner ]
-		  ifFalse: [
-		  		(aController isKindOf: OPBPMNDataFlowController)
-		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
-		 		ifFalse: [ ^ (aController isKindOf: OPBPMNElementController)
-			  | (aController isKindOf: OPBPMNEdgeController) ]
-			 ]
-	
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ aController source model owner ~= self model owner ].
+
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+
+	^ (aController isKindOf: OPBPMNElementController) or: [
+		  aController isKindOf: OPBPMNEdgeController ]
 ]
 
-{ #category : 'forms' }
+{ #category : 'accessing' }
 OPBPMNSubProcessController >> dependentElements [
 
 	^ (self model incoming , self model outgoing) asSet
 ]
 
-{ #category : 'forms' }
+{ #category : 'construction' }
 OPBPMNSubProcessController >> diagramElementClass [
 
 	^ OPBPMNSubProcessShape
 ]
 
-{ #category : 'forms' }
+{ #category : 'accessing' }
 OPBPMNSubProcessController >> elementsToShowInside [
 
 	^ self model nodes
 	  , (self model nodes flatCollect: [ :each | each outgoing ])
 ]
 
-{ #category : 'forms' }
+{ #category : 'accessing' }
 OPBPMNSubProcessController >> modelClass [
 
 	^ OPBPMNSubProcessModel
 ]
 
-{ #category : 'forms' }
+{ #category : 'canvas actions' }
 OPBPMNSubProcessController >> showDenyFeedbackFor: aController [
 
 	^ nil

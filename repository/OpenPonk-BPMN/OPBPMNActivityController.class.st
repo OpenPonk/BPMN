@@ -52,13 +52,13 @@ OPBPMNActivityController >> canBeSourceFor: aController [
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeTargetFor: aController [
 
-	^ (aController isKindOf: OPBPMNMessageFlowController)
-		  ifTrue: [ ^ aController source model owner ~= self model owner ]
-		  ifFalse: [
-		  		(aController isKindOf: OPBPMNDataFlowController)
-		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
-		 		ifFalse: [ ^ aController isKindOf: OPBPMNEdgeController ]
-			 ]
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ aController source model owner ~= self model owner ].
+
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'construction' }

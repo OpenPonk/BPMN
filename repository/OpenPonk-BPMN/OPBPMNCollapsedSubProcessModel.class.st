@@ -14,7 +14,7 @@ OPBPMNCollapsedSubProcessModel >> defaultType [
 	^ OPBPMNNodeType None
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNCollapsedSubProcessModel >> initialize [ 
 	super initialize.
 	isCallActivity := false.
@@ -30,7 +30,7 @@ OPBPMNCollapsedSubProcessModel >> isCallActivity: aActivity [
 	isCallActivity := aActivity
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNCollapsedSubProcessModel >> printType [
 	type = OPBPMNNodeType MarkerParallel 
 		ifTrue: [ ^ 'MarkerParallel' ].
@@ -44,7 +44,7 @@ OPBPMNCollapsedSubProcessModel >> printType [
 		ifTrue: [ ^ 'MarkerLoop']
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNCollapsedSubProcessModel >> typeIconFor: aType [
 	aType = OPBPMNNodeType None 
 		ifTrue: [ ^ OPBPMNIcon current activityNone ].
