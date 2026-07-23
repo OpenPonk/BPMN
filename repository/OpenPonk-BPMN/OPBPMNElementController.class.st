@@ -1,9 +1,6 @@
 Class {
 	#name : 'OPBPMNElementController',
 	#superclass : 'OPBPMNNodeController',
-	#instVars : [
-		'owner'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'

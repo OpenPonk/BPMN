@@ -1,13 +1,6 @@
 Class {
 	#name : 'OPBPMNPoolController',
 	#superclass : 'OPBPMNNodeController',
-	#instVars : [
-		'innerBox',
-		'innerConstraint',
-		'labeled',
-		'labelConstraint',
-		'elements'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
@@ -22,20 +15,23 @@ OPBPMNPoolController >> boxHeight [
 OPBPMNPoolController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
+	
 	(aForm addTextInput: 'Lanes')
 		text: self model lanes asString;
 		whenTextChangedDo: [ :newValue |
-			self model lanes: (newValue asString asInteger ifNil: [ 1 ]).
-			self model laneNamesFitToLanesCount.
-			self modelChanged ].
+				self model lanes:
+						((newValue asString asInteger ifNil: [ 1 ]) max: 0).
+				self model laneNamesFitToLanesCount.
+				self modelChanged ].
 
-	self model lanes > 1 ifTrue: [
-		1 to: self model lanes do: [ :i |
+	self model lanes < 2 ifTrue: [ ^ self ].
+
+	1 to: self model lanes do: [ :i |
 			(aForm addTextInput: 'Lane ' , i asString)
 				text: (self model laneNames at: i) asString;
 				whenTextChangedDo: [ :newValue |
-					self model laneNamesAt: i put: newValue.
-					self modelChanged ] ] ]
+						self model laneNamesAt: i put: newValue.
+						self modelChanged ] ]
 ]
 
 { #category : 'connecting' }

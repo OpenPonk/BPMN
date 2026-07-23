@@ -1,11 +1,6 @@
 Class {
 	#name : 'OPBPMNCollapsedSubProcessController',
 	#superclass : 'OPBPMNElementController',
-	#instVars : [
-		'labelConstraint',
-		'iconElement',
-		'iconConstraint'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'

@@ -1,10 +1,6 @@
 Class {
 	#name : 'OPBPMNBoundaryEventController',
 	#superclass : 'OPBPMNElementController',
-	#instVars : [
-		'iconElement',
-		'iconConstraint'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'

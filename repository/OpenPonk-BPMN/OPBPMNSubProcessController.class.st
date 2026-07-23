@@ -1,9 +1,6 @@
 Class {
 	#name : 'OPBPMNSubProcessController',
 	#superclass : 'OPBPMNNodeController',
-	#instVars : [
-		'elements'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'

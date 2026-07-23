@@ -1,13 +1,6 @@
 Class {
 	#name : 'OPBPMNIntermediateEventController',
 	#superclass : 'OPBPMNElementController',
-	#instVars : [
-		'innerCircle',
-		'elements',
-		'innerConstraint',
-		'iconElement',
-		'iconConstraint'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
