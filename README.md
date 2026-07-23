@@ -4,7 +4,7 @@ This is a partial prototype of BPMN implementation for [OpenPonk tool](https://o
 
 ## Installation
 
-Requires Pharo 12 image - clean or with loaded OpenPonk.
+Requires Pharo 13 image - clean or with loaded OpenPonk.
 
 In Playground, execute following script:
 ```
