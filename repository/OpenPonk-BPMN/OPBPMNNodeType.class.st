@@ -91,6 +91,11 @@ OPBPMNNodeType class >> Exclusive [
 ]
 
 { #category : 'as yet unclassified' }
+OPBPMNNodeType class >> ExclusiveEmpty [
+	^ #'Exclusive (empty)'
+]
+
+{ #category : 'as yet unclassified' }
 OPBPMNNodeType class >> Inclusive [
 	^ #Inclusive
 ]

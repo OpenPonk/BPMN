@@ -11,7 +11,7 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 
 	super buildEditorForm: aForm.
 	(aForm addDroplist: 'Type')
-		items: #( #Exclusive #Inclusive #Parallel #Complex #Eventbased );
+		items: #( #'Exclusive (empty)' #Exclusive #Inclusive #Parallel #Complex #Eventbased );
 		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;

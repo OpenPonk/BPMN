@@ -59,6 +59,7 @@ OPBPMNSimConfigurationGUI >> initializePresenters [
 	diagramSimulator configurableGateways do: [ :element |
 		row := OrderedCollection new.
 		({
+			 OPBPMNNodeType ExclusiveEmpty.
 			 OPBPMNNodeType Exclusive.
 			 OPBPMNNodeType Eventbased } includes: element model type) ifTrue: [
 			element outgoingDo: [ :flow |

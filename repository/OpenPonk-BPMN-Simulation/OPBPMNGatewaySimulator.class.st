@@ -24,6 +24,7 @@ OPBPMNGatewaySimulator class >> model: anElement diagramSimulator: aDiagramSimul
 		simulator := OPBPMNInclusiveGatewaySimulator new ].
 
 	({
+		 OPBPMNNodeType ExclusiveEmpty.
 		 OPBPMNNodeType Exclusive.
 		 OPBPMNNodeType Eventbased } includes: type) ifTrue: [
 		simulator := OPBPMNExclusiveGatewaySimulator new ].
