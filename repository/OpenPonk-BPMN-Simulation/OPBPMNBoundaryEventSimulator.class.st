@@ -29,7 +29,7 @@ OPBPMNBoundaryEventSimulator >> loadConnectedItems [
 	eventType := self class typeMapping at: self model type ifAbsent: nil.
 	eventType ifNil: [ ^ self ].
 
-	self model owner elements
+	self model rootOwner allElements
 		select: [ :each |
 			((each isKindOf: OPBPMNIntermediateEventModel) or:
 				 (each isKindOf: OPBPMNEndEventModel)) and: each type = eventType ]

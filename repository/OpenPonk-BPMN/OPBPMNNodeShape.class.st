@@ -31,12 +31,6 @@ OPBPMNNodeShape >> borderColor [
 ]
 
 { #category : 'accessing' }
-OPBPMNNodeShape >> borderColor: aColor [
-
-	borderColor := aColor
-]
-
-{ #category : 'accessing' }
 OPBPMNNodeShape >> color [
 
 	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
@@ -99,6 +93,12 @@ OPBPMNNodeShape >> selectableInteraction [
 OPBPMNNodeShape >> shouldBePositionableByUser [
 
 	^ true
+]
+
+{ #category : 'accessing' }
+OPBPMNNodeShape >> strokeColor: aColor [
+
+	borderColor := aColor
 ]
 
 { #category : 'connecting' }

@@ -25,7 +25,7 @@ OPBPMNValidationResultsUI class >> createUIFor: aVerificationResults withControl
 OPBPMNValidationResultsUI >> changeElementColor: aElement toColor: aColor [
 	| diagramElementArray |
 	diagramElementArray := (self controller controllers select: [ :aController | aController model = aElement ]) asArray.
-	diagramElementArray ifNotEmpty: [ diagramElementArray first diagramElement borderColor: aColor.
+	diagramElementArray ifNotEmpty: [ diagramElementArray first diagramElement strokeColor: aColor.
 		diagramElementArray first diagramElement updateRenderFromSelf. ] .
 ]
 

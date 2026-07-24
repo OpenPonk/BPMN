@@ -28,9 +28,9 @@ OPBPMNSubProcessSimulator >> loadConnectedItems [
 
 	| simulator |
 	super loadConnectedItems.
-	model elements ifEmpty: [ ^ self ].
+	model allElements ifEmpty: [ ^ self ].
 
-	model elements do: [ :each |
+	model allElements do: [ :each |
 		simulator := diagramSimulator simulatorOf: each.
 
 		(each isKindOf: OPBPMNStartEventModel) ifTrue: [

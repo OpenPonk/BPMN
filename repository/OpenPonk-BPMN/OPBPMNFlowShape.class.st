@@ -7,12 +7,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-OPBPMNFlowShape >> borderColor: aColor [
-
-	self roassalShape color: aColor.
-]
-
-{ #category : 'as yet unclassified' }
 OPBPMNFlowShape >> createOwnedElementsWithoutController [
 
 	super createOwnedElementsWithoutController.
@@ -46,6 +40,12 @@ OPBPMNFlowShape >> renderBasicShape [
 		  from: self source roassalShape;
 		  to: self target roassalShape;
 		  yourself
+]
+
+{ #category : 'as yet unclassified' }
+OPBPMNFlowShape >> strokeColor: aColor [
+
+	self roassalShape color: aColor.
 ]
 
 { #category : 'as yet unclassified' }

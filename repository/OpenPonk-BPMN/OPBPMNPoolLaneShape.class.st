@@ -90,6 +90,7 @@ OPBPMNPoolLaneShape >> renderShapeDetails [
 	rightBox := self createInvisibleBox.
 	laneSeparator := RSLine new
 		                 color: Color transparent;
+		                 model: self;
 		                 from: leftBox;
 		                 to: rightBox;
 		                 yourself.
@@ -104,8 +105,7 @@ OPBPMNPoolLaneShape >> renderShapeDetails [
 	self owningElement roassalShape
 		when: RSPositionChangedEvent
 		do: [ self updatePosition ]
-		for: self.
-
+		for: self
 ]
 
 { #category : 'accessing' }

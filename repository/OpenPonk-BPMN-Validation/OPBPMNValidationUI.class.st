@@ -14,7 +14,7 @@ OPBPMNValidationUI class >> changeElementColorTo: aColor using: aController [
 
 
 	(aController respondsTo: #diagramElement) ifFalse: [ ^ self ].
-	aController diagramElement borderColor: aColor.
+	aController diagramElement strokeColor: aColor.
 	aController diagramElement updateRenderFromSelf
 ]
 
@@ -68,7 +68,7 @@ OPBPMNValidationUI class >> updateValidatedElementStyle: aVerificationResults us
 		color := Color orange ].
 	(aVerificationResults hasErrors: aController model) ifTrue: [ 
 		color := Color red ].
-	aController diagramElement borderColor: color.
+	aController diagramElement strokeColor: color.
 	aController diagramElement updateRenderFromSelf
 ]
 

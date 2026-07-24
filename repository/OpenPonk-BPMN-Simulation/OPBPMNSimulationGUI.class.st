@@ -91,12 +91,12 @@ OPBPMNSimulationGUI >> updateColors [
 		controller := self diagramController controllerForModel:
 			              element model.
 		element bpmnTokens > 0
-			ifFalse: [ controller diagramElement borderColor: Color black ]
+			ifFalse: [ controller diagramElement strokeColor: Color black ]
 			ifTrue: [
 				element bpmnTokens > 1
 					ifTrue: [
-					controller diagramElement borderColor: Color orange darker ]
+					controller diagramElement strokeColor: Color orange darker ]
 					ifFalse: [
-					controller diagramElement borderColor: Color green darker ] ].
+					controller diagramElement strokeColor: Color green darker ] ].
 		controller diagramElement updateRenderFromSelf ]
 ]

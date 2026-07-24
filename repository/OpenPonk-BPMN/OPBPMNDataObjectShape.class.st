@@ -23,14 +23,6 @@ OPBPMNDataObjectShape >> borderColor [
 ]
 
 { #category : 'update' }
-OPBPMNDataObjectShape >> borderColor: aColor [
-
-	borderColor := aColor = Color black
-		               ifTrue: [ Color transparent ]
-		               ifFalse: [ aColor ]
-]
-
-{ #category : 'update' }
 OPBPMNDataObjectShape >> color [
 
 	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
@@ -108,6 +100,14 @@ OPBPMNDataObjectShape >> selectableInteraction [
 OPBPMNDataObjectShape >> shouldBePositionableByUser [
 
 	^ true
+]
+
+{ #category : 'update' }
+OPBPMNDataObjectShape >> strokeColor: aColor [
+
+	borderColor := aColor = Color black
+		               ifTrue: [ Color transparent ]
+		               ifFalse: [ aColor ]
 ]
 
 { #category : 'update' }

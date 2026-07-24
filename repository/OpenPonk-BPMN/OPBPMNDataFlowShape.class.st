@@ -16,12 +16,6 @@ OPBPMNDataFlowShape >> borderColor [
 ]
 
 { #category : 'rendering' }
-OPBPMNDataFlowShape >> borderColor: aColor [
-
-	borderColor := aColor
-]
-
-{ #category : 'rendering' }
 OPBPMNDataFlowShape >> createOwnedElementsWithoutController [
 
 	super createOwnedElementsWithoutController.
@@ -42,4 +36,10 @@ OPBPMNDataFlowShape >> renderBasicShape [
 		  from: self source roassalShape;
 		  to: self target roassalShape;
 		  yourself
+]
+
+{ #category : 'rendering' }
+OPBPMNDataFlowShape >> strokeColor: aColor [
+
+	borderColor := aColor
 ]

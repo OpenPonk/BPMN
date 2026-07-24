@@ -6,12 +6,6 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'hooks' }
-OPBPMNMessageShape >> borderColor: aColor [
-
-	self roassalShape color: aColor
-]
-
 { #category : 'initialization' }
 OPBPMNMessageShape >> createOwnedElementsWithoutController [
 
@@ -45,6 +39,12 @@ OPBPMNMessageShape >> renderBasicShape [
 		  from: self source roassalShape;
 		  to: self target roassalShape;
 		  yourself
+]
+
+{ #category : 'hooks' }
+OPBPMNMessageShape >> strokeColor: aColor [
+
+	self roassalShape color: aColor
 ]
 
 { #category : 'hooks' }

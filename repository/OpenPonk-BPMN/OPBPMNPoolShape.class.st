@@ -67,6 +67,11 @@ OPBPMNPoolShape >> nameAreaWidth [
 	^ 30
 ]
 
+{ #category : 'accessing' }
+OPBPMNPoolShape >> nameLabel [
+	^ nameLabel
+]
+
 { #category : 'removing' }
 OPBPMNPoolShape >> removeRender [
 
@@ -109,8 +114,8 @@ OPBPMNPoolShape >> renderNameAreaInvisibleBoxes [
 		          borderColor: Color transparent;
 		          width: 0;
 		          height: 0;
-		          model: #topInvisBox.
-	bottomBox := topBox copy model: #bottomInvisBox.
+		          model: self.
+	bottomBox := topBox copy model: self.
 
 	self canvas
 		add: topBox;
@@ -164,6 +169,7 @@ OPBPMNPoolShape >> renderNameAreaSeparator [
 
 	nameAreaSeparator := RSLine new
 		                     width: 1;
+		                     model: self;
 		                     from: topBox;
 		                     to: bottomBox.
 

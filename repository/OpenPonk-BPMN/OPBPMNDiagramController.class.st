@@ -21,8 +21,16 @@ OPBPMNDiagramController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ (super canBeTargetFor: aController)
-		or: [ aController isKindOf: OPBPMNNodeController ]
+
+	(super canBeTargetFor: aController) ifTrue: [ ^ true ].
+
+	((aController isKindOf: OPBPMNBoundaryEventController) or: [
+		 aController modelClass inheritsFrom: OPBPMNFlowNodeModel ])
+		ifTrue: [
+				^ self controllers noneSatisfy: [ :any |
+					  any isKindOf: OPBPMNPoolController ] ].
+
+	^ aController isKindOf: OPBPMNNodeController
 ]
 
 { #category : 'accessing' }
