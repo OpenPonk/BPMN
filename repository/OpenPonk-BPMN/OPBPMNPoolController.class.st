@@ -6,32 +6,29 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'construction' }
-OPBPMNPoolController >> boxHeight [
-	^ 300
-]
-
 { #category : 'forms' }
 OPBPMNPoolController >> buildEditorForm: aForm [
 
+	| amountOfShownLanes lanesInput |
 	super buildEditorForm: aForm.
-	
-	(aForm addTextInput: 'Lanes')
+
+	"IMPORTANT: Lanes need to be last items in the form as only last items can be removed"
+
+	amountOfShownLanes := 0.
+
+	(lanesInput := aForm addNumberInput: 'Lanes')
+		minimum: 0;
 		text: self model lanes asString;
 		whenTextChangedDo: [ :newValue |
-				self model lanes:
-						((newValue asString asInteger ifNil: [ 1 ]) max: 0).
-				self model laneNamesFitToLanesCount.
+				self model lanes: ((newValue asInteger ifNil: [ 0 ]) max: 0).
+				amountOfShownLanes = self model lanes ifFalse: [
+							amountOfShownLanes := self
+								                      rebuildLaneNamesFrom: amountOfShownLanes
+								                      inForm: aForm.
+							aForm rebuildWidget ].
 				self modelChanged ].
 
-	self model lanes < 2 ifTrue: [ ^ self ].
-
-	1 to: self model lanes do: [ :i |
-			(aForm addTextInput: 'Lane ' , i asString)
-				text: (self model laneNames at: i) asString;
-				whenTextChangedDo: [ :newValue |
-						self model laneNamesAt: i put: newValue.
-						self modelChanged ] ]
+	amountOfShownLanes := self rebuildLaneNamesFrom: 0 inForm: aForm
 ]
 
 { #category : 'connecting' }
@@ -57,11 +54,20 @@ OPBPMNPoolController >> diagramElementClass [
 	^ OPBPMNPoolShape
 ]
 
-{ #category : 'connecting' }
+{ #category : 'accessing' }
 OPBPMNPoolController >> elementsToShowInside [
 
 	^ self model nodes
 	  , (self model nodes flatCollect: [ :each | each outgoing ])
+]
+
+{ #category : 'construction' }
+OPBPMNPoolController >> hookDiagramElement [
+
+	super hookDiagramElement.
+
+	self diagramElement innerRoassalShapesBlock: [
+		self nodeRoassalShapes ]
 ]
 
 { #category : 'accessing' }
@@ -69,7 +75,37 @@ OPBPMNPoolController >> modelClass [
 	^ OPBPMNPoolModel
 ]
 
-{ #category : 'connecting' }
-OPBPMNPoolController >> showDenyFeedbackFor: aController [
-	^ nil
+{ #category : 'accessing' }
+OPBPMNPoolController >> nodeRoassalShapes [
+
+	^ self model nodes
+		  collect: [ :eachModel | 
+			  self diagramController
+				  controllerForModel: eachModel
+				  ifFound: #roassalShape ]
+		  thenSelect: #isNotNil
+]
+
+{ #category : 'forms' }
+OPBPMNPoolController >> rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm [
+
+	aForm removeLast: amountOfShownLanes - self model lanes * 2.
+
+	self model laneNames withIndexDo: [ :eachLaneName :eachIndex |
+			eachIndex > amountOfShownLanes ifTrue: [
+					(aForm addTextInput: 'Lane ' , eachIndex asString)
+						text: eachLaneName;
+						whenTextChangedDo: [ :newValue |
+								self model laneNamesAt: eachIndex put: newValue.
+								self modelChanged ] ] ].
+
+	^ self model lanes
+]
+
+{ #category : 'diagram elements' }
+OPBPMNPoolController >> unhookDiagramElement [
+
+	super unhookDiagramElement.
+	(self diagramElement ifNotExists: [ ^ self ])
+		innerRoassalShapesBlock: [  ]
 ]

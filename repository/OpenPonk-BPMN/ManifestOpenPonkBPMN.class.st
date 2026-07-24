@@ -24,6 +24,13 @@ ManifestOpenPonkBPMN class >> ruleCollectionMessagesToExternalObjectRuleV1FalseP
 ]
 
 { #category : 'code-critics' }
+ManifestOpenPonkBPMN class >> rulePrecedenceRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGMethodDefinition #(#OPBPMNPoolController #rebuildLaneNamesFrom:inForm: #false)) #'2026-07-23T15:28:38.21+02:00') )
+]
+
+{ #category : 'code-critics' }
 ManifestOpenPonkBPMN class >> ruleUncommonMessageSendRuleV1FalsePositive [
 
 	<ignoreForCoverage>

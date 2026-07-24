@@ -2,7 +2,6 @@ Class {
 	#name : 'OPBPMNPoolModel',
 	#superclass : 'OPBPMNNodeModel',
 	#instVars : [
-		'lanes',
 		'laneNames'
 	],
 	#category : 'OpenPonk-BPMN-Models',
@@ -30,8 +29,13 @@ OPBPMNPoolModel >> enclosingPool [
 { #category : 'initialization' }
 OPBPMNPoolModel >> initialize [ 
 	super initialize.
-	lanes := 1.
 	laneNames := OrderedCollection new.
+]
+
+{ #category : 'accessing' }
+OPBPMNPoolModel >> laneNameAt: aIndex [
+
+	^ laneNames at: aIndex
 ]
 
 { #category : 'accessing' }
@@ -50,28 +54,22 @@ OPBPMNPoolModel >> laneNamesAt: aIndex put: aText [
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> laneNamesFitToLanesCount [
-
-	| text prevSize |
-	text := 'Lane'.
-	lanes < 2 ifTrue: [
-			laneNames removeAll.
-			^ self ].
-		
-	prevSize := laneNames size.
-	prevSize < (lanes - 1)
-		ifTrue: [ prevSize to: lanes - 1 do: [ :i | laneNames add: text ] ]
-		ifFalse: [ lanes + 1 to: prevSize do: [ :i | laneNames removeLast ] ]
-]
-
-{ #category : 'accessing' }
 OPBPMNPoolModel >> lanes [
-	^ lanes
+	^ self laneNames size
 ]
 
 { #category : 'accessing' }
 OPBPMNPoolModel >> lanes: aNumber [
-	lanes := aNumber 
+
+	| text prevSize |
+	text := 'Lane '.
+	aNumber < 1 ifTrue: [
+			laneNames removeAll.
+			^ self ].
+
+	prevSize := laneNames size.
+	prevSize + 1 to: aNumber do: [ :i | laneNames add: text , i asString ].
+	prevSize to: aNumber + 1 by: -1 do: [ :i | laneNames removeLast ]
 ]
 
 { #category : 'accessing' }

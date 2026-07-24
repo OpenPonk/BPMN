@@ -1,190 +1,189 @@
 Class {
 	#name : 'OPBPMNPoolShape',
 	#superclass : 'OPBoundNode',
+	#traits : 'OPTBorderColoredAsStroke @ {#updateBasicShapeBorderColorFromStyles->#updateBorderColorFromStyles}',
+	#classTraits : 'OPTBorderColoredAsStroke classTrait',
 	#instVars : [
-		'label',
-		'laneLines',
-		'laneLabels',
-		'b1',
-		'b2',
-		'borderColor'
+		'innerRoassalShapesBlock',
+		'topBox',
+		'bottomBox',
+		'nameLabel',
+		'nameAreaSeparator'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'adding' }
-OPBPMNPoolShape >> addLanes: aNumber [
+{ #category : 'ston-core' }
+OPBPMNPoolShape class >> stonAllInstVarNames [
 
-	| b4 b5 e2 w h lb |
-	self removeLaneLines.
-	w := roassalShape width.
-	h := roassalShape height.
-	2 to: aNumber do: [ :i | 
-		b4 := RSBox new size: 0.01.
-		b5 := RSBox new size: 0.01.
-		roassalShape add: b4.
-		roassalShape add: b5.
-		roassalShape adjustToChildren.
-		b4 position:
-			b1 width / 2 @ (i - 1 / aNumber * 2 * b1 height - b1 height / 2).
-		b5 position: b1 width / 2 - b1 width + b2 width
-			@ (i - 1 / aNumber * 2 * b1 height - b1 height / 2).
-		"b5 position: (w/2)-w+(30) @ (((i-1)/ aNumber*2*(b1 height))- b1 height/2)."
-
-		e2 := RSLine new
-			      from: b4;
-			      to: b5;
-					addInteraction: OPRSDraggableControlPoints.
-
-		self canvas add: e2.
-		laneLines add: e2 ].
-
-	aNumber > 1 ifTrue: [ 
-		1 to: aNumber do: [ :i | 
-			lb := RSLabel new
-				rotateByDegrees: -90.
-			roassalShape add: lb.
-			laneLabels add: lb.
-			lb position:
-				b1 width / 2 - b1 width + b2 width + 8 @ ((i - 1 / aNumber * 2 * b1 height - b1 height / 2) + (b1 height/aNumber/2)) ] ]
+	^ super stonAllInstVarNames copyWithout: #ownedElements
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
+OPBPMNPoolShape >> addNeededLanes [
+
+	self ownedElements size >= self modelElement lanes ifTrue: [ ^ self ].
+
+	self ownedElements size + 1 to: self modelElement lanes do: [ :index |
+	OPBPMNPoolLaneShape renderIn: self forIndex: index ]
+]
+
+{ #category : 'interactions' }
 OPBPMNPoolShape >> addSelectionDraggableInteraction [
 
 	roassalShape
-	@ OPRSSelectionDraggableBorder thatAlsoDragsContainedShapes
+	@ (OPRSSelectionDraggableBorder thatAlsoDragsShapesProvidedByBlock:
+			 innerRoassalShapesBlock)
 ]
 
-{ #category : 'removing' }
+{ #category : 'accessing' }
 OPBPMNPoolShape >> attachedShapes [
 
-	^ super attachedShapes , laneLines , laneLabels , {
-		  label.
-		  b1.
-		  b2 }
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolShape >> borderColor [
-
-	^ borderColor
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolShape >> borderColor: aColor [
-
-	borderColor := aColor
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolShape >> color [
-
-	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolShape >> color: aColor [
-
-	^ self stylePropertyNamed: #fillColor put: aColor
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolShape >> createRoassalShape [
-| com |
-com := RSComposite new.
-b1 := RSBox new width: 650; height: 400; color: Color white; borderColor: Color black.
-b2 := RSBox new width: 30; height: 400; color: Color white; borderColor: Color black.
-com add: b1.
-com add: b2.
-
-com adjustToChildren.
-b2 position: -310@0. 
-	^ com
+	^ super attachedShapes , {
+		  topBox.
+		  bottomBox.
+		  nameLabel.
+		  nameAreaSeparator }
 ]
 
 { #category : 'initialization' }
 OPBPMNPoolShape >> initialize [
+
 	super initialize.
-	laneLines := OrderedCollection new.
-	laneLabels := OrderedCollection new.
+	innerRoassalShapesBlock := [ :allNodes | allNodes ].
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolShape >> label [
+{ #category : 'initialization' }
+OPBPMNPoolShape >> innerRoassalShapesBlock: aBlock [
 
-	^ label
+	innerRoassalShapesBlock := aBlock
 ]
 
-{ #category : 'removing' }
-OPBPMNPoolShape >> removeLaneLines [
+{ #category : 'constants' }
+OPBPMNPoolShape >> nameAreaWidth [
 
-	laneLines do: [ :each | self canvas removeShape: each. ].
-	"laneLabels do: [ :each | self canvas removeShape: each. ]."
-	laneLabels do: [ :each | self roassalShape removeShape: each. ].
-	laneLines removeAll.
-	laneLabels removeAll.
+	^ 30
 ]
 
 { #category : 'removing' }
 OPBPMNPoolShape >> removeRender [
 
-	self removeLaneLines.
 	super removeRender.
-	label := nil.
-	b1 := nil.
-	b2 := nil
+	topBox := nil.
+	bottomBox := nil.
+	nameLabel := nil.
+	nameAreaSeparator := nil
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
+OPBPMNPoolShape >> removeUnneededLanes [
+
+	[ self modelElement lanes < self ownedElements size ] whileTrue: [
+		self ownedElements last remove ]
+]
+
+{ #category : 'rendering' }
 OPBPMNPoolShape >> renderBasicShape [
 
-	^ self createRoassalShape model: self
+	^ RSBox new
+		  width: 650;
+		  height: 400;
+		  color: Color transparent;
+		  borderColor: Color black
 ]
 
-{ #category : 'accessing' }
+{ #category : 'rendering' }
+OPBPMNPoolShape >> renderNameArea [
+
+	self renderNameAreaLabel.
+	self renderNameAreaInvisibleBoxes.
+	self renderNameAreaSeparator
+]
+
+{ #category : 'rendering' }
+OPBPMNPoolShape >> renderNameAreaInvisibleBoxes [
+
+	topBox := RSBox new
+		          borderColor: Color transparent;
+		          width: 0;
+		          height: 0;
+		          model: #topInvisBox.
+	bottomBox := topBox copy model: #bottomInvisBox.
+
+	self canvas
+		add: topBox;
+		add: bottomBox.
+
+	RSLocation new
+		innerX;
+		left;
+		top;
+		offset: self nameAreaWidth @ 0;
+		stick: topBox on: self roassalShape.
+	RSLocation new
+		innerX;
+		left;
+		bottom;
+		offset: self nameAreaWidth @ 0;
+		stick: bottomBox on: self roassalShape
+]
+
+{ #category : 'rendering' }
+OPBPMNPoolShape >> renderNameAreaLabel [
+
+	| location moveBlock |
+	nameLabel := RSLabel new
+		             color: Color black;
+		             model: self;
+		             rotateByDegrees: -90;
+		             yourself.
+	nameLabel text: 'Pool'.
+	self canvas add: nameLabel.
+
+	location := RSLocation new
+		            inner;
+		            left;
+		            middle;
+		            offset:
+			            (self nameAreaWidth - nameLabel textExtents height / 2)
+				            asInteger @ 0.
+
+	moveBlock := [ location move: nameLabel on: self roassalShape ].
+	moveBlock value.
+	self roassalShape
+		when: RSPositionChangedEvent
+		do: moveBlock
+		for: self.
+	nameLabel when: RSExtentChangedEvent do: moveBlock for: self
+]
+
+{ #category : 'rendering' }
+OPBPMNPoolShape >> renderNameAreaSeparator [
+
+	nameAreaSeparator := RSLine new
+		                     width: 1;
+		                     from: topBox;
+		                     to: bottomBox.
+
+	roassalShape canvas add: nameAreaSeparator
+]
+
+{ #category : 'rendering' }
 OPBPMNPoolShape >> renderShapeDetails [
 
-	label := RSLabel new
-		         rotateByDegrees: -90;
-		         color: Color black.
-	self roassalShape add: label.
-	label position: b1 width / 2 - b1 width + 11 @ 0.
-	"self canvas add: label.
-	RSLocation new
-		stick: label on: self roassalShape;
-		left;
-		offset: 4 @ 0.
-	self roassalShape when: RSShapeRemovedEvent do: [ label remove ]."
-
-	"roassalShape @ OPRSSelectionDraggable.
-	roassalShape @ RSTransformable.
-	selectable := OPRSSelectable new.
-	self setupHighlight: selectable.
-	roassalShape @ selectable.
-	self updateRenderFromModel."
-
-	self roassalShape
-		pushBack;
-		@ RSTransformable.
-	self updateRenderFromModel
+	super renderShapeDetails.
+	self renderNameArea
 ]
 
 { #category : 'interactions' }
-OPBPMNPoolShape >> resizableInteractionTarget [
-
-	^ b1
-]
-
-{ #category : 'accessing' }
 OPBPMNPoolShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : 'accessing' }
+{ #category : 'interactions' }
 OPBPMNPoolShape >> shouldBePositionableByUser [
 
 	^ true
@@ -196,26 +195,26 @@ OPBPMNPoolShape >> shouldBeResizableByUser [
 	^ true
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolShape >> updateRenderFromModel [
-	| aCnt |
-	self modelElement name ifNotNil: [ 
-		label text: self modelElement name ].
-	"roassalShape width: self modelElement width.
-	roassalShape height: self modelElement height.
-	lane width: self modelElement width.
-	lane height: self modelElement height/2."
-	self addLanes: self modelElement lanes.
-	aCnt := 1.
-	self modelElement laneNames do: [ :each | (laneLabels at: aCnt) text: each. aCnt := aCnt + 1. ].
-	super updateRenderFromModel.
-	roassalShape signalUpdate
+{ #category : 'initialization' }
+OPBPMNPoolShape >> updateBorderColorFromStyles [
+
+	self updateBasicShapeBorderColorFromStyles.
+	nameAreaSeparator color: self borderColor
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolShape >> updateRenderFromSelf [
+{ #category : 'updating' }
+OPBPMNPoolShape >> updateLanesAmount [
 
-	self isRendered ifFalse: [ ^ self ].
-	roassalShape color: self color.
-	super updateRenderFromSelf
+	self
+		removeUnneededLanes;
+		addNeededLanes
+]
+
+{ #category : 'rendering' }
+OPBPMNPoolShape >> updateRenderFromModel [
+
+	nameLabel text: (self modelElement name ifNil: [ '' ]).
+	self updateLanesAmount.
+	super updateRenderFromModel.
+	roassalShape signalUpdate
 ]

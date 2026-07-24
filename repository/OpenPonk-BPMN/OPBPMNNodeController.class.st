@@ -25,7 +25,7 @@ OPBPMNNodeController >> internalSubscribeTo: aModel [
 	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
 ]
 
-{ #category : 'private' }
+{ #category : 'destruction' }
 OPBPMNNodeController >> removeModel [
 
 	self model owner remove: self model
