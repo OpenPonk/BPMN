@@ -6,19 +6,6 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNDiagramController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	"(aForm addDroplist: 'Is Executable?')
-		items: #( #false #true );
-		display: [ :isExecutable | isExecutable asString ];
-		selectItem: self model isExecutable;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model isExecutable: newValue.
-			self diagramElement updateRenderFromModel ]"
-]
-
 { #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
 

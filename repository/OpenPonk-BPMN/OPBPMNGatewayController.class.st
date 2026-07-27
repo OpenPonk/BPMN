@@ -22,13 +22,17 @@ OPBPMNGatewayController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNGatewayController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNFlowController
+
+	^ (aController isKindOf: OPBPMNFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
 ]
 
 { #category : 'connecting' }
 OPBPMNGatewayController >> canBeTargetFor: aController [
-	^ (aController isKindOf: OPBPMNFlowController)
-		
+
+	^ ((aController isKindOf: OPBPMNFlowController) or: [
+		   aController isKindOf: OPBPMNAssociationController ]) and: [
+		  aController source ~= self ]
 ]
 
 { #category : 'construction' }

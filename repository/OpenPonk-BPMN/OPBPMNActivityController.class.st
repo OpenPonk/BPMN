@@ -42,19 +42,26 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeSourceFor: aController [
 
-	^ aController isKindOf: OPBPMNEdgeController
+	^ (aController isKindOf: OPBPMNEdgeController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
 ]
 
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeTargetFor: aController [
 
+	((aController isKindOf: OPBPMNEdgeController) or: [
+		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
+		^ false ].
+
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool ].
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }

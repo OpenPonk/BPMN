@@ -22,12 +22,6 @@ OPBPMNEdgeModel class >> from: aSourceObject to: aTargetObject named: aString [
 		yourself
 ]
 
-{ #category : 'instance creation' }
-OPBPMNEdgeModel >> from: aSource to: aTarget [
-	self source: aSource.
-	self target: aTarget
-]
-
 { #category : 'testing' }
 OPBPMNEdgeModel >> isEdge [
 	^ true
@@ -46,24 +40,4 @@ OPBPMNEdgeModel >> printIdType [
 { #category : 'printing' }
 OPBPMNEdgeModel >> printType [
 	^ self subclassResponsibility 
-]
-
-{ #category : 'accessing' }
-OPBPMNEdgeModel >> source [
-	^ source
-]
-
-{ #category : 'accessing' }
-OPBPMNEdgeModel >> source: aNode [
-	source := aNode
-]
-
-{ #category : 'accessing' }
-OPBPMNEdgeModel >> target [ 
-	^ target
-]
-
-{ #category : 'accessing' }
-OPBPMNEdgeModel >> target: aNode [
-	target := aNode
 ]

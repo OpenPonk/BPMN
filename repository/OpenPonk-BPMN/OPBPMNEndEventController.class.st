@@ -37,7 +37,8 @@ OPBPMNEndEventController >> buildEditorForm: aForm [
 { #category : 'connecting' }
 OPBPMNEndEventController >> canBeSourceFor: aController [
 
-	^ aController isKindOf: OPBPMNMessageFlowController
+	^ (aController isKindOf: OPBPMNMessageFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
 ]
 
 { #category : 'connecting' }
@@ -47,9 +48,14 @@ OPBPMNEndEventController >> canBeTargetFor: aController [
 		^ false ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	((aController isKindOf: OPBPMNEdgeController) or: [
+		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
+		^ false ].
+
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }

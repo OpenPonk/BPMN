@@ -22,12 +22,17 @@ OPBPMNDataObjectController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNDataObjectController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNDataFlowController
+
+	^ (aController isKindOf: OPBPMNDataFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
 ]
 
 { #category : 'connecting' }
 OPBPMNDataObjectController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNDataFlowController
+
+	^ ((aController isKindOf: OPBPMNDataFlowController) or: [
+		   aController isKindOf: OPBPMNAssociationController ]) and: [
+		  aController source ~= self ]
 ]
 
 { #category : 'accessing' }

@@ -6,11 +6,6 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'construction' }
-OPBPMNEdgeController >> diagramElementClass [
-	^ self subclassResponsibility
-]
-
 { #category : 'announcements' }
 OPBPMNEdgeController >> internalSubscribeTo: aModel [
 

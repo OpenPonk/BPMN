@@ -47,17 +47,25 @@ OPBPMNStartEventController >> canBeSourceFor: aController [
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
 		^ false ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	^ (aController isKindOf: OPBPMNEdgeController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
 ]
 
 { #category : 'connecting' }
 OPBPMNStartEventController >> canBeTargetFor: aController [
 
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool ].
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+		^ aController source model isKindOf: OPBPMNDataObjectModel ].
 
-	^ (aController isKindOf: OPBPMNDataFlowController) and: [
-		  aController source model isKindOf: OPBPMNDataObjectModel ]
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
+
+	((aController isKindOf: OPBPMNMessageFlowController) or: [
+		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
+		^ false ].
+
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }
