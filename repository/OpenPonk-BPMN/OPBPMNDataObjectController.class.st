@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNDataObjectController',
-	#superclass : 'OPBPMNNodeController',
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
@@ -22,17 +22,17 @@ OPBPMNDataObjectController >> buildEditorForm: aForm [
 
 { #category : 'connecting' }
 OPBPMNDataObjectController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNDataFlowController
+
+	^ (aController isKindOf: OPBPMNDataFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
 ]
 
 { #category : 'connecting' }
 OPBPMNDataObjectController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNDataFlowController
-]
 
-{ #category : 'accessing' }
-OPBPMNDataObjectController >> dependentElements [
-	^ (self model incoming , self model outgoing) asSet
+	^ ((aController isKindOf: OPBPMNDataFlowController) or: [
+		   aController isKindOf: OPBPMNAssociationController ]) and: [
+		  aController source ~= self ]
 ]
 
 { #category : 'construction' }
@@ -58,17 +58,14 @@ OPBPMNDataObjectController >> modelClass [
 
 { #category : 'connecting' }
 OPBPMNDataObjectController >> typeIconFor: aType [
-	aType = OPBPMNNodeType DataObject
-		ifTrue: [ ^ OPBPMNIcon current dataObject16 ].
-	aType = OPBPMNNodeType DataInput
-		ifTrue: [ ^ OPBPMNIcon current dataInput16 ].
-	aType = OPBPMNNodeType DataOutput
-		ifTrue: [ ^ OPBPMNIcon current dataOutput16 ].
-	aType = OPBPMNNodeType DataStore
-		ifTrue: [ ^ OPBPMNIcon current dataStore16 ].
-]
 
-{ #category : 'connecting' }
-OPBPMNDataObjectController >> typeIconForModel [
-	^ self model typeIconFor: self model type
+	aType = OPBPMNNodeType DataObject ifTrue: [
+		^ OPBPMNIcon current dataObject16 ].
+	aType = OPBPMNNodeType DataInput ifTrue: [
+		^ OPBPMNIcon current dataInput16 ].
+	aType = OPBPMNNodeType DataOutput ifTrue: [
+		^ OPBPMNIcon current dataOutput16 ].
+	aType = OPBPMNNodeType DataStore ifTrue: [
+		^ OPBPMNIcon current dataStore16 ].
+	self error: 'Unknown type'
 ]

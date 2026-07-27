@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNFlowNodeModel',
-	#superclass : 'OPBPMNNodeModel',
+	#superclass : 'OPBPMNSemanticNodeModel',
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'

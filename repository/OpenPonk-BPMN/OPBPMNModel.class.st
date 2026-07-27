@@ -21,10 +21,11 @@ OPBPMNModel >> enclosingPool [
 	^ self
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNModel >> initialize [
+
 	super initialize.
-	isExecutable := false.
+	isExecutable := false
 ]
 
 { #category : 'accessing' }

@@ -14,7 +14,7 @@ OPBPMNEdgeControllerTest class >> isAbstract [
 	^ self = OPBPMNEdgeControllerTest
 ]
 
-{ #category : 'tests' }
+{ #category : 'constants' }
 OPBPMNEdgeControllerTest >> amountOfLabels [
 	^ 1
 ]
@@ -33,15 +33,16 @@ OPBPMNEdgeControllerTest >> assignModelTarget [
 	model target addFlow: model
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEdgeControllerTest >> diagramControllerClass [
 
 	^ OPBPMNDiagramController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEdgeControllerTest >> diagramModelClass [
-	^ OPBPMNModel 
+
+	^ OPBPMNModel
 ]
 
 { #category : 'tests' }

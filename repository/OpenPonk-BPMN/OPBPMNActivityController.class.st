@@ -15,27 +15,27 @@ OPBPMNActivityController >> buildEditorForm: aForm [
 		displayIcon: [ :type | self model typeIconFor: type ];
 		display: [ :type | type asString ];
 		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
+		whenSelectedItemChangedDo: [ :newValue |
+				self model type: newValue.
+				self modelChanged ].
 	(aForm addCheckbox: 'Is Call Activity?')
 		state: self model isCallActivity;
-		whenChangedDo: [ :val | 
-			self model isCallActivity: val.
-			self modelChanged ].
+		whenChangedDo: [ :val |
+				self model isCallActivity: val.
+				self modelChanged ].
 	self model type = OPBPMNNodeType Service
 	| (self model type = OPBPMNNodeType Send)
-		ifTrue: [ 
-			(aForm addText: 'Executable attribute')
-				text: self model executableAttribute;
-				whenTextChangedDo: [ :newValue | 
-					self model executableAttribute: newValue asString.
-					self modelChanged ].
-			(aForm addText: 'Executable attribute value')
-				text: self model executableAttributeValue;
-				whenTextChangedDo: [ :newValue | 
-					self model executableAttributeValue: newValue asString.
-					self modelChanged ] ]
+		ifTrue: [
+				(aForm addText: 'Executable attribute')
+					text: self model executableAttribute;
+					whenTextChangedDo: [ :newValue |
+							self model executableAttribute: newValue asString.
+							self modelChanged ].
+				(aForm addText: 'Executable attribute value')
+					text: self model executableAttributeValue;
+					whenTextChangedDo: [ :newValue |
+							self model executableAttributeValue: newValue asString.
+							self modelChanged ] ]
 		ifFalse: [ self model executableAttribute: nil ]
 ]
 
@@ -48,13 +48,17 @@ OPBPMNActivityController >> canBeSourceFor: aController [
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeTargetFor: aController [
 
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
+
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool ].
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }
@@ -66,9 +70,4 @@ OPBPMNActivityController >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNActivityController >> modelClass [
 	^ OPBPMNActivityModel
-]
-
-{ #category : 'connecting' }
-OPBPMNActivityController >> typeIconForModel [
-	^ self model typeIconFor: self model type
 ]

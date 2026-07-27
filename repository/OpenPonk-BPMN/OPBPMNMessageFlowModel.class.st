@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNMessageFlowModel',
-	#superclass : 'OPBPMNEdgeModel',
+	#superclass : 'OPBPMNAbstractFlowModel',
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'

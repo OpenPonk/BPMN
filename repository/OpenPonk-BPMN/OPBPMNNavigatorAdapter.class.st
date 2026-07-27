@@ -17,13 +17,14 @@ OPBPMNNavigatorAdapter >> childrenMapping [
 
 	^ {
 		  (OPBPMNModel -> [ :o | o nodes ]).
-		  (OPBPMNNodeModel -> [ :o | o nodes , o outgoing ]) }
+		  (OPBPMNSemanticNodeModel -> [ :o | o nodes , o outgoing ]) .
+		  (OPBPMNAnnotationModel -> [ :o | o elements ]).}
 ]
 
 { #category : 'widget API' }
 OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
-	(OPBPMNNodeModel -> 'Node').
+	(OPBPMNSemanticNodeModel -> 'Node').
 	(OPBPMNPoolModel -> 'Pool').
 	(OPBPMNSubProcessModel -> 'Expanded SubProcess').
 	(OPBPMNCollapsedSubProcessModel -> 'Collapsed SubProcess').
@@ -36,16 +37,19 @@ OPBPMNNavigatorAdapter >> displayMapping [
 	(OPBPMNDataObjectModel -> 'Data Object').
 	(OPBPMNDataFlowModel -> 'Data Flow').
 	(OPBPMNFlowModel -> 'Sequence Flow').
-	(OPBPMNMessageFlowModel -> 'Message Flow')}
+	(OPBPMNMessageFlowModel -> 'Message Flow').
+	(OPBPMNAnnotationModel -> 'Annotation').
+	(OPBPMNAssociationModel -> 'Association')}
 ]
 
 { #category : 'widget API' }
 OPBPMNNavigatorAdapter >> hasMappingFor: anObject in: aModel [
 
-	^ { 
+	^ {
 		  OPBPMNModel.
 		  OPBPMNNodeModel.
-		  OPBPMNEdgeModel } anySatisfy: [ :any | anObject isKindOf: any ]
+		  OPBPMNEdgeModel. } anySatisfy: [ :any |
+		  anObject isKindOf: any ]
 ]
 
 { #category : 'widget API' }
@@ -75,7 +79,9 @@ OPBPMNNavigatorAdapter >> sort: modelObjects [
 
 { #category : 'widget API' }
 OPBPMNNavigatorAdapter >> typesByDependency [
-	^ {OPBPMNModel.
-	OPBPMNNodeModel.
-	OPBPMNEdgeModel }
+
+	^ {
+		  OPBPMNModel.
+		  OPBPMNNodeModel.
+		  OPBPMNEdgeModel }
 ]

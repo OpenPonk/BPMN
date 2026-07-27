@@ -65,8 +65,8 @@ OPBPMNPoolLaneShape >> index: anInteger [
 { #category : 'removing' }
 OPBPMNPoolLaneShape >> removeRender [
 
-	self owningElement roassalShape ifNotNil: [ :ownerShape |
-		ownerShape announcer unsubscribe: self ].
+	self owningElement roassalShape ifNotNil: [ :ownerRoassalShape |
+		ownerRoassalShape announcer unsubscribe: self ].
 	super removeRender.
 	leftBox := nil.
 	rightBox := nil.

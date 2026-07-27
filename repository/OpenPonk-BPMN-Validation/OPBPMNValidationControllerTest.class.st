@@ -8,17 +8,21 @@ Class {
 
 { #category : 'tests' }
 OPBPMNValidationControllerTest >> testGetValidatedObjects [
-	| controller validations activity pool subprocess array model collection |
+
+	| controller activity pool subprocess array model |
 	controller := OPBPMNValidationController new.
 
 	activity := OPBPMNActivityModel new.
 	pool := OPBPMNPoolModel new.
 	subprocess := OPBPMNSubProcessModel new.
 	model := OPBPMNModel new.
-	array := { activity. pool. subprocess. } asOrderedCollection.
+	array := {
+		         activity.
+		         pool.
+		         subprocess } asOrderedCollection.
 	model addAll: array.
-	
-	self assert: (controller getValidateObjects: model) equals: array.
+
+	self assert: (controller getValidateObjects: model) equals: array
 ]
 
 { #category : 'tests' }
@@ -28,67 +32,73 @@ OPBPMNValidationControllerTest >> testGetValidations [
 	controller := OPBPMNValidationController new.
 	validations := controller getValidations.
 	self assert: (validations isKindOf: Collection).
-	self assert: validations isEmpty equals: false.
-
-	self
-		assert: (validations allSatisfy: [ :validationClass |
-				 validationClass packageTag name = 'Validation-Classes' ])
-		equals: true
+	self deny: validations isEmpty.
+	self assert: (validations allSatisfy: [ :validationClass |
+			 validationClass packageTag name = 'Validation-Classes' ])
 ]
 
 { #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidate [
+
 	| activity array model controller results dataO |
 	activity := OPBPMNActivityModel new.
-	dataO := OPBPMNDataObjectModel  new.
-	array :=  { activity. dataO }.
+	dataO := OPBPMNDataObjectModel new.
+	array := {
+		         activity.
+		         dataO }.
 	model := OPBPMNModel new.
 	model addAll: array.
 	controller := OPBPMNValidationController new.
 	results := controller validate: model.
-	self assert: (results isKindOf: OPBPMNValidationResults) equals: true.
-	self assert: (results hasErrors: activity) equals: true.
-	self assert: (results hasErrors: dataO) equals: false.
-	self assert: (results hasWarnings: model) equals: true.
-	self assert: (results hasErrors: model) equals: false.
+	self assert: (results isKindOf: OPBPMNValidationResults).
+	self assert: (results hasErrors: activity).
+	self deny: (results hasErrors: dataO).
+	self assert: (results hasWarnings: model).
+	self deny: (results hasErrors: model)
 ]
 
 { #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidateProcess [
+
 	| activity array model controller results dataO startE |
 	activity := OPBPMNActivityModel new.
-	dataO := OPBPMNDataObjectModel  new.
+	dataO := OPBPMNDataObjectModel new.
 	startE := OPBPMNStartEventModel new.
-	array :=  { activity. dataO }.
+	array := {
+		         activity.
+		         dataO }.
 	model := OPBPMNModel new.
 	model addAll: array.
 	controller := OPBPMNValidationController new.
 	results := controller validateProcess: model.
-	self assert: (results isKindOf: OPBPMNValidationResults) equals: true.
-	self assert: (results hasErrors: activity) equals: false.
-	self assert: (results hasErrors: dataO) equals: false.
-	self assert: (results hasWarnings: model) equals: true.
-	self assert: (results hasErrors: model) equals: false.
-	
+	self assert: (results isKindOf: OPBPMNValidationResults).
+	self deny: (results hasErrors: activity).
+	self deny: (results hasErrors: dataO).
+	self assert: (results hasWarnings: model).
+	self deny: (results hasErrors: model).
+
 	model add: startE.
 	results := controller validateProcess: model.
-	self assert: (results isKindOf: OPBPMNValidationResults) equals: true.
-	self assert: (results hasErrors: activity) equals: false.
-	self assert: (results hasErrors: startE) equals: false.
-	self assert: (results hasWarnings: model) equals: false.
-	self assert: (results hasErrors: model) equals: false.
-	
-	
+	self assert: (results isKindOf: OPBPMNValidationResults).
+	self deny: (results hasErrors: activity).
+	self deny: (results hasErrors: startE).
+	self deny: (results hasWarnings: model).
+	self deny: (results hasErrors: model)
 ]
 
 { #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidateSingleObject [
-	| activity array model controller results |
+
+	| activity array controller results |
 	activity := OPBPMNActivityModel new.
-	array :=  { activity }.
+	array := { activity }.
 	controller := OPBPMNValidationController new.
 	results := OPBPMNValidationResults new.
-	controller validateSingleObject: activity withValidations: controller getValidations withModel: array  withResults: results.
-	self assert: (results isKindOf: OPBPMNValidationResults) equals: true.
-	self assert: (results hasErrors: activity) equals: true.
+	controller
+		validateSingleObject: activity
+		withValidations: controller getValidations
+		withModel: array
+		withResults: results.
+	self assert: (results isKindOf: OPBPMNValidationResults).
+	self assert: (results hasErrors: activity)
 ]

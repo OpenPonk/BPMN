@@ -1,9 +1,9 @@
 Class {
 	#name : 'OPBPMNMessageFlowControllerTest',
 	#superclass : 'OPBPMNEdgeControllerTest',
-	#category : 'OpenPonk-BPMN-Tests',
+	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Tests'
+	#tag : 'Models'
 }
 
 { #category : 'accessing' }
@@ -11,10 +11,10 @@ OPBPMNMessageFlowControllerTest >> controllerClass [
 	^ OPBPMNMessageFlowController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNMessageFlowControllerTest >> diagramElementClass [
 
-	^ OPBPMNMessageShape 
+	^ OPBPMNMessageFlowShape 
 ]
 
 { #category : 'accessing' }
@@ -22,12 +22,12 @@ OPBPMNMessageFlowControllerTest >> modelClass [
 	^ OPBPMNMessageFlowModel 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNMessageFlowControllerTest >> sourceControllerClass [
 	^ OPBPMNPoolController  
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNMessageFlowControllerTest >> sourceModelClass [
 	^ OPBPMNPoolModel 
 ]

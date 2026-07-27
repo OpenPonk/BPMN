@@ -18,6 +18,12 @@ OPBPMNNodeShape class >> stonAllInstVarNames [
 	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
 ]
 
+{ #category : 'reacting' }
+OPBPMNNodeShape >> associationCreated: anAssociation [
+
+	"do nothing"
+]
+
 { #category : 'accessing' }
 OPBPMNNodeShape >> attachedShapes [
 
@@ -87,12 +93,6 @@ OPBPMNNodeShape >> renderShapeDetails [
 OPBPMNNodeShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
-]
-
-{ #category : 'interactions' }
-OPBPMNNodeShape >> shouldBePositionableByUser [
-
-	^ true
 ]
 
 { #category : 'accessing' }

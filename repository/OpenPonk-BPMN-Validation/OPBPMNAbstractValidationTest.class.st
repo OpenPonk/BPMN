@@ -8,8 +8,11 @@ Class {
 
 { #category : 'constants' }
 OPBPMNAbstractValidationTest >> canValidateTest [
-	self assert: (self getTestedClass canValidate: self getNotValidatedClassInstance) equals: false.
-	self assert: (self getTestedClass canValidate: self getValidatedClassInstance) equals: true.
+
+	self deny:
+		(self getTestedClass canValidate: self getNotValidatedClassInstance).
+	self assert:
+		(self getTestedClass canValidate: self getValidatedClassInstance)
 ]
 
 { #category : 'constants' }

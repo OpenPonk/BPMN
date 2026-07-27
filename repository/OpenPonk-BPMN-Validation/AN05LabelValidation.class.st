@@ -8,14 +8,14 @@ Class {
 
 { #category : 'as yet unclassified' }
 AN05LabelValidation class >> validateClass [
-	^ OPBPMNNodeModel.
+	^ OPBPMNSemanticNodeModel.
 ]
 
 { #category : 'verification' }
 AN05LabelValidation >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| size |
-	(aVerifiedObject isKindOf: OPBPMNNodeModel) ifTrue: [ 
+	(aVerifiedObject isKindOf: OPBPMNSemanticNodeModel) ifTrue: [ 
 		size := aVerifiedObject name size.
 		(aVerifiedObject isKindOf: OPBPMNStartEventModel)
 		| (aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 

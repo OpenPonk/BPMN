@@ -18,27 +18,27 @@ OPBPMNStartEventController >> buildEditorForm: aForm [
 		display: [ :type | type asString ];
 		selectItem: self model type;
 		whenSelectedItemChangedDo: [ :newValue |
-			self model type: newValue.
-			self modelChanged ].
+				self model type: newValue.
+				self modelChanged ].
 	(aForm addCheckbox: 'Is Non-Interrupting')
 		state: self model isNonInterrupting;
 		whenChangedDo: [ :val |
-			self model isNonInterrupting: val.
-			self modelChanged ].
+				self model isNonInterrupting: val.
+				self modelChanged ].
 
-	self model type = OPBPMNNodeType Timer ifTrue: [
-		(aForm addDroplist: 'Timer type')
-			items: #( #none #timeDate #timeDuration #timeCycle );
-			display: [ :type | type asString ];
-			selectItem: self model timerType;
-			whenSelectedItemChangedDo: [ :newValue |
+	self model type = OPBPMNNodeType Timer ifFalse: [ ^ self ].
+	(aForm addDroplist: 'Timer type')
+		items: #( #none #timeDate #timeDuration #timeCycle );
+		display: [ :type | type asString ];
+		selectItem: self model timerType;
+		whenSelectedItemChangedDo: [ :newValue |
 				self model timerType: newValue.
 				self modelChanged ].
-		(aForm addText: 'Timer value')
-			text: self model timerValue;
-			whenTextChangedDo: [ :newValue |
+	(aForm addText: 'Timer value')
+		text: self model timerValue;
+		whenTextChangedDo: [ :newValue |
 				self model timerValue: newValue asString.
-				self modelChanged ] ]
+				self modelChanged ]
 ]
 
 { #category : 'connecting' }
@@ -53,11 +53,18 @@ OPBPMNStartEventController >> canBeSourceFor: aController [
 { #category : 'connecting' }
 OPBPMNStartEventController >> canBeTargetFor: aController [
 
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool ].
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+		^ aController source model isKindOf: OPBPMNDataObjectModel ].
 
-	^ (aController isKindOf: OPBPMNDataFlowController) and: [
-		  aController source model isKindOf: OPBPMNDataObjectModel ]
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
+
+	((aController isKindOf: OPBPMNMessageFlowController) or: [
+		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
+		^ false ].
+
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }

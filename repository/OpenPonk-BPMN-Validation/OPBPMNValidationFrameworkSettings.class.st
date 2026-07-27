@@ -30,12 +30,15 @@ OPBPMNValidationFrameworkSettings >> getSettingFor: aVerificationClass [
 	^ settings at: aVerificationClass.
 ]
 
-{ #category : 'access' }
+{ #category : 'initialization' }
 OPBPMNValidationFrameworkSettings >> initialize [
+
 	| controller |
+	super initialize.
+
 	controller := OPBPMNValidationController new.
 	settings := Dictionary new.
-	controller getValidations do: [ :class | settings add: (class -> true). ]
+	controller getValidations do: [ :class | settings add: class -> true ]
 ]
 
 { #category : 'access' }

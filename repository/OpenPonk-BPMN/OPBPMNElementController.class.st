@@ -1,16 +1,10 @@
 Class {
 	#name : 'OPBPMNElementController',
-	#superclass : 'OPBPMNNodeController',
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
-
-{ #category : 'private' }
-OPBPMNElementController >> dependentElements [
-
-	^ self model flows
-]
 
 { #category : 'announcements' }
 OPBPMNElementController >> internalSubscribeTo: aModel [

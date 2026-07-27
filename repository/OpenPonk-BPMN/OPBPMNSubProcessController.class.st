@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNSubProcessController',
-	#superclass : 'OPBPMNNodeController',
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
@@ -39,20 +39,19 @@ OPBPMNSubProcessController >> canBeSourceFor: aController [
 { #category : 'connecting' }
 OPBPMNSubProcessController >> canBeTargetFor: aController [
 
+	(aController isKindOf: OPBPMNElementController) ifTrue: [ ^ true ].
+
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool ].
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
 
-	^ (aController isKindOf: OPBPMNElementController) or: [
-		  aController isKindOf: OPBPMNEdgeController ]
-]
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 
-{ #category : 'accessing' }
-OPBPMNSubProcessController >> dependentElements [
-
-	^ (self model incoming , self model outgoing) asSet
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }

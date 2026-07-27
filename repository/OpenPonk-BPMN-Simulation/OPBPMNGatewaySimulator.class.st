@@ -15,6 +15,8 @@ OPBPMNGatewaySimulator class >> model: anElement diagramSimulator: aDiagramSimul
 	| type simulator |
 	type := anElement type.
 
+	simulator := nil.
+
 	type = OPBPMNNodeType Parallel ifTrue: [
 		simulator := OPBPMNParallelGatewaySimulator new ].
 
@@ -28,6 +30,8 @@ OPBPMNGatewaySimulator class >> model: anElement diagramSimulator: aDiagramSimul
 		 OPBPMNNodeType Exclusive.
 		 OPBPMNNodeType Eventbased } includes: type) ifTrue: [
 		simulator := OPBPMNExclusiveGatewaySimulator new ].
+
+	self assert: simulator isNotNil.
 
 	^ simulator
 		  model: anElement;

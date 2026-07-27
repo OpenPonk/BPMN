@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNFlowModel',
-	#superclass : 'OPBPMNEdgeModel',
+	#superclass : 'OPBPMNAbstractFlowModel',
 	#instVars : [
 		'type'
 	],
@@ -9,8 +9,9 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
-OPBPMNFlowModel >> initialize [ 
+{ #category : 'initialization' }
+OPBPMNFlowModel >> initialize [
+
 	super initialize.
 	type := 'Normal'
 ]

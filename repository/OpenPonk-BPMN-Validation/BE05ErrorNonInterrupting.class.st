@@ -14,13 +14,14 @@ BE05ErrorNonInterrupting class >> validateClass [
 { #category : 'verification' }
 BE05ErrorNonInterrupting >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
-	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 
-		(aVerifiedObject type = OPBPMNNodeType Error) & (aVerifiedObject isNonInterrupting = True) ifTrue: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(BE05) ', aVerifiedObject class name
-						   ,
-						   ' of type Error could not be Non-Interrupting.') } ] ].
-	^ {  }
+	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifFalse: [
+		^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Error ifFalse: [ ^ {  } ].
+	aVerifiedObject isNonInterrupting ifFalse: [ ^ {  } ].
+
+	^ { (OPBPMNValidationMessageError
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText: '(BE05) ' , aVerifiedObject class name
+			   , ' of type Error could not be Non-Interrupting.') }
 ]

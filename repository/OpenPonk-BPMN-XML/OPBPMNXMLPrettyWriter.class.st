@@ -14,12 +14,14 @@ OPBPMNXMLPrettyWriter >> lineBreak: aCharacterOrString [
 	lineBreak := aCharacterOrString asString
 ]
 
-{ #category : 'accessing' }
+{ #category : 'writing' }
 OPBPMNXMLPrettyWriter >> writeLineBreak [
-	self writer atBeginning
-		ifFalse: [ self writer nextPutAll: lineBreak.
-			(self currentIndentLevel > 0 and: [ self indentString size > 0 ])
-				ifTrue: [ self writeIndent ] ]
+
+	self writer atBeginning ifTrue: [ ^ self ].
+	self writer nextPutAll: lineBreak.
+	self currentIndentLevel isZero ifTrue: [ ^ self ].
+	self indentString ifEmpty: [ ^ self ].
+	self writeIndent
 ]
 
 { #category : 'accessing' }

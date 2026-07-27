@@ -37,7 +37,7 @@ OPBPMNValidationResults >> hasWarnings: aVerifiedObject [
 	^ self selectWarnings anySatisfy: [ :verificationMessage | verificationMessage objectReference = aVerifiedObject ].
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNValidationResults >> initialize [
 	super initialize.
 	results := Set new.

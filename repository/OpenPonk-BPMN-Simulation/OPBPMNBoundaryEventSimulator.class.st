@@ -26,19 +26,20 @@ OPBPMNBoundaryEventSimulator >> loadConnectedItems [
 	| eventType |
 	super loadConnectedItems.
 
-	eventType := self class typeMapping at: self model type ifAbsent: nil.
-	eventType ifNil: [ ^ self ].
+	eventType := self class typeMapping
+		             at: self model type
+		             ifAbsent: [ ^ self ].
 
 	self model rootOwner allElements
 		select: [ :each |
-			((each isKindOf: OPBPMNIntermediateEventModel) or:
-				 (each isKindOf: OPBPMNEndEventModel)) and: each type = eventType ]
+				((each isKindOf: OPBPMNIntermediateEventModel) or:
+					 (each isKindOf: OPBPMNEndEventModel)) and: each type = eventType ]
 		thenDo: [ :each |
-			(diagramSimulator simulatorOf: each)
-				when: OPSimulatorWillDoAction
-				do: [ :event |
-					self bpmnTokens: event simulator bpmnTokens.
-					self model isNonInterrupting ifFalse: [
-						event simulator bpmnTokens: 0 ] ]
-				for: self ]
+				(diagramSimulator simulatorOf: each)
+					when: OPSimulatorWillDoAction
+					do: [ :event |
+							self bpmnTokens: event simulator bpmnTokens.
+							self model isNonInterrupting ifFalse: [
+								event simulator bpmnTokens: 0 ] ]
+					for: self ]
 ]

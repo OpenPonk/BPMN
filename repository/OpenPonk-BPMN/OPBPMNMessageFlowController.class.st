@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNMessageFlowController',
-	#superclass : 'OPBPMNEdgeController',
+	#superclass : 'OPBPMNAbstractFlowController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
@@ -9,7 +9,7 @@ Class {
 { #category : 'construction' }
 OPBPMNMessageFlowController >> diagramElementClass [
 
-	^ OPBPMNMessageShape
+	^ OPBPMNMessageFlowShape
 ]
 
 { #category : 'hooks' }

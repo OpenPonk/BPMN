@@ -44,6 +44,8 @@ OPBPMNSimulatorTest >> exampleModel [
 { #category : 'running' }
 OPBPMNSimulatorTest >> setUp [
 
+	super setUp.
+
 	simulator := self controllerClass model: self exampleModel
 ]
 

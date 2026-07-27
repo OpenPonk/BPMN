@@ -39,6 +39,5 @@ OPBPMNGatewayModel >> typeIconFor: aType [
 		^ OPBPMNIcon current gatewayComplex ].
 	aType = OPBPMNNodeType Eventbased ifTrue: [
 		^ OPBPMNIcon current gatewayEvent ].
-	aType = OPBPMNNodeType None ifTrue: [
-		^ OPBPMNIcon current activityNone ]
+	self error: 'Unknown type'
 ]

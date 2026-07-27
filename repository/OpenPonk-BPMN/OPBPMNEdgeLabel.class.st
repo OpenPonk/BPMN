@@ -6,19 +6,19 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'adding' }
 OPBPMNEdgeLabel >> defaultAnchorConstraintPosition [
 
 	^ OPRSAnchorConstraintBalanceReference balance: 0.4
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 OPBPMNEdgeLabel >> defaultBalance [
 
 	^ 0.4
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'adding' }
 OPBPMNEdgeLabel >> defaultMinDistance [
 
 	^ 5
@@ -30,7 +30,7 @@ OPBPMNEdgeLabel >> defaultText [
 	^ self modelElement name ifNil: [ ^ '' ] ifNotNil: [ :name | name ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 OPBPMNEdgeLabel >> text [
 
 	^ self modelElement name

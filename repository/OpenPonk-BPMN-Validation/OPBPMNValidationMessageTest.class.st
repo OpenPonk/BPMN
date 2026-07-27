@@ -65,22 +65,30 @@ OPBPMNValidationMessageTest >> testValidation [
 
 { #category : 'tests' }
 OPBPMNValidationMessageTest >> testValidationError [
+
 	| validationMessage testObject testValidation testMessageText |
 	testObject := Object new.
 	testValidation := OPBPMNValidation basicNew.
 	testMessageText := 'dummyMessageText'.
-	validationMessage := OPBPMNValidationMessageError createFor: testObject withValidation: testValidation  withText: testMessageText.	
+	validationMessage := OPBPMNValidationMessageError
+		                     createFor: testObject
+		                     withValidation: testValidation
+		                     withText: testMessageText.
 	self assert: validationMessage validation equals: testValidation.
-	self assert: validationMessage severity = 'Error'.
+	self assert: validationMessage severity equals: 'Error'
 ]
 
 { #category : 'tests' }
 OPBPMNValidationMessageTest >> testValidationWarning [
+
 	| validationMessage testObject testValidation testMessageText |
 	testObject := Object new.
 	testValidation := OPBPMNValidation basicNew.
 	testMessageText := 'dummyMessageText'.
-	validationMessage := OPBPMNValidationMessageWarning createFor: testObject withValidation: testValidation  withText: testMessageText.	
+	validationMessage := OPBPMNValidationMessageWarning
+		                     createFor: testObject
+		                     withValidation: testValidation
+		                     withText: testMessageText.
 	self assert: validationMessage validation equals: testValidation.
-	self assert: validationMessage severity = 'Warning'.
+	self assert: validationMessage severity equals: 'Warning'
 ]

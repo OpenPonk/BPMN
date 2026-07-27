@@ -62,7 +62,7 @@ OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
 		^ aController source model isKindOf: OPBPMNDataObjectModel ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController isKindOf: OPBPMNAbstractFlowController
 ]
 
 { #category : 'construction' }
@@ -74,9 +74,4 @@ OPBPMNCollapsedSubProcessController >> diagramElementClass [
 { #category : 'construction' }
 OPBPMNCollapsedSubProcessController >> modelClass [
 	^ OPBPMNCollapsedSubProcessModel
-]
-
-{ #category : 'connecting' }
-OPBPMNCollapsedSubProcessController >> typeIconForModel [
-	^ self model typeIconFor: self model type
 ]

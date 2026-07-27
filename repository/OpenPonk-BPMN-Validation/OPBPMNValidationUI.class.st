@@ -1,9 +1,6 @@
 Class {
 	#name : 'OPBPMNValidationUI',
 	#superclass : 'Object',
-	#classInstVars : [
-		'class'
-	],
 	#category : 'OpenPonk-BPMN-Validation-UI',
 	#package : 'OpenPonk-BPMN-Validation',
 	#tag : 'UI'

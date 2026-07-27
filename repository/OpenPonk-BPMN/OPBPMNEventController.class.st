@@ -10,8 +10,3 @@ Class {
 OPBPMNEventController >> modelClass [
 	^ self subclassResponsibility
 ]
-
-{ #category : 'hooks' }
-OPBPMNEventController >> typeIconForModel [
-	^ self model typeIconFor: self model type
-]

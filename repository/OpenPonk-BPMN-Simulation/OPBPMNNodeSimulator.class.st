@@ -37,7 +37,7 @@ OPBPMNNodeSimulator >> bpmnTokens [
 { #category : 'accessing' }
 OPBPMNNodeSimulator >> bpmnTokens: anInteger [
 
-	bpmnTokens := anInteger 
+	bpmnTokens := anInteger
 ]
 
 { #category : 'testing' }

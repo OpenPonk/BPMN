@@ -38,6 +38,12 @@ OPBPMNPoolShape >> addSelectionDraggableInteraction [
 			 innerRoassalShapesBlock)
 ]
 
+{ #category : 'reacting' }
+OPBPMNPoolShape >> associationCreated: anAssociation [
+
+	"do nothing"
+]
+
 { #category : 'accessing' }
 OPBPMNPoolShape >> attachedShapes [
 
@@ -187,12 +193,6 @@ OPBPMNPoolShape >> renderShapeDetails [
 OPBPMNPoolShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
-]
-
-{ #category : 'interactions' }
-OPBPMNPoolShape >> shouldBePositionableByUser [
-
-	^ true
 ]
 
 { #category : 'interactions' }

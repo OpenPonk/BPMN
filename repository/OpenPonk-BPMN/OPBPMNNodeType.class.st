@@ -1,218 +1,215 @@
 Class {
 	#name : 'OPBPMNNodeType',
 	#superclass : 'Object',
-	#instVars : [
-		'type'
-	],
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Cancel [
 	^ #Cancel
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> CatchCompensation [
 
 	^ #CatchCompensation
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Compensation [
 
 	^ #Compensation
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> CompensationThrow [
 
 	^ #CompensationThrow
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Complex [
 	^ #Complex
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Conditional [
 
 	^ #Conditional
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> DataInput [
 	^#DataInput
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> DataObject [
 	^#DataObject
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> DataOutput [
 	^#DataOutput
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> DataStore [
 	^#DataStore
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Error [
 	^ #Error
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Escalation [
 
 	^ #Escalation
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> EscalationThrow [
 
 	^ #EscalationThrow
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Eventbased [
 	^ #Eventbased
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Exclusive [
 	^ #Exclusive
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> ExclusiveEmpty [
 	^ #'Exclusive (empty)'
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Inclusive [
 	^ #Inclusive
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Link [
 	^ #Link
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> LinkThrow [
 	^ #LinkThrow
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Manual [
 	^ #Manual
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MarkerAdhoc [
 	^ #MarkerAdhoc
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MarkerCompensation [
 	^ #MarkerCompensation
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MarkerLoop [
 	^ #MarkerLoop
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MarkerParallel [
 	^ #MarkerParallel
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MarkerSequential [
 	^ #MarkerSequential
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MarkerSubProcess [	
 	^ #MarkerSubProcess
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Multiple [
 
 	^ #Multiple
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> MultipleThrow [
 
 	^ #MultipleThrow
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> None [
 	^ #None
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Parallel [
 	^ #Parallel
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> ParallelMultiple [
 
 	^ #ParallelMultiple
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Receive [
 	^ #Receive
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Send [
 
 	^ #Send
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Service [
 	^ #Service
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Signal [
 
 	^ #Signal
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> SignalThrow [
 
 	^ #SignalThrow
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Terminate [
 
 	^ #Terminate
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> Timer [
 	^ #Timer
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'values' }
 OPBPMNNodeType class >> User [
 	^#User
 ]

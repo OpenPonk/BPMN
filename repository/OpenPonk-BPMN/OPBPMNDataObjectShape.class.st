@@ -55,8 +55,9 @@ OPBPMNDataObjectShape >> createRoassalShape [
 	^ com
 ]
 
-{ #category : 'update' }
-OPBPMNDataObjectShape >> initialize [ 
+{ #category : 'initialization' }
+OPBPMNDataObjectShape >> initialize [
+
 	super initialize.
 	borderColor := Color transparent
 ]
@@ -94,12 +95,6 @@ OPBPMNDataObjectShape >> renderShapeDetails [
 OPBPMNDataObjectShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
-]
-
-{ #category : 'update' }
-OPBPMNDataObjectShape >> shouldBePositionableByUser [
-
-	^ true
 ]
 
 { #category : 'update' }

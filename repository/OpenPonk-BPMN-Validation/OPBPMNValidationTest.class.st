@@ -23,7 +23,9 @@ OPBPMNValidationTest >> getValidatedClassInstance [
 
 { #category : 'constants' }
 OPBPMNValidationTest >> testCanValidate [
-	self assert: (self getTestedClass canValidate: self getNotValidatedClassInstance) equals: false.
+
+	self deny:
+		(self getTestedClass canValidate: self getNotValidatedClassInstance)
 ]
 
 { #category : 'constants' }

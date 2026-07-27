@@ -14,18 +14,32 @@ OPBPMNNodeControllerTest class >> isAbstract [
 	^ self = OPBPMNNodeControllerTest
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNNodeControllerTest >> diagramControllerClass [
 
 	^ OPBPMNDiagramController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNNodeControllerTest >> diagramModelClass [
-	^ OPBPMNModel 
+
+	^ OPBPMNModel
 ]
 
-{ #category : 'accessing' }
+{ #category : 'utilities' }
+OPBPMNNodeControllerTest >> selectableTypes [
+
+	| form dropListForType dropListForMarker |
+	form := Mock new.
+	dropListForType := SpDropListPresenter new.
+	dropListForMarker := SpDropListPresenter new.
+	(form stub addDroplist: 'Type') willReturn: dropListForType.
+	(form stub addDroplist: 'Marker') willReturn: dropListForMarker.
+	self controller buildEditorForm: form.
+	^ dropListForType items , dropListForMarker items
+]
+
+{ #category : 'tests' }
 OPBPMNNodeControllerTest >> testFigureRefresh [
 
 	| text |
@@ -34,11 +48,33 @@ OPBPMNNodeControllerTest >> testFigureRefresh [
 	controller
 		createDiagramElement;
 		renderDiagramElement.
-	self assert:
-		(controller roassalShape propertyAt: #RSLabeled) text = ''.
+	self
+		assert: (controller roassalShape propertyAt: #RSLabeled) text
+		equals: ''.
 	controller model name: 'new name'.
 	controller modelChanged.
 	text := (controller roassalShape propertyAt: #RSLabeled) text.
 	self assert:
 		((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
+]
+
+{ #category : 'tests' }
+OPBPMNNodeControllerTest >> testSelectableTypesAreSameAsShowable [
+
+	| selectableTypes allTypes notSelectableTypes |
+	self prepareToShow.
+	selectableTypes := self selectableTypes.
+	allTypes := OPBPMNNodeType class selectors collect: [ :each |
+		            (MessageSend receiver: OPBPMNNodeType selector: each)
+			            value ].
+	notSelectableTypes := allTypes asSet difference: selectableTypes.
+	selectableTypes do: [ :each |
+			| icon |
+			icon := self model typeIconFor: each.
+			self assert: icon width > 10 ].
+	notSelectableTypes do: [ :each |
+			| icon |
+			icon := nil.
+			self should: [ icon := self model typeIconFor: each ] raise: Error.
+			self assert: (icon isNil or: [ icon isForm not ]) ]
 ]

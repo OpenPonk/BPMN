@@ -60,12 +60,16 @@ OPBPMNIntermediateEventController >> canBeSourceFor: aController [
 OPBPMNIntermediateEventController >> canBeTargetFor: aController [
 
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool ].
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
 
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-		^ aController source model isKindOf: OPBPMNDataObjectModel ].
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
+
+	^ aController source ~= self
 ]
 
 { #category : 'construction' }
@@ -77,9 +81,4 @@ OPBPMNIntermediateEventController >> diagramElementClass [
 { #category : 'accessing' }
 OPBPMNIntermediateEventController >> modelClass [
 	^ OPBPMNIntermediateEventModel
-]
-
-{ #category : 'connecting' }
-OPBPMNIntermediateEventController >> typeIconForModel [
-	^ self model typeIconFor: self model type
 ]

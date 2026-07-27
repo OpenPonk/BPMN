@@ -20,7 +20,7 @@ ManifestOpenPonkBPMN class >> ruleBadMessageRule2V1FalsePositive [
 ManifestOpenPonkBPMN class >> ruleCollectionMessagesToExternalObjectRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#OPBPMNNodeController #removeModel #false)) #'2024-05-30T12:30:45.597+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#OPBPMNSemanticNodeController #removeModel #false)) #'2024-05-30T12:30:45.597+02:00') )
 ]
 
 { #category : 'code-critics' }
@@ -34,5 +34,5 @@ ManifestOpenPonkBPMN class >> rulePrecedenceRuleV1FalsePositive [
 ManifestOpenPonkBPMN class >> ruleUncommonMessageSendRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#OPBPMNIntermediateEventModel #printType #false)) #'2026-07-22T12:55:46.155+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#OPBPMNIntermediateEventModel #printType #false)) #'2026-07-22T12:55:46.155+02:00') #(#(#RGPackageDefinition #(#'OpenPonk-BPMN')) #'2026-07-31T09:52:11.177+02:00') )
 ]
