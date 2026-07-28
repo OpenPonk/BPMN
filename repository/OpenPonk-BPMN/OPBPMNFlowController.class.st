@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNFlowController',
-	#superclass : 'OPBPMNEdgeController',
+	#superclass : 'OPBPMNAbstractFlowController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'

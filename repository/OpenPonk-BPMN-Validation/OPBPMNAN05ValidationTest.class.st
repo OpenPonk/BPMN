@@ -13,7 +13,7 @@ OPBPMNAN05ValidationTest >> getTestedClass [
 
 { #category : 'constants' }
 OPBPMNAN05ValidationTest >> getValidatedClass [
-	^ OPBPMNNodeModel.
+	^ OPBPMNSemanticNodeModel.
 ]
 
 { #category : 'constants' }

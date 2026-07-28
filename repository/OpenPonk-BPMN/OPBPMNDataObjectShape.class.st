@@ -97,12 +97,6 @@ OPBPMNDataObjectShape >> selectableInteraction [
 ]
 
 { #category : 'update' }
-OPBPMNDataObjectShape >> shouldBePositionableByUser [
-
-	^ true
-]
-
-{ #category : 'update' }
 OPBPMNDataObjectShape >> strokeColor: aColor [
 
 	borderColor := aColor = Color black

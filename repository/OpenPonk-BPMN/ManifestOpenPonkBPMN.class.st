@@ -20,7 +20,7 @@ ManifestOpenPonkBPMN class >> ruleBadMessageRule2V1FalsePositive [
 ManifestOpenPonkBPMN class >> ruleCollectionMessagesToExternalObjectRuleV1FalsePositive [
 
 	<ignoreForCoverage>
-	^ #(#(#(#RGMethodDefinition #(#OPBPMNNodeController #removeModel #false)) #'2024-05-30T12:30:45.597+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#OPBPMNSemanticNodeController #removeModel #false)) #'2024-05-30T12:30:45.597+02:00') )
 ]
 
 { #category : 'code-critics' }

@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNPoolController',
-	#superclass : 'OPBPMNNodeController',
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
@@ -51,6 +51,12 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 	(aController isKindOf: self class) ifTrue: [ ^ false ].
 
 	^ aController isKindOf: OPBPMNNodeController
+]
+
+{ #category : 'accessing' }
+OPBPMNPoolController >> dependentElements [
+
+	^ super dependentElements , self elementsToShowInside
 ]
 
 { #category : 'construction' }

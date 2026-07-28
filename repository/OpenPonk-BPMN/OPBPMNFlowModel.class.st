@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNFlowModel',
-	#superclass : 'OPBPMNEdgeModel',
+	#superclass : 'OPBPMNAbstractFlowModel',
 	#instVars : [
 		'type'
 	],

@@ -47,8 +47,7 @@ OPBPMNStartEventController >> canBeSourceFor: aController [
 	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
 		^ false ].
 
-	^ (aController isKindOf: OPBPMNEdgeController) or: [
-		  aController isKindOf: OPBPMNAssociationController ]
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'connecting' }

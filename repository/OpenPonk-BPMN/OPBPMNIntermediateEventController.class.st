@@ -53,8 +53,7 @@ OPBPMNIntermediateEventController >> buildEditorForm: aForm [
 { #category : 'connecting' }
 OPBPMNIntermediateEventController >> canBeSourceFor: aController [
 
-	^ (aController isKindOf: OPBPMNEdgeController) or: [
-		  aController isKindOf: OPBPMNAssociationController ]
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'connecting' }
@@ -68,9 +67,7 @@ OPBPMNIntermediateEventController >> canBeTargetFor: aController [
 			(aController source model isKindOf: OPBPMNDataObjectModel)
 				ifFalse: [ ^ false ] ].
 
-	((aController isKindOf: OPBPMNEdgeController) or: [
-		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
-		^ false ].
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 
 	^ aController source ~= self
 ]

@@ -1,10 +1,16 @@
 Class {
 	#name : 'OPBPMNAssociationController',
-	#superclass : 'OPDirectionalRelationshipController',
+	#superclass : 'OPBPMNEdgeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
+
+{ #category : 'construction' }
+OPBPMNAssociationController >> diagramElementClass [
+
+	^ OPBPMNAssociationShape
+]
 
 { #category : 'announcements' }
 OPBPMNAssociationController >> internalSubscribeTo: aModel [

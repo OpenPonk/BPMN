@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNPoolModel',
-	#superclass : 'OPBPMNNodeModel',
+	#superclass : 'OPBPMNSemanticNodeModel',
 	#instVars : [
 		'laneNames'
 	],

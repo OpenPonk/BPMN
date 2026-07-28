@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNDataObjectController',
-	#superclass : 'OPBPMNNodeController',
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
@@ -33,11 +33,6 @@ OPBPMNDataObjectController >> canBeTargetFor: aController [
 	^ ((aController isKindOf: OPBPMNDataFlowController) or: [
 		   aController isKindOf: OPBPMNAssociationController ]) and: [
 		  aController source ~= self ]
-]
-
-{ #category : 'accessing' }
-OPBPMNDataObjectController >> dependentElements [
-	^ (self model incoming , self model outgoing) asSet
 ]
 
 { #category : 'construction' }

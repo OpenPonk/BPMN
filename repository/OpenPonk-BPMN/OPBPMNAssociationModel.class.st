@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNAssociationModel',
-	#superclass : 'OPDirectedAssociation',
+	#superclass : 'OPBPMNEdgeModel',
 	#instVars : [
 		'associationDirection'
 	],
@@ -44,16 +44,4 @@ OPBPMNAssociationModel >> initialize [
 
 	super initialize.
 	self associationDirection: self class associationDirectionNone
-]
-
-{ #category : 'testing' }
-OPBPMNAssociationModel >> isEdge [
-
-	^ true
-]
-
-{ #category : 'testing' }
-OPBPMNAssociationModel >> isNode [
-
-	^ false
 ]

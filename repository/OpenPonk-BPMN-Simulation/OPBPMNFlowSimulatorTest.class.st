@@ -36,8 +36,8 @@ OPBPMNFlowSimulatorTest >> setUp [
 	super setUp.
 	model := self exampleModel.
 	simulator := self controllerClass model: model.
-	nodeIn := (OPBPMNNodeSimulator model: OPBPMNNodeModel) bpmnTokens: 10.
-	nodeOut := (OPBPMNNodeSimulator model: OPBPMNNodeModel) blocked: true.
+	nodeIn := (OPBPMNNodeSimulator model: OPBPMNSemanticNodeModel) bpmnTokens: 10.
+	nodeOut := (OPBPMNNodeSimulator model: OPBPMNSemanticNodeModel) blocked: true.
 	simulator
 		source: nodeIn;
 		target: nodeOut

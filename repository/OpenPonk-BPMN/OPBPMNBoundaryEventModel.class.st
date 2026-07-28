@@ -1,6 +1,6 @@
 Class {
 	#name : 'OPBPMNBoundaryEventModel',
-	#superclass : 'OPBPMNNodeModel',
+	#superclass : 'OPBPMNSemanticNodeModel',
 	#instVars : [
 		'subscribeDiagram',
 		'isNonInterrupting'

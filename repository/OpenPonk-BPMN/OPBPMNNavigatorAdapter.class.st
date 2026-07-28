@@ -17,14 +17,14 @@ OPBPMNNavigatorAdapter >> childrenMapping [
 
 	^ {
 		  (OPBPMNModel -> [ :o | o nodes ]).
-		  (OPBPMNNodeModel -> [ :o | o nodes , o outgoing ]) .
+		  (OPBPMNSemanticNodeModel -> [ :o | o nodes , o outgoing ]) .
 		  (OPBPMNAnnotationModel -> [ :o | o elements ]).}
 ]
 
 { #category : 'widget API' }
 OPBPMNNavigatorAdapter >> displayMapping [
 	^ {(OPBPMNModel -> 'Model').
-	(OPBPMNNodeModel -> 'Node').
+	(OPBPMNSemanticNodeModel -> 'Node').
 	(OPBPMNPoolModel -> 'Pool').
 	(OPBPMNSubProcessModel -> 'Expanded SubProcess').
 	(OPBPMNCollapsedSubProcessModel -> 'Collapsed SubProcess').
@@ -48,9 +48,7 @@ OPBPMNNavigatorAdapter >> hasMappingFor: anObject in: aModel [
 	^ {
 		  OPBPMNModel.
 		  OPBPMNNodeModel.
-		  OPBPMNEdgeModel.
-		  OPBPMNAnnotationModel.
-		  OPBPMNAssociationModel } anySatisfy: [ :any |
+		  OPBPMNEdgeModel. } anySatisfy: [ :any |
 		  anObject isKindOf: any ]
 ]
 
@@ -85,7 +83,5 @@ OPBPMNNavigatorAdapter >> typesByDependency [
 	^ {
 		  OPBPMNModel.
 		  OPBPMNNodeModel.
-		  OPBPMNAnnotationModel.
-		  OPBPMNEdgeModel.
-		  OPBPMNAssociationModel }
+		  OPBPMNEdgeModel }
 ]

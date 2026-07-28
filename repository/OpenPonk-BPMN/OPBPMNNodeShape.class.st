@@ -89,12 +89,6 @@ OPBPMNNodeShape >> selectableInteraction [
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : 'interactions' }
-OPBPMNNodeShape >> shouldBePositionableByUser [
-
-	^ true
-]
-
 { #category : 'accessing' }
 OPBPMNNodeShape >> strokeColor: aColor [
 

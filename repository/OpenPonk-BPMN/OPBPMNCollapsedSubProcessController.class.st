@@ -50,8 +50,7 @@ OPBPMNCollapsedSubProcessController >> buildEditorForm: aForm [
 { #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> canBeSourceFor: aController [
 
-	^ (aController isKindOf: OPBPMNEdgeController) or: [
-		  aController isKindOf: OPBPMNAssociationController ]
+	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'connecting' }
@@ -63,7 +62,7 @@ OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
 		^ aController source model isKindOf: OPBPMNDataObjectModel ].
 
-	^ aController isKindOf: OPBPMNEdgeController
+	^ aController isKindOf: OPBPMNAbstractFlowController
 ]
 
 { #category : 'construction' }

@@ -8,7 +8,7 @@ Class {
 
 { #category : 'as yet unclassified' }
 AN04LabeledMessageFlow class >> validateClass [
-	^ OPBPMNNodeModel.
+	^ OPBPMNSemanticNodeModel.
 ]
 
 { #category : 'verification' }

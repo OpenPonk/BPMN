@@ -51,9 +51,7 @@ OPBPMNEndEventController >> canBeTargetFor: aController [
 			(aController source model isKindOf: OPBPMNDataObjectModel)
 				ifFalse: [ ^ false ] ].
 
-	((aController isKindOf: OPBPMNEdgeController) or: [
-		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
-		^ false ].
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 
 	^ aController source ~= self
 ]

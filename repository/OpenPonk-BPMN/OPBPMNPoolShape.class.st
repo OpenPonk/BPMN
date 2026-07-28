@@ -190,12 +190,6 @@ OPBPMNPoolShape >> selectableInteraction [
 ]
 
 { #category : 'interactions' }
-OPBPMNPoolShape >> shouldBePositionableByUser [
-
-	^ true
-]
-
-{ #category : 'interactions' }
 OPBPMNPoolShape >> shouldBeResizableByUser [
 
 	^ true

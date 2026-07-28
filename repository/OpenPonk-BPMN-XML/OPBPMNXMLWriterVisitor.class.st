@@ -120,26 +120,30 @@ OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
    <bpmndi:BPMNLabel/>
 </bpmndi:BPMNShape>"
 
-	(anElement isKindOf: OPBPMNEdgeController)
+	self flag: 'Associations not yet supported'.
+
+	(anElement isKindOf: OPBPMNAbstractFlowController)
 		ifTrue: [ self visitDiagramFlow: anElement ]
 		ifFalse: [
-			(anElement isKindOf: OPBPMNPoolController)
-				ifTrue: [ self visitDiagramParticipant: anElement ]
-				ifFalse: [
-					writer
-						tag: self diagramNamespace , 'BPMNShape'
-						attributes: (Array with: 'bpmnElement'
-								 ->
-								 (anElement model printIdType , anElement model uuid asString))
-						with: [
-							writer tag: 'dc:Bounds' attributes: (Array
-									 with: 'height' -> anElement diagramElement height asString
-									 with: 'width' -> anElement diagramElement width asString
-									 with: 'x' -> (anElement diagramElement position x
-										  - (anElement diagramElement width / 2.0)) asString
-									 with: 'y' -> (anElement diagramElement position y
-										  - (anElement diagramElement height / 2.0)) asString).
-							writer tag: self diagramNamespace , 'BPMNLabel' ] ] ]
+				(anElement isKindOf: OPBPMNPoolController)
+					ifTrue: [ self visitDiagramParticipant: anElement ]
+					ifFalse: [
+							writer
+								tag: self diagramNamespace , 'BPMNShape'
+								attributes: (Array with: 'bpmnElement'
+										 ->
+										 (anElement model printIdType
+										  , anElement model uuid asString))
+								with: [
+										writer tag: 'dc:Bounds' attributes: (Array
+												 with:
+												 'height' -> anElement diagramElement height asString
+												 with: 'width' -> anElement diagramElement width asString
+												 with: 'x' -> (anElement diagramElement position x
+													  - (anElement diagramElement width / 2.0)) asString
+												 with: 'y' -> (anElement diagramElement position y
+													  - (anElement diagramElement height / 2.0)) asString).
+										writer tag: self diagramNamespace , 'BPMNLabel' ] ] ]
 ]
 
 { #category : 'initialization' }

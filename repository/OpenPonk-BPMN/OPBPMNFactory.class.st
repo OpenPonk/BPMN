@@ -19,7 +19,7 @@ OPBPMNFactory class >> detachFLowsFrom: aDiagram [
 { #category : 'adding' }
 OPBPMNFactory class >> flowFrom: fromNode to: toNode [
 	| flow |
-	flow := OPBPMNEdgeModel from: fromNode to: toNode.
+	flow := OPBPMNAbstractFlowModel from: fromNode to: toNode.
 	fromNode addFlow: flow.
 	toNode addFlow: flow.
 	^ flow
