@@ -1,34 +1,34 @@
 Class {
 	#name : 'OPBPMNFlowControllerTest',
-	#superclass : 'OPBPMNEdgeControllerTest',
+	#superclass : 'OPBPMNAbstractFlowControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> controllerClass [
 	^ OPBPMNFlowController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> diagramElementClass [
 
 	^ OPBPMNFlowShape 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> modelClass [
 	^ OPBPMNFlowModel 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> sourceControllerClass [
 
 	^ OPBPMNActivityController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> sourceModelClass [
 	^ OPBPMNActivityModel 
 ]

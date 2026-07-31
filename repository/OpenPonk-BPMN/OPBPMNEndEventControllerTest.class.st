@@ -1,33 +1,33 @@
 Class {
 	#name : 'OPBPMNEndEventControllerTest',
-	#superclass : 'OPBPMNNodeControllerTest',
+	#superclass : 'OPBPMNSemanticNodeControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEndEventControllerTest >> controllerClass [
 	^ OPBPMNEndEventController 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEndEventControllerTest >> creationTargetControllerClass [
 	^ OPBPMNPoolController  
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEndEventControllerTest >> creationTargetModelClass [
 	^ OPBPMNPoolModel
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEndEventControllerTest >> diagramElementClass [
 
 	^ OPBPMNEndEventShape 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEndEventControllerTest >> modelClass [
 	^ OPBPMNEndEventModel 
 ]

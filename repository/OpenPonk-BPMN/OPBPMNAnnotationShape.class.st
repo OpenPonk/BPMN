@@ -51,7 +51,8 @@ OPBPMNAnnotationShape >> minExtent [
 OPBPMNAnnotationShape >> removeRender [
 
 	sourceEdges , targetEdges do: [ :eachEdge |
-		eachEdge roassalShape announcer unsubscribe: self ].
+			eachEdge roassalShape ifNotNil: [ :existingRoassalShape |
+				existingRoassalShape announcer unsubscribe: self ] ].
 	super removeRender
 ]
 
@@ -81,6 +82,7 @@ OPBPMNAnnotationShape >> renderShapeDetails [
 	roassalShape pushFront.
 
 	labeled := OPRSLabeled new.
+	labeled fontSize: RSLabel defaultFontSize - 1.
 	labeled model: self.
 	labeled color: Color black.
 	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.

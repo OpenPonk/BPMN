@@ -14,16 +14,3 @@ OPBPMNSemanticNodeController >> buildEditorForm: aForm [
 			self model name: newValue asString.
 			self modelChanged ]
 ]
-
-{ #category : 'announcements' }
-OPBPMNSemanticNodeController >> internalSubscribeTo: aModel [
-
-	super internalSubscribeTo: aModel.
-	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
-]
-
-{ #category : 'destruction' }
-OPBPMNSemanticNodeController >> removeModel [
-
-	self model owner remove: self model
-]

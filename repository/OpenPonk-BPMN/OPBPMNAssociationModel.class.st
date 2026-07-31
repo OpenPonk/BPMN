@@ -10,6 +10,15 @@ Class {
 }
 
 { #category : 'accessing' }
+OPBPMNAssociationModel class >> allAssociationDirections [
+
+	^ {
+		  self associationDirectionNone.
+		  self associationDirectionOne.
+		  self associationDirectionBoth }
+]
+
+{ #category : 'accessing' }
 OPBPMNAssociationModel class >> associationDirectionBoth [
 
 	^ #Both

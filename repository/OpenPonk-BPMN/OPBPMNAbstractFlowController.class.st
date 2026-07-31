@@ -6,13 +6,6 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'announcements' }
-OPBPMNAbstractFlowController >> internalSubscribeTo: aModel [
-
-	super internalSubscribeTo: aModel.
-	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
-]
-
 { #category : 'construction' }
 OPBPMNAbstractFlowController >> modelSource: aModel in: aParentModel [
 

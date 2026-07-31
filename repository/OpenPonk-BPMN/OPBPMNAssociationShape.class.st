@@ -6,6 +6,15 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'accessing' }
+OPBPMNAssociationShape >> colorMarker: aMarker [
+
+	aMarker ifNil: [ ^ aMarker ].
+	self isRendered ifFalse: [ ^ aMarker ].
+	aMarker shape color: self roassalShape color.
+	^ aMarker
+]
+
 { #category : 'hooks' }
 OPBPMNAssociationShape >> headMarker [
 
@@ -19,8 +28,6 @@ OPBPMNAssociationShape >> headMarker [
 OPBPMNAssociationShape >> renderBasicShape [
 
 	^ OPRSPolyline new
-		  markerStart: self tailMarker;
-		  markerEnd: self headMarker;
 		  dashed;
 		  withBorderAttachPoint;
 		  controlPointsController: OPRSDraggableCPController new;
@@ -53,7 +60,8 @@ OPBPMNAssociationShape >> tailMarker [
 OPBPMNAssociationShape >> updateRenderFromModel [
 
 	roassalShape
-		markerStart: self tailMarker;
-		markerEnd: self headMarker.
-	super updateRenderFromModel
+		markerStart: (self colorMarker: self tailMarker);
+		markerEnd: (self colorMarker: self headMarker).
+	super updateRenderFromModel.
+	roassalShape signalUpdate
 ]

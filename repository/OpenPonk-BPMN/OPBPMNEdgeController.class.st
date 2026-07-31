@@ -5,3 +5,10 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
+
+{ #category : 'announcements' }
+OPBPMNEdgeController >> internalSubscribeTo: aModel [
+
+	super internalSubscribeTo: aModel.
+	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
+]

@@ -11,3 +11,16 @@ OPBPMNNodeController >> dependentElements [
 
 	^ self model edges asSet
 ]
+
+{ #category : 'announcements' }
+OPBPMNNodeController >> internalSubscribeTo: aModel [
+
+	super internalSubscribeTo: aModel.
+	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
+]
+
+{ #category : 'destruction' }
+OPBPMNNodeController >> removeModel [
+
+	self model owner remove: self model
+]

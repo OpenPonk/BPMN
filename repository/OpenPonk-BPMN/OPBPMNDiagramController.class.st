@@ -38,9 +38,11 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
 		register: OPBPMNDataObjectController forModel: OPBPMNDataObjectModel;
+		register: OPBPMNAnnotationController forModel: OPBPMNAnnotationModel;
 		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
 		register: OPBPMNDataFlowController forModel: OPBPMNDataFlowModel;
-		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
+		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel;
+		register: OPBPMNAssociationController forModel: OPBPMNAssociationModel
 ]
 
 { #category : 'accessing' }
