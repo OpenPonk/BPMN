@@ -11,22 +11,24 @@ Class {
 
 { #category : 'toolbar' }
 OPBPMNPlugin class >> exportPackage: aPackage [
-
 	StSaveFilePresenter new
 		title: 'Choose a BPMN file to export to';
 		okAction: [ :file | 
+			| message |
 			file
 				ensureDelete;
 				writeStreamDo: [ :stream | 
 					stream << (OPBPMNXMLWriter toString: aPackage) ].
-			UIManager default
-				inform: (String streamContents: [ :s | 
-						 s << 'Exported to ' << file pathString.
-						 s
-							 cr;
-							 cr.
-						 s << 'Click to open location' ])
-				actionOnClick: [ file openInOSFileBrowser ] ];
+			message := String streamContents: [ :s | 
+				s << 'Exported to ' << file pathString.
+				s cr; cr.
+				s << 'Click to open location' ].
+			(ProvideAnswerNotification signal: message) ifNil: [
+				(GrowlMorph 
+					openWithLabel: 'Information' translated 
+					contents: message)
+					vanishDelay: 5 seconds;
+					actionBlock: [ file openInOSFileBrowser ] ] ];
 		extensions: #( bpmn xml ) named: 'BPMN XML files';
 		open
 ]
