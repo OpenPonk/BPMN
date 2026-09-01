@@ -1,3 +1,6 @@
+"
+I am the abstract base model for BPMN flows, establishing the semantic connection between a source and a target element in the process graph.
+"
 Class {
 	#name : 'OPBPMNAbstractFlowModel',
 	#superclass : 'OPBPMNEdgeModel',
@@ -11,14 +14,6 @@ OPBPMNAbstractFlowModel class >> from: aSource to: aTarget [
 	^ self new
 		source: aSource;
 		target: aTarget;
-		yourself
-]
-
-{ #category : 'instance creation' }
-OPBPMNAbstractFlowModel class >> from: aSourceObject to: aTargetObject named: aString [
-	^ self new
-		from: aSourceObject to: aTargetObject;
-		name: aString;
 		yourself
 ]
 

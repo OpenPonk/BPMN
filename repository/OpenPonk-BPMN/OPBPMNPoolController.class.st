@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Pools. I manage lane structures, canvas hooks, and handle elements entering or leaving the pool boundaries.
+"
 Class {
 	#name : 'OPBPMNPoolController',
 	#superclass : 'OPBPMNSemanticNodeController',
@@ -6,29 +9,15 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNPoolController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNPoolController class >> diagramElementClass [
 
-	| amountOfShownLanes lanesInput |
-	super buildEditorForm: aForm.
+	^ OPBPMNPoolShape
+]
 
-	"IMPORTANT: Lanes need to be last items in the form as only last items can be removed"
-
-	amountOfShownLanes := 0.
-
-	(lanesInput := aForm addNumberInput: 'Lanes')
-		minimum: 0;
-		text: self model lanes asString;
-		whenTextChangedDo: [ :newValue |
-				self model lanes: ((newValue asInteger ifNil: [ 0 ]) max: 0).
-				amountOfShownLanes = self model lanes ifFalse: [
-							amountOfShownLanes := self
-								                      rebuildLaneNamesFrom: amountOfShownLanes
-								                      inForm: aForm.
-							aForm rebuildWidget ].
-				self modelChanged ].
-
-	amountOfShownLanes := self rebuildLaneNamesFrom: 0 inForm: aForm
+{ #category : 'accessing' }
+OPBPMNPoolController class >> viewModelClass [
+	^ OPBPMNPoolViewModel
 ]
 
 { #category : 'connecting' }
@@ -53,25 +42,6 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 	^ aController isKindOf: OPBPMNNodeController
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolController >> dependentElements [
-
-	^ super dependentElements , self elementsToShowInside
-]
-
-{ #category : 'construction' }
-OPBPMNPoolController >> diagramElementClass [
-
-	^ OPBPMNPoolShape
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolController >> elementsToShowInside [
-
-	^ self model nodes
-	  , (self model nodes flatCollect: [ :each | each outgoing ])
-]
-
 { #category : 'construction' }
 OPBPMNPoolController >> hookDiagramElement [
 
@@ -79,11 +49,6 @@ OPBPMNPoolController >> hookDiagramElement [
 
 	self diagramElement innerRoassalShapesBlock: [
 		self nodeRoassalShapes ]
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolController >> modelClass [
-	^ OPBPMNPoolModel
 ]
 
 { #category : 'accessing' }
@@ -97,20 +62,10 @@ OPBPMNPoolController >> nodeRoassalShapes [
 		  thenSelect: #isNotNil
 ]
 
-{ #category : 'forms' }
+{ #category : 'deprecation' }
 OPBPMNPoolController >> rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm [
-
-	aForm removeLast: amountOfShownLanes - self model lanes * 2.
-
-	self model laneNames withIndexDo: [ :eachLaneName :eachIndex |
-			eachIndex > amountOfShownLanes ifTrue: [
-					(aForm addTextInput: 'Lane ' , eachIndex asString)
-						text: eachLaneName;
-						whenTextChangedDo: [ :newValue |
-								self model laneNamesAt: eachIndex put: newValue.
-								self modelChanged ] ] ].
-
-	^ self model lanes
+	self deprecated: 'Use viewModel instead'.
+	^ self viewModel rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm
 ]
 
 { #category : 'diagram elements' }

@@ -1,3 +1,6 @@
+"
+I am the abstract base controller for semantic BPMN nodes, managing diagram interactions and view updates.
+"
 Class {
 	#name : 'OPBPMNSemanticNodeController',
 	#superclass : 'OPBPMNNodeController',
@@ -5,12 +8,3 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
-
-{ #category : 'forms' }
-OPBPMNSemanticNodeController >> buildEditorForm: aForm [
-	(aForm addText: 'Name')
-		text: self model name;
-		whenTextChangedDo: [ :newValue | 
-			self model name: newValue asString.
-			self modelChanged ]
-]

@@ -1,3 +1,6 @@
+"
+I am a validation rule checking whether a gateway correctly acts as a splitting (diverging) node by having multiple outgoing sequence flows.
+"
 Class {
 	#name : 'GW02Splitting',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GW02Splitting class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]

@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the creation, canvas rendering, and diagram targeting behavior of OPBPMNEndEventController.
+"
 Class {
 	#name : 'OPBPMNEndEventControllerTest',
 	#superclass : 'OPBPMNSemanticNodeControllerTest',
@@ -5,6 +8,12 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
+
+{ #category : 'constants' }
+OPBPMNEndEventControllerTest class >> diagramElementClass [
+
+	^ OPBPMNEndEventShape 
+]
 
 { #category : 'constants' }
 OPBPMNEndEventControllerTest >> controllerClass [
@@ -19,12 +28,6 @@ OPBPMNEndEventControllerTest >> creationTargetControllerClass [
 { #category : 'constants' }
 OPBPMNEndEventControllerTest >> creationTargetModelClass [
 	^ OPBPMNPoolModel
-]
-
-{ #category : 'constants' }
-OPBPMNEndEventControllerTest >> diagramElementClass [
-
-	^ OPBPMNEndEventShape 
 ]
 
 { #category : 'constants' }

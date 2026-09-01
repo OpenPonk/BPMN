@@ -1,3 +1,6 @@
+"
+I represent a BPMN Intermediate Event in the semantic model, denoting a specific event trigger or catch that occurs during the execution of a process.
+"
 Class {
 	#name : 'OPBPMNIntermediateEventModel',
 	#superclass : 'OPBPMNEventModel',

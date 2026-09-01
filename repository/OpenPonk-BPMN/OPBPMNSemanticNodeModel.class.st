@@ -1,3 +1,6 @@
+"
+I represent a semantic BPMN node. I track incoming and outgoing flows, semantic element types, and executable attributes for the underlying business process.
+"
 Class {
 	#name : 'OPBPMNSemanticNodeModel',
 	#superclass : 'OPBPMNNodeModel',
@@ -124,7 +127,7 @@ OPBPMNSemanticNodeModel >> removeAllFlows [
 OPBPMNSemanticNodeModel >> removeFlow: aFlow [
 
 	flows remove: aFlow.
-	self announceRemoved: aFlow
+	self announceRemovedChild: aFlow
 ]
 
 { #category : 'removing' }

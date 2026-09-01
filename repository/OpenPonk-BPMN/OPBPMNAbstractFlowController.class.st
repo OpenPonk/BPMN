@@ -1,3 +1,6 @@
+"
+I am the abstract base controller for BPMN flows, managing the interaction and rendering logic for directed edges like sequence and message flows.
+"
 Class {
 	#name : 'OPBPMNAbstractFlowController',
 	#superclass : 'OPBPMNEdgeController',
@@ -5,32 +8,3 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
-
-{ #category : 'construction' }
-OPBPMNAbstractFlowController >> modelSource: aModel in: aParentModel [
-
-	(super modelSource: aModel in: aParentModel) ifFalse: [ ^ false ].
-	self modelSource addFlow: self model.
-	^ true
-]
-
-{ #category : 'construction' }
-OPBPMNAbstractFlowController >> modelTarget: aModel in: aParentModel [
-
-	(super modelTarget: aModel in: aParentModel) ifFalse: [ ^ false ].
-	self modelTarget addFlow: self model.
-	^ true
-]
-
-{ #category : 'construction' }
-OPBPMNAbstractFlowController >> registerModelInContainer: aParentModel [
-
-	"do nothing"
-]
-
-{ #category : 'destruction' }
-OPBPMNAbstractFlowController >> removeModel [
-	self model owner remove: self model.
-	self model target removeFlow: self model.
-	self model source removeFlow: self model
-]

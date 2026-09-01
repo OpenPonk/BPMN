@@ -1,3 +1,6 @@
+"
+I am an abstract base test class verifying common assignment and relationship logic for directional BPMN edge controllers.
+"
 Class {
 	#name : 'OPBPMNEdgeControllerTest',
 	#superclass : 'OPAbstractDirectionalRelationshipControllerTest',

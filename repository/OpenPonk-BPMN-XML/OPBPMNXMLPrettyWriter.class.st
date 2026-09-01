@@ -1,3 +1,6 @@
+"
+I am a customized XML formatter extending the standard XML printing tools. I manage configurable line breaks and indentation to produce clean, human-readable BPMN XML output.
+"
 Class {
 	#name : 'OPBPMNXMLPrettyWriter',
 	#superclass : 'XMLPrettyPrintingWriterFormatter',

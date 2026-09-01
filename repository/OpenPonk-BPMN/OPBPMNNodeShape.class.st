@@ -1,3 +1,6 @@
+"
+I am the base Roassal shape for semantic BPMN nodes. I manage boundary rendering, dynamic icons, and visual updates based on underlying model state.
+"
 Class {
 	#name : 'OPBPMNNodeShape',
 	#superclass : 'OPBoundNode',
@@ -9,14 +12,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
-
-{ #category : 'ston-core' }
-OPBPMNNodeShape class >> stonAllInstVarNames [
-
-	"Override to encode my instances using a custom set of instance variables or to define their order."
-
-	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
-]
 
 { #category : 'reacting' }
 OPBPMNNodeShape >> associationCreated: anAssociation [
@@ -122,7 +117,7 @@ OPBPMNNodeShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : 'roassal' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

@@ -1,3 +1,6 @@
+"
+I represent a BPMN Sequence Flow in the semantic model, establishing the structural execution sequence between flow nodes.
+"
 Class {
 	#name : 'OPBPMNFlowModel',
 	#superclass : 'OPBPMNAbstractFlowModel',

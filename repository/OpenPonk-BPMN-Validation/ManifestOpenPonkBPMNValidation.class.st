@@ -1,5 +1,5 @@
 "
-Please describe the package using the class comment of the included manifest class. The manifest class also includes other additional metadata for the package. These meta data are used by other tools such as the SmalllintManifestChecker and the critics Browser
+I store metadata for the OpenPonk-BPMN-Validation package. This package contains the rules, logic, and UI components for validating BPMN models against standard specification constraints.
 "
 Class {
 	#name : 'ManifestOpenPonkBPMNValidation',

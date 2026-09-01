@@ -1,3 +1,6 @@
+"
+I am the abstract base controller for BPMN diagram nodes. I coordinate between the underlying BPMN semantic models and their visual representations on the canvas.
+"
 Class {
 	#name : 'OPBPMNNodeController',
 	#superclass : 'OPElementController',
@@ -5,22 +8,3 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
-
-{ #category : 'accessing' }
-OPBPMNNodeController >> dependentElements [
-
-	^ self model edges asSet
-]
-
-{ #category : 'announcements' }
-OPBPMNNodeController >> internalSubscribeTo: aModel [
-
-	super internalSubscribeTo: aModel.
-	aModel weakWhen: OPElementRemoved send: #removeControllerAndDiagramElement to: self
-]
-
-{ #category : 'destruction' }
-OPBPMNNodeController >> removeModel [
-
-	self model owner remove: self model
-]

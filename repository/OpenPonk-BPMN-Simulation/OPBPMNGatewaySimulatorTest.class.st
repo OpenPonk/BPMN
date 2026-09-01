@@ -1,3 +1,6 @@
+"
+Abstract base class for unit tests verifying the token routing and synchronization behavior of BPMN gateway simulators.
+"
 Class {
 	#name : 'OPBPMNGatewaySimulatorTest',
 	#superclass : 'OPBPMNNodeSimulatorTest',
@@ -22,7 +25,7 @@ OPBPMNGatewaySimulatorTest >> exampleModel [
 	^ OPBPMNGatewayModel new
 ]
 
-{ #category : 'accessing' }
+{ #category : 'running' }
 OPBPMNGatewaySimulatorTest >> setUp [
 
 	super setUp.

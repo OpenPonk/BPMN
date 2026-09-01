@@ -1,3 +1,6 @@
+"
+I am the primary diagram controller for the BPMN editor. I manage the modeling palette, canvas interactions, element targeting rules, and the instantiation of BPMN elements.
+"
 Class {
 	#name : 'OPBPMNDiagramController',
 	#superclass : 'OPDiagramController',
@@ -5,6 +8,11 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
+
+{ #category : 'accessing' }
+OPBPMNDiagramController class >> viewModelClass [
+	^ OPBPMNModelViewModel
+]
 
 { #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
@@ -18,11 +26,6 @@ OPBPMNDiagramController >> canBeTargetFor: aController [
 					  any isKindOf: OPBPMNPoolController ] ].
 
 	^ aController isKindOf: OPBPMNNodeController
-]
-
-{ #category : 'accessing' }
-OPBPMNDiagramController >> commonModelClassPrefix [
-	^ 'OPBPMN'
 ]
 
 { #category : 'accessing' }
@@ -45,21 +48,8 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNAssociationController forModel: OPBPMNAssociationModel
 ]
 
-{ #category : 'accessing' }
-OPBPMNDiagramController >> elementsToShowInside [
-
-	| poolNodes poolFlows laneNodes laneFlows |
-	poolNodes := self model nodes flatCollect: [ :each | each nodes ].
-	poolFlows := poolNodes flatCollect: [ :each | each outgoing ].
-	laneNodes := poolNodes flatCollect: [ :each | each nodes ].
-	laneFlows := laneNodes flatCollect: [ :each | each outgoing ].
-	^ self model nodes , poolNodes , poolFlows , laneNodes , laneFlows
-	  , (self model nodes flatCollect: [ :each | each outgoing ])
-]
-
 { #category : 'ui interaction' }
 OPBPMNDiagramController >> initializePalette: aPalette [
-
 	aPalette
 		newCreationTool: 'Activity'
 		factory: [ OPBPMNActivityController new ]
@@ -85,6 +75,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Collapsed SubProcess'
 		factory: [ OPBPMNCollapsedSubProcessController new ]
 		icon: OPBPMNIcon current subProcessCollapsed;
+		newCreationTool: 'Boundary Event'
+		factory: [ OPBPMNBoundaryEventController new ]
+		icon: OPBPMNIcon current intermediateEvent;
 		newCreationTool: 'Data Object'
 		factory: [ OPBPMNDataObjectController new ]
 		icon: OPBPMNIcon current dataObject16;
@@ -103,9 +96,4 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Annotation'
 		factory: [ OPBPMNAnnotationController new ]
 		icon: (Smalltalk ui icons iconNamed: #smallLeftFlush)
-]
-
-{ #category : 'accessing' }
-OPBPMNDiagramController >> modelClass [
-	^ OPBPMNModel 
 ]

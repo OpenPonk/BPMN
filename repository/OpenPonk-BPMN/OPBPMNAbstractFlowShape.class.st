@@ -1,3 +1,6 @@
+"
+I am the abstract base edge shape for BPMN flows. I provide common rendering hooks and structural management for derived flows like Sequence Flows and Message Flows.
+"
 Class {
 	#name : 'OPBPMNAbstractFlowShape',
 	#superclass : 'OPEdge',

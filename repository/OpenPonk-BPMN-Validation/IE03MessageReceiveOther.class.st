@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural correctness of incoming messages on catching Intermediate Events other than explicit Message Events.
+"
 Class {
 	#name : 'IE03MessageReceiveOther',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 IE03MessageReceiveOther class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
 ]

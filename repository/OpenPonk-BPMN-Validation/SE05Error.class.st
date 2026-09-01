@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying that Error Start Events are used correctly, such as ensuring they only appear in event sub-processes and are not triggered by external message flows.
+"
 Class {
 	#name : 'SE05Error',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SE05Error class >> validateClass [
 	^ OPBPMNStartEventModel.
 ]

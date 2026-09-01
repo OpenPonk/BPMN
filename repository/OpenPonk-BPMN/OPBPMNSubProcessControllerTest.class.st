@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the creation, canvas rendering, and diagram targeting behavior of OPBPMNSubProcessController.
+"
 Class {
 	#name : 'OPBPMNSubProcessControllerTest',
 	#superclass : 'OPBPMNSemanticNodeControllerTest',
@@ -5,6 +8,11 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
+
+{ #category : 'constants' }
+OPBPMNSubProcessControllerTest class >> diagramElementClass [
+	^ OPBPMNSubProcessShape 
+]
 
 { #category : 'constants' }
 OPBPMNSubProcessControllerTest >> controllerClass [
@@ -19,11 +27,6 @@ OPBPMNSubProcessControllerTest >> creationTargetControllerClass [
 { #category : 'constants' }
 OPBPMNSubProcessControllerTest >> creationTargetModelClass [
 	^ OPBPMNPoolModel 
-]
-
-{ #category : 'constants' }
-OPBPMNSubProcessControllerTest >> diagramElementClass [
-	^ OPBPMNSubProcessShape 
 ]
 
 { #category : 'constants' }

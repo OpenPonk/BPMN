@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN sequence flows. Controls the direct sequential progression of tokens between flow nodes within the same process.
+"
 Class {
 	#name : 'OPBPMNSequenceFlowSimulator',
 	#superclass : 'OPBPMNFlowSimulator',

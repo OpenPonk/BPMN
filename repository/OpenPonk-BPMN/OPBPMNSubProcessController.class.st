@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN SubProcesses. I manage diagram interactions, connection rules, and provide visual feedback when an invalid connection is attempted.
+"
 Class {
 	#name : 'OPBPMNSubProcessController',
 	#superclass : 'OPBPMNSemanticNodeController',
@@ -6,28 +9,15 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNSubProcessController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNSubProcessController class >> diagramElementClass [
 
-	| anEvent |
-	super buildEditorForm: aForm.
-	(aForm addButton: 'Add Boundary Event') action: [
-		anEvent := OPBPMNBoundaryEventController new
-			           createModelIn: self model;
-			           showInDiagram: self diagramController;
-			           subscribeDiagram: self diagramElement;
-			           yourself.
-		"self diagramElement addBoundaryEvent: anEvent"
-		RSLocation new
-			stick: anEvent roassalShape on: self roassalShape;
-			bottom;
-			right;
-			offset: -5 @ 20.
-		self roassalShape
-			when: RSShapeRemovedEvent
-			do: [ anEvent roassalShape remove ]
-			for: self ].
-	self modelChanged
+	^ OPBPMNSubProcessShape
+]
+
+{ #category : 'accessing' }
+OPBPMNSubProcessController class >> viewModelClass [
+	^ OPBPMNSubProcessViewModel
 ]
 
 { #category : 'connecting' }
@@ -52,25 +42,6 @@ OPBPMNSubProcessController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 
 	^ aController source ~= self
-]
-
-{ #category : 'construction' }
-OPBPMNSubProcessController >> diagramElementClass [
-
-	^ OPBPMNSubProcessShape
-]
-
-{ #category : 'accessing' }
-OPBPMNSubProcessController >> elementsToShowInside [
-
-	^ self model nodes
-	  , (self model nodes flatCollect: [ :each | each outgoing ])
-]
-
-{ #category : 'accessing' }
-OPBPMNSubProcessController >> modelClass [
-
-	^ OPBPMNSubProcessModel
 ]
 
 { #category : 'canvas actions' }

@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the creation, state management, and severity assignment of BPMN validation messages.
+"
 Class {
 	#name : 'OPBPMNValidationMessageTest',
 	#superclass : 'TestCase',
@@ -20,16 +23,19 @@ OPBPMNValidationMessageTest >> testCreateForWithValidatinoWithText [
 
 { #category : 'tests' }
 OPBPMNValidationMessageTest >> testMessageText [
+
 	| validationMessage testObject testValidation testMessageText secondText |
 	testObject := Object new.
 	testValidation := OPBPMNValidation basicNew.
-	testMessageText := 'dummyMessageText'. 
+	testMessageText := 'dummyMessageText'.
 	secondText := 'changedText'.
-	validationMessage := OPBPMNValidationMessage createFor: testObject withValidation: testValidation  withText: testMessageText.
+	validationMessage := OPBPMNValidationMessage
+		                     createFor: testObject
+		                     withValidation: testValidation
+		                     withText: testMessageText.
 	self assert: validationMessage messageText equals: testMessageText.
 	validationMessage messageText: secondText.
-	self assert: validationMessage messageText equals: secondText.
-	
+	self assert: validationMessage messageText equals: secondText
 ]
 
 { #category : 'tests' }

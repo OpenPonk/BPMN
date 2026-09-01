@@ -1,3 +1,6 @@
+"
+I am the base domain model class for all BPMN nodes. I manage graph connectivity by tracking incoming and outgoing flows, associations, and hierarchical containment within pools or lanes.
+"
 Class {
 	#name : 'OPBPMNNodeModel',
 	#superclass : 'OPModelObject',

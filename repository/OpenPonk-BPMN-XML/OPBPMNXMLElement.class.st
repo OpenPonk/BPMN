@@ -1,3 +1,6 @@
+"
+I represent a basic XML element node within the BPMN XML DOM tree structure. I manage the element's qualified XML name and basic writing behavior.
+"
 Class {
 	#name : 'OPBPMNXMLElement',
 	#superclass : 'OPBPMNXMLInfoItems',

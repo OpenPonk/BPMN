@@ -1,3 +1,6 @@
+"
+I am a specialized Roassal Control Point (CP) controller for BPMN Text Annotations. I manage routing and ensure that association lines visually connect appropriately to the open bracket of the annotation shape.
+"
 Class {
 	#name : 'OPBPMNAnnotationCPController',
 	#superclass : 'RSAbstractCPController',

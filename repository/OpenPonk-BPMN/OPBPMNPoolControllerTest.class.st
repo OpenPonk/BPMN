@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the behavior of OPBPMNPoolController, specifically testing parent assignments, structural containment, and figure refreshes.
+"
 Class {
 	#name : 'OPBPMNPoolControllerTest',
 	#superclass : 'OPBPMNSemanticNodeControllerTest',
@@ -7,13 +10,13 @@ Class {
 }
 
 { #category : 'constants' }
-OPBPMNPoolControllerTest >> controllerClass [
-	^ OPBPMNPoolController 
+OPBPMNPoolControllerTest class >> diagramElementClass [
+	^ OPBPMNPoolShape
 ]
 
 { #category : 'constants' }
-OPBPMNPoolControllerTest >> diagramElementClass [
-	^ OPBPMNPoolShape
+OPBPMNPoolControllerTest >> controllerClass [
+	^ OPBPMNPoolController 
 ]
 
 { #category : 'constants' }

@@ -1,3 +1,6 @@
+"
+Abstract simulator component for BPMN flows (edges). Manages token routing between source and target elements.
+"
 Class {
 	#name : 'OPBPMNFlowSimulator',
 	#superclass : 'OPEdgeSimulator',

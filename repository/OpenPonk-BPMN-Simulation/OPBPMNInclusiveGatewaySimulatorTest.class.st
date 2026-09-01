@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNInclusiveGatewaySimulator.
+Verifies proper token synchronization and multi-branch routing execution logic.
+"
 Class {
 	#name : 'OPBPMNInclusiveGatewaySimulatorTest',
 	#superclass : 'OPBPMNGatewaySimulatorTest',
@@ -12,7 +16,7 @@ OPBPMNInclusiveGatewaySimulatorTest >> controllerClass [
 	^ OPBPMNInclusiveGatewaySimulator
 ]
 
-{ #category : 'accessing' }
+{ #category : 'running' }
 OPBPMNInclusiveGatewaySimulatorTest >> setUp [
 
 	super setUp.
@@ -23,7 +27,7 @@ OPBPMNInclusiveGatewaySimulatorTest >> setUp [
 			 yourself)
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNInclusiveGatewaySimulatorTest >> testAddBpmnTokensFrom [
 
 	self assert: simulator incomingBpmnTokens size equals: 2.
@@ -40,7 +44,7 @@ OPBPMNInclusiveGatewaySimulatorTest >> testAddBpmnTokensFrom [
 	self assert: (simulator incomingBpmnTokens at: flowIn1) equals: 0
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNInclusiveGatewaySimulatorTest >> testFire [
 
 	self assert: simulator bpmnTokens equals: 1.

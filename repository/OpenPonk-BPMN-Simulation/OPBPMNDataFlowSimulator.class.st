@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN data flows (data associations). Transfers data tokens between elements and data objects.
+"
 Class {
 	#name : 'OPBPMNDataFlowSimulator',
 	#superclass : 'OPBPMNFlowSimulator',

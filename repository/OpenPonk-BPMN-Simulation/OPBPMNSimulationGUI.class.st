@@ -1,3 +1,6 @@
+"
+Simulation GUI presenter for BPMN diagrams. Extends the base simulation GUI with specific configuration menus and BPMN-specific color highlighting for active tokens.
+"
 Class {
 	#name : 'OPBPMNSimulationGUI',
 	#superclass : 'OPSimulationGUI',

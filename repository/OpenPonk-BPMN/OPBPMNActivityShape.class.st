@@ -1,3 +1,6 @@
+"
+I render a BPMN Activity (such as a Task) as a Roassal bound node, typically drawing a rounded rectangle with dynamic borders and inner markers.
+"
 Class {
 	#name : 'OPBPMNActivityShape',
 	#superclass : 'OPBPMNNodeShape',
@@ -8,14 +11,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
-
-{ #category : 'ston-core' }
-OPBPMNActivityShape class >> stonAllInstVarNames [
-
-	"Override to encode my instances using a custom set of instance variables or to define their order."
-
-	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
-]
 
 { #category : 'connecting' }
 OPBPMNActivityShape >> createBorder [
@@ -48,7 +43,7 @@ OPBPMNActivityShape >> initialize [
 	self createBorder
 ]
 
-{ #category : 'hooks' }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> renderShapeDetails [
 
 	| label |
@@ -71,7 +66,7 @@ OPBPMNActivityShape >> renderShapeDetails [
 	"self bounds: nil"
 ]
 
-{ #category : 'updating' }
+{ #category : 'rendering' }
 OPBPMNActivityShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

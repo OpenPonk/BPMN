@@ -1,3 +1,6 @@
+"
+I represent a BPMN Event in the semantic model. I manage event-specific execution configurations, such as timer triggers and values.
+"
 Class {
 	#name : 'OPBPMNEventModel',
 	#superclass : 'OPBPMNFlowNodeModel',

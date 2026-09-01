@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the behavior of OPBPMNDataFlowController, focusing on correct source and target assignments for data associations.
+"
 Class {
 	#name : 'OPBPMNDataFlowControllerTest',
 	#superclass : 'OPBPMNAbstractFlowControllerTest',
@@ -7,14 +10,14 @@ Class {
 }
 
 { #category : 'constants' }
-OPBPMNDataFlowControllerTest >> controllerClass [
-	^ OPBPMNDataFlowController
+OPBPMNDataFlowControllerTest class >> diagramElementClass [
+
+	^ OPBPMNDataFlowShape 
 ]
 
 { #category : 'constants' }
-OPBPMNDataFlowControllerTest >> diagramElementClass [
-
-	^ OPBPMNDataFlowShape 
+OPBPMNDataFlowControllerTest >> controllerClass [
+	^ OPBPMNDataFlowController
 ]
 
 { #category : 'constants' }

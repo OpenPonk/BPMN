@@ -1,3 +1,6 @@
+"
+I am a comprehensive registry of raw icon contents (such as SVG definitions or byte arrays) used to render the diverse set of BPMN elements, markers, gateways, and event types.
+"
 Class {
 	#name : 'OPBPMNIcon',
 	#superclass : 'Object',

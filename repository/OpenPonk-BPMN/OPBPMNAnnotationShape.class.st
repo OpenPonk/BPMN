@@ -1,3 +1,6 @@
+"
+I render a BPMN Text Annotation as a Roassal bound node, drawing the characteristic open bracket boundary and accommodating text bounds.
+"
 Class {
 	#name : 'OPBPMNAnnotationShape',
 	#superclass : 'OPBoundNode',

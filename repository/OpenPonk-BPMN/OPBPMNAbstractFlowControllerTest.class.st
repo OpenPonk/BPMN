@@ -1,3 +1,6 @@
+"
+I am an abstract base test class verifying the behavior of BPMN flow controllers, specifically testing source/target assignments and visual figure refreshes.
+"
 Class {
 	#name : 'OPBPMNAbstractFlowControllerTest',
 	#superclass : 'OPBPMNEdgeControllerTest',

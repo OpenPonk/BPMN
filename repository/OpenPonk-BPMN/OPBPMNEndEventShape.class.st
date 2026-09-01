@@ -1,3 +1,6 @@
+"
+I render a BPMN End Event as a Roassal shape, drawing the standard thick-bordered circle to signify the termination of a process path.
+"
 Class {
 	#name : 'OPBPMNEndEventShape',
 	#superclass : 'OPBPMNEventShape',

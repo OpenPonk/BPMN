@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Boundary Events. I manage the lifecycle and diagram interactions of events attached directly to the boundary of an activity.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventController',
 	#superclass : 'OPBPMNElementController',
@@ -6,25 +9,15 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNBoundaryEventController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNBoundaryEventController class >> diagramElementClass [
 
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items:
-			#( #Receive #Timer #Escalation #Conditional #Error #Cancel #CatchCompensation
-			   #Signal #Multiple #ParallelMultiple );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
-		(aForm addCheckbox: 'Is Non-Interrupting')
-		state: self model isNonInterrupting;
-		whenChangedDo: [ :val | 
-			self model isNonInterrupting: val.
-			self modelChanged ].
+	^ OPBPMNBoundaryEventShape
+]
+
+{ #category : 'accessing' }
+OPBPMNBoundaryEventController class >> viewModelClass [
+	^ OPBPMNBoundaryEventViewModel
 ]
 
 { #category : 'connecting' }
@@ -49,15 +42,29 @@ OPBPMNBoundaryEventController >> canBeTargetFor: aController [
 ]
 
 { #category : 'construction' }
-OPBPMNBoundaryEventController >> diagramElementClass [
-
-	^ OPBPMNBoundaryEventShape
-]
-
-{ #category : 'forms' }
-OPBPMNBoundaryEventController >> modelClass [
-
-	^ OPBPMNBoundaryEventModel
+OPBPMNBoundaryEventController >> renderDiagramElement [
+	| shape parentCtrl |
+	shape := super renderDiagramElement.
+	
+	self model owner ifNil: [ ^ shape ].
+	
+	parentCtrl := self diagramController 
+		controllerForModel: self model owner 
+		ifNone: [ ^ shape ].
+	
+	RSLocation new
+		bottom;
+		right;
+		offset: -1 @ 22;
+		stick: shape
+		on: parentCtrl roassalShape.
+		
+	parentCtrl roassalShape
+		when: RSShapeRemovedEvent
+		do: [ shape remove ]
+		for: self.
+		
+	^ shape
 ]
 
 { #category : 'accessing' }

@@ -1,3 +1,6 @@
+"
+I represent an XML attribute node within the BPMN XML DOM tree structure. I store and manage the attribute's qualified XML name.
+"
 Class {
 	#name : 'OPBPMNXMLAttribute',
 	#superclass : 'OPBPMNXMLInfoItems',

@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the aggregation and filtering logic of OPBPMNValidationResults. I test the separation and retrieval of validation errors and warnings.
+"
 Class {
 	#name : 'OPBPMNValidationResultsTest',
 	#superclass : 'TestCase',

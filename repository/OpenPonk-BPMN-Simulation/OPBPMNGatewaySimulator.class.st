@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN gateways. Evaluates routing conditions, manages active outgoing branches, and splits or merges token flows.
+"
 Class {
 	#name : 'OPBPMNGatewaySimulator',
 	#superclass : 'OPBPMNFlowNodeSimulator',

@@ -1,3 +1,7 @@
+"
+Simulator component for BPMN start events.
+Acts as the entry point for process execution, generating and dispatching initial tokens to outgoing flows.
+"
 Class {
 	#name : 'OPBPMNStartEventSimulator',
 	#superclass : 'OPBPMNEventSimulator',

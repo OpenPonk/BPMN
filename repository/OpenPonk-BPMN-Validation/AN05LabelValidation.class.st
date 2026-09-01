@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that essential BPMN elements possess descriptive text labels for process clarity.
+"
 Class {
 	#name : 'AN05LabelValidation',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN05LabelValidation class >> validateClass [
 	^ OPBPMNSemanticNodeModel.
 ]

@@ -1,9 +1,12 @@
+"
+I am the core plugin class for the OpenPonk BPMN editor. I register the BPMN diagram controllers, models, layouters, and default UI tools into the OpenPonk environment.
+"
 Class {
 	#name : 'OPBPMNPlugin',
 	#superclass : 'OPPlugin',
-	#category : 'OpenPonk-BPMN-Adapters',
+	#category : 'OpenPonk-BPMN-ViewModels',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Adapters'
+	#tag : 'ViewModels'
 }
 
 { #category : 'toolbar' }

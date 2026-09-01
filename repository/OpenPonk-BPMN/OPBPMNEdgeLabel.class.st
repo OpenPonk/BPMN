@@ -1,3 +1,6 @@
+"
+I am a specialized edge label for BPMN flows and associations. I calculate layout balance, constraints, and minimum distances for text placed along edges.
+"
 Class {
 	#name : 'OPBPMNEdgeLabel',
 	#superclass : 'OPEdgeLabel',

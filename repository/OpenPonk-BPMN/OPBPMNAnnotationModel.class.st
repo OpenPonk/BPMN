@@ -1,3 +1,6 @@
+"
+I represent a BPMN Text Annotation. I store the textual content and track outgoing associations to other diagram elements.
+"
 Class {
 	#name : 'OPBPMNAnnotationModel',
 	#superclass : 'OPBPMNNodeModel',
@@ -5,18 +8,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
 }
-
-{ #category : 'testing' }
-OPBPMNAnnotationModel >> isEdge [
-
-	^ false
-]
-
-{ #category : 'testing' }
-OPBPMNAnnotationModel >> isNode [
-
-	^ true
-]
 
 { #category : 'accessing' }
 OPBPMNAnnotationModel >> nodes [

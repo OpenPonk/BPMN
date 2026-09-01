@@ -1,3 +1,6 @@
+"
+I am an edge shape representing a BPMN Association. I render as a dashed line connecting an artifact (like an annotation or data object) to a flow node, applying appropriate directional markers.
+"
 Class {
 	#name : 'OPBPMNAssociationShape',
 	#superclass : 'OPEdge',

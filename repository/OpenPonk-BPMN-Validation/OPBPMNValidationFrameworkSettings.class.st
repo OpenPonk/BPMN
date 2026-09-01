@@ -1,3 +1,6 @@
+"
+I act as a registry for configuring the BPMN validation framework. I manage user settings, such as enabling or disabling specific validation rules.
+"
 Class {
 	#name : 'OPBPMNValidationFrameworkSettings',
 	#superclass : 'Object',

@@ -1,3 +1,6 @@
+"
+I render a BPMN Gateway as a Roassal bound node, drawing the standard diamond shape and placing inner markers indicating the gateway type.
+"
 Class {
 	#name : 'OPBPMNGatewayShape',
 	#superclass : 'OPBPMNNodeShape',

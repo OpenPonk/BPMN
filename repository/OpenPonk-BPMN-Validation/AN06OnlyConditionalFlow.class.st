@@ -1,3 +1,6 @@
+"
+I am a validation rule warning against nodes that have only conditional outgoing flows without a default flow, which risks deadlocking the process if no conditions are met.
+"
 Class {
 	#name : 'AN06OnlyConditionalFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN06OnlyConditionalFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]

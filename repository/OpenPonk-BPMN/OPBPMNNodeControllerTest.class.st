@@ -1,3 +1,6 @@
+"
+I am an abstract base test class verifying common initialization, targeting, and rendering logic for generic BPMN node controllers.
+"
 Class {
 	#name : 'OPBPMNNodeControllerTest',
 	#superclass : 'OPAbstractElementControllerTest',

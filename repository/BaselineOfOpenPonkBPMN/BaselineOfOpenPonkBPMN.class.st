@@ -1,3 +1,6 @@
+"
+Metacello baseline for the OpenPonk BPMN plugin, defining its package dependencies and load configurations.
+"
 Class {
 	#name : 'BaselineOfOpenPonkBPMN',
 	#superclass : 'BaselineOf',

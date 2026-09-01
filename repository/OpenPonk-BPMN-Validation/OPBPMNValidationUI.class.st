@@ -1,3 +1,6 @@
+"
+I integrate the validation framework into the OpenPonk user interface. I provide toolbar actions to trigger validations and coordinate the visual highlighting of diagram elements.
+"
 Class {
 	#name : 'OPBPMNValidationUI',
 	#superclass : 'Object',

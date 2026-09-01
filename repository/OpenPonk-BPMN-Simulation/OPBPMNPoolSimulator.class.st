@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN pools. Represents participant boundaries during process execution.
+"
 Class {
 	#name : 'OPBPMNPoolSimulator',
 	#superclass : 'OPBPMNNodeSimulator',

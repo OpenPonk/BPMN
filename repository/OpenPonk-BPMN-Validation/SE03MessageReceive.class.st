@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that a Message Start Event correctly defines incoming message flows.
+"
 Class {
 	#name : 'SE03MessageReceive',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SE03MessageReceive class >> validateClass [
 	^ OPBPMNStartEventModel.
 ]

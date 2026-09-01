@@ -1,3 +1,6 @@
+"
+I represent a collapsed BPMN SubProcess in the semantic model, tracking execution properties while indicating its internal flow remains visually hidden.
+"
 Class {
 	#name : 'OPBPMNCollapsedSubProcessModel',
 	#superclass : 'OPBPMNFlowNodeModel',
@@ -8,11 +11,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
 }
-
-{ #category : 'accessing' }
-OPBPMNCollapsedSubProcessModel >> defaultType [
-	^ OPBPMNNodeType None
-]
 
 { #category : 'initialization' }
 OPBPMNCollapsedSubProcessModel >> initialize [ 

@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Gateways. I manage canvas interactions and enforce valid connection rules for branching and merging sequence flows.
+"
 Class {
 	#name : 'OPBPMNGatewayController',
 	#superclass : 'OPBPMNElementController',
@@ -6,18 +9,15 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNGatewayController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNGatewayController class >> diagramElementClass [
 
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #'Exclusive (empty)' #Exclusive #Inclusive #Parallel #Complex #Eventbased );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-			self model type: newValue.
-			self modelChanged ]
+	^ OPBPMNGatewayShape 
+]
+
+{ #category : 'accessing' }
+OPBPMNGatewayController class >> viewModelClass [
+	^ OPBPMNGatewayViewModel
 ]
 
 { #category : 'connecting' }
@@ -33,15 +33,4 @@ OPBPMNGatewayController >> canBeTargetFor: aController [
 	^ ((aController isKindOf: OPBPMNFlowController) or: [
 		   aController isKindOf: OPBPMNAssociationController ]) and: [
 		  aController source ~= self ]
-]
-
-{ #category : 'construction' }
-OPBPMNGatewayController >> diagramElementClass [
-
-	^ OPBPMNGatewayShape 
-]
-
-{ #category : 'accessing' }
-OPBPMNGatewayController >> modelClass [
-	^ OPBPMNGatewayModel
 ]

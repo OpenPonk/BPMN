@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that outgoing message flows from a black-box pool originate from the pool boundary rather than from hidden internal elements.
+"
 Class {
 	#name : 'PR06BlackBoxOutgoingMessage',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 PR06BlackBoxOutgoingMessage class >> validateClass [
 	^ OPBPMNPoolModel.
 ]

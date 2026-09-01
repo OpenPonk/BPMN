@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AC05ActivityMergingFlows validation rule. I ensure it correctly warns when an activity has multiple incoming sequence flows without a merging gateway.
+"
 Class {
 	#name : 'OPBPMNAC05ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

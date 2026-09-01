@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that error boundary events are always marked as interrupting, as BPMN specification prohibits non-interrupting error events.
+"
 Class {
 	#name : 'BE05ErrorNonInterrupting',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 BE05ErrorNonInterrupting class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]

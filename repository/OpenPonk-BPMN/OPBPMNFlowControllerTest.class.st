@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the behavior of OPBPMNFlowController, focusing on correct source and target assignments for sequence flows.
+"
 Class {
 	#name : 'OPBPMNFlowControllerTest',
 	#superclass : 'OPBPMNAbstractFlowControllerTest',
@@ -7,14 +10,14 @@ Class {
 }
 
 { #category : 'constants' }
-OPBPMNFlowControllerTest >> controllerClass [
-	^ OPBPMNFlowController
+OPBPMNFlowControllerTest class >> diagramElementClass [
+
+	^ OPBPMNFlowShape 
 ]
 
 { #category : 'constants' }
-OPBPMNFlowControllerTest >> diagramElementClass [
-
-	^ OPBPMNFlowShape 
+OPBPMNFlowControllerTest >> controllerClass [
+	^ OPBPMNFlowController
 ]
 
 { #category : 'constants' }

@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural correctness of outgoing messages on activities other than explicit Send Tasks.
+"
 Class {
 	#name : 'AC04MessageSendOther',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AC04MessageSendOther class >> validateClass [
 	^ OPBPMNActivityModel.
 ]

@@ -1,3 +1,6 @@
+"
+Simulator component for expanded BPMN subprocesses. Manages the execution of internal elements, routing tokens to inner start events upon activation.
+"
 Class {
 	#name : 'OPBPMNSubProcessSimulator',
 	#superclass : 'OPBPMNFlowNodeSimulator',

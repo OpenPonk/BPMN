@@ -1,3 +1,6 @@
+"
+I render a BPMN Data Association flow, drawing the directed path between data objects and activities.
+"
 Class {
 	#name : 'OPBPMNDataFlowShape',
 	#superclass : 'OPBPMNAbstractFlowShape',

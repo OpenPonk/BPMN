@@ -1,3 +1,6 @@
+"
+I control diagram interactions for BPMN Data Objects, managing connectivity rules and updating the type icon based on the object state.
+"
 Class {
 	#name : 'OPBPMNDataObjectController',
 	#superclass : 'OPBPMNSemanticNodeController',
@@ -6,18 +9,15 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNDataObjectController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNDataObjectController class >> diagramElementClass [
 
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #DataObject #DataInput #DataOutput #DataStore);
-		displayIcon: [ :type | self typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
+	^ OPBPMNDataObjectShape
+]
+
+{ #category : 'accessing' }
+OPBPMNDataObjectController class >> viewModelClass [
+	^ OPBPMNDataObjectViewModel
 ]
 
 { #category : 'connecting' }
@@ -35,37 +35,18 @@ OPBPMNDataObjectController >> canBeTargetFor: aController [
 		  aController source ~= self ]
 ]
 
-{ #category : 'construction' }
-OPBPMNDataObjectController >> diagramElementClass [
-
-	^ OPBPMNDataObjectShape
-]
-
 { #category : 'announcements' }
-OPBPMNDataObjectController >> internalSubscribeTo: aModel [
+OPBPMNDataObjectController >> subscribeToViewModel [
 
-	super internalSubscribeTo: aModel.
-	aModel
-		weakWhen: OPBPMNPlaceTokensChanged
+	super subscribeToViewModel.
+	self viewModel announcer weak
+		when: OPBPMNPlaceTokensChanged
 		send: #modelChanged
 		to: self
 ]
 
-{ #category : 'accessing' }
-OPBPMNDataObjectController >> modelClass [
-	^ OPBPMNDataObjectModel
-]
-
-{ #category : 'connecting' }
+{ #category : 'deprecation' }
 OPBPMNDataObjectController >> typeIconFor: aType [
-
-	aType = OPBPMNNodeType DataObject ifTrue: [
-		^ OPBPMNIcon current dataObject16 ].
-	aType = OPBPMNNodeType DataInput ifTrue: [
-		^ OPBPMNIcon current dataInput16 ].
-	aType = OPBPMNNodeType DataOutput ifTrue: [
-		^ OPBPMNIcon current dataOutput16 ].
-	aType = OPBPMNNodeType DataStore ifTrue: [
-		^ OPBPMNIcon current dataStore16 ].
-	self error: 'Unknown type'
+	self deprecated: 'Use viewModel instead' transformWith: '`@receiver typeIconFor: `@arg1' -> '`@receiver viewModel typeIconFor: `@arg1'.
+	^ self viewModel typeIconFor: aType
 ]

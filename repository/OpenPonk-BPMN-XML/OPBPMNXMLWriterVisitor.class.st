@@ -1,3 +1,6 @@
+"
+I am a visitor that traverses the OpenPonk BPMN domain model (including nodes, events, sequence flows, participants, and diagram definitions) and orchestrates the generation of the corresponding BPMN XML structure.
+"
 Class {
 	#name : 'OPBPMNXMLWriterVisitor',
 	#superclass : 'Object',

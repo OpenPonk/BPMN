@@ -1,5 +1,5 @@
 "
-Please describe the package using the class comment of the included manifest class. The manifest class also includes other additional metadata for the package. These meta data are used by other tools such as the SmalllintManifestChecker and the critics Browser
+I store metadata for the OpenPonk-BPMN package. This package provides the domain models, controllers, ViewModels, and visual shapes for the Business Process Model and Notation (BPMN) editor.
 "
 Class {
 	#name : 'ManifestOpenPonkBPMN',

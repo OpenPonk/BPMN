@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNDataFlowSimulator.
+Verifies token transfer and data association logic during simulation.
+"
 Class {
 	#name : 'OPBPMNDataFlowSimulatorTest',
 	#superclass : 'OPBPMNFlowSimulatorTest',

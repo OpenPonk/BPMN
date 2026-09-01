@@ -1,3 +1,6 @@
+"
+I represent a BPMN Activity in the semantic model. I track specific execution properties, such as whether the activity functions as a reusable call activity.
+"
 Class {
 	#name : 'OPBPMNActivityModel',
 	#superclass : 'OPBPMNFlowNodeModel',
@@ -8,11 +11,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
 }
-
-{ #category : 'accessing' }
-OPBPMNActivityModel >> defaultType [
-	^ OPBPMNNodeType None
-]
 
 { #category : 'initialization' }
 OPBPMNActivityModel >> initialize [ 

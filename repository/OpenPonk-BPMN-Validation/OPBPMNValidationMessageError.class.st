@@ -1,3 +1,6 @@
+"
+I represent a critical validation finding. I indicate a strict violation of the BPMN specification that must be resolved.
+"
 Class {
 	#name : 'OPBPMNValidationMessageError',
 	#superclass : 'OPBPMNValidationMessage',

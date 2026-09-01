@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the BE03BoundaryErrorSibling validation rule. I ensure it correctly enforces constraints against having multiple error boundary events attached to the same activity.
+"
 Class {
 	#name : 'OPBPMNBE03ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

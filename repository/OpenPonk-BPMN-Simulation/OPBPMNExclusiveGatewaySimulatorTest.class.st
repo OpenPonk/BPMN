@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNExclusiveGatewaySimulator.
+Verifies that tokens are correctly routed through exactly one active outgoing branch based on conditions.
+"
 Class {
 	#name : 'OPBPMNExclusiveGatewaySimulatorTest',
 	#superclass : 'OPBPMNGatewaySimulatorTest',
@@ -12,14 +16,14 @@ OPBPMNExclusiveGatewaySimulatorTest >> controllerClass [
 	^ OPBPMNExclusiveGatewaySimulator
 ]
 
-{ #category : 'accessing' }
+{ #category : 'running' }
 OPBPMNExclusiveGatewaySimulatorTest >> setUp [
 
 	super setUp.
 	model type: OPBPMNNodeType Exclusive
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNExclusiveGatewaySimulatorTest >> testFire [
 
 	self assert: simulator bpmnTokens equals: 1.

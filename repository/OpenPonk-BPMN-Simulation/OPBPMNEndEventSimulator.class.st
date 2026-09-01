@@ -1,3 +1,7 @@
+"
+Simulator component for BPMN end events.
+Handles token consumption and finalizes process paths upon execution.
+"
 Class {
 	#name : 'OPBPMNEndEventSimulator',
 	#superclass : 'OPBPMNEventSimulator',

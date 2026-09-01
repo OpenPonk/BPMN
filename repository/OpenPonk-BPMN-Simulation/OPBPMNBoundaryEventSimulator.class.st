@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN boundary events. Manages attachment to activities and triggers exceptional flow or interrupts based on event types.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventSimulator',
 	#superclass : 'OPBPMNNodeSimulator',

@@ -1,3 +1,6 @@
+"
+I provide UI utilities for formatting validation messages, such as extracting human-readable names for the referenced diagram objects.
+"
 Class {
 	#name : 'OPBPMNValidationMessageUI',
 	#superclass : 'Object',

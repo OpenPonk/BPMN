@@ -1,3 +1,6 @@
+"
+I provide constant identifiers and enumerations for the various types of BPMN nodes, events, gateways, and markers used throughout the editor to identify semantic element types.
+"
 Class {
 	#name : 'OPBPMNNodeType',
 	#superclass : 'Object',

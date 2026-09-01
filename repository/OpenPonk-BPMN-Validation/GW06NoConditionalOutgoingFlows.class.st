@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying that specific gateways (like Parallel or Event-Based Gateways) do not have conditional outgoing sequence flows.
+"
 Class {
 	#name : 'GW06NoConditionalOutgoingFlows',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GW06NoConditionalOutgoingFlows class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]

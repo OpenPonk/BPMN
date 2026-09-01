@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNSequenceFlowSimulator.
+Verifies direct token progression between flow nodes within the same process.
+"
 Class {
 	#name : 'OPBPMNSequenceFlowSimulatorTest',
 	#superclass : 'OPBPMNFlowSimulatorTest',

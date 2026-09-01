@@ -1,3 +1,6 @@
+"
+I represent a BPMN Gateway in the semantic model, controlling the divergence and convergence of process paths based on its specific gateway type.
+"
 Class {
 	#name : 'OPBPMNGatewayModel',
 	#superclass : 'OPBPMNFlowNodeModel',

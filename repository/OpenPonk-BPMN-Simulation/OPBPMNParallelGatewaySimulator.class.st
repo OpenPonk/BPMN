@@ -1,3 +1,7 @@
+"
+Simulator component for BPMN parallel (AND) gateways.
+Synchronizes all incoming sequence flows, waiting for tokens on each, before splitting the token concurrently to all outgoing sequence flows.
+"
 Class {
 	#name : 'OPBPMNParallelGatewaySimulator',
 	#superclass : 'OPBPMNGatewaySimulator',

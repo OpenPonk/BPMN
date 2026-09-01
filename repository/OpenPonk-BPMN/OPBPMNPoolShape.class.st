@@ -1,3 +1,6 @@
+"
+I render a BPMN Pool as a complex Roassal bound node. I manage the vertical pool name area and the dynamic layout of horizontal lanes.
+"
 Class {
 	#name : 'OPBPMNPoolShape',
 	#superclass : 'OPBoundNode',
@@ -15,18 +18,12 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'ston-core' }
-OPBPMNPoolShape class >> stonAllInstVarNames [
-
-	^ super stonAllInstVarNames copyWithout: #ownedElements
-]
-
 { #category : 'updating' }
 OPBPMNPoolShape >> addNeededLanes [
 
-	self ownedElements size >= self modelElement lanes ifTrue: [ ^ self ].
+	self lanes size >= self modelElement lanes ifTrue: [ ^ self ].
 
-	self ownedElements size + 1 to: self modelElement lanes do: [ :index |
+	self lanes size + 1 to: self modelElement lanes do: [ :index |
 	OPBPMNPoolLaneShape renderIn: self forIndex: index ]
 ]
 
@@ -67,6 +64,13 @@ OPBPMNPoolShape >> innerRoassalShapesBlock: aBlock [
 	innerRoassalShapesBlock := aBlock
 ]
 
+{ #category : 'updating' }
+OPBPMNPoolShape >> lanes [
+
+	^ self ownedElements select: [ :de |
+		  de isKindOf: OPBPMNPoolLaneShape ]
+]
+
 { #category : 'constants' }
 OPBPMNPoolShape >> nameAreaWidth [
 
@@ -91,8 +95,7 @@ OPBPMNPoolShape >> removeRender [
 { #category : 'updating' }
 OPBPMNPoolShape >> removeUnneededLanes [
 
-	[ self modelElement lanes < self ownedElements size ] whileTrue: [
-		self ownedElements last remove ]
+	self lanes reverseDo: [ :each | each remove ]
 ]
 
 { #category : 'rendering' }
@@ -209,7 +212,7 @@ OPBPMNPoolShape >> updateBorderColorFromStyles [
 ]
 
 { #category : 'updating' }
-OPBPMNPoolShape >> updateLanesAmount [
+OPBPMNPoolShape >> updateLanes [
 
 	self
 		removeUnneededLanes;
@@ -220,7 +223,7 @@ OPBPMNPoolShape >> updateLanesAmount [
 OPBPMNPoolShape >> updateRenderFromModel [
 
 	nameLabel text: (self modelElement name ifNil: [ '' ]).
-	self updateLanesAmount.
+	self updateLanes.
 	super updateRenderFromModel.
 	roassalShape signalUpdate
 ]

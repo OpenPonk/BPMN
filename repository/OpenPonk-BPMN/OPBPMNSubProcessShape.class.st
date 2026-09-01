@@ -1,3 +1,6 @@
+"
+I render an expanded BPMN SubProcess as a Roassal bound node, managing the boundary box and inner type icons.
+"
 Class {
 	#name : 'OPBPMNSubProcessShape',
 	#superclass : 'OPBPMNNodeShape',
@@ -59,7 +62,7 @@ OPBPMNSubProcessShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : 'roassal' }
+{ #category : 'rendering' }
 OPBPMNSubProcessShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

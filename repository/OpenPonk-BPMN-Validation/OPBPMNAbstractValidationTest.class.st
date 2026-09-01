@@ -1,3 +1,6 @@
+"
+I am an abstract base test class for verifying specific BPMN validation rules. I provide boilerplate methods to test whether a rule correctly targets and applies to specific model objects.
+"
 Class {
 	#name : 'OPBPMNAbstractValidationTest',
 	#superclass : 'TestCase',

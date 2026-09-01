@@ -1,3 +1,6 @@
+"
+I render a BPMN Message Flow, drawing a dashed directional line with an open arrowhead and a circular tail marker.
+"
 Class {
 	#name : 'OPBPMNMessageFlowShape',
 	#superclass : 'OPBPMNAbstractFlowShape',

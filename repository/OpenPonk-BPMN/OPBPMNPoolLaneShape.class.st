@@ -1,3 +1,6 @@
+"
+I am a Roassal diagram shape representing a BPMN Pool or Lane. I manage the visual bounding boxes, text labels, internal separators, and positioning of lanes within a process diagram.
+"
 Class {
 	#name : 'OPBPMNPoolLaneShape',
 	#superclass : 'OPDiagramElement',
@@ -60,6 +63,13 @@ OPBPMNPoolLaneShape >> index [
 { #category : 'accessing' }
 OPBPMNPoolLaneShape >> index: anInteger [ 
 	index := anInteger
+]
+
+{ #category : 'testing' }
+OPBPMNPoolLaneShape >> isTransient [
+	"Lanes are dynamically generated based on OPBPMNPoolModel>>#lanes."
+	
+	^ true
 ]
 
 { #category : 'removing' }

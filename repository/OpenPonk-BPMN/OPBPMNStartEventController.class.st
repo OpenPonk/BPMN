@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Start Events. I enforce valid connection rules, ensuring that start events correctly generate outgoing flows on the diagram canvas.
+"
 Class {
 	#name : 'OPBPMNStartEventController',
 	#superclass : 'OPBPMNEventController',
@@ -6,39 +9,15 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNStartEventController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNStartEventController class >> diagramElementClass [
 
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items:
-			#( #None #Receive #Timer #Escalation #Conditional #Error #Compensation
-			   #Signal #Multiple #ParallelMultiple );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-				self model type: newValue.
-				self modelChanged ].
-	(aForm addCheckbox: 'Is Non-Interrupting')
-		state: self model isNonInterrupting;
-		whenChangedDo: [ :val |
-				self model isNonInterrupting: val.
-				self modelChanged ].
+	^ OPBPMNStartEventShape
+]
 
-	self model type = OPBPMNNodeType Timer ifFalse: [ ^ self ].
-	(aForm addDroplist: 'Timer type')
-		items: #( #none #timeDate #timeDuration #timeCycle );
-		display: [ :type | type asString ];
-		selectItem: self model timerType;
-		whenSelectedItemChangedDo: [ :newValue |
-				self model timerType: newValue.
-				self modelChanged ].
-	(aForm addText: 'Timer value')
-		text: self model timerValue;
-		whenTextChangedDo: [ :newValue |
-				self model timerValue: newValue asString.
-				self modelChanged ]
+{ #category : 'accessing' }
+OPBPMNStartEventController class >> viewModelClass [
+	^ OPBPMNStartEventViewModel
 ]
 
 { #category : 'connecting' }
@@ -65,15 +44,4 @@ OPBPMNStartEventController >> canBeTargetFor: aController [
 		^ false ].
 
 	^ aController source ~= self
-]
-
-{ #category : 'construction' }
-OPBPMNStartEventController >> diagramElementClass [
-
-	^ OPBPMNStartEventShape
-]
-
-{ #category : 'accessing' }
-OPBPMNStartEventController >> modelClass [
-	^ OPBPMNStartEventModel
 ]

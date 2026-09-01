@@ -1,3 +1,6 @@
+"
+I represent a BPMN Data Object in the underlying semantic model, tracking data requirements or outputs for activities.
+"
 Class {
 	#name : 'OPBPMNDataObjectModel',
 	#superclass : 'OPBPMNSemanticNodeModel',
@@ -11,7 +14,7 @@ OPBPMNDataObjectModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'announcing' }
+{ #category : 'updating' }
 OPBPMNDataObjectModel >> changed [
 	super changed.
 	owner changed

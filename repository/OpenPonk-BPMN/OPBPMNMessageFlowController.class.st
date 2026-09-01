@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Message Flows. I manage the interactions and diagram logic for directed edges representing message exchanges between distinct process participants (pools).
+"
 Class {
 	#name : 'OPBPMNMessageFlowController',
 	#superclass : 'OPBPMNAbstractFlowController',
@@ -7,12 +10,12 @@ Class {
 }
 
 { #category : 'construction' }
-OPBPMNMessageFlowController >> diagramElementClass [
+OPBPMNMessageFlowController class >> diagramElementClass [
 
 	^ OPBPMNMessageFlowShape
 ]
 
-{ #category : 'hooks' }
-OPBPMNMessageFlowController >> modelClass [
-	^ OPBPMNMessageFlowModel
+{ #category : 'accessing' }
+OPBPMNMessageFlowController class >> viewModelClass [
+	^ OPBPMNMessageFlowViewModel
 ]

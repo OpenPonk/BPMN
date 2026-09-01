@@ -1,3 +1,6 @@
+"
+I orchestrate the execution of BPMN validation rules. I gather the diagram elements, apply the corresponding validation checks, and aggregate the results.
+"
 Class {
 	#name : 'OPBPMNValidationController',
 	#superclass : 'Object',
@@ -23,7 +26,7 @@ OPBPMNValidationController >> getValidations [
 		  class packageTag name = 'Validation-Classes' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'validation' }
 OPBPMNValidationController >> validate: aValidateModel [
 
 	| validateObjects validations results |

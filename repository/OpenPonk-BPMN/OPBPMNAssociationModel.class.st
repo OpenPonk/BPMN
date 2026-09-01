@@ -1,3 +1,6 @@
+"
+I represent a BPMN Association. I track the relationship between an artifact and a flow object, explicitly managing the visual directionality (none, one, or both).
+"
 Class {
 	#name : 'OPBPMNAssociationModel',
 	#superclass : 'OPBPMNEdgeModel',

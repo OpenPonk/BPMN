@@ -1,3 +1,6 @@
+"
+Simulator for BPMN diagrams. Coordinates execution flow across the process, manages global stepping, and tracks configurable gateways.
+"
 Class {
 	#name : 'OPBPMNSimulator',
 	#superclass : 'OPDiagramSimulator',
@@ -61,7 +64,7 @@ OPBPMNSimulator >> loadItems [
 	self loadConfigurableGateways 
 ]
 
-{ #category : 'stepping' }
+{ #category : 'initialization' }
 OPBPMNSimulator >> setDefaultStepping [
 	"sets default stepping settings"
 

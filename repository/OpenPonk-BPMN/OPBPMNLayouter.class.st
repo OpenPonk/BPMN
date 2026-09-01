@@ -1,9 +1,12 @@
+"
+I am a specialized graph layouter for BPMN diagrams, applying automated spatial arrangements specifically tailored for pools, lanes, nodes, and sequence flows.
+"
 Class {
 	#name : 'OPBPMNLayouter',
-	#superclass : 'OPLayouter',
-	#category : 'OpenPonk-BPMN-Adapters',
+	#superclass : 'OPNodesAndEdgesLayouter',
+	#category : 'OpenPonk-BPMN-ViewModels',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Adapters'
+	#tag : 'ViewModels'
 }
 
 { #category : 'accessing' }

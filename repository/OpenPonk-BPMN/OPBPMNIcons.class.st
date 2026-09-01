@@ -1,3 +1,6 @@
+"
+I am an icon provider and cache for the BPMN plugin, supplying instantiated Form objects for OpenPonk's UI and palette based on the raw contents defined in OPBPMNIcon.
+"
 Class {
 	#name : 'OPBPMNIcons',
 	#superclass : 'OPIcons',

@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying that standard flow nodes have at least one outgoing sequence flow, preventing dead ends in the process.
+"
 Class {
 	#name : 'AN02FlowNodeOutgoingFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN02FlowNodeOutgoingFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]

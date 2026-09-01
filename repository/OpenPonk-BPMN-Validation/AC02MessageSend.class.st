@@ -1,3 +1,6 @@
+"
+I am a validation rule checking whether a Send Task correctly defines outgoing message flows.
+"
 Class {
 	#name : 'AC02MessageSend',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AC02MessageSend class >> validateClass [
 	^ OPBPMNActivityModel.
 ]

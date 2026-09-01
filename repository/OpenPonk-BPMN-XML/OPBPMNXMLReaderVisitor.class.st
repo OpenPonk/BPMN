@@ -1,3 +1,6 @@
+"
+I am a DOM visitor that traverses a parsed BPMN XML document tree. I map XML elements to OpenPonk BPMN model objects and resolve reference IDs to reconstruct the model graph.
+"
 Class {
 	#name : 'OPBPMNXMLReaderVisitor',
 	#superclass : 'XMLDOMVisitor',
@@ -45,7 +48,7 @@ OPBPMNXMLReaderVisitor >> resolveAll [
 	unresolved do: #value
 ]
 
-{ #category : 'factory' }
+{ #category : 'visiting' }
 OPBPMNXMLReaderVisitor >> visitDocument: aDocument [
 	self visit: aDocument root.
 	self resolveAll.

@@ -1,3 +1,6 @@
+"
+I act as a container for aggregating multiple OPBPMNValidationMessage instances. I provide filtering capabilities to separate errors from warnings.
+"
 Class {
 	#name : 'OPBPMNValidationResults',
 	#superclass : 'Object',

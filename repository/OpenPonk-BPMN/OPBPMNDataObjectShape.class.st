@@ -1,3 +1,6 @@
+"
+I render a BPMN Data Object as a Roassal bound node, displaying the standard page icon with a folded top-right corner.
+"
 Class {
 	#name : 'OPBPMNDataObjectShape',
 	#superclass : 'OPBoundNode',
@@ -10,7 +13,7 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'removing' }
+{ #category : 'accessing' }
 OPBPMNDataObjectShape >> attachedShapes [
 
 	^ super attachedShapes , { icon }
@@ -69,13 +72,13 @@ OPBPMNDataObjectShape >> removeRender [
 	icon := nil
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> renderBasicShape [
 
 	^ self createRoassalShape model: self
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> renderShapeDetails [
 
 	| label |
@@ -91,7 +94,7 @@ OPBPMNDataObjectShape >> renderShapeDetails [
 	RSLocation new stick: icon on: self roassalShape
 ]
 
-{ #category : 'update' }
+{ #category : 'interactions' }
 OPBPMNDataObjectShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
@@ -116,7 +119,7 @@ OPBPMNDataObjectShape >> updateIcon [
 	icon form: self typeIconForModel.
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
@@ -126,7 +129,7 @@ OPBPMNDataObjectShape >> updateRenderFromModel [
 	roassalShape signalUpdate
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

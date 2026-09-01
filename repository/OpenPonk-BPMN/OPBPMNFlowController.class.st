@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Sequence Flows. I manage the interactions and rendering of the primary directed edges dictating process execution order.
+"
 Class {
 	#name : 'OPBPMNFlowController',
 	#superclass : 'OPBPMNAbstractFlowController',
@@ -6,26 +9,13 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNFlowController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #Normal #Default #Conditional );
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
-]
-
 { #category : 'construction' }
-OPBPMNFlowController >> diagramElementClass [
+OPBPMNFlowController class >> diagramElementClass [
 
 	^ OPBPMNFlowShape
 ]
 
 { #category : 'accessing' }
-OPBPMNFlowController >> modelClass [
-	^ OPBPMNFlowModel
+OPBPMNFlowController class >> viewModelClass [
+	^ OPBPMNFlowViewModel
 ]

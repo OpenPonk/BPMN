@@ -1,3 +1,6 @@
+"
+I render a standard BPMN Sequence Flow, drawing a solid directional line with a filled arrowhead.
+"
 Class {
 	#name : 'OPBPMNFlowShape',
 	#superclass : 'OPBPMNAbstractFlowShape',

@@ -1,3 +1,6 @@
+"
+I control diagram interactions for BPMN Annotations, enforcing valid connection sources and targets on the canvas.
+"
 Class {
 	#name : 'OPBPMNAnnotationController',
 	#superclass : 'OPBPMNNodeController',
@@ -5,6 +8,17 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
+
+{ #category : 'construction' }
+OPBPMNAnnotationController class >> diagramElementClass [
+
+	^ OPBPMNAnnotationShape
+]
+
+{ #category : 'accessing' }
+OPBPMNAnnotationController class >> viewModelClass [
+	^ OPBPMNAnnotationViewModel
+]
 
 { #category : 'connecting' }
 OPBPMNAnnotationController >> canBeSourceFor: aController [
@@ -17,33 +31,4 @@ OPBPMNAnnotationController >> canBeTargetFor: aController [
 
 	^ (aController isKindOf: OPBPMNAssociationController) and: [
 		  aController source ~= self ]
-]
-
-{ #category : 'forms' }
-OPBPMNAnnotationController >> descriptionName [
-
-	<magritteDescription>
-	| accessor |
-	accessor := MAPluggableAccessor
-		            read: [ :me | me model text ]
-		            write: [ :me :newValue | 
-			            me model text: newValue.
-			            self modelChanged ].
-	^ MAMemoDescription new
-		  accessor: accessor;
-		  label: 'Text';
-		  priority: 1;
-		  yourself
-]
-
-{ #category : 'construction' }
-OPBPMNAnnotationController >> diagramElementClass [
-
-	^ OPBPMNAnnotationShape
-]
-
-{ #category : 'accessing' }
-OPBPMNAnnotationController >> modelClass [
-
-	^ OPBPMNAnnotationModel
 ]

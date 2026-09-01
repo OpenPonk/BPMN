@@ -1,3 +1,6 @@
+"
+I am an abstract base test class verifying diagram interaction, selectable types constraints, and figure refresh logic for semantic BPMN node controllers.
+"
 Class {
 	#name : 'OPBPMNSemanticNodeControllerTest',
 	#superclass : 'OPBPMNNodeControllerTest',

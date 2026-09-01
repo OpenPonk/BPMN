@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that Parallel Event-Based Gateways do not have conditional outgoing flows or invalid target nodes.
+"
 Class {
 	#name : 'GW05ParallelEventGatewayOutgoingFlows',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GW05ParallelEventGatewayOutgoingFlows class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]

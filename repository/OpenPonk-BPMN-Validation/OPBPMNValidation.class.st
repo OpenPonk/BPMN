@@ -1,3 +1,6 @@
+"
+I am the abstract base class for specific BPMN validation rules. I define the interface for validating diagram objects against the BPMN specification.
+"
 Class {
 	#name : 'OPBPMNValidation',
 	#superclass : 'Object',
@@ -6,13 +9,13 @@ Class {
 	#tag : 'Settings'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'testing' }
 OPBPMNValidation class >> canValidate: aVerifiedObject [
 	"^ aVerifiedObject class = self validateClass."
 	^ aVerifiedObject isKindOf: self validateClass.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 OPBPMNValidation class >> new [
 	^ self shouldNotImplement.
 ]
@@ -25,7 +28,7 @@ OPBPMNValidation class >> validate: aVerifiedObject withModel: aVerifiedModel [
 	^ verification validateObject: aVerifiedObject withModel: aVerifiedModel.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 OPBPMNValidation class >> validateClass [
 	^ nil.
 ]

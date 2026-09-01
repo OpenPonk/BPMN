@@ -1,3 +1,6 @@
+"
+I manage the user interface for displaying validation results. I render an inspector table and highlight the offending diagram elements when a user selects a specific validation warning.
+"
 Class {
 	#name : 'OPBPMNValidationResultsUI',
 	#superclass : 'Object',

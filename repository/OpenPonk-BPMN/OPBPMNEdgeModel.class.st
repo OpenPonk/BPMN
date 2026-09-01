@@ -1,3 +1,6 @@
+"
+I represent a directional BPMN edge linking two nodes. I serve as the base domain model for sequence flows, message flows, and associations.
+"
 Class {
 	#name : 'OPBPMNEdgeModel',
 	#superclass : 'OPDirectedAssociation',

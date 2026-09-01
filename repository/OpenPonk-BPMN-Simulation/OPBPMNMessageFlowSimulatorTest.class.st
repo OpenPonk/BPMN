@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNMessageFlowSimulator.
+Verifies message token transfer across participant boundaries.
+"
 Class {
 	#name : 'OPBPMNMessageFlowSimulatorTest',
 	#superclass : 'OPBPMNFlowSimulatorTest',

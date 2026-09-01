@@ -1,23 +1,26 @@
+"
+I am a unit test class verifying the behavior of OPBPMNMessageFlowController, focusing on correct source and target assignments for message flows.
+"
 Class {
 	#name : 'OPBPMNMessageFlowControllerTest',
-	#superclass : 'OPBPMNEdgeControllerTest',
-	#category : 'OpenPonk-BPMN-Models',
+	#superclass : 'OPBPMNAbstractFlowControllerTest',
+	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Models'
+	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
+OPBPMNMessageFlowControllerTest class >> diagramElementClass [
+
+	^ OPBPMNMessageFlowShape 
+]
+
+{ #category : 'constants' }
 OPBPMNMessageFlowControllerTest >> controllerClass [
 	^ OPBPMNMessageFlowController
 ]
 
 { #category : 'constants' }
-OPBPMNMessageFlowControllerTest >> diagramElementClass [
-
-	^ OPBPMNMessageFlowShape 
-]
-
-{ #category : 'accessing' }
 OPBPMNMessageFlowControllerTest >> modelClass [
 	^ OPBPMNMessageFlowModel 
 ]

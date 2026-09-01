@@ -1,3 +1,6 @@
+"
+I am the abstract base class for BPMN XML information items. I provide boolean type-checking methods to distinguish between attributes, elements, objects, and reference items during serialization and deserialization.
+"
 Class {
 	#name : 'OPBPMNXMLInfoItems',
 	#superclass : 'Object',

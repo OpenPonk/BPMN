@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AN01FlowNodeIncomingFlow validation rule. I ensure it correctly detects standard flow nodes missing at least one incoming sequence flow.
+"
 Class {
 	#name : 'OPBPMNAN01ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

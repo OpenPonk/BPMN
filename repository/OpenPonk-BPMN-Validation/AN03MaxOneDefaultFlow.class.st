@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that an activity or gateway defines at most one default outgoing sequence flow.
+"
 Class {
 	#name : 'AN03MaxOneDefaultFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN03MaxOneDefaultFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]

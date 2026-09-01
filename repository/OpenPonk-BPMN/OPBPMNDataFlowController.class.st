@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN Data Associations. I manage the interactions and diagram logic for directed edges connecting data objects to activities.
+"
 Class {
 	#name : 'OPBPMNDataFlowController',
 	#superclass : 'OPBPMNAbstractFlowController',
@@ -7,13 +10,12 @@ Class {
 }
 
 { #category : 'construction' }
-OPBPMNDataFlowController >> diagramElementClass [
+OPBPMNDataFlowController class >> diagramElementClass [
 
 	^ OPBPMNDataFlowShape
 ]
 
 { #category : 'accessing' }
-OPBPMNDataFlowController >> modelClass [
-
-	^ OPBPMNDataFlowModel
+OPBPMNDataFlowController class >> viewModelClass [
+	^ OPBPMNDataFlowViewModel
 ]

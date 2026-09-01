@@ -1,3 +1,6 @@
+"
+I represent a BPMN Pool. I serve as a participant container managing enclosed flow nodes, nested lanes, and lane naming metadata.
+"
 Class {
 	#name : 'OPBPMNPoolModel',
 	#superclass : 'OPBPMNSemanticNodeModel',
@@ -14,7 +17,7 @@ OPBPMNPoolModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'announcing' }
+{ #category : 'updating' }
 OPBPMNPoolModel >> changed [
 	super changed.
 	owner changed
@@ -82,7 +85,7 @@ OPBPMNPoolModel >> printType [
 	^ 'process'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
 ]

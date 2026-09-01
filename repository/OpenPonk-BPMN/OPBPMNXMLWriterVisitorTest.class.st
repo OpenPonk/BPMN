@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the correct serialization and conversion of BPMN model elements (activities, flows, participants, events) into XML format by the visitor.
+"
 Class {
 	#name : 'OPBPMNXMLWriterVisitorTest',
 	#superclass : 'TestCase',

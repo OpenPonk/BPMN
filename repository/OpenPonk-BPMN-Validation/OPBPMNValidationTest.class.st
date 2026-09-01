@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the base behavior of the OPBPMNValidation framework, specifically testing the interface and abstract mechanisms for model object validation.
+"
 Class {
 	#name : 'OPBPMNValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

@@ -1,3 +1,7 @@
+"
+Simulator component for BPMN inclusive (OR) gateways.
+Handles synchronization of incoming tokens and routes them through one or more valid outgoing sequence flows based on conditions.
+"
 Class {
 	#name : 'OPBPMNInclusiveGatewaySimulator',
 	#superclass : 'OPBPMNGatewaySimulator',

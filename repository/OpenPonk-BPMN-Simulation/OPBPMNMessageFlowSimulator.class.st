@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN message flows. Transfers message tokens across participant boundaries (pools).
+"
 Class {
 	#name : 'OPBPMNMessageFlowSimulator',
 	#superclass : 'OPBPMNFlowSimulator',

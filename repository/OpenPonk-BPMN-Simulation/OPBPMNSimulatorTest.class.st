@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNSimulator.
+Verifies diagram-level simulation stepping, state management, and overall execution flow logic.
+"
 Class {
 	#name : 'OPBPMNSimulatorTest',
 	#superclass : 'TestCase',

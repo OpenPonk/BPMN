@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AN06OnlyConditionalFlow validation rule. I ensure it correctly warns when nodes have only conditional outgoing flows without a default flow fallback.
+"
 Class {
 	#name : 'OPBPMNAN06ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

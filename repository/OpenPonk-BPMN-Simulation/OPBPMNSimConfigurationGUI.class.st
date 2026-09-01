@@ -1,3 +1,6 @@
+"
+Spec presenter for configuring the BPMN simulation parameters. Manages the setup of configurable elements like gateway branch routing conditions prior to execution.
+"
 Class {
 	#name : 'OPBPMNSimConfigurationGUI',
 	#superclass : 'SpPresenter',
@@ -47,6 +50,7 @@ OPBPMNSimConfigurationGUI >> diagramSimulator: aDiagramSimulator [
 { #category : 'initialization' }
 OPBPMNSimConfigurationGUI >> initialize [
 
+	super initialize.
 	gatewayPresenters := Dictionary new
 ]
 
@@ -54,33 +58,33 @@ OPBPMNSimConfigurationGUI >> initialize [
 OPBPMNSimConfigurationGUI >> initializePresenters [
 
 	| row |
-	super initializePresenters.
-
 	diagramSimulator configurableGateways do: [ :element |
-		row := OrderedCollection new.
-		({
-			 OPBPMNNodeType ExclusiveEmpty.
-			 OPBPMNNodeType Exclusive.
-			 OPBPMNNodeType Eventbased } includes: element model type) ifTrue: [
-			element outgoingDo: [ :flow |
-				row add: (self newRadioButton
-						 label: flow model name;
-						 yourself) ].
-			row notEmpty ifTrue: [
-				row anyOne associatedRadioButtons: row.
-				(row at: (element outgoing indexOf: element outgoingActive first))
-					state: true ] ].
-		({
-			 OPBPMNNodeType Inclusive.
-			 OPBPMNNodeType Complex } includes: element model type) ifTrue: [
-			element outgoingDo: [ :flow |
-				row add: (self newCheckBox
-						 label: flow model name;
-						 state: (element outgoingActive includes: flow);
-						 yourself) ] ].
+			row := OrderedCollection new.
+			({
+				 OPBPMNNodeType ExclusiveEmpty.
+				 OPBPMNNodeType Exclusive.
+				 OPBPMNNodeType Eventbased } includes: element model type)
+				ifTrue: [
+						element outgoingDo: [ :flow |
+								row add: (self newRadioButton
+										 label: flow model name;
+										 yourself) ].
+						row notEmpty ifTrue: [
+								row anyOne associatedRadioButtons: row.
+								(row at:
+									 (element outgoing indexOf: element outgoingActive first))
+									state: true ] ].
+			({
+				 OPBPMNNodeType Inclusive.
+				 OPBPMNNodeType Complex } includes: element model type) ifTrue: [
+					element outgoingDo: [ :flow |
+							row add: (self newCheckBox
+									 label: flow model name;
+									 state: (element outgoingActive includes: flow);
+									 yourself) ] ].
 
-		row addFirst: (self newLabel label: element model name).
-		gatewayPresenters at: element put: row ]
+			row addFirst: (self newLabel label: element model name).
+			gatewayPresenters at: element put: row ]
 ]
 
 { #category : 'initialization' }

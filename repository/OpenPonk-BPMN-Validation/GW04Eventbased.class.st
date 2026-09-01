@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural constraints of Event-Based Gateways, such as ensuring their outgoing flows connect only to catching events or receive tasks.
+"
 Class {
 	#name : 'GW04Eventbased',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GW04Eventbased class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]

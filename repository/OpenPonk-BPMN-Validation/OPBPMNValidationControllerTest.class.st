@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the behavior of OPBPMNValidationController. I test the orchestration of validation execution across single objects and entire BPMN processes.
+"
 Class {
 	#name : 'OPBPMNValidationControllerTest',
 	#superclass : 'TestCase',

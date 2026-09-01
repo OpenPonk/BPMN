@@ -1,3 +1,7 @@
+"
+Unit tests for OPBPMNParallelGatewaySimulator.
+Verifies strict synchronization of all incoming branches and concurrent splitting to all outgoing branches.
+"
 Class {
 	#name : 'OPBPMNParallelGatewaySimulatorTest',
 	#superclass : 'OPBPMNGatewaySimulatorTest',
@@ -12,7 +16,7 @@ OPBPMNParallelGatewaySimulatorTest >> controllerClass [
 	^ OPBPMNParallelGatewaySimulator 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'running' }
 OPBPMNParallelGatewaySimulatorTest >> setUp [
 
 	super setUp.
@@ -23,7 +27,7 @@ OPBPMNParallelGatewaySimulatorTest >> setUp [
 			 yourself)
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNParallelGatewaySimulatorTest >> testAddBpmnTokensFrom [
 
 	self assert: simulator incomingBpmnTokens size equals: 2.
@@ -38,7 +42,7 @@ OPBPMNParallelGatewaySimulatorTest >> testAddBpmnTokensFrom [
 	self assert: (simulator incomingBpmnTokens at: flowIn1) equals: 0
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNParallelGatewaySimulatorTest >> testFire [
 
 	self assert: simulator bpmnTokens equals: 1.

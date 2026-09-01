@@ -1,3 +1,6 @@
+"
+Simulator component for standard BPMN events (start, intermediate, end). Manages event triggering and token generation or consumption.
+"
 Class {
 	#name : 'OPBPMNEventSimulator',
 	#superclass : 'OPBPMNFlowNodeSimulator',

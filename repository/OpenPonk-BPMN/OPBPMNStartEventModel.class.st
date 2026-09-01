@@ -1,3 +1,6 @@
+"
+I represent a BPMN Start Event in the semantic model. I initiate the process flow and track configurations such as whether the start trigger is non-interrupting.
+"
 Class {
 	#name : 'OPBPMNStartEventModel',
 	#superclass : 'OPBPMNEventModel',

@@ -1,3 +1,6 @@
+"
+I render a collapsed BPMN SubProcess, displaying a rounded rectangle with a standard plus marker at the bottom center to indicate hidden internal structure.
+"
 Class {
 	#name : 'OPBPMNCollapsedSubProcessShape',
 	#superclass : 'OPBPMNNodeShape',
@@ -9,14 +12,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
-
-{ #category : 'ston-core' }
-OPBPMNCollapsedSubProcessShape class >> stonAllInstVarNames [
-
-	"Override to encode my instances using a custom set of instance variables or to define their order."
-
-	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
-]
 
 { #category : 'accessing' }
 OPBPMNCollapsedSubProcessShape >> attachedShapes [

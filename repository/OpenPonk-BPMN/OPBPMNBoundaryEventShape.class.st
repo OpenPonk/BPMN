@@ -1,3 +1,6 @@
+"
+I render a BPMN Boundary Event as a Roassal shape. I manage the visual representation of two concentric circles and handle attachment to the border of a host activity shape.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventShape',
 	#superclass : 'OPBPMNNodeShape',
@@ -61,7 +64,7 @@ OPBPMNBoundaryEventShape >> removeRender [
 	innerCircle := nil
 ]
 
-{ #category : 'hooks' }
+{ #category : 'rendering' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
 
 	| label |
@@ -90,7 +93,7 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 
-{ #category : 'updating' }
+{ #category : 'rendering' }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

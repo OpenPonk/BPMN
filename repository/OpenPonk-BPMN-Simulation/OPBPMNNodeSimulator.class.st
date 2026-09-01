@@ -1,3 +1,6 @@
+"
+Abstract simulator component for BPMN nodes. Manages BPMN-specific token lifecycles, execution firing, and blocking states during simulation.
+"
 Class {
 	#name : 'OPBPMNNodeSimulator',
 	#superclass : 'OPElementSimulator',

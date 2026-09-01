@@ -1,3 +1,6 @@
+"
+I am a deprecated utility factory used to construct, manipulate, and manage specific BPMN flows and model transitions between nodes within the diagram.
+"
 Class {
 	#name : 'OPBPMNFactory',
 	#superclass : 'Object',
@@ -28,6 +31,13 @@ OPBPMNFactory class >> flowFrom: fromNode to: toNode [
 { #category : 'adding' }
 OPBPMNFactory class >> fqnFlowFrom: fromName to: toName in: aParticipant [
 	^ self flowFrom: aParticipant @ fromName to: aParticipant @ toName
+]
+
+{ #category : 'testing' }
+OPBPMNFactory class >> isDeprecated [
+	"currently unused, untested"
+
+	^ true
 ]
 
 { #category : 'moving' }

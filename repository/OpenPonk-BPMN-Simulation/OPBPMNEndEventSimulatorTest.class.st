@@ -1,5 +1,6 @@
 "
-An OPBPMNStartEventSimulatorTest is a test class for testing the behavior of OPBPMNStartEventSimulator
+Unit tests for OPBPMNEndEventSimulator.
+Verifies token consumption and process termination behavior at end events.
 "
 Class {
 	#name : 'OPBPMNEndEventSimulatorTest',
@@ -21,7 +22,7 @@ OPBPMNEndEventSimulatorTest >> exampleModel [
 	^ OPBPMNEndEventModel new
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNEndEventSimulatorTest >> testFire [
 
 	model type: OPBPMNNodeType None.

@@ -1,3 +1,6 @@
+"
+I represent a BPMN Boundary Event attached to an activity. I track specific execution semantics, such as whether the event interrupts the host activity.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventModel',
 	#superclass : 'OPBPMNSemanticNodeModel',
@@ -16,7 +19,7 @@ OPBPMNBoundaryEventModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'announcing' }
+{ #category : 'updating' }
 OPBPMNBoundaryEventModel >> changed [
 
 	super changed.

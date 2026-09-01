@@ -1,3 +1,6 @@
+"
+Abstract base class for unit tests verifying the behavior of BPMN node (activity, event, gateway) simulators.
+"
 Class {
 	#name : 'OPBPMNNodeSimulatorTest',
 	#superclass : 'TestCase',
@@ -30,20 +33,20 @@ OPBPMNNodeSimulatorTest >> exampleModel [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : 'running' }
 OPBPMNNodeSimulatorTest >> setUp [
 
 	super setUp.
 	model := self exampleModel.
 	simulator := self controllerClass model: model.
-	flowIn1 := (OPBPMNSequenceFlowSimulator model: OPBPMNFlowModel) bpmnTokens:
-		           10.
+	flowIn1 := (OPBPMNSequenceFlowSimulator model: OPBPMNFlowModel)
+		           bpmnTokens: 10.
 	flowOut1 := OPBPMNSequenceFlowSimulator model: OPBPMNFlowModel.
 	simulator addedIncoming: flowIn1.
 	simulator addedOutgoing: flowOut1
 ]
 
-{ #category : 'accessing' }
+{ #category : 'tests' }
 OPBPMNNodeSimulatorTest >> testFire [
 
 	^ self subclassResponsibility

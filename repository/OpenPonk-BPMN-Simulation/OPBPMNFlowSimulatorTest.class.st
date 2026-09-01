@@ -1,3 +1,6 @@
+"
+Abstract base class for unit tests verifying the behavior of BPMN flow (edge) simulators.
+"
 Class {
 	#name : 'OPBPMNFlowSimulatorTest',
 	#superclass : 'TestCase',

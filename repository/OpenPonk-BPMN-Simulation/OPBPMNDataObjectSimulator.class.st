@@ -1,3 +1,6 @@
+"
+Simulator component for BPMN data objects. Handles data state availability and data token flow during execution.
+"
 Class {
 	#name : 'OPBPMNDataObjectSimulator',
 	#superclass : 'OPBPMNNodeSimulator',

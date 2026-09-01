@@ -1,3 +1,6 @@
+"
+I am a validation rule that checks whether message flows are explicitly labeled to describe the exchanged information.
+"
 Class {
 	#name : 'AN04LabeledMessageFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN04LabeledMessageFlow class >> validateClass [
 	^ OPBPMNSemanticNodeModel.
 ]
