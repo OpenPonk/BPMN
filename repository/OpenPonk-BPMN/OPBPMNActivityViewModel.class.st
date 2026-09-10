@@ -49,3 +49,8 @@ OPBPMNActivityViewModel >> buildEditorForm: aForm [
 { #category : 'accessing' }
 OPBPMNActivityViewModel >> icon [ ^ OPBPMNIcon current activity
 ]
+
+{ #category : 'testing' }
+OPBPMNActivityViewModel >> isNameMultiline [
+	^ true
+]

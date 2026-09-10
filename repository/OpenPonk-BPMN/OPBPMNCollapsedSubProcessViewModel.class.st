@@ -37,3 +37,8 @@ OPBPMNCollapsedSubProcessViewModel >> buildEditorForm: aForm [
 { #category : 'accessing' }
 OPBPMNCollapsedSubProcessViewModel >> icon [ ^ OPBPMNIcon current subProcessCollapsed
 ]
+
+{ #category : 'testing' }
+OPBPMNCollapsedSubProcessViewModel >> isNameMultiline [
+	^ true
+]

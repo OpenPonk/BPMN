@@ -21,9 +21,11 @@ OPBPMNSemanticNodeViewModel class >> modelClass [ ^ OPBPMNSemanticNodeModel
 
 { #category : 'forms' }
 OPBPMNSemanticNodeViewModel >> buildEditorForm: aForm [
-	(aForm addText: 'Name')
-		text: self model name;
-		whenTextChangedDo: [ :newValue | 
+	(self isNameMultiline
+		ifTrue: [ aForm addText: 'Name' ]
+		ifFalse: [ aForm addTextInput: 'Name' ])
+		text: (self model name ifNil: [ '' ]);
+		whenTextChangedDo: [ :newValue |
 			self model name: newValue asString.
 			self modelChanged ]
 ]
@@ -32,4 +34,9 @@ OPBPMNSemanticNodeViewModel >> buildEditorForm: aForm [
 OPBPMNSemanticNodeViewModel >> childrenModels [
 
 	^ self model nodes asArray , self model outgoing asArray
+]
+
+{ #category : 'testing' }
+OPBPMNSemanticNodeViewModel >> isNameMultiline [
+	^ false
 ]

@@ -27,3 +27,8 @@ OPBPMNSubProcessViewModel >> essentialChildrenModels [
 { #category : 'accessing' }
 OPBPMNSubProcessViewModel >> icon [ ^ OPBPMNIcon current expandedSubprocess
 ]
+
+{ #category : 'testing' }
+OPBPMNSubProcessViewModel >> isNameMultiline [
+	^ true
+]

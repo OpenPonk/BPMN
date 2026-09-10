@@ -31,6 +31,11 @@ OPBPMNDataObjectViewModel >> buildEditorForm: aForm [
 OPBPMNDataObjectViewModel >> icon [ ^ OPBPMNIcon current dataObject16
 ]
 
+{ #category : 'testing' }
+OPBPMNDataObjectViewModel >> isNameMultiline [
+	^ true
+]
+
 { #category : 'forms' }
 OPBPMNDataObjectViewModel >> typeIconFor: aType [
 

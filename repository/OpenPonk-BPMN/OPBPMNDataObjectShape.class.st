@@ -6,7 +6,8 @@ Class {
 	#superclass : 'OPBoundNode',
 	#instVars : [
 		'icon',
-		'borderColor'
+		'borderColor',
+		'labeled'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
@@ -67,9 +68,9 @@ OPBPMNDataObjectShape >> initialize [
 
 { #category : 'removing' }
 OPBPMNDataObjectShape >> removeRender [
-
 	super removeRender.
-	icon := nil
+	icon := nil.
+	labeled := nil
 ]
 
 { #category : 'rendering' }
@@ -80,16 +81,16 @@ OPBPMNDataObjectShape >> renderBasicShape [
 
 { #category : 'rendering' }
 OPBPMNDataObjectShape >> renderShapeDetails [
-
-	| label |
-	label := RSLabeled new.
-	label location below.
-	label shapeBuilder labelShape color: Color black.
-	roassalShape addInteraction: label.
+	labeled := OPRSLabeled new.
+	labeled color: Color black.
+	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
+	labeled location below.
+	labeled text: ''.
+	roassalShape @ labeled.
 
 	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+		form: self typeIconForModel;
+		yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape
 ]
@@ -121,11 +122,10 @@ OPBPMNDataObjectShape >> updateIcon [
 
 { #category : 'rendering' }
 OPBPMNDataObjectShape >> updateRenderFromModel [
-
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
+	labeled ifNotNil: [
+		labeled text: (self modelElement name ifNil: [ '' ]) ].
 	self updateIcon.
 	super updateRenderFromModel.
-	
 	roassalShape signalUpdate
 ]
 

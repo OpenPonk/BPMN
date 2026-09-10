@@ -6,7 +6,8 @@ Class {
 	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
 		'subprocessIcon',
-		'border'
+		'border',
+		'labeled'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
@@ -52,25 +53,26 @@ OPBPMNCollapsedSubProcessShape >> initialize [
 
 { #category : 'removing' }
 OPBPMNCollapsedSubProcessShape >> removeRender [
-
 	super removeRender.
-	subprocessIcon := nil
+	subprocessIcon := nil.
+	labeled := nil
 ]
 
 { #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
+	labeled := OPRSLabeled new.
+	labeled color: Color black.
+	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
+	labeled location middle.
+	labeled text: ''.
+	roassalShape @ labeled.
 
-	| label |
-	label := RSLabeled new.
-	label location middle.
-	label shapeBuilder labelShape color: Color black.
-	roassalShape addInteraction: label.
 	subprocessIcon := RSBitmap new
-		                  form: self typeBasicIcon;
-		                  yourself.
+		form: self typeBasicIcon;
+		yourself.
 	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+		form: self typeIconForModel;
+		yourself.
 	self canvas add: subprocessIcon.
 	self canvas add: icon.
 	RSLocation new
@@ -88,12 +90,13 @@ OPBPMNCollapsedSubProcessShape >> typeBasicIcon [
 ]
 
 { #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> updateLabel [
+	labeled ifNotNil: [
+		labeled text: (self modelElement name ifNil: [ '' ]) ]
+]
+
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> updateRenderFromModel [
-
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
-	self updateIcon.
 	self createBorder.
-	super updateRenderFromModel.
-
-	roassalShape signalUpdate
+	super updateRenderFromModel
 ]

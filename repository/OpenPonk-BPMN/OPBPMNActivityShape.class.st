@@ -5,7 +5,8 @@ Class {
 	#name : 'OPBPMNActivityShape',
 	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
-		'border'
+		'border',
+		'labeled'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
@@ -43,36 +44,40 @@ OPBPMNActivityShape >> initialize [
 	self createBorder
 ]
 
+{ #category : 'removing' }
+OPBPMNActivityShape >> removeRender [
+	super removeRender.
+	labeled := nil
+]
+
 { #category : 'rendering' }
 OPBPMNActivityShape >> renderShapeDetails [
-
-	| label |
-	label := RSLabeled new.
-	label location middle.
-	label shapeBuilder labelShape color: Color black.
-	roassalShape addInteraction: label.
+	labeled := OPRSLabeled new.
+	labeled color: Color black.
+	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
+	labeled location middle.
+	labeled text: ''.
+	roassalShape @ labeled.
 
 	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+		form: self typeIconForModel;
+		yourself.
 	self canvas add: icon.
 	RSLocation new
 		stick: icon on: self roassalShape;
 		offset: -28 @ -16.
 
-	self color: (Color fromHexString: 'f2f2f2').
-	"TODO for what are good bounds?????"
-	"JanBliznicenko: To persist position and size for persistence"
-	"self bounds: nil"
+	self color: (Color fromHexString: 'f2f2f2')
+]
+
+{ #category : 'rendering' }
+OPBPMNActivityShape >> updateLabel [
+	labeled ifNotNil: [
+		labeled text: (self modelElement name ifNil: [ '' ]) ]
 ]
 
 { #category : 'rendering' }
 OPBPMNActivityShape >> updateRenderFromModel [
-
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
-	self updateIcon.
 	self createBorder.
-	super updateRenderFromModel.
-
-	roassalShape signalUpdate
+	super updateRenderFromModel
 ]

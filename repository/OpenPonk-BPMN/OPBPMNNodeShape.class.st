@@ -108,12 +108,18 @@ OPBPMNNodeShape >> updateIcon [
 ]
 
 { #category : 'rendering' }
-OPBPMNNodeShape >> updateRenderFromModel [
+OPBPMNNodeShape >> updateLabel [
+	| labelShape |
+	labelShape := roassalShape propertyAt: #RSLabeled ifAbsent: [ nil ].
+	labelShape ifNotNil: [
+		labelShape text: (self modelElement name ifNil: [ '' ]) ]
+]
 
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
+{ #category : 'rendering' }
+OPBPMNNodeShape >> updateRenderFromModel [
+	self updateLabel.
 	self updateIcon.
 	super updateRenderFromModel.
-
 	roassalShape signalUpdate
 ]
 
