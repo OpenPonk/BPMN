@@ -16,14 +16,13 @@ OPBPMNFlowViewModel class >> modelClass [ ^ OPBPMNFlowModel
 { #category : 'forms' }
 OPBPMNFlowViewModel >> buildEditorForm: aForm [
 
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #Normal #Default #Conditional );
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
+	droplist := aForm
+		bindDroplist: 'Type'
+		property: #type
+		items: #( #Normal #Default #Conditional ).
+	droplist display: [ :eachFlowType | eachFlowType asString ]
 ]
 
 { #category : 'accessing' }

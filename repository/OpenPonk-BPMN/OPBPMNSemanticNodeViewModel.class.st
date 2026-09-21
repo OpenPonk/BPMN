@@ -21,13 +21,10 @@ OPBPMNSemanticNodeViewModel class >> modelClass [ ^ OPBPMNSemanticNodeModel
 
 { #category : 'forms' }
 OPBPMNSemanticNodeViewModel >> buildEditorForm: aForm [
-	(self isNameMultiline
-		ifTrue: [ aForm addText: 'Name' ]
-		ifFalse: [ aForm addTextInput: 'Name' ])
-		text: (self model name ifNil: [ '' ]);
-		whenTextChangedDo: [ :newValue |
-			self model name: newValue asString.
-			self modelChanged ]
+
+	self isNameMultiline
+		ifTrue: [ aForm bindText: 'Name' property: #name ]
+		ifFalse: [ aForm bindTextInput: 'Name' property: #name ]
 ]
 
 { #category : 'accessing' }

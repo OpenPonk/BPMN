@@ -36,9 +36,9 @@ OPBPMNPoolModel >> initialize [
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> laneNameAt: aIndex [
-
-	^ laneNames at: aIndex
+OPBPMNPoolModel >> laneNameAt: anIndex [
+	"Answer the name of the lane at the given 1-based index."
+	^ laneNames at: anIndex
 ]
 
 { #category : 'accessing' }
@@ -48,12 +48,14 @@ OPBPMNPoolModel >> laneNames [
 
 { #category : 'accessing' }
 OPBPMNPoolModel >> laneNames: aCollection [
-	laneNames := aCollection  
+	"Set the collection of lane names defensively."
+	laneNames := aCollection asOrderedCollection copy
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> laneNamesAt: aIndex put: aText [
-	laneNames at: aIndex put: aText
+OPBPMNPoolModel >> laneNamesAt: anIndex put: aText [
+	"Set the name of the lane at the given 1-based index."
+	laneNames at: anIndex put: aText
 ]
 
 { #category : 'accessing' }

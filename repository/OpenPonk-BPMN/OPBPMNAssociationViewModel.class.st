@@ -33,14 +33,13 @@ OPBPMNAssociationViewModel >> basicRemoveModel [
 { #category : 'forms' }
 OPBPMNAssociationViewModel >> buildEditorForm: aForm [
 
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Association direction')
-		items: self modelClass allAssociationDirections;
-		display: [ :type | type asString ];
-		selectItem: self model associationDirection;
-		whenSelectedItemChangedDo: [ :newValue |
-				self model associationDirection: newValue.
-				self modelChanged ]
+	droplist := aForm
+		bindDroplist: 'Association direction'
+		property: #associationDirection
+		items: self modelClass allAssociationDirections.
+	droplist display: [ :eachDirection | eachDirection asString ]
 ]
 
 { #category : 'accessing' }

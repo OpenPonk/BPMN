@@ -14,6 +14,12 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'reacting' }
+OPBPMNDataObjectShape >> associationCreated: anAssociation [
+	"Hook called when an association connected to this shape is created. No specific visual reaction needed."
+	
+]
+
 { #category : 'accessing' }
 OPBPMNDataObjectShape >> attachedShapes [
 

@@ -16,15 +16,14 @@ OPBPMNGatewayViewModel class >> modelClass [ ^ OPBPMNGatewayModel
 { #category : 'forms' }
 OPBPMNGatewayViewModel >> buildEditorForm: aForm [
 
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #'Exclusive (empty)' #Exclusive #Inclusive #Parallel #Complex #Eventbased );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-			self model type: newValue.
-			self modelChanged ]
+	droplist := aForm
+		bindDroplist: 'Type'
+		property: #type
+		items: #( #'Exclusive (empty)' #Exclusive #Inclusive #Parallel #Complex #Eventbased ).
+	droplist displayIcon: [ :eachGatewayType | self model typeIconFor: eachGatewayType ].
+	droplist display: [ :eachGatewayType | eachGatewayType asString ]
 ]
 
 { #category : 'accessing' }

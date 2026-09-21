@@ -15,23 +15,18 @@ OPBPMNCollapsedSubProcessViewModel class >> modelClass [ ^ OPBPMNCollapsedSubPro
 
 { #category : 'forms' }
 OPBPMNCollapsedSubProcessViewModel >> buildEditorForm: aForm [
+
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Marker')
+	droplist := aForm
+		bindDroplist: 'Marker'
+		property: #type
 		items:
 			#( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation
-			   #MarkerAdhoc );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-			self model type: newValue.
-			self modelChanged ].
-	(aForm addCheckbox: 'Is Call Activity?')
-		state: self model isCallActivity;
-		whenChangedDo: [ :val |
-			self model isCallActivity: val.
-			self modelChanged ].
-	self modelChanged
+			   #MarkerAdhoc ).
+	droplist displayIcon: [ :eachMarker | self model typeIconFor: eachMarker ].
+	droplist display: [ :eachMarker | eachMarker asString ].
+	aForm bindCheckbox: 'Is Call Activity?' property: #isCallActivity
 ]
 
 { #category : 'accessing' }

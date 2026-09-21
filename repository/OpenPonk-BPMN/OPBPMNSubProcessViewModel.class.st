@@ -13,12 +13,6 @@ Class {
 OPBPMNSubProcessViewModel class >> modelClass [ ^ OPBPMNSubProcessModel
 ]
 
-{ #category : 'forms' }
-OPBPMNSubProcessViewModel >> buildEditorForm: aForm [
-	super buildEditorForm: aForm.
-	self modelChanged
-]
-
 { #category : 'accessing' }
 OPBPMNSubProcessViewModel >> essentialChildrenModels [
 			^ self model nodes asArray , (self model nodes flatCollect: [ :each | each outgoing ]) asArray

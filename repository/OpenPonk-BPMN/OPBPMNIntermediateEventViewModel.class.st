@@ -15,48 +15,36 @@ OPBPMNIntermediateEventViewModel class >> modelClass [ ^ OPBPMNIntermediateEvent
 
 { #category : 'forms' }
 OPBPMNIntermediateEventViewModel >> buildEditorForm: aForm [
-
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
+	droplist := aForm
+		bindDroplist: 'Type'
+		property: #type
 		items:
 			#( #Send #Receive #Timer #Escalation #EscalationThrow
 			   #Conditional #Link #LinkThrow #Compensation #CompensationThrow
 			   #Signal #SignalThrow #Multiple #MultipleThrow #ParallelMultiple
-			   #None );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-			self model type: newValue.
-			self modelChanged ].
+			   #None ).
+	droplist displayIcon: [ :eachType | self model typeIconFor: eachType ].
+	droplist display: [ :eachType | eachType asString ].
 	self model type = OPBPMNNodeType Timer ifTrue: [
-		(aForm addDroplist: 'Timer type')
-			items: #( #none #timeDate #timeDuration #timeCycle );
-			display: [ :type | type asString ];
-			selectItem: self model timerType;
-			whenSelectedItemChangedDo: [ :newValue |
-				self model timerType: newValue.
-				self modelChanged ].
-		(aForm addText: 'Timer value')
-			text: self model timerValue;
-			whenTextChangedDo: [ :newValue |
-				self model timerValue: newValue asString.
-				self modelChanged ] ].
-	self model type = OPBPMNNodeType Send
-		ifTrue: [
-			(aForm addText: 'Executable attribute')
-				text: self model executableAttribute;
-				whenTextChangedDo: [ :newValue |
-					self model executableAttribute: newValue asString.
-					self modelChanged ].
-			(aForm addText: 'Executable attribute value')
-				text: self model executableAttributeValue;
-				whenTextChangedDo: [ :newValue |
-					self model executableAttributeValue: newValue asString.
-					self modelChanged ] ]
-		ifFalse: [ self model executableAttribute: nil ]
+		| timerDrop |
+		timerDrop := aForm
+			bindDroplist: 'Timer type'
+			property: #timerType
+			items: #( #none #timeDate #timeDuration #timeCycle ).
+		timerDrop display: [ :eachTimerType | eachTimerType asString ].
+		aForm bindTextInput: 'Timer value' property: #timerValue ].
+	self model type = OPBPMNNodeType Send ifTrue: [
+		aForm bindTextInput: 'Executable attribute' property: #executableAttribute.
+		aForm bindTextInput: 'Executable attribute value' property: #executableAttributeValue ]
 ]
 
 { #category : 'accessing' }
 OPBPMNIntermediateEventViewModel >> icon [ ^ OPBPMNIcon current intermediateEvent
+]
+
+{ #category : 'accessing' }
+OPBPMNIntermediateEventViewModel >> structuralPropertySelectors [
+	^ #( #type )
 ]

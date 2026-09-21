@@ -17,15 +17,24 @@ OPBPMNSemanticNodeControllerTest class >> isAbstract [
 	^ self = OPBPMNSemanticNodeControllerTest
 ]
 
-{ #category : 'utilities' }
+{ #category : 'accessing' }
 OPBPMNSemanticNodeControllerTest >> selectableTypes [
 
 	| form dropListForType dropListForMarker |
 	form := Mock new.
 	dropListForType := SpDropListPresenter new.
 	dropListForMarker := SpDropListPresenter new.
+
 	(form stub addDroplist: 'Type') willReturn: dropListForType.
 	(form stub addDroplist: 'Marker') willReturn: dropListForMarker.
+
+	(form stub bindDroplist: 'Type' property: Any items: Any) will: [ :labelArg :propertyArg :itemsArg |
+		dropListForType items: itemsArg.
+		dropListForType ].
+	(form stub bindDroplist: 'Marker' property: Any items: Any) will: [ :labelMarkerArg :propertyMarkerArg :itemsMarkerArg |
+		dropListForMarker items: itemsMarkerArg.
+		dropListForMarker ].
+
 	self controller buildEditorForm: form.
 	^ dropListForType items , dropListForMarker items
 ]

@@ -15,39 +15,32 @@ OPBPMNStartEventViewModel class >> modelClass [ ^ OPBPMNStartEventModel
 
 { #category : 'forms' }
 OPBPMNStartEventViewModel >> buildEditorForm: aForm [
-
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
+	droplist := aForm
+		bindDroplist: 'Type'
+		property: #type
 		items:
 			#( #None #Receive #Timer #Escalation #Conditional #Error #Compensation
-			   #Signal #Multiple #ParallelMultiple );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-				self model type: newValue.
-				self modelChanged ].
-	(aForm addCheckbox: 'Is Non-Interrupting')
-		state: self model isNonInterrupting;
-		whenChangedDo: [ :val |
-				self model isNonInterrupting: val.
-				self modelChanged ].
-
-	self model type = OPBPMNNodeType Timer ifFalse: [ ^ self ].
-	(aForm addDroplist: 'Timer type')
-		items: #( #none #timeDate #timeDuration #timeCycle );
-		display: [ :type | type asString ];
-		selectItem: self model timerType;
-		whenSelectedItemChangedDo: [ :newValue |
-				self model timerType: newValue.
-				self modelChanged ].
-	(aForm addText: 'Timer value')
-		text: self model timerValue;
-		whenTextChangedDo: [ :newValue |
-				self model timerValue: newValue asString.
-				self modelChanged ]
+			   #Signal #Multiple #ParallelMultiple ).
+	droplist displayIcon: [ :eachType | self model typeIconFor: eachType ].
+	droplist display: [ :eachType | eachType asString ].
+	aForm bindCheckbox: 'Is Non-Interrupting' property: #isNonInterrupting.
+	self model type = OPBPMNNodeType Timer ifTrue: [
+		| timerDrop |
+		timerDrop := aForm
+			bindDroplist: 'Timer type'
+			property: #timerType
+			items: #( #none #timeDate #timeDuration #timeCycle ).
+		timerDrop display: [ :eachTimerType | eachTimerType asString ].
+		aForm bindTextInput: 'Timer value' property: #timerValue ]
 ]
 
 { #category : 'accessing' }
 OPBPMNStartEventViewModel >> icon [ ^ OPBPMNIcon current startEvent
+]
+
+{ #category : 'accessing' }
+OPBPMNStartEventViewModel >> structuralPropertySelectors [
+	^ #( #type )
 ]

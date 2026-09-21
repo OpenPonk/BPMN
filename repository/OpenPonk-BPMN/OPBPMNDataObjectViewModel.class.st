@@ -16,15 +16,14 @@ OPBPMNDataObjectViewModel class >> modelClass [ ^ OPBPMNDataObjectModel
 { #category : 'forms' }
 OPBPMNDataObjectViewModel >> buildEditorForm: aForm [
 
+	| droplist |
 	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #DataObject #DataInput #DataOutput #DataStore);
-		displayIcon: [ :type | self typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
+	droplist := aForm
+		bindDroplist: 'Type'
+		property: #type
+		items: #( #DataObject #DataInput #DataOutput #DataStore ).
+	droplist displayIcon: [ :eachDataType | self typeIconFor: eachDataType ].
+	droplist display: [ :eachDataType | eachDataType asString ]
 ]
 
 { #category : 'accessing' }
