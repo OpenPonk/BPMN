@@ -47,6 +47,18 @@ OPBPMNPlugin >> diagramControllerClass [
 	^ OPBPMNDiagramController
 ]
 
+{ #category : 'templates' }
+OPBPMNPlugin >> exampleProjectTemplates [
+	"Answers example project templates for BPMN process diagrams."
+
+	^ { 
+		(OPProjectTemplate
+			named: 'Order Fulfillment'
+			icon: self icon
+			modelFactory: [ OPBPMNExamples exampleOrderFulfillment ]
+			isExample: true) }
+]
+
 { #category : 'accessing' }
 OPBPMNPlugin >> icon [
 	^ OPBPMNIcon current logo

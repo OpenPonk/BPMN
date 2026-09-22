@@ -25,13 +25,19 @@ OPBPMNModelViewModel >> childrenModels [ ^ self model nodes
 
 { #category : 'accessing' }
 OPBPMNModelViewModel >> essentialChildrenModels [
-		| poolNodes poolFlows laneNodes laneFlows |
-		poolNodes := self model nodes flatCollect: [ :each | each nodes ].
-		poolFlows := poolNodes flatCollect: [ :each | each outgoing ].
-		laneNodes := poolNodes flatCollect: [ :each | each nodes ].
-		laneFlows := laneNodes flatCollect: [ :each | each outgoing ].
-		^ self model nodes asArray , poolNodes asArray , poolFlows asArray , laneNodes asArray , laneFlows asArray
-		  , (self model nodes flatCollect: [ :each | each outgoing ]) asArray
+	"Answers all model elements that must be visualized in diagram controllers, including pools, nested nodes, flows, and associations."
+	| collectedNodes collectedEdges |
+	collectedNodes := Set new.
+	collectedEdges := Set new.
+	
+	self model allElements do: [ :eachModelElement |
+		eachModelElement isNode ifTrue: [
+			collectedNodes add: eachModelElement.
+			collectedEdges addAll: eachModelElement edges ].
+		eachModelElement isEdge ifTrue: [
+			collectedEdges add: eachModelElement ] ].
+			
+	^ (collectedNodes asArray , collectedEdges asArray) asSet asArray
 ]
 
 { #category : 'accessing' }

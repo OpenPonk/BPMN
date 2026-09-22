@@ -14,7 +14,9 @@ OPBPMNAnnotationViewModel class >> modelClass [ ^ OPBPMNAnnotationModel
 ]
 
 { #category : 'accessing' }
-OPBPMNAnnotationViewModel >> childrenModels [ ^ self model elements
+OPBPMNAnnotationViewModel >> childrenModels [
+	"Answers contained elements and connected associations belonging to this annotation."
+	^ self model elements asArray , self model associations asArray
 ]
 
 { #category : 'forms' }

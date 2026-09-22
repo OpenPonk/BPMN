@@ -65,9 +65,8 @@ OPBPMNAssociationControllerTest >> targetModelClass [
 	^ OPBPMNAnnotationModel
 ]
 
-{ #category : 'tests - ui interaction' }
+{ #category : 'tests' }
 OPBPMNAssociationControllerTest >> testBeingCopiedWithDiagram [
-
 	| diagram diagramElement diagramControllerOfCopy |
 	self assertEmpty: diagramController controllers.
 	self showInDiagram.
@@ -81,20 +80,19 @@ OPBPMNAssociationControllerTest >> testBeingCopiedWithDiagram [
 		assertCollection: diagramController controllers
 		includesAll: { controller }.
 	diagramControllerOfCopy := self diagramControllerClass new.
-	diagramControllerOfCopy viewModelRegistry:
-		(OPViewModelRegistry forProject: diagramController project).
+	diagramController projectController addDiagramController: diagramControllerOfCopy.
 	diagramControllerOfCopy model: diagramController model.
 	self
 		shouldnt: [ diagramControllerOfCopy diagramElement: diagram newCopy ]
 		raise: OPInvalidWarning.
 	diagramControllerOfCopy canvasPresenter: (OPCanvasPresenter new
-			 canvas: RSCanvas new;
-			 yourself).
+			canvas: RSCanvas new;
+			yourself).
 	diagramControllerOfCopy diagramFocused.
 	self
 		assertCollection:
 			(diagramControllerOfCopy diagram allOwnedElements collect:
-				 #modelElement)
+				#modelElement)
 		hasSameElements:
 		(diagramController diagram allOwnedElements collect: #modelElement).
 	self

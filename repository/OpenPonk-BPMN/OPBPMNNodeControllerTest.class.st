@@ -69,13 +69,11 @@ OPBPMNNodeControllerTest >> showCompatibleControllerInDiagram: aController [
 	aController showWithoutDependentInDiagram: diagramController
 ]
 
-{ #category : 'tests - association' }
+{ #category : 'tests' }
 OPBPMNNodeControllerTest >> testCanBeAssociationSource [
-	"Verifies canBeSourceFor: matches hook and validates shape creation when true."
 	| assocController targetController |
 	assocController := OPBPMNAssociationController new.
 	assocController diagramController: diagramController.
-	assocController viewModelRegistry: diagramController viewModelRegistry.
 
 	self assert: (controller canBeSourceFor: assocController) equals: self canBeAssociationSource.
 	self canBeAssociationSource ifFalse: [ ^ self ].
@@ -98,13 +96,11 @@ OPBPMNNodeControllerTest >> testCanBeAssociationSource [
 	self assert: assocController roassalShape to equals: targetController roassalShape
 ]
 
-{ #category : 'tests - association' }
+{ #category : 'tests' }
 OPBPMNNodeControllerTest >> testCanBeAssociationTarget [
-	"Verifies canBeTargetFor: matches hook and validates shape creation when true."
 	| assocController sourceController |
 	assocController := OPBPMNAssociationController new.
 	assocController diagramController: diagramController.
-	assocController viewModelRegistry: diagramController viewModelRegistry.
 
 	sourceController := self newCompatibleSourceForAssociation.
 	assocController source: sourceController.

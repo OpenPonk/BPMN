@@ -59,9 +59,19 @@ OPBPMNPoolViewModel >> computeLaneNamesForCount: aNumber [
 
 { #category : 'accessing' }
 OPBPMNPoolViewModel >> essentialChildrenModels [
-
-	^ self model nodes asArray
-	  , (self model nodes flatCollect: [ :each | each outgoing ]) asArray
+	"Answers all nodes and edges belonging directly or transitively to this pool."
+	| collectedNodes collectedEdges |
+	collectedNodes := Set new.
+	collectedEdges := Set new.
+	
+	self model allElements do: [ :eachModelElement |
+		eachModelElement isNode ifTrue: [
+			collectedNodes add: eachModelElement.
+			collectedEdges addAll: eachModelElement edges ].
+		eachModelElement isEdge ifTrue: [
+			collectedEdges add: eachModelElement ] ].
+			
+	^ (collectedNodes asArray , collectedEdges asArray) asSet asArray
 ]
 
 { #category : 'accessing' }

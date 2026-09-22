@@ -16,12 +16,6 @@ OPBPMNAnnotationModel >> nodes [
 ]
 
 { #category : 'accessing' }
-OPBPMNAnnotationModel >> outgoing [
-
-	^ self elements select: [ :each | each source = self ]
-]
-
-{ #category : 'accessing' }
 OPBPMNAnnotationModel >> text [
 
 	^ self name

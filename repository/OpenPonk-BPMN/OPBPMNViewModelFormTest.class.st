@@ -62,6 +62,22 @@ OPBPMNViewModelFormTest >> testActivityViewModelRebuildsFormOnUndo [
 ]
 
 { #category : 'tests' }
+OPBPMNViewModelFormTest >> testAnnotationViewModelReportsAssociationsAsChildrenModels [
+	| annotationModel activityModel associationModel annotationViewModel reportedChildren |
+	annotationModel := OPBPMNAnnotationModel new.
+	activityModel := OPBPMNActivityModel new.
+	associationModel := OPBPMNAssociationModel new
+		source: annotationModel;
+		target: activityModel;
+		yourself.
+	annotationModel addAssociation: associationModel.
+	activityModel addAssociation: associationModel.
+	annotationViewModel := OPBPMNAnnotationViewModel new model: annotationModel.
+	reportedChildren := annotationViewModel childrenModels.
+	self assertCollection: reportedChildren includesAll: { associationModel }
+]
+
+{ #category : 'tests' }
 OPBPMNViewModelFormTest >> testAssociationViewModelBindsAssociationDirection [
 	| model viewModel form |
 	model := OPBPMNAssociationModel new.
