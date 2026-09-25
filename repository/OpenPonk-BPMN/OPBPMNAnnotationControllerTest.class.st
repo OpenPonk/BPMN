@@ -49,3 +49,23 @@ OPBPMNAnnotationControllerTest >> testDescriptionName [
 		equals: 'bravo'.
 	diagramElement should receive modelChanged
 ]
+
+{ #category : 'tests' }
+OPBPMNAnnotationControllerTest >> testUpdateRenderFromModelRendersTextImmediately [
+	| annotationModel annotationShape canvas renderedLabelText |
+	annotationModel := OPBPMNAnnotationModel new.
+	annotationModel text: 'SLA: 24 hours'.
+	annotationShape := OPBPMNAnnotationShape new.
+	annotationShape modelElement: annotationModel.
+	canvas := RSCanvas new.
+	annotationShape renderIn: canvas.
+	annotationShape updateRenderFromModel.
+
+	renderedLabelText := (annotationShape instVarNamed: 'labeled')
+		ifNotNil: [ :activeLabeled | activeLabeled labelShape text ]
+		ifNil: [ '' ].
+
+	self assert: renderedLabelText equals: 'SLA: 24 hours'.
+	self assert: annotationShape roassalShape extent x > 0.
+	self assert: annotationShape roassalShape extent y > 0
+]

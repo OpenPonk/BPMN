@@ -34,6 +34,11 @@ OPBPMNPlugin class >> exportPackage: aPackage [
 ]
 
 { #category : 'accessing' }
+OPBPMNPlugin class >> repositoryName [
+	^ #BPMN
+]
+
+{ #category : 'accessing' }
 OPBPMNPlugin class >> toolbarMenu: aBuilder [
 
 	<opEditorToolbarMenu: #OPBPMNPlugin>

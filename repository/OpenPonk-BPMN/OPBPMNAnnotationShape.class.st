@@ -6,8 +6,7 @@ Class {
 	#superclass : 'OPBoundNode',
 	#instVars : [
 		'labeled',
-		'borderLine',
-		'lastText'
+		'borderLine'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
@@ -138,13 +137,7 @@ OPBPMNAnnotationShape >> updateBorder [
 
 { #category : 'rendering' }
 OPBPMNAnnotationShape >> updateRenderFromModel [
-
-	lastText = self modelElement text ifTrue: [
-		^ super updateRenderFromModel ].
-	
-	lastText := self modelElement text.
-	labeled text: lastText.
-	
+	labeled text: (self modelElement text ifNil: [ '' ]).
 	self accomodateText.
 	super updateRenderFromModel.
 	roassalShape signalUpdate
