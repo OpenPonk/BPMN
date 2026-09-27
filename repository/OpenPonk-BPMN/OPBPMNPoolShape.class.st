@@ -4,10 +4,7 @@ I render a BPMN Pool as a complex Roassal bound node. I manage the vertical pool
 Class {
 	#name : 'OPBPMNPoolShape',
 	#superclass : 'OPBoundNode',
-	#traits : 'OPTBorderColoredAsStroke @ {#updateBasicShapeBorderColorFromStyles->#updateBorderColorFromStyles}',
-	#classTraits : 'OPTBorderColoredAsStroke classTrait',
 	#instVars : [
-		'innerRoassalShapesBlock',
 		'topBox',
 		'bottomBox',
 		'nameLabel',
@@ -17,6 +14,28 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
+
+{ #category : 'layout' }
+OPBPMNPoolShape >> adaptBoundsToInnerBounds: anInnerRectangle [
+	"Resizes pool shape to encompass inner nodes, accounting for pool header width and lanes."
+	| poolShape poolLeft poolRight poolTop poolBottom poolRectangle |
+	poolShape := self roassalShape.
+	self innerNodeElements ifEmpty: [
+		poolShape extent: 650 @ 120.
+		self updateLanes.
+		self lanes do: [ :eachLane | eachLane updatePosition ].
+		^ self ].
+	poolLeft := anInnerRectangle left - (self nameAreaWidth + 30).
+	poolRight := anInnerRectangle right + 40.
+	poolTop := anInnerRectangle top - 35.
+	poolBottom := anInnerRectangle bottom + 35.
+	poolRectangle := Rectangle left: poolLeft right: poolRight top: poolTop bottom: poolBottom.
+	poolShape
+		extent: poolRectangle extent;
+		translateTo: poolRectangle center.
+	self updateLanes.
+	self lanes do: [ :eachLane | eachLane updatePosition ]
+]
 
 { #category : 'updating' }
 OPBPMNPoolShape >> addNeededLanes [
@@ -29,10 +48,7 @@ OPBPMNPoolShape >> addNeededLanes [
 
 { #category : 'interactions' }
 OPBPMNPoolShape >> addSelectionDraggableInteraction [
-
-	roassalShape
-	@ (OPRSSelectionDraggableBorder thatAlsoDragsShapesProvidedByBlock:
-			 innerRoassalShapesBlock)
+	roassalShape @ (OPRSSelectionDraggableBorder thatAlsoDragsShapesProvidedByBlock: [ self innerDraggableRoassalShapes ])
 ]
 
 { #category : 'reacting' }
@@ -53,15 +69,12 @@ OPBPMNPoolShape >> attachedShapes [
 
 { #category : 'initialization' }
 OPBPMNPoolShape >> initialize [
-
-	super initialize.
-	innerRoassalShapesBlock := [ :allNodes | allNodes ].
+	super initialize
 ]
 
-{ #category : 'initialization' }
-OPBPMNPoolShape >> innerRoassalShapesBlock: aBlock [
-
-	innerRoassalShapesBlock := aBlock
+{ #category : 'testing' }
+OPBPMNPoolShape >> isContainer [
+	^ true
 ]
 
 { #category : 'updating' }

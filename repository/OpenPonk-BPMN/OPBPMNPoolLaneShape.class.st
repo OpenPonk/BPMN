@@ -95,25 +95,28 @@ OPBPMNPoolLaneShape >> renderBasicShape [
 
 { #category : 'rendering' }
 OPBPMNPoolLaneShape >> renderShapeDetails [
+	"Renders invisible boxes, lane separator line and binds layout updates on position and extent changes."
 
 	leftBox := self createInvisibleBox.
 	rightBox := self createInvisibleBox.
 	laneSeparator := RSLine new
-		                 color: Color transparent;
-		                 model: self;
-		                 from: leftBox;
-		                 to: rightBox;
-		                 yourself.
+		color: Color transparent;
+		model: self;
+		from: leftBox;
+		to: rightBox;
+		yourself.
 	self canvas
 		add: leftBox;
 		add: rightBox;
 		add: laneSeparator.
 	laneSeparator pushBack.
-
 	self updatePosition.
-
 	self owningElement roassalShape
 		when: RSPositionChangedEvent
+		do: [ self updatePosition ]
+		for: self.
+	self owningElement roassalShape
+		when: RSExtentChangedEvent
 		do: [ self updatePosition ]
 		for: self
 ]

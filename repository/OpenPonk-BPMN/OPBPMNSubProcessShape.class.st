@@ -12,6 +12,15 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'layout' }
+OPBPMNSubProcessShape >> adaptBoundsToInnerBounds: anInnerRectangle [
+	"Adapts subprocess shape extent and position to safely enclose inner nodes."
+	| requiredExtent |
+	requiredExtent := (anInnerRectangle extent + (60 @ 40)) max: 200 @ 120.
+	self roassalShape extent: requiredExtent.
+	self roassalShape translateTo: anInnerRectangle center
+]
+
 { #category : 'connecting' }
 OPBPMNSubProcessShape >> createRoassalShape [
 
@@ -24,6 +33,11 @@ OPBPMNSubProcessShape >> createRoassalShape [
 		  yourself
 ]
 
+{ #category : 'testing' }
+OPBPMNSubProcessShape >> isContainer [
+	^ true
+]
+
 { #category : 'removing' }
 OPBPMNSubProcessShape >> removeRender [
 	super removeRender.
@@ -32,14 +46,20 @@ OPBPMNSubProcessShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNSubProcessShape >> renderShapeDetails [
+
 	labeled := OPRSLabeled new.
 	labeled color: Color black.
 	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
 	labeled location top offset: 0 @ 17.
 	labeled text: ''.
-	roassalShape @ labeled.
+	roassalShape @ labeled
+]
 
-	roassalShape @ RSTransformable
+{ #category : 'interactions' }
+OPBPMNSubProcessShape >> shouldBeResizableByUser [
+	"Subprocesses are expandable container nodes that can be resized by the user or layout algorithms."
+
+	^ true
 ]
 
 { #category : 'connecting' }

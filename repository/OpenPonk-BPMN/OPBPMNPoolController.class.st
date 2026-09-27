@@ -42,36 +42,8 @@ OPBPMNPoolController >> canBeTargetFor: aController [
 	^ aController isKindOf: OPBPMNNodeController
 ]
 
-{ #category : 'construction' }
-OPBPMNPoolController >> hookDiagramElement [
-
-	super hookDiagramElement.
-
-	self diagramElement innerRoassalShapesBlock: [
-		self nodeRoassalShapes ]
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolController >> nodeRoassalShapes [
-
-	^ self model nodes
-		  collect: [ :eachModel |
-			  self diagramController
-				  controllerForModel: eachModel
-				  ifFound: #roassalShape ]
-		  thenSelect: #isNotNil
-]
-
 { #category : 'deprecation' }
 OPBPMNPoolController >> rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm [
 	self deprecated: 'Use viewModel instead'.
 	^ self viewModel rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm
-]
-
-{ #category : 'diagram elements' }
-OPBPMNPoolController >> unhookDiagramElement [
-
-	super unhookDiagramElement.
-	(self diagramElement ifNotExists: [ ^ self ])
-		innerRoassalShapesBlock: [  ]
 ]

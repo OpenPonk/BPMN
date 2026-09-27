@@ -93,6 +93,13 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 
+{ #category : 'interactions' }
+OPBPMNBoundaryEventShape >> shouldBePositionableByUser [
+	"Boundary events are structurally attached to their enclosing activity or subprocess via RSLocation and cannot be independently positioned."
+
+	^ false
+]
+
 { #category : 'rendering' }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
 
