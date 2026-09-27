@@ -17,7 +17,7 @@ OPBPMNAbstractFlowShape >> associationCreated: anAssociation [
 
 { #category : 'initialization' }
 OPBPMNAbstractFlowShape >> createOwnedElementsWithoutController [
-
+	self ownedElements ifNotEmpty: [ ^ self ].
 	super createOwnedElementsWithoutController.
 	OPBPMNEdgeLabel in: self
 ]
