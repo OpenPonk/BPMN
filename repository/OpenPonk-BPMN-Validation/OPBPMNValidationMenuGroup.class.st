@@ -15,12 +15,6 @@ OPBPMNValidationMenuGroup >> icon [
 	^ OPBPMNIcon current logo
 ]
 
-{ #category : 'testing' }
-OPBPMNValidationMenuGroup >> isInlined [
-	"Answers false to render this group as a nested submenu."
-	^ false
-]
-
 { #category : 'accessing' }
 OPBPMNValidationMenuGroup >> name [
 	"Answers the display name of the validation group."
