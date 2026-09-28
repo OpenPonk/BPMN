@@ -1,3 +1,6 @@
+"
+Tests automatic hierarchical layout algorithms and element positioning in BPMN collaboration diagrams.
+"
 Class {
 	#name : 'OPBPMNLayouterTest',
 	#superclass : 'TestCase',

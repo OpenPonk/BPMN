@@ -1,3 +1,6 @@
+"
+Verifies the serialization and deserialization roundtrip persistence for BPMN collaboration models.
+"
 Class {
 	#name : 'OPBPMNPluginRoundtripTest',
 	#superclass : 'OPAbstractPluginExampleRoundtripTest',

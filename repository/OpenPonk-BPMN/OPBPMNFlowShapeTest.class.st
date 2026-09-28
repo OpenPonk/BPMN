@@ -1,3 +1,6 @@
+"
+Tests sequence and message flow shape rendering, markers, and line segments in BPMN diagrams.
+"
 Class {
 	#name : 'OPBPMNFlowShapeTest',
 	#superclass : 'TestCase',

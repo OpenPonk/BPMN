@@ -1,3 +1,6 @@
+"
+Tests diagram controller interactions, lane containment, and pool management in BPMN diagrams.
+"
 Class {
 	#name : 'OPBPMNDiagramControllerTest',
 	#superclass : 'OPAbstractDiagramControllerTest',

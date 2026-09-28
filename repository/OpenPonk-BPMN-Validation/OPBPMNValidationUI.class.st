@@ -27,35 +27,6 @@ OPBPMNValidationUI class >> removeHighlightsFromElementsIn: aDiagramController [
 ]
 
 { #category : 'specs' }
-OPBPMNValidationUI class >> toolbarMenu: aBuilder [
-
-	<opEditorToolbarMenu: #OPBPMNPlugin>
-	"| appliedProfiles |
-	appliedProfiles := aBuilder model diagramController model
-		                   profileApplications collect: #appliedProfile.
-	(appliedProfiles noneSatisfy: [ :each | each name = 'BPMN' ]) 
-		ifTrue: [ ^ self ].
-	"self toolbarMenuItemFor: aBuilder
-]
-
-{ #category : 'specs' }
-OPBPMNValidationUI class >> toolbarMenuItemFor: aBuilder [
-
-	(aBuilder item: 'Validations')
-		icon: OPBPMNIcon current logo;
-		action: [  ];
-		with: [ 
-			(aBuilder item: 'Validate model') action: [ 
-					self
-						updateValidatedElements: (OPBPMNValidationController new validate:
-									 aBuilder model diagramController model)
-						using: aBuilder model diagramController ].
-			(aBuilder item: 'Remove highlights') action: [ 
-					self removeHighlightsFromElementsIn:
-							aBuilder model diagramController ] ]
-]
-
-{ #category : 'specs' }
 OPBPMNValidationUI class >> updateValidatedElementStyle: aVerificationResults using: aController [
 
 	| color |

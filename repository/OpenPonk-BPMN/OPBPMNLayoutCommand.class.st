@@ -1,3 +1,6 @@
+"
+A diagram command that executes the hierarchical automatic layout algorithm on the active BPMN diagram elements.
+"
 Class {
 	#name : 'OPBPMNLayoutCommand',
 	#superclass : 'OPLayoutDiagramCommand',

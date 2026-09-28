@@ -1,3 +1,6 @@
+"
+Verifies the initialization, registration, and shutdown lifecycle of the BPMN plugin.
+"
 Class {
 	#name : 'OPBPMNPluginLifecycleTest',
 	#superclass : 'OPAbstractPluginExampleLifecycleTest',

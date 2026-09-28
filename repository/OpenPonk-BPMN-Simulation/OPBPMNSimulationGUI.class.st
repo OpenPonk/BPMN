@@ -12,13 +12,6 @@ Class {
 	#tag : 'Simulation'
 }
 
-{ #category : 'toolbar' }
-OPBPMNSimulationGUI class >> toolbarMenu: aBuilder [
-
-	<opEditorToolbarMenu: #OPBPMNPlugin>
-	self toolbarMenuItemFor: aBuilder
-]
-
 { #category : 'private - hooks' }
 OPBPMNSimulationGUI >> buttonItems [
 

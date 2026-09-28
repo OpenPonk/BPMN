@@ -1,3 +1,6 @@
+"
+Tests loading, diagram rendering, and model integrity for bundled BPMN example workflows.
+"
 Class {
 	#name : 'OPBPMNExamplesTest',
 	#superclass : 'TestCase',

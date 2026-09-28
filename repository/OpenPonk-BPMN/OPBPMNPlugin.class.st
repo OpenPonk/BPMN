@@ -39,15 +39,6 @@ OPBPMNPlugin class >> repositoryName [
 ]
 
 { #category : 'accessing' }
-OPBPMNPlugin class >> toolbarMenu: aBuilder [
-
-	<opEditorToolbarMenu: #OPBPMNPlugin>
-	(aBuilder item: 'Export as XML...')
-		icon: OPBPMNIcon current logo;
-		action: [ self exportPackage: aBuilder model diagramController ]
-]
-
-{ #category : 'accessing' }
 OPBPMNPlugin >> diagramControllerClass [
 	^ OPBPMNDiagramController
 ]

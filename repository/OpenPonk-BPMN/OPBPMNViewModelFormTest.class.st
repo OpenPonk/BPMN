@@ -1,3 +1,6 @@
+"
+Tests dynamic property form generation, field bindings, and validation for BPMN view models.
+"
 Class {
 	#name : 'OPBPMNViewModelFormTest',
 	#superclass : 'TestCase',
