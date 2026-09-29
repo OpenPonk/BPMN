@@ -4,9 +4,9 @@ I am a specialized graph layouter for BPMN diagrams, applying automated spatial 
 Class {
 	#name : 'OPBPMNLayouter',
 	#superclass : 'OPHierarchicalNodesAndEdgesLayouter',
-	#category : 'OpenPonk-BPMN-ViewModels',
+	#category : 'OpenPonk-BPMN-Plugin',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'ViewModels'
+	#tag : 'Plugin'
 }
 
 { #category : 'accessing' }
@@ -58,6 +58,13 @@ OPBPMNLayouter >> applyLayout: aTwoArgBlock [
 	commands := snapshot deltaCommands.
 	self executeLayoutCommands: commands.
 	self updateCanvas
+]
+
+{ #category : 'accessing' }
+OPBPMNLayouter >> containerElementsBottomUp [
+	"Answers all active container diagram elements in diagram, excluding swimlanes which are laid out globally by their owning pool."
+	^ (super containerElementsBottomUp reject: [ :eachElement |
+		eachElement isKindOf: OPBPMNLaneShape ]) asArray
 ]
 
 { #category : 'layouts' }
@@ -130,9 +137,11 @@ OPBPMNLayouter >> layoutHorizontalFlowShapes: aCollectionOfFlowShapes edges: aCo
 
 { #category : 'layouts' }
 OPBPMNLayouter >> layoutInnerContentOf: aContainerElement shapes: directShapes edges: directEdges [
-	"Dispatches inner layout algorithm based on whether the container is a pool or a subprocess."
+	"Dispatches inner layout algorithm based on whether the container is a subprocess, pool with lanes, or unpartitioned pool."
 	(aContainerElement isKindOf: OPBPMNSubProcessShape) ifTrue: [
 		^ self layoutSubProcessContent: aContainerElement shapes: directShapes edges: directEdges ].
+	((aContainerElement isKindOf: OPBPMNPoolShape) and: [ aContainerElement hasLanes ]) ifTrue: [
+		^ self layoutPoolWithLanes: aContainerElement shapes: directShapes ].
 	self layoutPoolContent: aContainerElement shapes: directShapes edges: directEdges
 ]
 
@@ -147,6 +156,75 @@ OPBPMNLayouter >> layoutPoolContent: aPoolShape shapes: directShapes edges: dire
 	flowEdges := self sequenceFlowLayoutEdgesForNodes: flowShapes.
 	self layoutHorizontalFlowShapes: flowShapes edges: flowEdges.
 	self layoutSecondaryShapes: secondaryShapes
+]
+
+{ #category : 'layouting' }
+OPBPMNLayouter >> layoutPoolWithLanes: aPoolShape shapes: aCollectionOfLaneShapes [
+	| lanes allFlowShapes allSecondaryShapes flowEdges ranks maxRank nodesByRank currentX horizontalGap laneHeight startX poolInnerWidth startY |
+	lanes := aPoolShape laneShapes.
+	lanes ifEmpty: [ ^ self ].
+
+	allFlowShapes := (lanes flatCollect: [ :eachLane |
+		eachLane directNodeRoassalShapes reject: [ :eachShape |
+			(eachShape model isKindOf: OPBPMNDataObjectShape) or: [
+				eachShape model isKindOf: OPBPMNAnnotationShape ] ] ]) asGroup.
+
+	allSecondaryShapes := (lanes flatCollect: [ :eachLane |
+		eachLane directNodeRoassalShapes select: [ :eachShape |
+			(eachShape model isKindOf: OPBPMNDataObjectShape) or: [
+				eachShape model isKindOf: OPBPMNAnnotationShape ] ] ]) asGroup.
+
+	flowEdges := self sequenceFlowLayoutEdgesForNodes: allFlowShapes.
+
+	ranks := Dictionary new.
+	allFlowShapes do: [ :eachShape | ranks at: eachShape put: 0 ].
+	allFlowShapes size timesRepeat: [
+		flowEdges do: [ :eachEdge |
+			| sourceRank targetRank |
+			sourceRank := ranks at: eachEdge key ifAbsent: [ 0 ].
+			targetRank := ranks at: eachEdge value ifAbsent: [ 0 ].
+			targetRank < (sourceRank + 1) ifTrue: [
+				ranks at: eachEdge value put: sourceRank + 1 ] ] ].
+
+	maxRank := ranks values ifEmpty: [ 0 ] ifNotEmpty: [ :valuesCollection | valuesCollection max ].
+	nodesByRank := Dictionary new.
+	0 to: maxRank do: [ :eachRank |
+		nodesByRank at: eachRank put: OrderedCollection new ].
+	ranks keysAndValuesDo: [ :eachShape :eachRank |
+		(nodesByRank at: eachRank) add: eachShape ].
+
+	laneHeight := 220.
+	currentX := 60.
+	horizontalGap := 50.
+
+	0 to: maxRank do: [ :eachRankIndex |
+		| columnShapes columnMaxWidth columnCenterX |
+		columnShapes := nodesByRank at: eachRankIndex.
+		columnShapes ifNotEmpty: [
+			columnMaxWidth := (columnShapes collect: [ :eachShape | eachShape extent x ]) max.
+			columnCenterX := currentX + (columnMaxWidth / 2).
+			columnShapes do: [ :eachShape |
+				| owningLaneIndex laneCenterY |
+				owningLaneIndex := lanes indexOf: eachShape model owningElement.
+				owningLaneIndex = 0 ifTrue: [ owningLaneIndex := 1 ].
+				laneCenterY := (owningLaneIndex - 0.5) * laneHeight.
+				eachShape translateTo: columnCenterX @ laneCenterY ].
+			currentX := currentX + columnMaxWidth + horizontalGap ] ].
+
+	self layoutSecondaryShapes: allSecondaryShapes.
+
+	startX := 0.
+	poolInnerWidth := currentX + 30 max: 600.
+	startY := 0.
+
+	lanes withIndexDo: [ :eachLane :index |
+		| eachLaneShape laneCenterX laneCenterY |
+		eachLaneShape := eachLane roassalShape.
+		laneCenterX := startX + aPoolShape nameAreaWidth + (poolInnerWidth / 2).
+		laneCenterY := startY + ((index - 0.5) * laneHeight).
+		eachLaneShape
+			extent: poolInnerWidth @ laneHeight;
+			translateTo: laneCenterX @ laneCenterY ]
 ]
 
 { #category : 'layouts' }
@@ -221,4 +299,18 @@ OPBPMNLayouter >> sequenceFlowLayoutEdgesForNodes: aCollectionOfShapes [
 				  sourceShape := sourceAndTargetShape key.
 				  targetShape := sourceAndTargetShape value.
 				  sourceShape isNotNil and: [ targetShape isNotNil and: [ sourceShape ~~ targetShape ] ] ]
+]
+
+{ #category : 'layouts' }
+OPBPMNLayouter >> wirePositionPropagationFor: aContainerElement children: aCollectionOfShapes [
+	"Subscribes to container shape position change to synchronously translate inner lane flow nodes."
+	| innerShapesToPropagate |
+	innerShapesToPropagate := OrderedCollection new.
+	(aContainerElement isKindOf: OPBPMNPoolShape)
+		ifTrue: [
+			aContainerElement laneShapes do: [ :eachLane |
+				innerShapesToPropagate addAll: eachLane directNodeRoassalShapes ] ]
+		ifFalse: [
+			innerShapesToPropagate addAll: aCollectionOfShapes ].
+	super wirePositionPropagationFor: aContainerElement children: innerShapesToPropagate asGroup
 ]

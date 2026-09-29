@@ -18,25 +18,33 @@ OPBPMNExamples class >> emptyModel [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : 'examples' }
 OPBPMNExamples class >> exampleOrderFulfillment [
 	"Answers a valid, fully connected BPMN model containing all 15 supported modeling constructs."
 
-	| model poolCustomer poolVendor startEvent taskCheckStock gatewayInStock procureSubProcess taskOrderSupplier boundaryTimer collapsedSubProcess intermediateTimer endEventFulfilled endEventCanceled dataObjectOrder annotationSla flowStartToTask flowTaskToGateway flowGatewayToProcure flowGatewayToShip flowProcureToShip flowBoundaryToCancel flowShipToIntermediate flowIntermediateToEnd messageFlow dataFlow association |
+	| model poolCustomer poolVendor laneSales laneWarehouse startEvent taskCheckStock gatewayInStock procureSubProcess taskOrderSupplier boundaryTimer collapsedSubProcess intermediateTimer endEventFulfilled endEventCanceled dataObjectOrder annotationSla flowStartToTask flowTaskToGateway flowGatewayToProcure flowGatewayToShip flowProcureToShip flowBoundaryToCancel flowShipToIntermediate flowIntermediateToEnd messageFlow dataFlow association |
 	model := self emptyModel.
 	model name: 'Order Fulfillment'.
 	poolCustomer := OPBPMNPoolModel new
 		name: 'Customer';
-		lanes: 0;
 		yourself.
 	poolVendor := OPBPMNPoolModel new
 		name: 'Order Fulfillment';
-		lanes: 2;
-		laneNames: { 'Sales' . 'Warehouse' };
 		yourself.
 	model
 		add: poolCustomer;
 		add: poolVendor.
+
+	laneSales := OPBPMNLaneModel new
+		name: 'Sales';
+		yourself.
+	laneWarehouse := OPBPMNLaneModel new
+		name: 'Warehouse';
+		yourself.
+	poolVendor
+		addLane: laneSales;
+		addLane: laneWarehouse.
+
 	startEvent := OPBPMNStartEventModel new
 		name: 'Order Placed';
 		type: OPBPMNNodeType Receive;
@@ -90,17 +98,21 @@ OPBPMNExamples class >> exampleOrderFulfillment [
 	annotationSla := OPBPMNAnnotationModel new
 		text: 'Standard fulfillment SLA: 48 hours';
 		yourself.
-	poolVendor
+
+	laneSales
 		add: startEvent;
 		add: taskCheckStock;
 		add: gatewayInStock;
 		add: procureSubProcess;
-		add: collapsedSubProcess;
-		add: intermediateTimer;
-		add: endEventFulfilled;
 		add: endEventCanceled;
 		add: dataObjectOrder;
 		add: annotationSla.
+
+	laneWarehouse
+		add: collapsedSubProcess;
+		add: intermediateTimer;
+		add: endEventFulfilled.
+
 	flowStartToTask := (OPBPMNFlowModel from: startEvent to: taskCheckStock)
 		name: String empty;
 		type: 'Normal';
@@ -169,14 +181,17 @@ OPBPMNExamples class >> exampleOrderFulfillment [
 	^ model
 ]
 
-{ #category : 'examples' }
+{ #category : 'opening' }
 OPBPMNExamples class >> openExample: aModel [
-	"Opens the given BPMN model in a newly created OpenPonk workbench and lays out all elements."
+	"Opens the given BPMN model in a newly created OpenPonk workbench and lays out all elements, guaranteeing window closure on failure."
 
-	| project |
+	| project newWorkbench |
 	project := OPProject named: 'BPMN Example'.
 	project addModel: aModel.
-	^ (OPWorkbench openProject: project) showAllElementsInAllDiagrams
+	newWorkbench := OPWorkbench openProject: project.
+	[ newWorkbench showAllElementsInAllDiagrams ]
+		ifCurtailed: [ newWorkbench close ].
+	^ newWorkbench
 ]
 
 { #category : 'examples' }

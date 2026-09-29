@@ -200,46 +200,18 @@ OPBPMNViewModelFormTest >> testIntermediateEventViewModelBindsTimerAndSendFields
 ]
 
 { #category : 'tests' }
-OPBPMNViewModelFormTest >> testPoolViewModelBindsLanesAndLaneNames [
-	| model viewModel controller form |
-	model := OPBPMNPoolModel new.
-	model lanes: 2.
-	viewModel := OPBPMNPoolViewModel new model: model.
-	controller := OPBPMNPoolController new viewModel: viewModel.
+OPBPMNViewModelFormTest >> testPoolViewModelBindsNameOnly [
+	| poolModel poolViewModel poolController form |
+	poolModel := OPBPMNPoolModel new name: 'Corporate Pool'.
+	poolViewModel := OPBPMNPoolViewModel new model: poolModel.
+	poolController := OPBPMNPoolController new viewModel: poolViewModel.
 
 	form := OPPropertiesForm new.
-	form viewModel: controller.
+	form viewModel: poolController.
 
 	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #lanes ]).
-	self assert: form bindings size equals: 4. "name + lanes + lane1 + lane2"
-]
-
-{ #category : 'tests' }
-OPBPMNViewModelFormTest >> testPoolViewModelRebuildsLaneNamesOnLanesChange [
-	| model viewModel controller form changeCmd |
-	model := OPBPMNPoolModel new.
-	model lanes: 1.
-	viewModel := OPBPMNPoolViewModel new model: model.
-	controller := OPBPMNPoolController new viewModel: viewModel.
-
-	form := OPPropertiesForm new.
-	form viewModel: controller.
-	self assert: form bindings size equals: 3. "name + lanes + lane1"
-
-	changeCmd := OPPropertyChangeCommand
-		viewModel: controller
-		selector: #lanes
-		oldValue: 1
-		newValue: 3.
-	changeCmd execute.
-
-	self assert: model lanes equals: 3.
-	self assert: form bindings size equals: 5. "name + lanes + lane1 + lane2 + lane3"
-
-	changeCmd undo.
-	self assert: model lanes equals: 1.
-	self assert: form bindings size equals: 3
+	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #lanes ]).
+	self assert: form bindings size equals: 1
 ]
 
 { #category : 'tests' }
@@ -270,46 +242,4 @@ OPBPMNViewModelFormTest >> testSubProcessViewModelBindsMultilineName [
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
 	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ])
-]
-
-{ #category : 'tests' }
-OPBPMNViewModelFormTest >> testUndoLaneCountPreservesCustomLaneNames [
-	"Verify that shrinking lane count and subsequently performing undo restores custom lane names."
-	| poolModel poolController form undoManager lanesBinding |
-	undoManager := OPUndoManager new.
-	poolModel := OPBPMNPoolModel new.
-	poolModel lanes: 3.
-	poolModel laneNames at: 3 put: 'Operator'.
-
-	poolController := OPBPMNPoolController new.
-	poolController viewModel: (OPBPMNPoolViewModel new model: poolModel).
-
-	form := OPPropertiesForm new.
-	form undoManager: undoManager.
-	form viewModel: poolController.
-
-	self assert: (poolModel laneNames at: 3) equals: 'Operator'.
-
-	lanesBinding := form bindings detect: [ :eachBinding98 | eachBinding98 selector = #lanes ].
-	lanesBinding writeModelValue: 2.
-
-	self assert: poolModel lanes equals: 2.
-	self assert: poolModel laneNames size equals: 2.
-
-	"Undo reverts to 3 lanes and restores the original lane name"
-	undoManager undo.
-	self assert: poolModel lanes equals: 3.
-	self assert: poolModel laneNames size equals: 3.
-	self assert: (poolModel laneNames at: 3) equals: 'Operator'.
-
-	"Redo reapplies the lane shrink operation"
-	undoManager redo.
-	self assert: poolModel lanes equals: 2.
-	self assert: poolModel laneNames size equals: 2.
-
-	"Repeated undo confirms complete reversibility"
-	undoManager undo.
-	self assert: poolModel lanes equals: 3.
-	self assert: poolModel laneNames size equals: 3.
-	self assert: (poolModel laneNames at: 3) equals: 'Operator'
 ]

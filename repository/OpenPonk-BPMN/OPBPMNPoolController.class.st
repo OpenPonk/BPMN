@@ -28,22 +28,18 @@ OPBPMNPoolController >> canBeSourceFor: aController [
 ]
 
 { #category : 'connecting' }
-OPBPMNPoolController >> canBeTargetFor: aController [
+OPBPMNPoolController >> canBeTargetFor: aTargetController [
 
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-			^ aController source model enclosingPool
-			  ~= self model enclosingPool and: [ aController source ~= self ] ].
+	(aTargetController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ aTargetController source model enclosingPool ~= self model enclosingPool and: [ aTargetController source ~= self ] ].
 
-	(aController isKindOf: OPBPMNAssociationController) ifTrue: [
-		^ aController source ~= self ].
+	(aTargetController isKindOf: OPBPMNAssociationController) ifTrue: [ ^ aTargetController source ~= self ].
 
-	(aController isKindOf: self class) ifTrue: [ ^ false ].
+	(aTargetController isKindOf: OPBPMNLaneController) ifTrue: [ ^ self model elements isEmpty or: [ self model hasLanes ] ].
 
-	^ aController isKindOf: OPBPMNNodeController
-]
+	(aTargetController isKindOf: self class) ifTrue: [ ^ false ].
 
-{ #category : 'deprecation' }
-OPBPMNPoolController >> rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm [
-	self deprecated: 'Use viewModel instead'.
-	^ self viewModel rebuildLaneNamesFrom: amountOfShownLanes inForm: aForm
+	self model hasLanes ifTrue: [ ^ false ].
+
+	^ aTargetController isKindOf: OPBPMNNodeController
 ]

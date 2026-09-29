@@ -37,6 +37,7 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNIntermediateEventController forModel: OPBPMNIntermediateEventModel;
 		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
 		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
+		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
 		register: OPBPMNSubProcessController forModel: OPBPMNSubProcessModel;
 		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
@@ -69,6 +70,9 @@ OPBPMNDiagramController >> initializePalette: aPalette [
 		newCreationTool: 'Pool'
 		factory: [ OPBPMNPoolController new ]
 		icon: OPBPMNIcon current pool;
+		newCreationTool: 'Lane'
+		factory: [ OPBPMNLaneController new ]
+		icon: OPBPMNIcon current lane;
 		newCreationTool: 'Expanded SubProcess'
 		factory: [ OPBPMNSubProcessController new ]
 		icon: OPBPMNIcon current expandedSubprocess;

@@ -26,3 +26,14 @@ OPBPMNAbstractFlowModel >> printIdType [
 OPBPMNAbstractFlowModel >> printType [
 	^ self subclassResponsibility 
 ]
+
+{ #category : 'removing' }
+OPBPMNAbstractFlowModel >> removeFrom: anOwner [
+	target ifNotNil: [ :activeTarget |
+		target := nil.
+		activeTarget removeFlow: self ].
+	source ifNotNil: [ :activeSource |
+		source := nil.
+		activeSource removeFlow: self ].
+	super removeFrom: anOwner
+]

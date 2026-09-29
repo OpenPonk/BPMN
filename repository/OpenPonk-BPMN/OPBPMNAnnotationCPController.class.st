@@ -38,6 +38,7 @@ OPBPMNAnnotationCPController >> controlPointsFor: aLine [
 { #category : 'hooks' }
 OPBPMNAnnotationCPController >> goToAnnotationFromRight: twoPoints [
 
+	(twoPoints first x closeTo: twoPoints last x) ifTrue: [ ^ false ].
 	^ twoPoints first x > twoPoints last x
 ]
 

@@ -4,9 +4,9 @@ A diagram command that executes the hierarchical automatic layout algorithm on t
 Class {
 	#name : 'OPBPMNLayoutCommand',
 	#superclass : 'OPLayoutDiagramCommand',
-	#category : 'OpenPonk-BPMN-ViewModels',
+	#category : 'OpenPonk-BPMN-Commands',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'ViewModels'
+	#tag : 'Commands'
 }
 
 { #category : 'accessing' }

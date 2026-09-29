@@ -116,6 +116,16 @@ OPBPMNSemanticNodeModel >> relatedElements [
 ]
 
 { #category : 'removing' }
+OPBPMNSemanticNodeModel >> remove: anElement [
+	(flows includes: anElement) ifTrue: [
+		anElement removeFrom: self.
+		flows remove: anElement ifAbsent: [ ].
+		self announceRemovedChild: anElement.
+		^ anElement ].
+	^ super remove: anElement
+]
+
+{ #category : 'removing' }
 OPBPMNSemanticNodeModel >> removeAllFlows [
 	flows copy
 		do: [ :each | 
@@ -125,8 +135,7 @@ OPBPMNSemanticNodeModel >> removeAllFlows [
 
 { #category : 'removing' }
 OPBPMNSemanticNodeModel >> removeFlow: aFlow [
-
-	flows remove: aFlow.
+	flows remove: aFlow ifAbsent: [ ^ self ].
 	self announceRemovedChild: aFlow
 ]
 

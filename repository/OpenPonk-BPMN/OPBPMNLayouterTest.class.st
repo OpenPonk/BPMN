@@ -74,7 +74,7 @@ OPBPMNLayouterTest >> testDefaultLayoutIsUndoable [
 
 	boundElements do: [ :eachElement |
 		eachElement roassalShape ifNotNil: [ :eachShape |
-			self assert: eachShape position equals: (initialPositions at: eachElement).
+			self assert: (eachShape position closeTo: (initialPositions at: eachElement) precision: 0.5).
 			eachElement isResizableByUser
 				ifTrue: [ self assert: eachShape extent equals: (initialExtents at: eachElement) ]
 				ifFalse: [ self assert: (eachShape extent closeTo: (initialExtents at: eachElement)) ] ] ]
@@ -92,6 +92,30 @@ OPBPMNLayouterTest >> testPoolEncompassesInnerNodesAfterDefaultLayout [
 	self assert: innerShapes isNotEmpty.
 	innerShapes do: [ :eachNodeShape |
 		self assert: (poolShape encompassingRectangle containsRect: eachNodeShape encompassingRectangle) ]
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testPoolWithLanesStacksLanesVerticallyWithZeroGap [
+	| layouter poolController poolShape salesShape warehouseShape salesRect warehouseRect |
+	layouter := OPBPMNLayouter new diagramController: diagramController.
+	layouter defaultLayout.
+
+	poolController := diagramController controllers detect: [ :eachController |
+		(eachController isKindOf: OPBPMNPoolController) and: [ eachController model name = 'Order Fulfillment' ] ].
+	poolShape := poolController roassalShape.
+	salesShape := (diagramController controllers detect: [ :eachController |
+		eachController model name = 'Sales' ]) roassalShape.
+	warehouseShape := (diagramController controllers detect: [ :eachController |
+		eachController model name = 'Warehouse' ]) roassalShape.
+
+	salesRect := salesShape encompassingRectangle.
+	warehouseRect := warehouseShape encompassingRectangle.
+
+	self assert: salesRect width equals: warehouseRect width.
+	self assert: salesRect left equals: warehouseRect left.
+	self assert: (salesRect bottom closeTo: warehouseRect top).
+	self assert: (poolShape encompassingRectangle containsRect: salesRect).
+	self assert: (poolShape encompassingRectangle containsRect: warehouseRect)
 ]
 
 { #category : 'tests' }

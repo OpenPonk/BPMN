@@ -4,9 +4,9 @@ I am the core plugin class for the OpenPonk BPMN editor. I register the BPMN dia
 Class {
 	#name : 'OPBPMNPlugin',
 	#superclass : 'OPPlugin',
-	#category : 'OpenPonk-BPMN-ViewModels',
+	#category : 'OpenPonk-BPMN-Plugin',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'ViewModels'
+	#tag : 'Plugin'
 }
 
 { #category : 'toolbar' }
