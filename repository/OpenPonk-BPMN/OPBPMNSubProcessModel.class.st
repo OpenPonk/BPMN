@@ -1,3 +1,6 @@
+"
+I represent an expanded BPMN SubProcess in the semantic model. I act as a flow node that also functions as a container managing nested inner nodes and flows.
+"
 Class {
 	#name : 'OPBPMNSubProcessModel',
 	#superclass : 'OPBPMNFlowNodeModel',
@@ -12,7 +15,7 @@ OPBPMNSubProcessModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 OPBPMNSubProcessModel >> changed [
 
 	super changed.
@@ -25,19 +28,19 @@ OPBPMNSubProcessModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNSubProcessModel >> printType [
 
 	^ 'subprocess'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNSubProcessModel >> removeAllNodes [
 
 	self removeAll
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNSubProcessModel >> removeNode: aNode [
 
 	elements remove: aNode

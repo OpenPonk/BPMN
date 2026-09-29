@@ -1,3 +1,6 @@
+"
+I am a validation rule that warns when an activity has multiple incoming sequence flows, recommending the use of a merging gateway instead to clarify execution semantics.
+"
 Class {
 	#name : 'AC05ActivityMergingFlows',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AC05ActivityMergingFlows class >> validateClass [
 	^ OPBPMNActivityModel.
 ]

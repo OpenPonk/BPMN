@@ -1,3 +1,6 @@
+"
+I provide the top-level API to serialize OpenPonk BPMN models into BPMN 2.0 compliant XML strings or streams.
+"
 Class {
 	#name : 'OPBPMNXMLWriter',
 	#superclass : 'Object',

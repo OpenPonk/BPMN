@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AN04LabeledMessageFlow validation rule. I ensure it correctly warns when message flows lack explicit descriptive labels.
+"
 Class {
 	#name : 'OPBPMNAN04ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',
@@ -13,7 +16,7 @@ OPBPMNAN04ValidationTest >> getTestedClass [
 
 { #category : 'constants' }
 OPBPMNAN04ValidationTest >> getValidatedClass [
-	^ OPBPMNNodeModel.
+	^ OPBPMNSemanticNodeModel.
 ]
 
 { #category : 'constants' }

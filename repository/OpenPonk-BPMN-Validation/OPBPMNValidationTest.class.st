@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the base behavior of the OPBPMNValidation framework, specifically testing the interface and abstract mechanisms for model object validation.
+"
 Class {
 	#name : 'OPBPMNValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',
@@ -23,7 +26,9 @@ OPBPMNValidationTest >> getValidatedClassInstance [
 
 { #category : 'constants' }
 OPBPMNValidationTest >> testCanValidate [
-	self assert: (self getTestedClass canValidate: self getNotValidatedClassInstance) equals: false.
+
+	self deny:
+		(self getTestedClass canValidate: self getNotValidatedClassInstance)
 ]
 
 { #category : 'constants' }

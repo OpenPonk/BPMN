@@ -1,23 +1,20 @@
+"
+I am a general controller for BPMN elements, providing common subscriptions and UI updates linking the semantic model to the diagram views.
+"
 Class {
 	#name : 'OPBPMNElementController',
-	#superclass : 'OPBPMNNodeController',
-	#instVars : [
-		'owner'
-	],
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
 
-{ #category : 'private' }
-OPBPMNElementController >> dependentElements [
-
-	^ self model flows
-]
-
 { #category : 'announcements' }
-OPBPMNElementController >> internalSubscribeTo: aModel [
+OPBPMNElementController >> subscribeToViewModel [
 
-	super internalSubscribeTo: aModel.
-	aModel weakWhen: OPBPMNPlaceTokensChanged send: #modelChanged to: self
+	super subscribeToViewModel.
+	self viewModel announcer weak
+		when: OPBPMNPlaceTokensChanged
+		send: #modelChanged
+		to: self
 ]

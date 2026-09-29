@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural correctness of incoming messages on Start Events other than explicit Message Start Events.
+"
 Class {
 	#name : 'SE04MessageOther',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SE04MessageOther class >> validateClass [
 	^ OPBPMNStartEventModel.
 ]

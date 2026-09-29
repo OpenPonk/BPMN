@@ -1,3 +1,6 @@
+"
+I am the base Roassal shape for semantic BPMN nodes. I manage boundary rendering, dynamic icons, and visual updates based on underlying model state.
+"
 Class {
 	#name : 'OPBPMNNodeShape',
 	#superclass : 'OPBoundNode',
@@ -10,12 +13,10 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'ston-core' }
-OPBPMNNodeShape class >> stonAllInstVarNames [
+{ #category : 'reacting' }
+OPBPMNNodeShape >> associationCreated: anAssociation [
 
-	"Override to encode my instances using a custom set of instance variables or to define their order."
-
-	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
+	"do nothing"
 ]
 
 { #category : 'accessing' }
@@ -24,25 +25,19 @@ OPBPMNNodeShape >> attachedShapes [
 	^ super attachedShapes , { icon }
 ]
 
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> borderColor [
 
 	^ borderColor
 ]
 
-{ #category : 'hooks' }
-OPBPMNNodeShape >> borderColor: aColor [
-
-	borderColor := aColor
-]
-
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> color [
 
 	^ self stylePropertyNamed: #fillColor ifAbsent: [ Color transparent ]
 ]
 
-{ #category : 'hooks' }
+{ #category : 'accessing' }
 OPBPMNNodeShape >> color: aColor [
 
 	^ self stylePropertyNamed: #fillColor put: aColor
@@ -67,13 +62,13 @@ OPBPMNNodeShape >> removeRender [
 	icon := nil
 ]
 
-{ #category : 'hooks' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> renderBasicShape [
 
 	^ self createRoassalShape model: self
 ]
 
-{ #category : 'hooks' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> renderShapeDetails [
 
 	| label |
@@ -89,40 +84,46 @@ OPBPMNNodeShape >> renderShapeDetails [
 	RSLocation new stick: icon on: self roassalShape
 ]
 
-{ #category : 'hooks' }
+{ #category : 'interactions' }
 OPBPMNNodeShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : 'hooks' }
-OPBPMNNodeShape >> shouldBePositionableByUser [
+{ #category : 'accessing' }
+OPBPMNNodeShape >> strokeColor: aColor [
 
-	^ true
+	borderColor := aColor
 ]
 
-{ #category : 'hooks' }
+{ #category : 'connecting' }
 OPBPMNNodeShape >> typeIconForModel [
 
 	^ self modelElement typeIconFor: self modelElement type
 ]
 
-{ #category : 'updating' }
+{ #category : 'update' }
 OPBPMNNodeShape >> updateIcon [
 	icon form: self typeIconForModel.
 ]
 
-{ #category : 'updating' }
-OPBPMNNodeShape >> updateRenderFromModel [
+{ #category : 'rendering' }
+OPBPMNNodeShape >> updateLabel [
+	| labelShape |
+	labelShape := roassalShape propertyAt: #RSLabeled ifAbsent: [ nil ].
+	labelShape ifNotNil: [
+		labelShape text: (self modelElement name ifNil: [ '' ]) ]
+]
 
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
+{ #category : 'rendering' }
+OPBPMNNodeShape >> updateRenderFromModel [
+	self updateLabel.
 	self updateIcon.
 	super updateRenderFromModel.
-
 	roassalShape signalUpdate
 ]
 
-{ #category : 'updating' }
+{ #category : 'rendering' }
 OPBPMNNodeShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

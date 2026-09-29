@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the BE04BoundaryEscalationSibling validation rule. I ensure it correctly enforces constraints against having multiple escalation boundary events attached to the same activity.
+"
 Class {
 	#name : 'OPBPMNBE04ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

@@ -1,3 +1,6 @@
+"
+I render a BPMN Intermediate Event as a Roassal shape, drawing the standard double-concentric circles associated with intermediate process triggers.
+"
 Class {
 	#name : 'OPBPMNIntermediateEventShape',
 	#superclass : 'OPBPMNEventShape',
@@ -30,7 +33,7 @@ OPBPMNIntermediateEventShape >> removeRender [
 	innerCircle := nil
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNIntermediateEventShape >> renderShapeDetails [
 
 	| label |

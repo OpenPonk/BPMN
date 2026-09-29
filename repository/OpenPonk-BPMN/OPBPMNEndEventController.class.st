@@ -1,3 +1,6 @@
+"
+I am the controller for BPMN End Events. I enforce valid connection rules, ensuring that end events correctly process incoming flows on the diagram canvas.
+"
 Class {
 	#name : 'OPBPMNEndEventController',
 	#superclass : 'OPBPMNEventController',
@@ -6,58 +9,35 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNEndEventController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #Send #EscalationThrow #Error #Cancel #CompensationThrow
-			   #SignalThrow #MultipleThrow #Terminate #None );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue |
-			self model type: newValue.
-			self modelChanged ].
-	self model type = OPBPMNNodeType Send
-		ifTrue: [
-			(aForm addText: 'Executable attribute')
-				text: self model executableAttribute;
-				whenTextChangedDo: [ :newValue |
-					self model executableAttribute: newValue asString.
-					self modelChanged ].
-			(aForm addText: 'Executable attribute value')
-				text: self model executableAttributeValue;
-				whenTextChangedDo: [ :newValue |
-					self model executableAttributeValue: newValue asString.
-					self modelChanged ] ]
-		ifFalse: [ self model executableAttribute: nil ]
-]
-
-{ #category : 'connecting' }
-OPBPMNEndEventController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNMessageFlowController
-]
-
-{ #category : 'connecting' }
-OPBPMNEndEventController >> canBeTargetFor: aController [
-
-	^ (aController isKindOf: OPBPMNMessageFlowController)
-		  ifTrue: [ ^ aController source model owner ~= self model owner ]
-		  ifFalse: [
-		  		(aController isKindOf: OPBPMNDataFlowController)
-		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
-		 		ifFalse: [ ^ aController isKindOf: OPBPMNEdgeController ]
-			 ]
-]
-
 { #category : 'construction' }
-OPBPMNEndEventController >> diagramElementClass [
+OPBPMNEndEventController class >> diagramElementClass [
 
 	^ OPBPMNEndEventShape
 ]
 
 { #category : 'accessing' }
-OPBPMNEndEventController >> modelClass [
-	^ OPBPMNEndEventModel
+OPBPMNEndEventController class >> viewModelClass [
+	^ OPBPMNEndEventViewModel
+]
+
+{ #category : 'connecting' }
+OPBPMNEndEventController >> canBeSourceFor: aController [
+
+	^ (aController isKindOf: OPBPMNMessageFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
+]
+
+{ #category : 'connecting' }
+OPBPMNEndEventController >> canBeTargetFor: aController [
+
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ false ].
+
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
+
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
+
+	^ aController source ~= self
 ]

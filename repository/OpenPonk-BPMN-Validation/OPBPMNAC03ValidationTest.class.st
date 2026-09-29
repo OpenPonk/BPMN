@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AC03MessageReceiveOther validation rule. I ensure it correctly identifies invalid incoming messages on activities other than explicit Receive Tasks.
+"
 Class {
 	#name : 'OPBPMNAC03ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

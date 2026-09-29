@@ -1,6 +1,9 @@
+"
+I render a BPMN Data Association flow, drawing the directed path between data objects and activities.
+"
 Class {
 	#name : 'OPBPMNDataFlowShape',
-	#superclass : 'OPEdge',
+	#superclass : 'OPBPMNAbstractFlowShape',
 	#instVars : [
 		'borderColor'
 	],
@@ -9,37 +12,22 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'rendering' }
+{ #category : 'accessing' }
 OPBPMNDataFlowShape >> borderColor [
 
 	^ borderColor
 ]
 
 { #category : 'rendering' }
-OPBPMNDataFlowShape >> borderColor: aColor [
-
-	borderColor := aColor
-]
-
-{ #category : 'rendering' }
-OPBPMNDataFlowShape >> createOwnedElementsWithoutController [
-
-	super createOwnedElementsWithoutController.
-	OPBPMNEdgeLabel in: self
-]
-
-{ #category : 'rendering' }
 OPBPMNDataFlowShape >> renderBasicShape [
 
-	^ (self source = self target
-		   ifTrue: [ OPRSBezier ]
-		   ifFalse: [ OPRSPolyline ]) new
-		  withBorderAttachPoint;
+	^ super renderBasicShape
 		  dashed;
-		  controlPointsController: OPRSDraggableCPController new;
-		  addInteraction: OPRSDraggableControlPoints;
-		  color: Color black;
-		  from: self source roassalShape;
-		  to: self target roassalShape;
 		  yourself
+]
+
+{ #category : 'accessing' }
+OPBPMNDataFlowShape >> strokeColor: aColor [
+
+	borderColor := aColor
 ]

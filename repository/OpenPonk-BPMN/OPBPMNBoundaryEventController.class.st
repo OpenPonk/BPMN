@@ -1,57 +1,70 @@
+"
+I am the controller for BPMN Boundary Events. I manage the lifecycle and diagram interactions of events attached directly to the boundary of an activity.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventController',
 	#superclass : 'OPBPMNElementController',
-	#instVars : [
-		'iconElement',
-		'iconConstraint'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNBoundaryEventController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items:
-			#( #Receive #Timer #Escalation #Conditional #Error #Cancel #CatchCompensation
-			   #Signal #Multiple #ParallelMultiple );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
-		(aForm addCheckbox: 'Is Non-Interrupting')
-		state: self model isNonInterrupting;
-		whenChangedDo: [ :val | 
-			self model isNonInterrupting: val.
-			self modelChanged ].
-]
-
-{ #category : 'connecting' }
-OPBPMNBoundaryEventController >> canBeSourceFor: aController [
-	^ (aController isKindOf: OPBPMNMessageFlowController) 
-	| (aController isKindOf: OPBPMNFlowController)
-]
-
-{ #category : 'connecting' }
-OPBPMNBoundaryEventController >> canBeTargetFor: aController [
-	^ (aController isKindOf: OPBPMNMessageFlowController)
-]
-
 { #category : 'construction' }
-OPBPMNBoundaryEventController >> diagramElementClass [
+OPBPMNBoundaryEventController class >> diagramElementClass [
 
 	^ OPBPMNBoundaryEventShape
 ]
 
-{ #category : 'forms' }
-OPBPMNBoundaryEventController >> modelClass [
+{ #category : 'accessing' }
+OPBPMNBoundaryEventController class >> viewModelClass [
+	^ OPBPMNBoundaryEventViewModel
+]
 
-	^ OPBPMNBoundaryEventModel
+{ #category : 'connecting' }
+OPBPMNBoundaryEventController >> canBeSourceFor: aController [
+
+	^ (aController isKindOf: OPBPMNFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
+]
+
+{ #category : 'connecting' }
+OPBPMNBoundaryEventController >> canBeTargetFor: aController [
+
+	((aController isKindOf: OPBPMNMessageFlowController) or: [
+		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
+		^ false ].
+
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
+
+	^ aController source ~= self
+]
+
+{ #category : 'construction' }
+OPBPMNBoundaryEventController >> renderDiagramElement [
+	| shape parentCtrl |
+	shape := super renderDiagramElement.
+	
+	self model owner ifNil: [ ^ shape ].
+	
+	parentCtrl := self diagramController 
+		controllerForModel: self model owner 
+		ifNone: [ ^ shape ].
+	
+	RSLocation new
+		bottom;
+		right;
+		offset: -1 @ 22;
+		stick: shape
+		on: parentCtrl roassalShape.
+		
+	parentCtrl roassalShape
+		when: RSShapeRemovedEvent
+		do: [ shape remove ]
+		for: self.
+		
+	^ shape
 ]
 
 { #category : 'accessing' }

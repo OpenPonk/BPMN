@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that a Message End Event correctly defines outgoing message flows.
+"
 Class {
 	#name : 'EE03MessageSend',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 EE03MessageSend class >> validateClass [
 	^ OPBPMNEndEventModel.
 ]

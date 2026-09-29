@@ -1,3 +1,6 @@
+"
+I represent a BPMN Intermediate Event in the semantic model, denoting a specific event trigger or catch that occurs during the execution of a process.
+"
 Class {
 	#name : 'OPBPMNIntermediateEventModel',
 	#superclass : 'OPBPMNEventModel',
@@ -8,44 +11,47 @@ Class {
 
 { #category : 'printing' }
 OPBPMNIntermediateEventModel >> printType [
-	(type = OPBPMNNodeType None) | (type = OPBPMNNodeType Link) | (type = OPBPMNNodeType Send)
-		ifTrue: [ ^ 'intermediateThrowEvent' ]
-		ifFalse: [ ^ 'intermediateCatchEvent' ].
 
+	(type = OPBPMNNodeType None or: [
+		 type = OPBPMNNodeType Link or: [ type = OPBPMNNodeType Send ] ])
+		ifTrue: [ ^ 'intermediateThrowEvent' ].
+
+	^ 'intermediateCatchEvent'
 ]
 
 { #category : 'printing' }
 OPBPMNIntermediateEventModel >> typeIconFor: aType [
-	aType = OPBPMNNodeType Send
-		ifTrue: [ ^ OPBPMNIcon current activitySendSquare ].
-	aType = OPBPMNNodeType Receive
-		ifTrue: [ ^ OPBPMNIcon current activityReceiveSquare ].
-	aType = OPBPMNNodeType Timer
-		ifTrue: [ ^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType Escalation
-		ifTrue: [ ^ OPBPMNIcon current eventEscalation ].
-	aType = OPBPMNNodeType EscalationThrow
-		ifTrue: [ ^ OPBPMNIcon current eventEscalationThrow ].
-	aType = OPBPMNNodeType Conditional
-		ifTrue: [ ^ OPBPMNIcon current eventCondition ].
-	aType = OPBPMNNodeType Link
-		ifTrue: [ ^ OPBPMNIcon current eventLink ].
-	aType = OPBPMNNodeType LinkThrow
-		ifTrue: [ ^ OPBPMNIcon current eventLinkThrow ].
-	aType = OPBPMNNodeType Compensation
-		ifTrue: [ ^ OPBPMNIcon current eventCatchCompensation ].
-	aType = OPBPMNNodeType CompensationThrow
-		ifTrue: [ ^ OPBPMNIcon current eventCompensationThrow ].
-	aType = OPBPMNNodeType Signal
-		ifTrue: [ ^ OPBPMNIcon current eventSignal ].
-	aType = OPBPMNNodeType SignalThrow
-		ifTrue: [ ^ OPBPMNIcon current eventSignalThrow ].
-	aType = OPBPMNNodeType Multiple
-		ifTrue: [ ^ OPBPMNIcon current eventMultiple ].
-	aType = OPBPMNNodeType MultipleThrow
-		ifTrue: [ ^ OPBPMNIcon current eventMultipleThrow ].
-	aType = OPBPMNNodeType ParallelMultiple
-		ifTrue: [ ^ OPBPMNIcon current eventParallelMultiple ].
-	aType = OPBPMNNodeType None
-		ifTrue: [ ^ OPBPMNIcon current activityNone ]
+
+	aType = OPBPMNNodeType Send ifTrue: [
+		^ OPBPMNIcon current activitySendSquare ].
+	aType = OPBPMNNodeType Receive ifTrue: [
+		^ OPBPMNIcon current activityReceiveSquare ].
+	aType = OPBPMNNodeType Timer ifTrue: [
+		^ OPBPMNIcon current eventTimer ].
+	aType = OPBPMNNodeType Escalation ifTrue: [
+		^ OPBPMNIcon current eventEscalation ].
+	aType = OPBPMNNodeType EscalationThrow ifTrue: [
+		^ OPBPMNIcon current eventEscalationThrow ].
+	aType = OPBPMNNodeType Conditional ifTrue: [
+		^ OPBPMNIcon current eventCondition ].
+	aType = OPBPMNNodeType Link ifTrue: [ ^ OPBPMNIcon current eventLink ].
+	aType = OPBPMNNodeType LinkThrow ifTrue: [
+		^ OPBPMNIcon current eventLinkThrow ].
+	aType = OPBPMNNodeType Compensation ifTrue: [
+		^ OPBPMNIcon current eventCatchCompensation ].
+	aType = OPBPMNNodeType CompensationThrow ifTrue: [
+		^ OPBPMNIcon current eventCompensationThrow ].
+	aType = OPBPMNNodeType Signal ifTrue: [
+		^ OPBPMNIcon current eventSignal ].
+	aType = OPBPMNNodeType SignalThrow ifTrue: [
+		^ OPBPMNIcon current eventSignalThrow ].
+	aType = OPBPMNNodeType Multiple ifTrue: [
+		^ OPBPMNIcon current eventMultiple ].
+	aType = OPBPMNNodeType MultipleThrow ifTrue: [
+		^ OPBPMNIcon current eventMultipleThrow ].
+	aType = OPBPMNNodeType ParallelMultiple ifTrue: [
+		^ OPBPMNIcon current eventParallelMultiple ].
+	aType = OPBPMNNodeType None ifTrue: [
+		^ OPBPMNIcon current activityNone ].
+	self error: 'Unknown type'
 ]

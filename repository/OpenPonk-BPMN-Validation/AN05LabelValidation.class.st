@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that essential BPMN elements possess descriptive text labels for process clarity.
+"
 Class {
 	#name : 'AN05LabelValidation',
 	#superclass : 'OPBPMNValidation',
@@ -6,16 +9,16 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN05LabelValidation class >> validateClass [
-	^ OPBPMNNodeModel.
+	^ OPBPMNSemanticNodeModel.
 ]
 
 { #category : 'verification' }
 AN05LabelValidation >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
 	| size |
-	(aVerifiedObject isKindOf: OPBPMNNodeModel) ifTrue: [ 
+	(aVerifiedObject isKindOf: OPBPMNSemanticNodeModel) ifTrue: [ 
 		size := aVerifiedObject name size.
 		(aVerifiedObject isKindOf: OPBPMNStartEventModel)
 		| (aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 

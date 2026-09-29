@@ -1,43 +1,21 @@
+"
+I am the controller for BPMN Sequence Flows. I manage the interactions and rendering of the primary directed edges dictating process execution order.
+"
 Class {
 	#name : 'OPBPMNFlowController',
-	#superclass : 'OPBPMNEdgeController',
+	#superclass : 'OPBPMNAbstractFlowController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
 
-{ #category : 'accessing' }
-OPBPMNFlowController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #Normal #Default #Conditional );
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
-]
-
-{ #category : 'accessing' }
-OPBPMNFlowController >> diagramElementClass [
+{ #category : 'construction' }
+OPBPMNFlowController class >> diagramElementClass [
 
 	^ OPBPMNFlowShape
 ]
 
 { #category : 'accessing' }
-OPBPMNFlowController >> headMarker [
-
-	^ (RSShapeFactory polygonWithPoints: (Array
-				    with: 5 @ 10
-				    with: 0 @ 5
-				    with: -5 @ 10
-				    with: 0 @ 0))
-		  color: Color black;
-		  yourself
-]
-
-{ #category : 'accessing' }
-OPBPMNFlowController >> modelClass [
-	^ OPBPMNFlowModel
+OPBPMNFlowController class >> viewModelClass [
+	^ OPBPMNFlowViewModel
 ]

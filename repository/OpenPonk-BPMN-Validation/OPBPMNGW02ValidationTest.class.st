@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the GW02Splitting validation rule. I ensure it correctly checks that diverging gateways actually possess multiple outgoing sequence flows.
+"
 Class {
 	#name : 'OPBPMNGW02ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

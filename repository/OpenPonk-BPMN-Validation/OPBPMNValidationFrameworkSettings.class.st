@@ -1,3 +1,6 @@
+"
+I act as a registry for configuring the BPMN validation framework. I manage user settings, such as enabling or disabling specific validation rules.
+"
 Class {
 	#name : 'OPBPMNValidationFrameworkSettings',
 	#superclass : 'Object',
@@ -30,12 +33,15 @@ OPBPMNValidationFrameworkSettings >> getSettingFor: aVerificationClass [
 	^ settings at: aVerificationClass.
 ]
 
-{ #category : 'access' }
+{ #category : 'initialization' }
 OPBPMNValidationFrameworkSettings >> initialize [
+
 	| controller |
+	super initialize.
+
 	controller := OPBPMNValidationController new.
 	settings := Dictionary new.
-	controller getValidations do: [ :class | settings add: (class -> true). ]
+	controller getValidations do: [ :class | settings add: class -> true ]
 ]
 
 { #category : 'access' }

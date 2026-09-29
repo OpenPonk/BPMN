@@ -1,3 +1,6 @@
+"
+I render a BPMN Start Event as a Roassal shape, drawing a single thin-bordered circle to signify the starting point of a process.
+"
 Class {
 	#name : 'OPBPMNStartEventShape',
 	#superclass : 'OPBPMNEventShape',
@@ -32,14 +35,14 @@ OPBPMNStartEventShape >> createRoassalShape [
 		yourself
 ]
 
-{ #category : 'connecting' }
+{ #category : 'initialization' }
 OPBPMNStartEventShape >> initialize [
 	super initialize.
 	self createBorder.
 	
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNStartEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

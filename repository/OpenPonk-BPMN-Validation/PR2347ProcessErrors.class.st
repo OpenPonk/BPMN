@@ -1,3 +1,6 @@
+"
+I am a composite validation rule evaluating structural process constraints, including start event counts, activity counts, multiple process definitions, and element containment within pools.
+"
 Class {
 	#name : 'PR2347ProcessErrors',
 	#superclass : 'OPBPMNValidation',

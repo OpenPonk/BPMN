@@ -1,34 +1,37 @@
+"
+I am a unit test class verifying the behavior of OPBPMNFlowController, focusing on correct source and target assignments for sequence flows.
+"
 Class {
 	#name : 'OPBPMNFlowControllerTest',
-	#superclass : 'OPBPMNEdgeControllerTest',
+	#superclass : 'OPBPMNAbstractFlowControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
-OPBPMNFlowControllerTest >> controllerClass [
-	^ OPBPMNFlowController
-]
-
-{ #category : 'accessing' }
-OPBPMNFlowControllerTest >> diagramElementClass [
+{ #category : 'constants' }
+OPBPMNFlowControllerTest class >> diagramElementClass [
 
 	^ OPBPMNFlowShape 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
+OPBPMNFlowControllerTest >> controllerClass [
+	^ OPBPMNFlowController
+]
+
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> modelClass [
 	^ OPBPMNFlowModel 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> sourceControllerClass [
 
 	^ OPBPMNActivityController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNFlowControllerTest >> sourceModelClass [
 	^ OPBPMNActivityModel 
 ]

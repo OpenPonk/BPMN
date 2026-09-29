@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AC02MessageSend validation rule. I ensure it correctly identifies structural violations regarding outgoing message flows on Send Tasks.
+"
 Class {
 	#name : 'OPBPMNAC02ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

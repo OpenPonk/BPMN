@@ -1,74 +1,52 @@
+"
+I control diagram interactions for BPMN Data Objects, managing connectivity rules and updating the type icon based on the object state.
+"
 Class {
 	#name : 'OPBPMNDataObjectController',
-	#superclass : 'OPBPMNNodeController',
+	#superclass : 'OPBPMNSemanticNodeController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNDataObjectController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #DataObject #DataInput #DataOutput #DataStore);
-		displayIcon: [ :type | self typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
-]
-
-{ #category : 'connecting' }
-OPBPMNDataObjectController >> canBeSourceFor: aController [
-	^ aController isKindOf: OPBPMNDataFlowController
-]
-
-{ #category : 'connecting' }
-OPBPMNDataObjectController >> canBeTargetFor: aController [
-	^ aController isKindOf: OPBPMNDataFlowController
-]
-
-{ #category : 'accessing' }
-OPBPMNDataObjectController >> dependentElements [
-	^ (self model incoming , self model outgoing) asSet
-]
-
 { #category : 'construction' }
-OPBPMNDataObjectController >> diagramElementClass [
+OPBPMNDataObjectController class >> diagramElementClass [
 
 	^ OPBPMNDataObjectShape
 ]
 
-{ #category : 'announcements' }
-OPBPMNDataObjectController >> internalSubscribeTo: aModel [
+{ #category : 'accessing' }
+OPBPMNDataObjectController class >> viewModelClass [
+	^ OPBPMNDataObjectViewModel
+]
 
-	super internalSubscribeTo: aModel.
-	aModel
-		weakWhen: OPBPMNPlaceTokensChanged
+{ #category : 'connecting' }
+OPBPMNDataObjectController >> canBeSourceFor: aController [
+
+	^ (aController isKindOf: OPBPMNDataFlowController) or: [
+		  aController isKindOf: OPBPMNAssociationController ]
+]
+
+{ #category : 'connecting' }
+OPBPMNDataObjectController >> canBeTargetFor: aController [
+
+	^ ((aController isKindOf: OPBPMNDataFlowController) or: [
+		   aController isKindOf: OPBPMNAssociationController ]) and: [
+		  aController source ~= self ]
+]
+
+{ #category : 'announcements' }
+OPBPMNDataObjectController >> subscribeToViewModel [
+
+	super subscribeToViewModel.
+	self viewModel announcer weak
+		when: OPBPMNPlaceTokensChanged
 		send: #modelChanged
 		to: self
 ]
 
-{ #category : 'accessing' }
-OPBPMNDataObjectController >> modelClass [
-	^ OPBPMNDataObjectModel
-]
-
-{ #category : 'connecting' }
+{ #category : 'deprecation' }
 OPBPMNDataObjectController >> typeIconFor: aType [
-	aType = OPBPMNNodeType DataObject
-		ifTrue: [ ^ OPBPMNIcon current dataObject16 ].
-	aType = OPBPMNNodeType DataInput
-		ifTrue: [ ^ OPBPMNIcon current dataInput16 ].
-	aType = OPBPMNNodeType DataOutput
-		ifTrue: [ ^ OPBPMNIcon current dataOutput16 ].
-	aType = OPBPMNNodeType DataStore
-		ifTrue: [ ^ OPBPMNIcon current dataStore16 ].
-]
-
-{ #category : 'connecting' }
-OPBPMNDataObjectController >> typeIconForModel [
-	^ self model typeIconFor: self model type
+	self deprecated: 'Use viewModel instead' transformWith: '`@receiver typeIconFor: `@arg1' -> '`@receiver viewModel typeIconFor: `@arg1'.
+	^ self viewModel typeIconFor: aType
 ]

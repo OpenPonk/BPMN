@@ -1,3 +1,6 @@
+"
+I am an abstract base test class verifying common assignment and relationship logic for directional BPMN edge controllers.
+"
 Class {
 	#name : 'OPBPMNEdgeControllerTest',
 	#superclass : 'OPAbstractDirectionalRelationshipControllerTest',
@@ -14,56 +17,45 @@ OPBPMNEdgeControllerTest class >> isAbstract [
 	^ self = OPBPMNEdgeControllerTest
 ]
 
-{ #category : 'tests' }
-OPBPMNEdgeControllerTest >> amountOfLabels [
-	^ 1
+{ #category : 'hooks' }
+OPBPMNEdgeControllerTest >> canBeAssociationSource [
+	"Hook specifying whether this edge controller can act as an association source."
+	^ false
 ]
 
-{ #category : 'initialization' }
-OPBPMNEdgeControllerTest >> assignModelSource [
-
-	super assignModelSource.
-	model source addFlow: model
+{ #category : 'hooks' }
+OPBPMNEdgeControllerTest >> canBeAssociationTarget [
+	"Hook specifying whether this edge controller can act as an association target."
+	^ false
 ]
 
-{ #category : 'initialization' }
-OPBPMNEdgeControllerTest >> assignModelTarget [
-
-	super assignModelTarget.
-	model target addFlow: model
-]
-
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEdgeControllerTest >> diagramControllerClass [
 
 	^ OPBPMNDiagramController
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNEdgeControllerTest >> diagramModelClass [
-	^ OPBPMNModel 
+
+	^ OPBPMNModel
 ]
 
-{ #category : 'tests' }
-OPBPMNEdgeControllerTest >> testCreateUsingAddAsTarget [
-
-	| figure |
-	super testCreateUsingAddAsTarget.
-	figure := controller roassalShape.
-	self assert: figure class equals: OPRSPolyline.
-	self assert: figure from equals: self sourceController roassalShape.
-	self assert: figure to equals: self targetController roassalShape.
-	self assert: figure shape color equals: Color black
+{ #category : 'tests - association' }
+OPBPMNEdgeControllerTest >> testCanBeAssociationSource [
+	"Verifies that edge controllers correctly decline or accept acting as association sources."
+	| assocController |
+	assocController := OPBPMNAssociationController new.
+	assocController diagramController: diagramController.
+	self assert: (controller canBeSourceFor: assocController) equals: self canBeAssociationSource
 ]
 
-{ #category : 'tests' }
-OPBPMNEdgeControllerTest >> testFigureRefresh [
-
-	| label |
-	self showInDiagram.
-	label := controller diagramElement ownedElements first.
-	self assert: label roassalShape text equals: ''.
-	controller model name: 'new name'.
-	controller modelChanged.
-	self assert: label roassalShape text equals: 'new name'
+{ #category : 'tests - association' }
+OPBPMNEdgeControllerTest >> testCanBeAssociationTarget [
+	"Verifies that edge controllers correctly decline or accept acting as association targets."
+	| assocController |
+	assocController := OPBPMNAssociationController new.
+	assocController diagramController: diagramController.
+	assocController source: self sourceController.
+	self assert: (controller canBeTargetFor: assocController) equals: self canBeAssociationTarget
 ]

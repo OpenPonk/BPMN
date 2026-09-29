@@ -1,10 +1,9 @@
+"
+I represent a BPMN Pool. I serve as a participant container managing enclosed flow nodes, nested lanes, and lane naming metadata.
+"
 Class {
 	#name : 'OPBPMNPoolModel',
-	#superclass : 'OPBPMNNodeModel',
-	#instVars : [
-		'lanes',
-		'laneNames'
-	],
+	#superclass : 'OPBPMNSemanticNodeModel',
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
@@ -16,55 +15,83 @@ OPBPMNPoolModel >> @ aName [
 ]
 
 { #category : 'accessing' }
+OPBPMNPoolModel >> addLane: aLaneModel [
+	| flowNodesToMigrate |
+	flowNodesToMigrate := (self elements select: [ :eachChildElement |
+		eachChildElement isKindOf: OPBPMNFlowNodeModel ]) copy.
+	self add: aLaneModel.
+	flowNodesToMigrate do: [ :eachFlowNode |
+		self remove: eachFlowNode.
+		aLaneModel add: eachFlowNode ].
+	^ aLaneModel
+]
+
+{ #category : 'adding' }
+OPBPMNPoolModel >> addLane: aLaneModel after: aTargetLaneModel [
+	(elements includes: aLaneModel) ifTrue: [ ^ aLaneModel ].
+	aLaneModel addedTo: self.
+	elements add: aLaneModel after: aTargetLaneModel.
+	aLaneModel weakWhen: OPModelChanged send: #changed to: self.
+	self announceAdded: aLaneModel.
+	^ aLaneModel
+]
+
+{ #category : 'adding' }
+OPBPMNPoolModel >> addLane: aLaneModel before: aTargetLaneModel [
+	(elements includes: aLaneModel) ifTrue: [ ^ aLaneModel ].
+	aLaneModel addedTo: self.
+	elements add: aLaneModel before: aTargetLaneModel.
+	aLaneModel weakWhen: OPModelChanged send: #changed to: self.
+	self announceAdded: aLaneModel.
+	^ aLaneModel
+]
+
+{ #category : 'updating' }
 OPBPMNPoolModel >> changed [
 	super changed.
 	owner changed
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolModel >> initialize [ 
-	super initialize.
-	lanes := 1.
-	laneNames := OrderedCollection new.
+{ #category : 'hooks' }
+OPBPMNPoolModel >> enclosingPool [
+
+	^ self
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> laneNames [
-	^ laneNames
+OPBPMNPoolModel >> flowNodesInLanes [
+	"Answers all flow nodes belonging to any lane in this pool."
+	^ (self lanes flatCollect: [ :eachLane | eachLane flowNodes ]) asOrderedCollection
+]
+
+{ #category : 'testing' }
+OPBPMNPoolModel >> hasLanes [
+	"Answers whether this pool is partitioned into lanes."
+	^ self lanes isNotEmpty
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> laneNames: aCollection [
-	laneNames := aCollection  
+OPBPMNPoolModel >> laneFor: aNodeModel [
+	"Answers the lane containing the given node, or nil if the node is directly in the pool or not found."
+	^ self lanes detect: [ :eachLane | (eachLane has: aNodeModel) or: [ aNodeModel isInsideOf: eachLane ] ] ifNone: [ nil ]
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> laneNamesAt: aIndex put: aText [
-	laneNames at: aIndex put: aText
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolModel >> laneNamesFitToLanesCount [
-
-	| text prevSize |
-	text := 'Lane'.
-	lanes < 2
-		ifTrue: [ laneNames removeAll ]
-		ifFalse: [ 
-			prevSize := laneNames size.
-			prevSize < (lanes - 1)
-				ifTrue: [ prevSize to: (lanes - 1) do: [ :i | laneNames add: text ] ]
-				ifFalse: [ (lanes + 1) to: prevSize do: [ :i | laneNames removeLast ] ] ]
+OPBPMNPoolModel >> laneNamed: aString [
+	"Answers the lane matching the given name, or nil."
+	^ self lanes detect: [ :eachLane | eachLane name = aString ] ifNone: [ nil ]
 ]
 
 { #category : 'accessing' }
 OPBPMNPoolModel >> lanes [
-	^ lanes
+	"Answers all lane models contained in this pool in hierarchical order."
+	^ (self elements select: [ :eachElement | eachElement isKindOf: OPBPMNLaneModel ]) asOrderedCollection
 ]
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> lanes: aNumber [
-	lanes := aNumber 
+OPBPMNPoolModel >> lanesCount [
+	"Answers the number of lanes in this pool."
+	^ self lanes size
 ]
 
 { #category : 'accessing' }
@@ -77,9 +104,21 @@ OPBPMNPoolModel >> printType [
 	^ 'process'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
+]
+
+{ #category : 'accessing' }
+OPBPMNPoolModel >> removeLane: aLaneModel [
+	| containedFlowNodes |
+	containedFlowNodes := aLaneModel flowNodes copy.
+	self remove: aLaneModel.
+	self hasLanes ifFalse: [
+		containedFlowNodes do: [ :eachFlowNode |
+			aLaneModel remove: eachFlowNode.
+			self add: eachFlowNode ] ].
+	^ aLaneModel
 ]
 
 { #category : 'accessing' }

@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that a throwing Message Intermediate Event correctly defines outgoing message flows.
+"
 Class {
 	#name : 'IE02MessageSend',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 IE02MessageSend class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
 ]

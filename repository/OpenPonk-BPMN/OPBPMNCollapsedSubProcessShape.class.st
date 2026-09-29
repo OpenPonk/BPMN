@@ -1,24 +1,20 @@
+"
+I render a collapsed BPMN SubProcess, displaying a rounded rectangle with a standard plus marker at the bottom center to indicate hidden internal structure.
+"
 Class {
 	#name : 'OPBPMNCollapsedSubProcessShape',
 	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
 		'subprocessIcon',
-		'border'
+		'border',
+		'labeled'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'ston-core' }
-OPBPMNCollapsedSubProcessShape class >> stonAllInstVarNames [
-
-	"Override to encode my instances using a custom set of instance variables or to define their order."
-
-	^ super stonAllInstVarNames copyWithoutAll: #( #icon )
-]
-
-{ #category : 'removing' }
+{ #category : 'accessing' }
 OPBPMNCollapsedSubProcessShape >> attachedShapes [
 
 	^ super attachedShapes , { subprocessIcon }
@@ -48,7 +44,7 @@ OPBPMNCollapsedSubProcessShape >> createRoassalShape [
 	
 ]
 
-{ #category : 'connecting' }
+{ #category : 'initialization' }
 OPBPMNCollapsedSubProcessShape >> initialize [
 	super initialize.
 	self createBorder.
@@ -57,25 +53,26 @@ OPBPMNCollapsedSubProcessShape >> initialize [
 
 { #category : 'removing' }
 OPBPMNCollapsedSubProcessShape >> removeRender [
-
 	super removeRender.
-	subprocessIcon := nil
+	subprocessIcon := nil.
+	labeled := nil
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
+	labeled := OPRSLabeled new.
+	labeled color: Color black.
+	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
+	labeled location middle.
+	labeled text: ''.
+	roassalShape @ labeled.
 
-	| label |
-	label := RSLabeled new.
-	label location middle.
-	label shapeBuilder labelShape color: Color black.
-	roassalShape addInteraction: label.
 	subprocessIcon := RSBitmap new
-		                  form: self typeBasicIcon;
-		                  yourself.
+		form: self typeBasicIcon;
+		yourself.
 	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+		form: self typeIconForModel;
+		yourself.
 	self canvas add: subprocessIcon.
 	self canvas add: icon.
 	RSLocation new
@@ -87,18 +84,19 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	self color: (Color fromHexString: 'f2f2f2')
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> typeBasicIcon [
 		^ OPBPMNIcon current markerSubProcess 
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> updateLabel [
+	labeled ifNotNil: [
+		labeled text: (self modelElement name ifNil: [ '' ]) ]
+]
+
+{ #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> updateRenderFromModel [
-
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
-	self updateIcon.
 	self createBorder.
-	super updateRenderFromModel.
-
-	roassalShape signalUpdate
+	super updateRenderFromModel
 ]

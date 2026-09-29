@@ -1,3 +1,6 @@
+"
+I am a validation rule enforcing constraints on multiple error boundary events attached to the same activity.
+"
 Class {
 	#name : 'BE03BoundaryErrorSibling',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 BE03BoundaryErrorSibling class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]

@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the BE05ErrorNonInterrupting validation rule. I ensure it correctly detects and flags non-interrupting error boundary events.
+"
 Class {
 	#name : 'OPBPMNBE05ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

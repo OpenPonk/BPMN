@@ -1,3 +1,6 @@
+"
+I read BPMN XML documents and deserialize them into OpenPonk BPMN domain model objects by applying specific XML-to-object mapping configurations.
+"
 Class {
 	#name : 'OPBPMNXMLReader',
 	#superclass : 'Object',

@@ -1,32 +1,35 @@
+"
+I am a unit test class verifying the creation, attachment, and diagram targeting behavior of OPBPMNActivityController.
+"
 Class {
 	#name : 'OPBPMNActivityControllerTest',
-	#superclass : 'OPBPMNNodeControllerTest',
+	#superclass : 'OPBPMNSemanticNodeControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
+OPBPMNActivityControllerTest class >> diagramElementClass [
+	^ OPBPMNActivityShape
+]
+
+{ #category : 'constants' }
 OPBPMNActivityControllerTest >> controllerClass [
 	^ OPBPMNActivityController 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNActivityControllerTest >> creationTargetControllerClass [
 	^ OPBPMNPoolController  
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNActivityControllerTest >> creationTargetModelClass [
 	^ OPBPMNPoolModel 
 ]
 
-{ #category : 'accessing' }
-OPBPMNActivityControllerTest >> diagramElementClass [
-	^ OPBPMNActivityShape
-]
-
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNActivityControllerTest >> modelClass [
 	^ OPBPMNActivityModel 
 ]

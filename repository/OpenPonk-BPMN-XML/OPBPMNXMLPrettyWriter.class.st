@@ -1,3 +1,6 @@
+"
+I am a customized XML formatter extending the standard XML printing tools. I manage configurable line breaks and indentation to produce clean, human-readable BPMN XML output.
+"
 Class {
 	#name : 'OPBPMNXMLPrettyWriter',
 	#superclass : 'XMLPrettyPrintingWriterFormatter',
@@ -14,12 +17,14 @@ OPBPMNXMLPrettyWriter >> lineBreak: aCharacterOrString [
 	lineBreak := aCharacterOrString asString
 ]
 
-{ #category : 'accessing' }
+{ #category : 'writing' }
 OPBPMNXMLPrettyWriter >> writeLineBreak [
-	self writer atBeginning
-		ifFalse: [ self writer nextPutAll: lineBreak.
-			(self currentIndentLevel > 0 and: [ self indentString size > 0 ])
-				ifTrue: [ self writeIndent ] ]
+
+	self writer atBeginning ifTrue: [ ^ self ].
+	self writer nextPutAll: lineBreak.
+	self currentIndentLevel isZero ifTrue: [ ^ self ].
+	self indentString ifEmpty: [ ^ self ].
+	self writeIndent
 ]
 
 { #category : 'accessing' }

@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying that standard flow nodes have at least one incoming sequence flow, ensuring the process path is reachable.
+"
 Class {
 	#name : 'AN01FlowNodeIncomingFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN01FlowNodeIncomingFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]

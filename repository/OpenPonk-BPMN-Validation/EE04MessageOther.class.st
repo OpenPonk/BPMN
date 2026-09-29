@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural correctness of outgoing messages on End Events other than explicit Message End Events.
+"
 Class {
 	#name : 'EE04MessageOther',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 EE04MessageOther class >> validateClass [
 	^ OPBPMNEndEventModel.
 ]

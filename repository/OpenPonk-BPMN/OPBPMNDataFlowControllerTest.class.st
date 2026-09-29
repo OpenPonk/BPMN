@@ -1,33 +1,36 @@
+"
+I am a unit test class verifying the behavior of OPBPMNDataFlowController, focusing on correct source and target assignments for data associations.
+"
 Class {
 	#name : 'OPBPMNDataFlowControllerTest',
-	#superclass : 'OPBPMNEdgeControllerTest',
+	#superclass : 'OPBPMNAbstractFlowControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
-OPBPMNDataFlowControllerTest >> controllerClass [
-	^ OPBPMNDataFlowController
-]
-
-{ #category : 'accessing' }
-OPBPMNDataFlowControllerTest >> diagramElementClass [
+{ #category : 'constants' }
+OPBPMNDataFlowControllerTest class >> diagramElementClass [
 
 	^ OPBPMNDataFlowShape 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
+OPBPMNDataFlowControllerTest >> controllerClass [
+	^ OPBPMNDataFlowController
+]
+
+{ #category : 'constants' }
 OPBPMNDataFlowControllerTest >> modelClass [
 	^ OPBPMNDataFlowModel 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNDataFlowControllerTest >> sourceControllerClass [
 	^ OPBPMNDataObjectController  
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
 OPBPMNDataFlowControllerTest >> sourceModelClass [
 	^ OPBPMNDataObjectModel 
 ]

@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural correctness of incoming messages on activities other than explicit Receive Tasks.
+"
 Class {
 	#name : 'AC03MessageReceiveOther',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AC03MessageReceiveOther class >> validateClass [
 	^ OPBPMNActivityModel.
 ]

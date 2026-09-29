@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AC01MessageReceive validation rule. I ensure it correctly identifies structural violations regarding incoming message flows on Receive Tasks.
+"
 Class {
 	#name : 'OPBPMNAC01ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

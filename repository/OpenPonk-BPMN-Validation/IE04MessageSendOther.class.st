@@ -1,3 +1,6 @@
+"
+I am a validation rule verifying the structural correctness of outgoing messages on throwing Intermediate Events other than explicit Message Events.
+"
 Class {
 	#name : 'IE04MessageSendOther',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 IE04MessageSendOther class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
 ]

@@ -1,30 +1,21 @@
+"
+I am the controller for BPMN Message Flows. I manage the interactions and diagram logic for directed edges representing message exchanges between distinct process participants (pools).
+"
 Class {
 	#name : 'OPBPMNMessageFlowController',
-	#superclass : 'OPBPMNEdgeController',
+	#superclass : 'OPBPMNAbstractFlowController',
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
 
 { #category : 'construction' }
-OPBPMNMessageFlowController >> diagramElementClass [
+OPBPMNMessageFlowController class >> diagramElementClass [
 
-	^ OPBPMNMessageShape
+	^ OPBPMNMessageFlowShape
 ]
 
-{ #category : 'hooks' }
-OPBPMNMessageFlowController >> headMarker [
-
-	^ (RSShapeFactory polygonWithPoints: (Array
-				    with: 5 @ 10
-				    with: 0 @ 5
-				    with: -5 @ 10
-				    with: 0 @ 0))
-		  color: Color black;
-		  yourself
-]
-
-{ #category : 'hooks' }
-OPBPMNMessageFlowController >> modelClass [
-	^ OPBPMNMessageFlowModel
+{ #category : 'accessing' }
+OPBPMNMessageFlowController class >> viewModelClass [
+	^ OPBPMNMessageFlowViewModel
 ]

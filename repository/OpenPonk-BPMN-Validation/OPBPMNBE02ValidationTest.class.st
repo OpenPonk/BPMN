@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the BE02OneSequenceFlow validation rule. I ensure it correctly enforces that a boundary event has exactly one outgoing sequence flow.
+"
 Class {
 	#name : 'OPBPMNBE02ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

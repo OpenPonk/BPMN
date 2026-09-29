@@ -1,3 +1,6 @@
+"
+I act as a container for aggregating multiple OPBPMNValidationMessage instances. I provide filtering capabilities to separate errors from warnings.
+"
 Class {
 	#name : 'OPBPMNValidationResults',
 	#superclass : 'Object',
@@ -37,7 +40,7 @@ OPBPMNValidationResults >> hasWarnings: aVerifiedObject [
 	^ self selectWarnings anySatisfy: [ :verificationMessage | verificationMessage objectReference = aVerifiedObject ].
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNValidationResults >> initialize [
 	super initialize.
 	results := Set new.

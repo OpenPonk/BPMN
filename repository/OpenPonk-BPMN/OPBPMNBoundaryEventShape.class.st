@@ -1,3 +1,6 @@
+"
+I render a BPMN Boundary Event as a Roassal shape. I manage the visual representation of two concentric circles and handle attachment to the border of a host activity shape.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventShape',
 	#superclass : 'OPBPMNNodeShape',
@@ -11,7 +14,7 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'removing' }
+{ #category : 'accessing' }
 OPBPMNBoundaryEventShape >> attachedShapes [
 
 	^ super attachedShapes , { innerCircle }
@@ -48,7 +51,7 @@ OPBPMNBoundaryEventShape >> createRoassalShape [
 		  yourself
 ]
 
-{ #category : 'connecting' }
+{ #category : 'initialization' }
 OPBPMNBoundaryEventShape >> initialize [
 	super initialize.
 	self createBorder.
@@ -61,7 +64,7 @@ OPBPMNBoundaryEventShape >> removeRender [
 	innerCircle := nil
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
 
 	| label |
@@ -90,19 +93,14 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	"roassalShape @ OPRSSelectionDraggable."
 ]
 
-{ #category : 'connecting' }
-OPBPMNBoundaryEventShape >> testupdateRenderFromSelf [
+{ #category : 'interactions' }
+OPBPMNBoundaryEventShape >> shouldBePositionableByUser [
+	"Boundary events are structurally attached to their enclosing activity or subprocess via RSLocation and cannot be independently positioned."
 
-	self isRendered ifFalse: [ ^ self ].
-	roassalShape color: self color.
-	self modelElement subscribeDiagram ifNotNil: [ 
-		roassalShape translateTo:
-			self modelElement subscribeDiagram position ].
-
-	super updateRenderFromSelf
+	^ false
 ]
 
-{ #category : 'connecting' }
+{ #category : 'rendering' }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
 
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.

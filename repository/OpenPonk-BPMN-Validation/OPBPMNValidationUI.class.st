@@ -1,9 +1,9 @@
+"
+I integrate the validation framework into the OpenPonk user interface. I provide toolbar actions to trigger validations and coordinate the visual highlighting of diagram elements.
+"
 Class {
 	#name : 'OPBPMNValidationUI',
 	#superclass : 'Object',
-	#classInstVars : [
-		'class'
-	],
 	#category : 'OpenPonk-BPMN-Validation-UI',
 	#package : 'OpenPonk-BPMN-Validation',
 	#tag : 'UI'
@@ -14,7 +14,7 @@ OPBPMNValidationUI class >> changeElementColorTo: aColor using: aController [
 
 
 	(aController respondsTo: #diagramElement) ifFalse: [ ^ self ].
-	aController diagramElement borderColor: aColor.
+	aController diagramElement strokeColor: aColor.
 	aController diagramElement updateRenderFromSelf
 ]
 
@@ -24,35 +24,6 @@ OPBPMNValidationUI class >> removeHighlightsFromElementsIn: aDiagramController [
 	aDiagramController controllers do: [ :controller | 
 		self changeElementColorTo: Color black using: controller ].
 	aDiagramController updateCanvas
-]
-
-{ #category : 'specs' }
-OPBPMNValidationUI class >> toolbarMenu: aBuilder [
-
-	<opEditorToolbarMenu: #OPBPMNPlugin>
-	"| appliedProfiles |
-	appliedProfiles := aBuilder model diagramController model
-		                   profileApplications collect: #appliedProfile.
-	(appliedProfiles noneSatisfy: [ :each | each name = 'BPMN' ]) 
-		ifTrue: [ ^ self ].
-	"self toolbarMenuItemFor: aBuilder
-]
-
-{ #category : 'specs' }
-OPBPMNValidationUI class >> toolbarMenuItemFor: aBuilder [
-
-	(aBuilder item: 'Validations')
-		icon: OPBPMNIcon current logo;
-		action: [  ];
-		with: [ 
-			(aBuilder item: 'Validate model') action: [ 
-					self
-						updateValidatedElements: (OPBPMNValidationController new validate:
-									 aBuilder model diagramController model)
-						using: aBuilder model diagramController ].
-			(aBuilder item: 'Remove highlights') action: [ 
-					self removeHighlightsFromElementsIn:
-							aBuilder model diagramController ] ]
 ]
 
 { #category : 'specs' }
@@ -68,7 +39,7 @@ OPBPMNValidationUI class >> updateValidatedElementStyle: aVerificationResults us
 		color := Color orange ].
 	(aVerificationResults hasErrors: aController model) ifTrue: [ 
 		color := Color red ].
-	aController diagramElement borderColor: color.
+	aController diagramElement strokeColor: color.
 	aController diagramElement updateRenderFromSelf
 ]
 

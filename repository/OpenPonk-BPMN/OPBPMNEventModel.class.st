@@ -1,3 +1,6 @@
+"
+I represent a BPMN Event in the semantic model. I manage event-specific execution configurations, such as timer triggers and values.
+"
 Class {
 	#name : 'OPBPMNEventModel',
 	#superclass : 'OPBPMNFlowNodeModel',
@@ -10,25 +13,25 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerType [
 
 	^ timerType ifNil: [ #none ]
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerType: aType [
 
 	timerType := aType
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerValue [
 
 	^ timerValue ifNil: [ '' ]
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 OPBPMNEventModel >> timerValue: aValue [
 	timerValue := aValue
 

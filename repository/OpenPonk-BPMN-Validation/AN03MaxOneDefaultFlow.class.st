@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that an activity or gateway defines at most one default outgoing sequence flow.
+"
 Class {
 	#name : 'AN03MaxOneDefaultFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AN03MaxOneDefaultFlow class >> validateClass [
 	^ OPBPMNFlowNodeModel.
 ]
@@ -16,17 +19,18 @@ AN03MaxOneDefaultFlow >> validateObject: aVerifiedObject withModel: aVerifiedMod
 
 	| aCounter |
 	aCounter := 0.
-	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifTrue: [
-		aVerifiedObject outgoing size > 0 ifTrue: [
-			aVerifiedObject outgoing do: [ :each |
-				(each isKindOf: OPBPMNFlowModel) ifTrue: [
-					each type = 'Default' ifTrue: [ aCounter := aCounter + 1 ] ] ].
-			(aCounter > 1) | ((aVerifiedObject outgoing size = 1) & (aCounter = 1))
-				ifTrue: [
-					^ { (OPBPMNValidationMessageError
-						   createFor: aVerifiedObject
-						   withValidation: self
-						   withText: '(AN03) ' , aVerifiedObject class name
-							   , ' could not have more than one Default Sequence Flow.') } ] ] ].
-	^ {  }
+	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifFalse: [ ^ {  } ].
+	aVerifiedObject outgoing ifEmpty: [ ^ {  } ].
+	aVerifiedObject outgoing do: [ :each |
+			(each isKindOf: OPBPMNFlowModel) ifTrue: [
+				each type = 'Default' ifTrue: [ aCounter := aCounter + 1 ] ] ].
+	(aCounter < 2 and: [
+		 aVerifiedObject outgoing size > 1 or: [ aCounter isZero ] ])
+		ifTrue: [ ^ {  } ].
+		
+	^ { (OPBPMNValidationMessageError
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText: '(AN03) ' , aVerifiedObject class name
+			   , ' could not have more than one Default Sequence Flow.') }
 ]

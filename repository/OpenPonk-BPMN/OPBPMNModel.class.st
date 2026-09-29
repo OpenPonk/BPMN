@@ -1,3 +1,6 @@
+"
+I represent the root definition of a BPMN model. I act as the top-level container for all process nodes, edges, execution configurations, and applied profiles.
+"
 Class {
 	#name : 'OPBPMNModel',
 	#superclass : 'OPModelObject',
@@ -15,10 +18,17 @@ OPBPMNModel >> edges [
 	^ elements select: #isEdge
 ]
 
-{ #category : 'accessing' }
+{ #category : 'hooks' }
+OPBPMNModel >> enclosingPool [
+
+	^ self
+]
+
+{ #category : 'initialization' }
 OPBPMNModel >> initialize [
+
 	super initialize.
-	isExecutable := false.
+	isExecutable := false
 ]
 
 { #category : 'accessing' }

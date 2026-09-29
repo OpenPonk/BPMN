@@ -1,3 +1,6 @@
+"
+I am the primary diagram controller for the BPMN editor. I manage the modeling palette, canvas interactions, element targeting rules, and the instantiation of BPMN elements.
+"
 Class {
 	#name : 'OPBPMNDiagramController',
 	#superclass : 'OPDiagramController',
@@ -6,31 +9,26 @@ Class {
 	#tag : 'Controllers'
 }
 
-{ #category : 'userinterface' }
-OPBPMNDiagramController >> buildEditorForm: aForm [
-
-	super buildEditorForm: aForm.
-	"(aForm addDroplist: 'Is Executable?')
-		items: #( #false #true );
-		display: [ :isExecutable | isExecutable asString ];
-		selectItem: self model isExecutable;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model isExecutable: newValue.
-			self diagramElement updateRenderFromModel ]"
+{ #category : 'accessing' }
+OPBPMNDiagramController class >> viewModelClass [
+	^ OPBPMNModelViewModel
 ]
 
 { #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-	^ (super canBeTargetFor: aController)
-		or: [ aController isKindOf: OPBPMNNodeController ]
+
+	(super canBeTargetFor: aController) ifTrue: [ ^ true ].
+
+	((aController isKindOf: OPBPMNBoundaryEventController) or: [
+		 aController modelClass inheritsFrom: OPBPMNFlowNodeModel ])
+		ifTrue: [
+				^ self controllers noneSatisfy: [ :any |
+					  any isKindOf: OPBPMNPoolController ] ].
+
+	^ aController isKindOf: OPBPMNNodeController
 ]
 
-{ #category : 'connecting' }
-OPBPMNDiagramController >> commonModelClassPrefix [
-	^ 'OPBPMN'
-]
-
-{ #category : 'ui interaction' }
+{ #category : 'accessing' }
 OPBPMNDiagramController >> controllerFactory [
 	^ super controllerFactory
 		register: OPBPMNActivityController forModel: OPBPMNActivityModel;
@@ -39,69 +37,67 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNIntermediateEventController forModel: OPBPMNIntermediateEventModel;
 		register: OPBPMNGatewayController forModel: OPBPMNGatewayModel;
 		register: OPBPMNPoolController forModel: OPBPMNPoolModel;
+		register: OPBPMNLaneController forModel: OPBPMNLaneModel;
 		register: OPBPMNSubProcessController forModel: OPBPMNSubProcessModel;
 		register: OPBPMNCollapsedSubProcessController forModel: OPBPMNCollapsedSubProcessModel;
 		register: OPBPMNBoundaryEventController forModel: OPBPMNBoundaryEventModel;
 		register: OPBPMNDataObjectController forModel: OPBPMNDataObjectModel;
+		register: OPBPMNAnnotationController forModel: OPBPMNAnnotationModel;
 		register: OPBPMNFlowController forModel: OPBPMNFlowModel;
 		register: OPBPMNDataFlowController forModel: OPBPMNDataFlowModel;
-		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel
-]
-
-{ #category : 'connecting' }
-OPBPMNDiagramController >> elementsToShowInside [
-
-	| poolNodes poolFlows laneNodes laneFlows |
-	poolNodes := self model nodes flatCollect: [ :each | each nodes ].
-	poolFlows := poolNodes flatCollect: [ :each | each outgoing ].
-	laneNodes := poolNodes flatCollect: [ :each | each nodes ].
-	laneFlows := laneNodes flatCollect: [ :each | each outgoing ].
-	^ self model nodes , poolNodes , poolFlows , laneNodes , laneFlows
-	  , (self model nodes flatCollect: [ :each | each outgoing ])
+		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel;
+		register: OPBPMNAssociationController forModel: OPBPMNAssociationModel
 ]
 
 { #category : 'ui interaction' }
 OPBPMNDiagramController >> initializePalette: aPalette [
 	aPalette
 		newCreationTool: 'Activity'
-			factory: [ OPBPMNActivityController new ]
-			icon: OPBPMNIcon current activity;
+		factory: [ OPBPMNActivityController new ]
+		icon: OPBPMNIcon current activity;
 		newCreationTool: 'Start Event'
-			factory: [ OPBPMNStartEventController new ]
-			icon: OPBPMNIcon current startEvent;
+		factory: [ OPBPMNStartEventController new ]
+		icon: OPBPMNIcon current startEvent;
 		newCreationTool: 'Intermediate Event'
-			factory: [ OPBPMNIntermediateEventController new ]
-			icon: OPBPMNIcon current intermediateEvent;
+		factory: [ OPBPMNIntermediateEventController new ]
+		icon: OPBPMNIcon current intermediateEvent;
 		newCreationTool: 'End Event'
-			factory: [ OPBPMNEndEventController new ]
-			icon: OPBPMNIcon current endEvent;
+		factory: [ OPBPMNEndEventController new ]
+		icon: OPBPMNIcon current endEvent;
 		newCreationTool: 'Gateway'
-			factory: [ OPBPMNGatewayController new ]
-			icon: OPBPMNIcon current gateway;
+		factory: [ OPBPMNGatewayController new ]
+		icon: OPBPMNIcon current gateway;
 		newCreationTool: 'Pool'
-			factory: [ OPBPMNPoolController new ]
-			icon: OPBPMNIcon current pool;
+		factory: [ OPBPMNPoolController new ]
+		icon: OPBPMNIcon current pool;
+		newCreationTool: 'Lane'
+		factory: [ OPBPMNLaneController new ]
+		icon: OPBPMNIcon current lane;
 		newCreationTool: 'Expanded SubProcess'
-			factory: [ OPBPMNSubProcessController new ]
-			icon: OPBPMNIcon current expandedSubprocess;
+		factory: [ OPBPMNSubProcessController new ]
+		icon: OPBPMNIcon current expandedSubprocess;
 		newCreationTool: 'Collapsed SubProcess'
-			factory: [ OPBPMNCollapsedSubProcessController new ]
-			icon: OPBPMNIcon current subProcessCollapsed;
+		factory: [ OPBPMNCollapsedSubProcessController new ]
+		icon: OPBPMNIcon current subProcessCollapsed;
+		newCreationTool: 'Boundary Event'
+		factory: [ OPBPMNBoundaryEventController new ]
+		icon: OPBPMNIcon current intermediateEvent;
 		newCreationTool: 'Data Object'
-			factory: [ OPBPMNDataObjectController new ]
-			icon: OPBPMNIcon current dataObject16;
+		factory: [ OPBPMNDataObjectController new ]
+		icon: OPBPMNIcon current dataObject16;
 		newConnectionCreationTool: 'Sequence Flow'
-			factory: [ OPBPMNFlowController new ]
-			icon: OPBPMNIcon current sequenceFlow;
+		factory: [ OPBPMNFlowController new ]
+		icon: OPBPMNIcon current sequenceFlow;
 		newConnectionCreationTool: 'Message Flow'
-			factory: [ OPBPMNMessageFlowController new ]
-			icon: OPBPMNIcon current messageFlow;
+		factory: [ OPBPMNMessageFlowController new ]
+		icon: OPBPMNIcon current messageFlow;
 		newConnectionCreationTool: 'Data Flow'
-			factory: [ OPBPMNDataFlowController new ]
-			icon: OPBPMNIcon current messageFlow
-]
-
-{ #category : 'ui interaction' }
-OPBPMNDiagramController >> modelClass [
-	^ OPBPMNModel 
+		factory: [ OPBPMNDataFlowController new ]
+		icon: OPBPMNIcon current messageFlow;
+		newConnectionCreationTool: 'Association'
+		factory: [ OPBPMNAssociationController new ]
+		icon: OPBPMNIcons accessLink16Icon;
+		newCreationTool: 'Annotation'
+		factory: [ OPBPMNAnnotationController new ]
+		icon: (Smalltalk ui icons iconNamed: #smallLeftFlush)
 ]

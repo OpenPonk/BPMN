@@ -1,25 +1,15 @@
+"
+I render a standard BPMN Sequence Flow, drawing a solid directional line with a filled arrowhead.
+"
 Class {
 	#name : 'OPBPMNFlowShape',
-	#superclass : 'OPEdge',
+	#superclass : 'OPBPMNAbstractFlowShape',
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'as yet unclassified' }
-OPBPMNFlowShape >> borderColor: aColor [
-
-	self roassalShape color: aColor.
-]
-
-{ #category : 'as yet unclassified' }
-OPBPMNFlowShape >> createOwnedElementsWithoutController [
-
-	super createOwnedElementsWithoutController.
-	OPBPMNEdgeLabel in: self
-]
-
-{ #category : 'as yet unclassified' }
+{ #category : 'hooks' }
 OPBPMNFlowShape >> headMarker [
 
 	^ (RSShapeFactory polygonWithPoints: (Array
@@ -31,24 +21,13 @@ OPBPMNFlowShape >> headMarker [
 		  yourself
 ]
 
-{ #category : 'as yet unclassified' }
-OPBPMNFlowShape >> renderBasicShape [
+{ #category : 'accessing' }
+OPBPMNFlowShape >> strokeColor: aColor [
 
-	^ (self source = self target
-		   ifTrue: [ OPRSBezier ]
-		   ifFalse: [ OPRSPolyline ]) new
-		  markerStart: self tailMarker;
-		  markerEnd: self headMarker;
-		  withBorderAttachPoint;
-		  controlPointsController: OPRSDraggableCPController new;
-		  addInteraction: OPRSDraggableControlPoints;
-		  color: Color black;
-		  from: self source roassalShape;
-		  to: self target roassalShape;
-		  yourself
+	self roassalShape color: aColor.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'hooks' }
 OPBPMNFlowShape >> tailMarker [
 
 	self modelElement ifNil: [ 
@@ -74,7 +53,7 @@ OPBPMNFlowShape >> tailMarker [
 			  yourself ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'rendering' }
 OPBPMNFlowShape >> updateRenderFromModel [
 
 	self roassalShape markerStart: self tailMarker.

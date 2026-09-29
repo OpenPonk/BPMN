@@ -1,6 +1,9 @@
+"
+I represent a BPMN Data Object in the underlying semantic model, tracking data requirements or outputs for activities.
+"
 Class {
 	#name : 'OPBPMNDataObjectModel',
-	#superclass : 'OPBPMNNodeModel',
+	#superclass : 'OPBPMNSemanticNodeModel',
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
@@ -11,7 +14,7 @@ OPBPMNDataObjectModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 OPBPMNDataObjectModel >> changed [
 	super changed.
 	owner changed
@@ -27,29 +30,31 @@ OPBPMNDataObjectModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNDataObjectModel >> printType [
 	^ 'dataObject'
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNDataObjectModel >> removeAllNodes [
 	self removeAll
 ]
 
-{ #category : 'accessing' }
+{ #category : 'removing' }
 OPBPMNDataObjectModel >> removeNode: aNode [
 	elements remove: aNode
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNDataObjectModel >> typeIconFor: aType [
-	aType = OPBPMNNodeType DataObject
-		ifTrue: [ ^ OPBPMNIcon current dataObject ].
-	aType = OPBPMNNodeType DataInput
-		ifTrue: [ ^ OPBPMNIcon current dataInput ].
-	aType = OPBPMNNodeType DataOutput
-		ifTrue: [ ^ OPBPMNIcon current dataOutput ].
-	aType = OPBPMNNodeType DataStore
-		ifTrue: [ ^ OPBPMNIcon current dataStore ].
+
+	aType = OPBPMNNodeType DataObject ifTrue: [
+		^ OPBPMNIcon current dataObject ].
+	aType = OPBPMNNodeType DataInput ifTrue: [
+		^ OPBPMNIcon current dataInput ].
+	aType = OPBPMNNodeType DataOutput ifTrue: [
+		^ OPBPMNIcon current dataOutput ].
+	aType = OPBPMNNodeType DataStore ifTrue: [
+		^ OPBPMNIcon current dataStore ].
+	self error: 'Unknown type'
 ]

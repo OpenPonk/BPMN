@@ -1,3 +1,6 @@
+"
+I manage the user interface for displaying validation results. I render an inspector table and highlight the offending diagram elements when a user selects a specific validation warning.
+"
 Class {
 	#name : 'OPBPMNValidationResultsUI',
 	#superclass : 'Object',
@@ -25,7 +28,7 @@ OPBPMNValidationResultsUI class >> createUIFor: aVerificationResults withControl
 OPBPMNValidationResultsUI >> changeElementColor: aElement toColor: aColor [
 	| diagramElementArray |
 	diagramElementArray := (self controller controllers select: [ :aController | aController model = aElement ]) asArray.
-	diagramElementArray ifNotEmpty: [ diagramElementArray first diagramElement borderColor: aColor.
+	diagramElementArray ifNotEmpty: [ diagramElementArray first diagramElement strokeColor: aColor.
 		diagramElementArray first diagramElement updateRenderFromSelf. ] .
 ]
 
@@ -61,21 +64,25 @@ OPBPMNValidationResultsUI >> highlighted [
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: composite [
+OPBPMNValidationResultsUI >> inspectorDocumentationReferenceIn: aBuilder [
+
 	<inspectorPresentationOrder: -14 title: 'Documentation'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  beResizable;
-		  items:  { 'https://github.com/OpenPonk/OpenPonk-BPMN/blob/dev-validations-docs/docs/validation-rules.md' };
-			addColumn: (SpLinkTableColumn
-				   title: 'Rules' evaluated: #asString url: #asString)
-		  yourself.
+		  items:
+			  { 'https://github.com/OpenPonk/OpenPonk-BPMN/blob/dev-validations-docs/docs/validation-rules.md' };
+		  addColumn:
+			  (SpLinkTableColumn
+				   title: 'Rules'
+				   evaluated: #asString
+				   url: #asString) yourself
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> inspectorTableIn: composite [
+OPBPMNValidationResultsUI >> inspectorTableIn: aBuilder [
 
 	<inspectorPresentationOrder: -15 title: 'Results'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  beResizable;
 		  items: self validationResults results asArray;
 		  whenSelectedDo: [ :item | self notifySelectChanged: item ];

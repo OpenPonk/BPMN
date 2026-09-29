@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that a boundary event has exactly one outgoing sequence flow to define its exception or compensation path.
+"
 Class {
 	#name : 'BE02OneSequenceFlow',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 BE02OneSequenceFlow class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]

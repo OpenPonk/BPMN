@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AN03MaxOneDefaultFlow validation rule. I ensure it correctly flags activities or gateways defining more than one default outgoing sequence flow.
+"
 Class {
 	#name : 'OPBPMNAN03ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

@@ -1,3 +1,6 @@
+"
+I am an abstract base test class for verifying specific BPMN validation rules. I provide boilerplate methods to test whether a rule correctly targets and applies to specific model objects.
+"
 Class {
 	#name : 'OPBPMNAbstractValidationTest',
 	#superclass : 'TestCase',
@@ -8,8 +11,11 @@ Class {
 
 { #category : 'constants' }
 OPBPMNAbstractValidationTest >> canValidateTest [
-	self assert: (self getTestedClass canValidate: self getNotValidatedClassInstance) equals: false.
-	self assert: (self getTestedClass canValidate: self getValidatedClassInstance) equals: true.
+
+	self deny:
+		(self getTestedClass canValidate: self getNotValidatedClassInstance).
+	self assert:
+		(self getTestedClass canValidate: self getValidatedClassInstance)
 ]
 
 { #category : 'constants' }

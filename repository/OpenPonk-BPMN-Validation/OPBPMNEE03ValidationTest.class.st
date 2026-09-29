@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the EE03MessageSend validation rule. I ensure it correctly identifies missing or invalid outgoing message flows on Message End Events.
+"
 Class {
 	#name : 'OPBPMNEE03ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

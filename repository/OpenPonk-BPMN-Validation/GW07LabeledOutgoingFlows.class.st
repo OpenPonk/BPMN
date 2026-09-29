@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that diverging gateways (like Exclusive or Inclusive Gateways) have explicitly labeled outgoing sequence flows to indicate the branching conditions.
+"
 Class {
 	#name : 'GW07LabeledOutgoingFlows',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GW07LabeledOutgoingFlows class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]

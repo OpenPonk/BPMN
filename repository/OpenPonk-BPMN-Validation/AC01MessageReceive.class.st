@@ -1,3 +1,6 @@
+"
+I am a validation rule checking whether a Receive Task correctly defines incoming message flows according to the BPMN specification.
+"
 Class {
 	#name : 'AC01MessageReceive',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AC01MessageReceive class >> validateClass [
 	^ OPBPMNActivityModel.
 ]

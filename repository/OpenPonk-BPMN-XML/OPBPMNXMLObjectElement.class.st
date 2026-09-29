@@ -1,3 +1,6 @@
+"
+I represent a complex BPMN XML element. I act as a container for nested XML items (such as attributes and child elements) and support visitor-based traversal.
+"
 Class {
 	#name : 'OPBPMNXMLObjectElement',
 	#superclass : 'OPBPMNXMLElement',

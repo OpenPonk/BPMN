@@ -1,78 +1,43 @@
+"
+I am the controller for BPMN Activities. I enforce valid connection rules for incoming and outgoing flows on the canvas.
+"
 Class {
 	#name : 'OPBPMNActivityController',
 	#superclass : 'OPBPMNElementController',
-	#instVars : [
-		'labelConstraint',
-		'iconElement',
-		'iconConstraint'
-	],
 	#category : 'OpenPonk-BPMN-Controllers',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
 
-{ #category : 'forms' }
-OPBPMNActivityController >> buildEditorForm: aForm [
+{ #category : 'construction' }
+OPBPMNActivityController class >> diagramElementClass [
 
-	super buildEditorForm: aForm.
-	(aForm addDroplist: 'Type')
-		items: #( #Service #User #Manual #Send #Receive #None );
-		displayIcon: [ :type | self model typeIconFor: type ];
-		display: [ :type | type asString ];
-		selectItem: self model type;
-		whenSelectedItemChangedDo: [ :newValue | 
-			self model type: newValue.
-			self modelChanged ].
-	(aForm addCheckbox: 'Is Call Activity?')
-		state: self model isCallActivity;
-		whenChangedDo: [ :val | 
-			self model isCallActivity: val.
-			self modelChanged ].
-	self model type = OPBPMNNodeType Service
-	| (self model type = OPBPMNNodeType Send)
-		ifTrue: [ 
-			(aForm addText: 'Executable attribute')
-				text: self model executableAttribute;
-				whenTextChangedDo: [ :newValue | 
-					self model executableAttribute: newValue asString.
-					self modelChanged ].
-			(aForm addText: 'Executable attribute value')
-				text: self model executableAttributeValue;
-				whenTextChangedDo: [ :newValue | 
-					self model executableAttributeValue: newValue asString.
-					self modelChanged ] ]
-		ifFalse: [ self model executableAttribute: nil ]
+	^ OPBPMNActivityShape
+]
+
+{ #category : 'accessing' }
+OPBPMNActivityController class >> viewModelClass [
+	^ OPBPMNActivityViewModel
 ]
 
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeSourceFor: aController [
+
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeTargetFor: aController [
 
-	^ (aController isKindOf: OPBPMNMessageFlowController)
-		  ifTrue: [ ^ aController source model owner ~= self model owner ]
-		  ifFalse: [
-		  		(aController isKindOf: OPBPMNDataFlowController)
-		  		ifTrue: [ ^ (aController source model) isKindOf: OPBPMNDataObjectModel  ]
-		 		ifFalse: [ ^ aController isKindOf: OPBPMNEdgeController ]
-			 ]
-]
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 
-{ #category : 'construction' }
-OPBPMNActivityController >> diagramElementClass [
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+			aController source model enclosingPool = self model enclosingPool
+				ifTrue: [ ^ false ] ].
 
-	^ OPBPMNActivityShape
-]
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
+			(aController source model isKindOf: OPBPMNDataObjectModel)
+				ifFalse: [ ^ false ] ].
 
-{ #category : 'accessing' }
-OPBPMNActivityController >> modelClass [
-	^ OPBPMNActivityModel
-]
-
-{ #category : 'connecting' }
-OPBPMNActivityController >> typeIconForModel [
-	^ self model typeIconFor: self model type
+	^ aController source ~= self
 ]

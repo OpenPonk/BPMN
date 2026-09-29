@@ -1,3 +1,6 @@
+"
+I am a validation rule recommending that nodes with multiple outgoing flows should use a splitting gateway to clarify branching logic.
+"
 Class {
 	#name : 'GW03ShouldSplitting',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GW03ShouldSplitting class >> validateClass [
 	^ OPBPMNGatewayModel.
 ]

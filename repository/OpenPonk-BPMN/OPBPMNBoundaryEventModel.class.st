@@ -1,6 +1,9 @@
+"
+I represent a BPMN Boundary Event attached to an activity. I track specific execution semantics, such as whether the event interrupts the host activity.
+"
 Class {
 	#name : 'OPBPMNBoundaryEventModel',
-	#superclass : 'OPBPMNNodeModel',
+	#superclass : 'OPBPMNSemanticNodeModel',
 	#instVars : [
 		'subscribeDiagram',
 		'isNonInterrupting'
@@ -16,7 +19,7 @@ OPBPMNBoundaryEventModel >> @ aName [
 	^ self nodeNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 OPBPMNBoundaryEventModel >> changed [
 
 	super changed.
@@ -29,7 +32,7 @@ OPBPMNBoundaryEventModel >> defaultType [
 	^ OPBPMNNodeType Error
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OPBPMNBoundaryEventModel >> initialize [ 
 	super initialize.
 	isNonInterrupting := false.
@@ -51,7 +54,7 @@ OPBPMNBoundaryEventModel >> nodeNamed: aName [
 	^ self elementNamed: aName
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNBoundaryEventModel >> printType [
 
 	^ 'boundary'
@@ -69,29 +72,28 @@ OPBPMNBoundaryEventModel >> subscribeDiagram: aDiagram [
 	subscribeDiagram := aDiagram
 ]
 
-{ #category : 'accessing' }
+{ #category : 'printing' }
 OPBPMNBoundaryEventModel >> typeIconFor: aType [
 
-	aType = OPBPMNNodeType Receive ifTrue: [ 
+	aType = OPBPMNNodeType Receive ifTrue: [
 		^ OPBPMNIcon current activityReceiveSquare ].
-	aType = OPBPMNNodeType Timer ifTrue: [ 
+	aType = OPBPMNNodeType Timer ifTrue: [
 		^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType Escalation ifTrue: [ 
+	aType = OPBPMNNodeType Escalation ifTrue: [
 		^ OPBPMNIcon current eventEscalation ].
-	aType = OPBPMNNodeType Conditional ifTrue: [ 
+	aType = OPBPMNNodeType Conditional ifTrue: [
 		^ OPBPMNIcon current eventCondition ].
-	aType = OPBPMNNodeType Error ifTrue: [ 
+	aType = OPBPMNNodeType Error ifTrue: [
 		^ OPBPMNIcon current eventError ].
-	aType = OPBPMNNodeType Cancel ifTrue: [ 
+	aType = OPBPMNNodeType Cancel ifTrue: [
 		^ OPBPMNIcon current eventCancel ].
-	aType = OPBPMNNodeType Compensation ifTrue: [ 
-		^ OPBPMNIcon current eventCompensation ].
-	aType = OPBPMNNodeType Signal ifTrue: [ 
+	aType = OPBPMNNodeType Signal ifTrue: [
 		^ OPBPMNIcon current eventSignal ].
-	aType = OPBPMNNodeType Multiple ifTrue: [ 
+	aType = OPBPMNNodeType Multiple ifTrue: [
 		^ OPBPMNIcon current eventMultiple ].
-	aType = OPBPMNNodeType ParallelMultiple ifTrue: [ 
+	aType = OPBPMNNodeType ParallelMultiple ifTrue: [
 		^ OPBPMNIcon current eventParallelMultiple ].
-	aType = OPBPMNNodeType CatchCompensation ifTrue: [ 
-		^ OPBPMNIcon current eventCatchCompensation ]
+	aType = OPBPMNNodeType CatchCompensation ifTrue: [
+		^ OPBPMNIcon current eventCatchCompensation ].
+	self error: 'Unknown type'
 ]

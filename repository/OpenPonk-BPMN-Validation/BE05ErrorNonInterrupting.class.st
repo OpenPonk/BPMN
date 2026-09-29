@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that error boundary events are always marked as interrupting, as BPMN specification prohibits non-interrupting error events.
+"
 Class {
 	#name : 'BE05ErrorNonInterrupting',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 BE05ErrorNonInterrupting class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]
@@ -14,13 +17,14 @@ BE05ErrorNonInterrupting class >> validateClass [
 { #category : 'verification' }
 BE05ErrorNonInterrupting >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 
-	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 
-		(aVerifiedObject type = OPBPMNNodeType Error) & (aVerifiedObject isNonInterrupting = True) ifTrue: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(BE05) ', aVerifiedObject class name
-						   ,
-						   ' of type Error could not be Non-Interrupting.') } ] ].
-	^ {  }
+	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifFalse: [
+		^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Error ifFalse: [ ^ {  } ].
+	aVerifiedObject isNonInterrupting ifFalse: [ ^ {  } ].
+
+	^ { (OPBPMNValidationMessageError
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText: '(BE05) ' , aVerifiedObject class name
+			   , ' of type Error could not be Non-Interrupting.') }
 ]

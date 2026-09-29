@@ -1,3 +1,6 @@
+"
+I am a specialized edge label for BPMN flows and associations. I calculate layout balance, constraints, and minimum distances for text placed along edges.
+"
 Class {
 	#name : 'OPBPMNEdgeLabel',
 	#superclass : 'OPEdgeLabel',
@@ -6,19 +9,19 @@ Class {
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'adding' }
 OPBPMNEdgeLabel >> defaultAnchorConstraintPosition [
 
 	^ OPRSAnchorConstraintBalanceReference balance: 0.4
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 OPBPMNEdgeLabel >> defaultBalance [
 
 	^ 0.4
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'adding' }
 OPBPMNEdgeLabel >> defaultMinDistance [
 
 	^ 5
@@ -30,7 +33,7 @@ OPBPMNEdgeLabel >> defaultText [
 	^ self modelElement name ifNil: [ ^ '' ] ifNotNil: [ :name | name ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 OPBPMNEdgeLabel >> text [
 
 	^ self modelElement name

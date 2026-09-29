@@ -1,16 +1,26 @@
+"
+I render a BPMN Data Object as a Roassal bound node, displaying the standard page icon with a folded top-right corner.
+"
 Class {
 	#name : 'OPBPMNDataObjectShape',
 	#superclass : 'OPBoundNode',
 	#instVars : [
 		'icon',
-		'borderColor'
+		'borderColor',
+		'labeled'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'DiagramElements'
 }
 
-{ #category : 'removing' }
+{ #category : 'reacting' }
+OPBPMNDataObjectShape >> associationCreated: anAssociation [
+	"Hook called when an association connected to this shape is created. No specific visual reaction needed."
+	
+]
+
+{ #category : 'accessing' }
 OPBPMNDataObjectShape >> attachedShapes [
 
 	^ super attachedShapes , { icon }
@@ -20,14 +30,6 @@ OPBPMNDataObjectShape >> attachedShapes [
 OPBPMNDataObjectShape >> borderColor [
 
 	^ borderColor
-]
-
-{ #category : 'update' }
-OPBPMNDataObjectShape >> borderColor: aColor [
-
-	aColor = Color black
-		ifTrue: [ borderColor := Color transparent ]
-		ifFalse: [ borderColor := aColor ]
 ]
 
 { #category : 'update' }
@@ -63,51 +65,54 @@ OPBPMNDataObjectShape >> createRoassalShape [
 	^ com
 ]
 
-{ #category : 'update' }
-OPBPMNDataObjectShape >> initialize [ 
+{ #category : 'initialization' }
+OPBPMNDataObjectShape >> initialize [
+
 	super initialize.
 	borderColor := Color transparent
 ]
 
 { #category : 'removing' }
 OPBPMNDataObjectShape >> removeRender [
-
 	super removeRender.
-	icon := nil
+	icon := nil.
+	labeled := nil
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> renderBasicShape [
 
 	^ self createRoassalShape model: self
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> renderShapeDetails [
-
-	| label |
-	label := RSLabeled new.
-	label location below.
-	label shapeBuilder labelShape color: Color black.
-	roassalShape addInteraction: label.
+	labeled := OPRSLabeled new.
+	labeled color: Color black.
+	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
+	labeled location below.
+	labeled text: ''.
+	roassalShape @ labeled.
 
 	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+		form: self typeIconForModel;
+		yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape
 ]
 
-{ #category : 'update' }
+{ #category : 'interactions' }
 OPBPMNDataObjectShape >> selectableInteraction [
 
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
 { #category : 'update' }
-OPBPMNDataObjectShape >> shouldBePositionableByUser [
+OPBPMNDataObjectShape >> strokeColor: aColor [
 
-	^ true
+	borderColor := aColor = Color black
+		               ifTrue: [ Color transparent ]
+		               ifFalse: [ aColor ]
 ]
 
 { #category : 'update' }
@@ -121,17 +126,16 @@ OPBPMNDataObjectShape >> updateIcon [
 	icon form: self typeIconForModel.
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> updateRenderFromModel [
-
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
+	labeled ifNotNil: [
+		labeled text: (self modelElement name ifNil: [ '' ]) ].
 	self updateIcon.
 	super updateRenderFromModel.
-	
 	roassalShape signalUpdate
 ]
 
-{ #category : 'update' }
+{ #category : 'rendering' }
 OPBPMNDataObjectShape >> updateRenderFromSelf [
 
 	self isRendered ifFalse: [ ^ self ].

@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the AN05LabelValidation validation rule. I ensure it correctly detects missing descriptive labels on essential BPMN elements.
+"
 Class {
 	#name : 'OPBPMNAN05ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',
@@ -13,7 +16,7 @@ OPBPMNAN05ValidationTest >> getTestedClass [
 
 { #category : 'constants' }
 OPBPMNAN05ValidationTest >> getValidatedClass [
-	^ OPBPMNNodeModel.
+	^ OPBPMNSemanticNodeModel.
 ]
 
 { #category : 'constants' }

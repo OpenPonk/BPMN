@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the EE04MessageOther validation rule. I ensure it correctly identifies invalid outgoing messages on End Events other than explicit Message End Events.
+"
 Class {
 	#name : 'OPBPMNEE04ValidationTest',
 	#superclass : 'OPBPMNAbstractValidationTest',

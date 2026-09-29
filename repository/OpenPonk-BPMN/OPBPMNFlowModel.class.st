@@ -1,6 +1,9 @@
+"
+I represent a BPMN Sequence Flow in the semantic model, establishing the structural execution sequence between flow nodes.
+"
 Class {
 	#name : 'OPBPMNFlowModel',
-	#superclass : 'OPBPMNEdgeModel',
+	#superclass : 'OPBPMNAbstractFlowModel',
 	#instVars : [
 		'type'
 	],
@@ -9,8 +12,9 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'printing' }
-OPBPMNFlowModel >> initialize [ 
+{ #category : 'initialization' }
+OPBPMNFlowModel >> initialize [
+
 	super initialize.
 	type := 'Normal'
 ]

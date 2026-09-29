@@ -1,3 +1,6 @@
+"
+I am a validation rule ensuring that a catching Message Intermediate Event correctly defines incoming message flows.
+"
 Class {
 	#name : 'IE01MessageReceive',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 IE01MessageReceive class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
 ]

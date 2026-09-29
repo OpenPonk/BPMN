@@ -1,3 +1,6 @@
+"
+I am a validation rule enforcing constraints on multiple escalation boundary events attached to the same activity.
+"
 Class {
 	#name : 'BE04BoundaryEscalationSibling',
 	#superclass : 'OPBPMNValidation',
@@ -6,7 +9,7 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 BE04BoundaryEscalationSibling class >> validateClass [
 	^ OPBPMNBoundaryEventModel.
 ]

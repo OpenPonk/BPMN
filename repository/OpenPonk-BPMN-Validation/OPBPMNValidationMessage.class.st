@@ -1,3 +1,6 @@
+"
+I represent a single validation finding (error or warning). I store the message text, severity level, the rule that triggered it, and a reference to the violating object.
+"
 Class {
 	#name : 'OPBPMNValidationMessage',
 	#superclass : 'Object',
@@ -21,7 +24,7 @@ OPBPMNValidationMessage class >> createFor: aObject withValidation: aVerificatio
 	^ message.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 OPBPMNValidationMessage class >> new [
 	^ self shouldNotImplement.
 ]

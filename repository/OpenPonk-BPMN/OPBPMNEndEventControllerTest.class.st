@@ -1,33 +1,36 @@
+"
+I am a unit test class verifying the creation, canvas rendering, and diagram targeting behavior of OPBPMNEndEventController.
+"
 Class {
 	#name : 'OPBPMNEndEventControllerTest',
-	#superclass : 'OPBPMNNodeControllerTest',
+	#superclass : 'OPBPMNSemanticNodeControllerTest',
 	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Tests'
 }
 
-{ #category : 'accessing' }
-OPBPMNEndEventControllerTest >> controllerClass [
-	^ OPBPMNEndEventController 
-]
-
-{ #category : 'accessing' }
-OPBPMNEndEventControllerTest >> creationTargetControllerClass [
-	^ OPBPMNPoolController  
-]
-
-{ #category : 'accessing' }
-OPBPMNEndEventControllerTest >> creationTargetModelClass [
-	^ OPBPMNPoolModel
-]
-
-{ #category : 'accessing' }
-OPBPMNEndEventControllerTest >> diagramElementClass [
+{ #category : 'constants' }
+OPBPMNEndEventControllerTest class >> diagramElementClass [
 
 	^ OPBPMNEndEventShape 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'constants' }
+OPBPMNEndEventControllerTest >> controllerClass [
+	^ OPBPMNEndEventController 
+]
+
+{ #category : 'constants' }
+OPBPMNEndEventControllerTest >> creationTargetControllerClass [
+	^ OPBPMNPoolController  
+]
+
+{ #category : 'constants' }
+OPBPMNEndEventControllerTest >> creationTargetModelClass [
+	^ OPBPMNPoolModel
+]
+
+{ #category : 'constants' }
 OPBPMNEndEventControllerTest >> modelClass [
 	^ OPBPMNEndEventModel 
 ]
