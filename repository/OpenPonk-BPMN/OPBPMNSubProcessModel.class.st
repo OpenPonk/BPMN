@@ -30,8 +30,7 @@ OPBPMNSubProcessModel >> nodeNamed: aName [
 
 { #category : 'printing' }
 OPBPMNSubProcessModel >> printType [
-
-	^ 'subprocess'
+	^ 'subProcess'
 ]
 
 { #category : 'removing' }

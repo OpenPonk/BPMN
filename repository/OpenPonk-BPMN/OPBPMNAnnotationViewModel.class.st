@@ -39,3 +39,9 @@ OPBPMNAnnotationViewModel >> descriptionName [
 { #category : 'accessing' }
 OPBPMNAnnotationViewModel >> icon [ ^ Smalltalk ui icons iconNamed: #smallLeftFlush
 ]
+
+{ #category : 'printing' }
+OPBPMNAnnotationViewModel >> nameOfModel [
+
+	^ self model text ifNil: [ '' ]
+]

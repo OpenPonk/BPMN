@@ -69,3 +69,13 @@ OPBPMNAssociationModel >> isToTarget [
 
 	^ self associationDirection ~= self class associationDirectionNone
 ]
+
+{ #category : 'printing' }
+OPBPMNAssociationModel >> printIdType [
+	^ '_6-'
+]
+
+{ #category : 'printing' }
+OPBPMNAssociationModel >> printType [
+	^ 'association'
+]
