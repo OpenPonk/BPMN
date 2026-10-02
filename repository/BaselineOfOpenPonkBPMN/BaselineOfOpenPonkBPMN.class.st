@@ -15,18 +15,18 @@ BaselineOfOpenPonkBPMN >> baseline: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'OpenPonk'
-			with: [ spec repository: 'github://openponk/openponk:v5.0.0' ].
+			with: [ spec repository: 'github://openponk/openponk:v5.0.1' ].
 
 		spec baseline: 'OpenPonkSimulation' with: [
 			spec
-				repository: 'github://openponk/simulation:v5.0.0';
+				repository: 'github://openponk/simulation:v5.0.1';
 				loads: 'plugin' ].
 		spec
 			baseline: 'OpenPonkModel'
-			with: [ spec repository: 'github://openponk/openponk-model:v5.0.0' ].
+			with: [ spec repository: 'github://openponk/openponk-model:v5.0.1' ].
 		spec
 			baseline: 'OpenPonkXMLDOMVisitor'
-			with: [ spec repository: 'github://openponk/xml-dom-visitor:v5.0.0' ].
+			with: [ spec repository: 'github://openponk/xml-dom-visitor:v5.0.1' ].
 		spec
 			package: 'OpenPonk-BPMN'
 			with: [ spec requires: #( 'OpenPonk' 'OpenPonkModel' ) ].
