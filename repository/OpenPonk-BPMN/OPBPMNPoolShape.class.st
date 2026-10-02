@@ -17,6 +17,11 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'constants' }
+OPBPMNPoolShape class >> minimumHeight [
+	^ 50
+]
+
 { #category : 'layout' }
 OPBPMNPoolShape >> adaptBoundsToInnerBounds: anInnerRectangle [
 	"Resizes pool shape to encompass inner nodes or lanes, accounting for pool header width."
@@ -37,15 +42,21 @@ OPBPMNPoolShape >> adaptBoundsToInnerBounds: anInnerRectangle [
 			poolTop := anInnerRectangle top - 35.
 			poolBottom := anInnerRectangle bottom + 35 ].
 	poolRectangle := Rectangle left: poolLeft right: poolRight top: poolTop bottom: poolBottom.
-	poolShape
-		translateTo: poolRectangle center;
-		extent: poolRectangle extent.
-	self hasLanes ifTrue: [ self layoutLanes ]
+	isAdjustingExtent := true.
+	[
+		poolShape
+			translateTo: poolRectangle center;
+			extent: poolRectangle extent.
+		self lastRectangle: poolRectangle.
+		self updateNameArea
+	] ensure: [ isAdjustingExtent := false ].
+	self hasLanes ifTrue: [ self relocateLanesDisplacingElements: false ]
 ]
 
 { #category : 'interactions' }
 OPBPMNPoolShape >> addSelectionDraggableInteraction [
-	roassalShape @ (OPRSSelectionDraggableBorder thatAlsoDragsShapesProvidedByBlock: [ self innerDraggableRoassalShapes ])
+
+	roassalShape @ (OPRSSelectionDraggable thatAlsoDragsShapesProvidedByBlock: [ self innerDraggableRoassalShapes ])
 ]
 
 { #category : 'geometry' }
@@ -57,7 +68,7 @@ OPBPMNPoolShape >> adjustExtentToLanes [
 	lanes ifEmpty: [ ^ self ].
 	currentShape := self roassalShape.
 	targetHeight := (lanes sumNumbers: [ :eachLane | eachLane laneHeight ]) asInteger.
-	targetHeight := targetHeight max: 220.
+	targetHeight := targetHeight max: self minimumHeight.
 	heightDelta := targetHeight - currentShape height.
 	heightDelta abs > 0.5 ifTrue: [
 		currentPosition := currentShape position.
@@ -198,6 +209,13 @@ OPBPMNPoolShape >> layoutLanes [
 ]
 
 { #category : 'constants' }
+OPBPMNPoolShape >> minimumHeight [
+	^ self laneShapes
+		ifEmpty: [ self class minimumHeight ]
+		ifNotEmpty: [ :lanes | lanes anyOne minimumHeight ]
+]
+
+{ #category : 'constants' }
 OPBPMNPoolShape >> nameAreaWidth [
 
 	^ 30
@@ -259,8 +277,8 @@ OPBPMNPoolShape >> relocateLanesDisplacingElements: aBoolean [
 
 { #category : 'removing' }
 OPBPMNPoolShape >> removeRender [
-	"Unsubscribes from shape events and clears header references."
 	self roassalShape ifNotNil: [ :shape | shape announcer unsubscribe: self ].
+	nameLabel ifNotNil: [ :label | label announcer unsubscribe: self ].
 	super removeRender.
 	topBox := nil.
 	bottomBox := nil.
@@ -309,6 +327,7 @@ OPBPMNPoolShape >> renderNameAreaLabel [
 		text: (self modelElement ifNotNil: [ :element | element name ifNil: [ 'Pool' ] ] ifNil: [ 'Pool' ]);
 		yourself.
 	self canvas add: nameLabel.
+	self addEventForwardingFrom: nameLabel to: self roassalShape.
 	self roassalShape when: RSPositionChangedEvent do: [ self updateNameArea ] for: self.
 	self roassalShape when: RSExtentChangedEvent do: [ self updateNameArea ] for: self.
 	nameLabel when: RSExtentChangedEvent do: [ self updateNameArea ] for: self
@@ -338,29 +357,55 @@ OPBPMNPoolShape >> renderShapeDetails [
 
 { #category : 'geometry' }
 OPBPMNPoolShape >> resizeToRectangle: aRectangle [
-	| oldRectangle deltaTop deltaBottom lanes |
+	| oldRectangle deltaTop deltaBottom lanes effectiveTop effectiveBottom effectiveRectangle isTopDrag isBottomDrag |
 	oldRectangle := self lastRectangle ifNil: [ roassalShape ifNotNil: [ roassalShape encompassingRectangle copy ] ].
 	oldRectangle ifNil: [ ^ self ].
-
-	deltaTop := aRectangle top - oldRectangle top.
-	deltaBottom := aRectangle bottom - oldRectangle bottom.
-
+	effectiveTop := aRectangle top.
+	effectiveBottom := aRectangle bottom.
 	lanes := self laneShapes.
-	lanes ifNotEmpty: [
-		lanes size = 1
-			ifTrue: [ lanes first laneHeight: (lanes first laneHeight - deltaTop + deltaBottom max: 50) ]
-			ifFalse: [
-				deltaTop abs > 0.5 ifTrue: [ lanes first laneHeight: (lanes first laneHeight - deltaTop max: 50) ].
-				deltaBottom abs > 0.5 ifTrue: [ lanes last laneHeight: (lanes last laneHeight + deltaBottom max: 50) ] ] ].
-
-	self lastRectangle: aRectangle.
-
+	(oldRectangle height closeTo: aRectangle height) ifFalse: [
+		deltaTop := aRectangle top - oldRectangle top.
+		deltaBottom := aRectangle bottom - oldRectangle bottom.
+		isTopDrag := (oldRectangle bottom closeTo: aRectangle bottom precision: 1.0) and: [ deltaTop abs > 0.5 ].
+		isBottomDrag := (oldRectangle top closeTo: aRectangle top precision: 1.0) and: [ deltaBottom abs > 0.5 ].
+		lanes ifNotEmpty: [
+			isTopDrag ifTrue: [
+				| currentFirstHeight minHeight maxShrinkTop actualDeltaTop |
+				currentFirstHeight := lanes first laneHeight.
+				minHeight := lanes first minimumHeight.
+				maxShrinkTop := currentFirstHeight - minHeight max: 0.
+				actualDeltaTop := deltaTop min: maxShrinkTop.
+				lanes first laneHeight: currentFirstHeight - actualDeltaTop.
+				effectiveTop := oldRectangle top + actualDeltaTop ].
+			isBottomDrag ifTrue: [
+				| currentLastHeight minHeight maxShrinkBottom actualDeltaBottom |
+				currentLastHeight := lanes last laneHeight.
+				minHeight := lanes last minimumHeight.
+				maxShrinkBottom := currentLastHeight - minHeight max: 0.
+				actualDeltaBottom := deltaBottom max: maxShrinkBottom negated.
+				lanes last laneHeight: currentLastHeight + actualDeltaBottom.
+				effectiveBottom := oldRectangle bottom + actualDeltaBottom ].
+			(isTopDrag not and: [ isBottomDrag not ]) ifTrue: [
+				| totalCurrentHeight scale |
+				totalCurrentHeight := lanes sumNumbers: #laneHeight.
+				scale := totalCurrentHeight isZero ifTrue: [ 1 ] ifFalse: [ aRectangle height / totalCurrentHeight ].
+				lanes do: [ :eachLane |
+					eachLane laneHeight: (eachLane laneHeight * scale max: eachLane minimumHeight) ] ] ] ].
+	effectiveRectangle := Rectangle
+		left: aRectangle left
+		right: aRectangle right
+		top: effectiveTop
+		bottom: effectiveBottom.
+	self lastRectangle: effectiveRectangle.
 	roassalShape ifNotNil: [
-		(roassalShape extent closeTo: aRectangle extent) ifFalse: [ roassalShape extent: aRectangle extent ].
-		(roassalShape position closeTo: aRectangle floatCenter) ifFalse: [ roassalShape translateTo: aRectangle floatCenter ].
-		self relocateLanesDisplacingElements: false ].
-
-	bounds ifNotNil: [ self bounds: (OPNodeBounds withPosition: aRectangle floatCenter extent: aRectangle extent) ]
+		isAdjustingExtent := true.
+		[
+			(roassalShape extent closeTo: effectiveRectangle extent) ifFalse: [ roassalShape extent: effectiveRectangle extent ].
+			(roassalShape position closeTo: effectiveRectangle floatCenter) ifFalse: [ roassalShape translateTo: effectiveRectangle floatCenter ].
+			self updateNameArea.
+			self relocateLanesDisplacingElements: false
+		] ensure: [ isAdjustingExtent := false ] ].
+	bounds ifNotNil: [ self bounds: (OPNodeBounds withPosition: effectiveRectangle floatCenter extent: effectiveRectangle extent) ]
 ]
 
 { #category : 'interactions' }

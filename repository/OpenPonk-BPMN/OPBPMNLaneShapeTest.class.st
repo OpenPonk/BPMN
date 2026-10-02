@@ -50,6 +50,17 @@ OPBPMNLaneShapeTest >> testAttachedShapesIncludesHeaderElements [
 		(laneShape instVarNamed: #laneSeparator) }
 ]
 
+{ #category : 'tests - interaction' }
+OPBPMNLaneShapeTest >> testClickingNameLabelForwardsClickToRoassalShape [
+	| clickAnnounced nameLabel |
+	laneShape renderIn: canvas.
+	nameLabel := laneShape instVarNamed: #nameLabel.
+	clickAnnounced := false.
+	laneShape roassalShape when: RSMouseClick do: [ clickAnnounced := true ] for: self.
+	nameLabel announce: (RSMouseClick new shape: nameLabel; yourself).
+	self assert: clickAnnounced
+]
+
 { #category : 'tests' }
 OPBPMNLaneShapeTest >> testDoesNotHaveBoundsSlot [
 	self deny: (OPBPMNLaneShape allInstVarNames includes: 'bounds')

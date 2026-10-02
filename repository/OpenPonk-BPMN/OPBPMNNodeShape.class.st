@@ -92,8 +92,9 @@ OPBPMNNodeShape >> selectableInteraction [
 
 { #category : 'accessing' }
 OPBPMNNodeShape >> strokeColor: aColor [
-
-	borderColor := aColor
+	borderColor := aColor.
+	self isRendered ifTrue: [
+		roassalShape borderColor: aColor ]
 ]
 
 { #category : 'connecting' }
@@ -125,10 +126,7 @@ OPBPMNNodeShape >> updateRenderFromModel [
 
 { #category : 'rendering' }
 OPBPMNNodeShape >> updateRenderFromSelf [
-
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
-	roassalShape borderColor: self borderColor.
-	
 	super updateRenderFromSelf
 ]

@@ -160,19 +160,17 @@ OPBPMNLayouter >> layoutPoolContent: aPoolShape shapes: directShapes edges: dire
 
 { #category : 'layouting' }
 OPBPMNLayouter >> layoutPoolWithLanes: aPoolShape shapes: aCollectionOfLaneShapes [
-	| lanes allFlowShapes allSecondaryShapes flowEdges ranks maxRank nodesByRank currentX horizontalGap laneHeight startX poolInnerWidth startY |
+	| lanes allFlowShapes allSecondaryShapes flowEdges ranks maxRank nodesByRank columnCenters currentX horizontalGap startX startY currentY allNodes poolInnerWidth |
 	lanes := aPoolShape laneShapes.
 	lanes ifEmpty: [ ^ self ].
 
 	allFlowShapes := (lanes flatCollect: [ :eachLane |
 		eachLane directNodeRoassalShapes reject: [ :eachShape |
-			(eachShape model isKindOf: OPBPMNDataObjectShape) or: [
-				eachShape model isKindOf: OPBPMNAnnotationShape ] ] ]) asGroup.
+			eachShape model isSecondaryLayoutShape ] ]) asGroup.
 
 	allSecondaryShapes := (lanes flatCollect: [ :eachLane |
 		eachLane directNodeRoassalShapes select: [ :eachShape |
-			(eachShape model isKindOf: OPBPMNDataObjectShape) or: [
-				eachShape model isKindOf: OPBPMNAnnotationShape ] ] ]) asGroup.
+			eachShape model isSecondaryLayoutShape ] ]) asGroup.
 
 	flowEdges := self sequenceFlowLayoutEdgesForNodes: allFlowShapes.
 
@@ -193,7 +191,7 @@ OPBPMNLayouter >> layoutPoolWithLanes: aPoolShape shapes: aCollectionOfLaneShape
 	ranks keysAndValuesDo: [ :eachShape :eachRank |
 		(nodesByRank at: eachRank) add: eachShape ].
 
-	laneHeight := 220.
+	columnCenters := Dictionary new.
 	currentX := 60.
 	horizontalGap := 50.
 
@@ -203,28 +201,65 @@ OPBPMNLayouter >> layoutPoolWithLanes: aPoolShape shapes: aCollectionOfLaneShape
 		columnShapes ifNotEmpty: [
 			columnMaxWidth := (columnShapes collect: [ :eachShape | eachShape extent x ]) max.
 			columnCenterX := currentX + (columnMaxWidth / 2).
-			columnShapes do: [ :eachShape |
-				| owningLaneIndex laneCenterY |
-				owningLaneIndex := lanes indexOf: eachShape model owningElement.
-				owningLaneIndex = 0 ifTrue: [ owningLaneIndex := 1 ].
-				laneCenterY := (owningLaneIndex - 0.5) * laneHeight.
-				eachShape translateTo: columnCenterX @ laneCenterY ].
+			columnCenters at: eachRankIndex put: columnCenterX.
 			currentX := currentX + columnMaxWidth + horizontalGap ] ].
+
+	lanes do: [ :eachLane |
+		0 to: maxRank do: [ :eachRankIndex |
+			| columnShapes columnCenterX |
+			columnShapes := (nodesByRank at: eachRankIndex) select: [ :eachShape |
+				eachShape model owningElement == eachLane ].
+			columnShapes ifNotEmpty: [
+				| totalColumnHeight runningY |
+				columnCenterX := columnCenters at: eachRankIndex ifAbsent: [ currentX ].
+				totalColumnHeight := (columnShapes sum: [ :eachShape | eachShape extent y ]) + ((columnShapes size - 1) * 30).
+				runningY := 0 - (totalColumnHeight / 2).
+				columnShapes do: [ :eachShape |
+					eachShape translateTo: columnCenterX @ (runningY + (eachShape extent y / 2)).
+					runningY := runningY + eachShape extent y + 30 ] ] ] ].
 
 	self layoutSecondaryShapes: allSecondaryShapes.
 
-	startX := 0.
-	poolInnerWidth := currentX + 30 max: 600.
-	startY := 0.
+	allNodes := (lanes flatCollect: #directNodeRoassalShapes) asGroup.
+	poolInnerWidth := allNodes ifEmpty: [ 600 ] ifNotEmpty: [
+		(allNodes encompassingRectangle right + 40 max: 600) asInteger ].
 
-	lanes withIndexDo: [ :eachLane :index |
-		| eachLaneShape laneCenterX laneCenterY |
-		eachLaneShape := eachLane roassalShape.
+	startX := 0.
+	startY := 0.
+	currentY := startY.
+
+	lanes do: [ :eachLane |
+		| laneNodes calculatedHeight laneCenterX laneCenterY eachLaneShape |
+		laneNodes := eachLane directNodeRoassalShapes.
+		calculatedHeight := laneNodes
+			ifEmpty: [ 100 ]
+			ifNotEmpty: [
+				| nodesRect |
+				nodesRect := (RSGroup withAll: laneNodes) encompassingRectangle.
+				((nodesRect height + 50) max: 100) asInteger ].
+		eachLane laneHeight: calculatedHeight.
+
+		laneCenterY := currentY + (calculatedHeight / 2).
 		laneCenterX := startX + aPoolShape nameAreaWidth + (poolInnerWidth / 2).
-		laneCenterY := startY + ((index - 0.5) * laneHeight).
+
+		laneNodes ifNotEmpty: [
+			| nodesRect deltaY |
+			nodesRect := (RSGroup withAll: laneNodes) encompassingRectangle.
+			deltaY := laneCenterY - nodesRect floatCenter y.
+			(RSGroup withAll: laneNodes) translateBy: (0 @ deltaY) ].
+
+		eachLaneShape := eachLane roassalShape.
 		eachLaneShape
-			extent: poolInnerWidth @ laneHeight;
-			translateTo: laneCenterX @ laneCenterY ]
+			extent: poolInnerWidth @ calculatedHeight;
+			translateTo: laneCenterX @ laneCenterY.
+
+		currentY := currentY + calculatedHeight ].
+
+	aPoolShape roassalShape extent: (poolInnerWidth + aPoolShape nameAreaWidth) @ currentY.
+	aPoolShape roassalShape translateTo:
+		(startX + ((poolInnerWidth + aPoolShape nameAreaWidth) / 2)) @ (startY + (currentY / 2)).
+	aPoolShape lastRectangle: aPoolShape roassalShape encompassingRectangle.
+	aPoolShape updateNameArea
 ]
 
 { #category : 'layouts' }

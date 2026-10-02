@@ -13,6 +13,11 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'constants' }
+OPBPMNLaneShape class >> minimumHeight [
+	^ 50
+]
+
 { #category : 'ston-core' }
 OPBPMNLaneShape class >> stonAllInstVarNames [
 	"Answers all instance variable names serialized by STON."
@@ -106,6 +111,11 @@ OPBPMNLaneShape >> laneSeparator [
 	^ laneSeparator
 ]
 
+{ #category : 'constants' }
+OPBPMNLaneShape >> minimumHeight [
+	^ self class minimumHeight
+]
+
 { #category : 'accessing' }
 OPBPMNLaneShape >> nameAreaWidth [
 	^ 30
@@ -147,6 +157,7 @@ OPBPMNLaneShape >> renderNameAreaLabel [
 		yourself.
 	nameLabel text: (self modelElement ifNotNil: [ :aModelElement | aModelElement name ifNil: [ '' ] ] ifNil: [ '' ]).
 	self canvas add: nameLabel.
+	self addEventForwardingFrom: nameLabel to: self roassalShape.
 	nameLabel when: RSExtentChangedEvent do: [ self updatePosition ] for: self
 ]
 
@@ -187,9 +198,9 @@ OPBPMNLaneShape >> selectableInteraction [
 
 { #category : 'geometry' }
 OPBPMNLaneShape >> translateContainedElementsPositionsBy: aDeltaPoint [
-	"Translates all positionable rendered elements contained in this lane by the given delta."
+	"Translates direct positionable rendered elements contained in this lane by the given delta."
 	| positionableElements |
-	positionableElements := self allOwnedElements select: [ :eachChild |
+	positionableElements := self innerNodeElements select: [ :eachChild |
 		eachChild isPositionableByUser and: [ eachChild isRendered ] ].
 	positionableElements do: [ :eachPositionable |
 		eachPositionable translateBy: aDeltaPoint ]
