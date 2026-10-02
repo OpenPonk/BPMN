@@ -10,10 +10,21 @@ Class {
 	#tag : 'Simulation'
 }
 
+{ #category : 'testing' }
+OPBPMNStartEventSimulator >> isInsideSubProcess [
+	| current |
+	current := model owner.
+	[ current isNotNil ] whileTrue: [
+		(current isKindOf: OPBPMNSubProcessModel) ifTrue: [ ^ true ].
+		current := current owner ].
+	^ false
+]
+
 { #category : 'creation' }
 OPBPMNStartEventSimulator >> loadConnectedItems [
-	"loads and/or connects appropriate tokens and elements"
 
 	super loadConnectedItems.
-	model owner = diagramSimulator model ifTrue: [ bpmnTokens := 1 ]
+	self isInsideSubProcess ifTrue: [ ^ self ].
+	bpmnTokens := 1.
+	blocked := false
 ]
