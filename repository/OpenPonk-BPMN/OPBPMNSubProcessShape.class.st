@@ -21,6 +21,11 @@ OPBPMNSubProcessShape >> adaptBoundsToInnerBounds: anInnerRectangle [
 	self roassalShape translateTo: anInnerRectangle center
 ]
 
+{ #category : 'interactions' }
+OPBPMNSubProcessShape >> addSelectionDraggableInteraction [
+	roassalShape @ (OPRSSelectionDraggable thatAlsoDragsShapesProvidedByBlock: [ self innerDraggableRoassalShapes ])
+]
+
 { #category : 'connecting' }
 OPBPMNSubProcessShape >> createRoassalShape [
 

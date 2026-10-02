@@ -43,6 +43,11 @@ OPBPMNAnnotationShape >> attachedShapes [
 		  (labeled ifNotNil: [ :l | l labelShape ]) }
 ]
 
+{ #category : 'testing' }
+OPBPMNAnnotationShape >> isSecondaryLayoutShape [
+	^ true
+]
+
 { #category : 'rendering' }
 OPBPMNAnnotationShape >> minExtent [
 

@@ -72,6 +72,11 @@ OPBPMNDataObjectShape >> initialize [
 	borderColor := Color transparent
 ]
 
+{ #category : 'testing' }
+OPBPMNDataObjectShape >> isSecondaryLayoutShape [
+	^ true
+]
+
 { #category : 'removing' }
 OPBPMNDataObjectShape >> removeRender [
 	super removeRender.
@@ -107,12 +112,13 @@ OPBPMNDataObjectShape >> selectableInteraction [
 	^ OPRSSelectable highlightBorderColorBlue
 ]
 
-{ #category : 'update' }
+{ #category : 'accessing' }
 OPBPMNDataObjectShape >> strokeColor: aColor [
-
 	borderColor := aColor = Color black
-		               ifTrue: [ Color transparent ]
-		               ifFalse: [ aColor ]
+		ifTrue: [ Color transparent ]
+		ifFalse: [ aColor ].
+	self isRendered ifTrue: [
+		roassalShape borderColor: borderColor ]
 ]
 
 { #category : 'update' }
@@ -137,9 +143,7 @@ OPBPMNDataObjectShape >> updateRenderFromModel [
 
 { #category : 'rendering' }
 OPBPMNDataObjectShape >> updateRenderFromSelf [
-
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
-	roassalShape borderColor: self borderColor.
 	super updateRenderFromSelf
 ]
