@@ -36,6 +36,24 @@ OPBPMNValidationTest >> testNew [
 	self newTest.
 ]
 
+{ #category : 'tests' }
+OPBPMNValidationTest >> testValidateModelWithLanesDoesNotReportMissingActivityOrStartEvent [
+	| validationController results exampleModel modelErrors modelWarnings |
+	validationController := OPBPMNValidationController new.
+	exampleModel := OPBPMNExamples exampleOrderFulfillment.
+	results := validationController validate: exampleModel.
+
+	modelErrors := results selectErrors select: [ :each | each objectReference = exampleModel ].
+	modelWarnings := results selectWarnings select: [ :each | each objectReference = exampleModel ].
+
+	self
+		assert: modelErrors isEmpty
+		description: [ 'Expected no errors for ' , exampleModel name , ' but got: ' , (modelErrors collect: #messageText) asArray asString ].
+	self
+		assert: modelWarnings isEmpty
+		description: [ 'Expected no warnings for ' , exampleModel name , ' but got: ' , (modelWarnings collect: #messageText) asArray asString ]
+]
+
 { #category : 'constants' }
 OPBPMNValidationTest >> testValidateObjectWithModel [
 	self

@@ -9,28 +9,23 @@ Class {
 	#tag : 'Plugin'
 }
 
-{ #category : 'toolbar' }
-OPBPMNPlugin class >> exportPackage: aPackage [
-	StSaveFilePresenter new
-		title: 'Choose a BPMN file to export to';
-		okAction: [ :file | 
-			| message |
-			file
-				ensureDelete;
-				writeStreamDo: [ :stream | 
-					stream << (OPBPMNXMLWriter toString: aPackage) ].
-			message := String streamContents: [ :s | 
-				s << 'Exported to ' << file pathString.
-				s cr; cr.
-				s << 'Click to open location' ].
-			(ProvideAnswerNotification signal: message) ifNil: [
-				(GrowlMorph 
-					openWithLabel: 'Information' translated 
-					contents: message)
-					vanishDelay: 5 seconds;
-					actionBlock: [ file openInOSFileBrowser ] ] ];
-		extensions: #( bpmn xml ) named: 'BPMN XML files';
-		open
+{ #category : 'exporting' }
+OPBPMNPlugin class >> exportPackage: aPackageOrController [
+	| baseName |
+	baseName := (aPackageOrController respondsTo: #name)
+		ifTrue: [ aPackageOrController name ]
+		ifFalse: [
+			(aPackageOrController respondsTo: #model)
+				ifTrue: [
+					aPackageOrController model ifNotNil: [ :model |
+						(model respondsTo: #name) ifTrue: [ model name ] ] ] ].
+	(baseName isNil or: [ baseName trimBoth isEmpty ]) ifTrue: [ baseName := 'export' ].
+	OPExportFileDialog
+		exportBlock: [ OPBPMNXMLWriter toString: aPackageOrController ]
+		defaultFileName: (FileNameSanitizer sanitize: baseName trimBoth) , '.bpmn'
+		extensions: #( bpmn xml )
+		named: 'BPMN XML files'
+		title: 'Choose a BPMN file to export to'
 ]
 
 { #category : 'accessing' }

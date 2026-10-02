@@ -15,6 +15,16 @@ OPBPMNAnnotationModel >> nodes [
 	^ {  }
 ]
 
+{ #category : 'printing' }
+OPBPMNAnnotationModel >> printIdType [
+	^ '_6-'
+]
+
+{ #category : 'printing' }
+OPBPMNAnnotationModel >> printType [
+	^ 'textAnnotation'
+]
+
 { #category : 'accessing' }
 OPBPMNAnnotationModel >> text [
 

@@ -9,7 +9,12 @@ Class {
 	#tag : 'Models'
 }
 
+{ #category : 'accessing' }
+OPBPMNDataFlowModel >> associationDirection [
+	^ 'One'
+]
+
 { #category : 'printing' }
 OPBPMNDataFlowModel >> printType [
-	^ 'dataFlow'
+	^ 'association'
 ]

@@ -81,18 +81,20 @@ OPBPMNSimulationGUI >> simulatorClass [
 
 { #category : 'private - hooks' }
 OPBPMNSimulationGUI >> updateColors [
-
 	| controller |
 	diagramSimulator elementsDo: [ :element |
-		controller := self diagramController controllerForModel:
-			              element model.
-		element bpmnTokens > 0
-			ifFalse: [ controller diagramElement strokeColor: Color black ]
+		controller := self diagramController controllerForModel: element model.
+		(controller notNil and: [
+			(controller respondsTo: #diagramElement) and: [
+				controller diagramElement respondsTo: #strokeColor: ] ])
 			ifTrue: [
-				element bpmnTokens > 1
+				element bpmnTokens > 0
+					ifFalse: [ controller diagramElement strokeColor: Color black ]
 					ifTrue: [
-					controller diagramElement strokeColor: Color orange darker ]
-					ifFalse: [
-					controller diagramElement strokeColor: Color green darker ] ].
-		controller diagramElement updateRenderFromSelf ]
+						element bpmnTokens > 1
+							ifTrue: [
+								controller diagramElement strokeColor: Color orange darker ]
+							ifFalse: [
+								controller diagramElement strokeColor: Color green darker ] ].
+				controller diagramElement updateRenderFromSelf ] ]
 ]

@@ -25,6 +25,11 @@ OPBPMNLaneModel >> pool [
 ]
 
 { #category : 'printing' }
+OPBPMNLaneModel >> printIdType [
+	^ '_6-'
+]
+
+{ #category : 'printing' }
 OPBPMNLaneModel >> printType [
 	^ 'lane'
 ]

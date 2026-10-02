@@ -6,7 +6,9 @@ Class {
 	#superclass : 'OPBPMNSemanticNodeModel',
 	#instVars : [
 		'subscribeDiagram',
-		'isNonInterrupting'
+		'isNonInterrupting',
+		'timerType',
+		'timerValue'
 	],
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
@@ -56,8 +58,7 @@ OPBPMNBoundaryEventModel >> nodeNamed: aName [
 
 { #category : 'printing' }
 OPBPMNBoundaryEventModel >> printType [
-
-	^ 'boundary'
+	^ 'boundaryEvent'
 ]
 
 { #category : 'accessing' }
@@ -70,6 +71,26 @@ OPBPMNBoundaryEventModel >> subscribeDiagram [
 OPBPMNBoundaryEventModel >> subscribeDiagram: aDiagram [
 
 	subscribeDiagram := aDiagram
+]
+
+{ #category : 'accessing' }
+OPBPMNBoundaryEventModel >> timerType [
+	^ timerType ifNil: [ #none ]
+]
+
+{ #category : 'accessing' }
+OPBPMNBoundaryEventModel >> timerType: aType [
+	timerType := aType
+]
+
+{ #category : 'accessing' }
+OPBPMNBoundaryEventModel >> timerValue [
+	^ timerValue ifNil: [ '' ]
+]
+
+{ #category : 'accessing' }
+OPBPMNBoundaryEventModel >> timerValue: aValue [
+	timerValue := aValue
 ]
 
 { #category : 'printing' }

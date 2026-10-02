@@ -30,16 +30,9 @@ OPBPMNCollapsedSubProcessModel >> isCallActivity: aActivity [
 
 { #category : 'printing' }
 OPBPMNCollapsedSubProcessModel >> printType [
-	type = OPBPMNNodeType MarkerParallel 
-		ifTrue: [ ^ 'MarkerParallel' ].
-	type = OPBPMNNodeType MarkerSequential 
-		ifTrue: [ ^ 'MarkerSequential' ].
-	type = OPBPMNNodeType MarkerAdhoc 
-		ifTrue: [ ^ 'MarkerAdhoc' ].
-	type = OPBPMNNodeType MarkerCompensation 
-		ifTrue: [ ^ 'MarkerCompensation' ].
-	type = OPBPMNNodeType MarkerLoop 
-		ifTrue: [ ^ 'MarkerLoop']
+
+	self isCallActivity ifTrue: [ ^ 'callActivity' ].
+	^ 'subProcess'
 ]
 
 { #category : 'printing' }
