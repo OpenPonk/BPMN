@@ -16,20 +16,17 @@ GW06NoConditionalOutgoingFlows class >> validateClass [
 
 { #category : 'verification' }
 GW06NoConditionalOutgoingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 
-		aVerifiedObject type = OPBPMNNodeType Parallel
-		| (aVerifiedObject type = OPBPMNNodeType Eventbased) ifFalse: [ 
-			counter := 0.
-			aVerifiedObject outgoing do: [ :each | 
-				(each isKindOf: OPBPMNFlowModel) ifTrue: [ 
-					each type = 'Conditional' ifTrue: [ counter := 1 ] ] ] ].
-		counter = 1 ifTrue: [ 
-			^ { (OPBPMNValidationMessageError
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(GW06) ' , aVerifiedObject class name
-					   , ' should not have conditional outgoing flows') } ] ].
+	| hasConditionalFlow |
+	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifFalse: [ ^ {  } ].
+	(aVerifiedObject type = OPBPMNNodeType Parallel
+		or: [ aVerifiedObject type = OPBPMNNodeType Eventbased ]) ifTrue: [ ^ {  } ].
+	hasConditionalFlow := aVerifiedObject outgoing anySatisfy: [ :each |
+		(each isKindOf: OPBPMNFlowModel) and: [ each type = 'Conditional' ] ].
+	hasConditionalFlow ifTrue: [
+		^ { (OPBPMNValidationMessageError
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(GW06) ' , aVerifiedObject class name
+				, ' should not have conditional outgoing flows') } ].
 	^ {  }
 ]

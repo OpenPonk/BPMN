@@ -79,3 +79,14 @@ OPBPMNAssociationModel >> printIdType [
 OPBPMNAssociationModel >> printType [
 	^ 'association'
 ]
+
+{ #category : 'removing' }
+OPBPMNAssociationModel >> removeFrom: anOwner [
+	target ifNotNil: [ :activeTarget |
+		target := nil.
+		activeTarget removeAssociation: self ].
+	source ifNotNil: [ :activeSource |
+		source := nil.
+		activeSource removeAssociation: self ].
+	super removeFrom: anOwner
+]

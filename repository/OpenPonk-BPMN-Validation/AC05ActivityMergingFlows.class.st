@@ -9,6 +9,13 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
+{ #category : 'testing' }
+AC05ActivityMergingFlows class >> canValidate: aVerifiedObject [
+	^ (super canValidate: aVerifiedObject)
+		or: [ (aVerifiedObject isKindOf: OPBPMNSubProcessModel)
+		or: [ aVerifiedObject isKindOf: OPBPMNCollapsedSubProcessModel ] ]
+]
+
 { #category : 'accessing' }
 AC05ActivityMergingFlows class >> validateClass [
 	^ OPBPMNActivityModel.
@@ -16,21 +23,17 @@ AC05ActivityMergingFlows class >> validateClass [
 
 { #category : 'verification' }
 AC05ActivityMergingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| counterIn counterOut |
-	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifTrue: [ 
-		counterIn := 0.
-		counterOut := 0.
-		aVerifiedObject incoming do: [ :each | (
-			(each isKindOf: OPBPMNFlowModel) 
-				ifTrue: [  counterIn := counterIn + 1 ]) ].
-		aVerifiedObject outgoing do: [ :each | (
-			(each isKindOf: OPBPMNFlowModel) 
-				ifTrue: [  counterOut := counterOut + 1 ]) ].
-		(counterIn > 1) | (counterOut > 1) ifTrue: [ 
-			^ { (OPBPMNValidationMessageWarning
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(AC05) ' , aVerifiedObject class name
-					   , ' should not be used for merging or splitting flows.') } ] ].
+	| incomingSequenceFlows outgoingSequenceFlows |
+	(self class canValidate: aVerifiedObject) ifFalse: [ ^ {  } ].
+	incomingSequenceFlows := aVerifiedObject incoming select: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNFlowModel ].
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNFlowModel ].
+	(incomingSequenceFlows size > 1 or: [ outgoingSequenceFlows size > 1 ]) ifTrue: [
+		^ { (OPBPMNValidationMessageWarning
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(AC05) ' , aVerifiedObject class name
+				, ' should not be used for merging or splitting flows.') } ].
 	^ {  }
 ]

@@ -16,19 +16,18 @@ IE04MessageSendOther class >> validateClass [
 
 { #category : 'verification' }
 IE04MessageSendOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifTrue: [ 
-		counter := 0.
-		aVerifiedObject outgoing do: [ :each | (
-			(each isKindOf: OPBPMNMessageFlowModel) ifTrue: [ counter := 1 ]) ] ].
-		counter = 1 ifTrue: [ 
-			aVerifiedObject type = OPBPMNNodeType Send
-			| (aVerifiedObject type = OPBPMNNodeType Multiple) ifFalse: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(IE04) ', aVerifiedObject class name
-						   ,
-						   ' can have outgoing Message Flow only as Message or Multiple type.') } ] ].
-	^ {  }
+	| hasOutgoingMessageFlow allowedTypes |
+	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifFalse: [ ^ {  } ].
+	hasOutgoingMessageFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasOutgoingMessageFlow ifFalse: [ ^ {  } ].
+	allowedTypes := {
+		OPBPMNNodeType Send .
+		OPBPMNNodeType MultipleThrow }.
+	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageError
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(IE04) ' , aVerifiedObject class name
+			, ' can have outgoing Message Flow only as Message Send or MultipleThrow type.') }
 ]

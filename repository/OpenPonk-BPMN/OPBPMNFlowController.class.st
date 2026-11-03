@@ -19,3 +19,17 @@ OPBPMNFlowController class >> diagramElementClass [
 OPBPMNFlowController class >> viewModelClass [
 	^ OPBPMNFlowViewModel
 ]
+
+{ #category : 'connecting' }
+OPBPMNFlowController >> canConnectSource: aSourceController toTarget: aTargetController [
+	| sourceModel targetModel sourceSubProcess targetSubProcess |
+	(super canConnectSource: aSourceController toTarget: aTargetController) ifFalse: [ ^ false ].
+	aSourceController ifNil: [ ^ true ].
+	sourceModel := aSourceController model.
+	targetModel := aTargetController model.
+	(sourceModel isNil or: [ targetModel isNil ]) ifTrue: [ ^ true ].
+	sourceSubProcess := self enclosingSubProcessOf: sourceModel.
+	targetSubProcess := self enclosingSubProcessOf: targetModel.
+	sourceSubProcess == targetSubProcess ifFalse: [ ^ false ].
+	^ sourceModel enclosingPool == targetModel enclosingPool
+]

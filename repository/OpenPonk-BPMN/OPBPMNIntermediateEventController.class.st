@@ -22,22 +22,16 @@ OPBPMNIntermediateEventController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNIntermediateEventController >> canBeSourceFor: aController [
-
+	(aController isKindOf: OPBPMNFlowController) ifTrue: [
+		^ self model isNil or: [ self model type ~= OPBPMNNodeType LinkThrow ] ].
 	^ aController isKindOf: OPBPMNEdgeController
 ]
 
 { #category : 'connecting' }
 OPBPMNIntermediateEventController >> canBeTargetFor: aController [
-
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-			aController source model enclosingPool = self model enclosingPool
-				ifTrue: [ ^ false ] ].
-
-	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-			(aController source model isKindOf: OPBPMNDataObjectModel)
-				ifFalse: [ ^ false ] ].
-
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
-
-	^ aController source ~= self
+	((aController isKindOf: OPBPMNFlowController) and: [
+		self model isNotNil and: [ self model type = OPBPMNNodeType Link ] ])
+		ifTrue: [ ^ false ].
+	^ aController canConnectTo: self
 ]

@@ -19,3 +19,30 @@ OPBPMNMessageFlowController class >> diagramElementClass [
 OPBPMNMessageFlowController class >> viewModelClass [
 	^ OPBPMNMessageFlowViewModel
 ]
+
+{ #category : 'connecting' }
+OPBPMNMessageFlowController >> canConnectSource: aSourceController toTarget: aTargetController [
+	| sourcePool targetPool |
+	(super canConnectSource: aSourceController toTarget: aTargetController) ifFalse: [ ^ false ].
+	aSourceController ifNil: [ ^ true ].
+	(self isValidMessageTarget: aTargetController) ifFalse: [ ^ false ].
+	sourcePool := aSourceController model enclosingPool.
+	targetPool := aTargetController model enclosingPool.
+	((sourcePool isKindOf: OPBPMNPoolModel) and: [ targetPool isKindOf: OPBPMNPoolModel ]) ifFalse: [ ^ false ].
+	sourcePool == targetPool ifTrue: [ ^ false ].
+	(aSourceController isKindOf: OPBPMNPoolController) ifTrue: [
+		aSourceController isBlackBox ifFalse: [ ^ false ] ].
+	^ true
+]
+
+{ #category : 'private' }
+OPBPMNMessageFlowController >> isValidMessageTarget: aTargetController [
+	(aTargetController isKindOf: OPBPMNPoolController) ifTrue: [
+		^ aTargetController isBlackBox ].
+	^ (aTargetController isKindOf: OPBPMNActivityController)
+		or: [ (aTargetController isKindOf: OPBPMNSubProcessController)
+		or: [ (aTargetController isKindOf: OPBPMNCollapsedSubProcessController)
+		or: [ (aTargetController isKindOf: OPBPMNStartEventController)
+		or: [ (aTargetController isKindOf: OPBPMNIntermediateEventController)
+		or: [ aTargetController isKindOf: OPBPMNBoundaryEventController ] ] ] ] ]
+]

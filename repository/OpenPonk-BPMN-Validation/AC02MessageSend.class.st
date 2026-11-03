@@ -16,19 +16,13 @@ AC02MessageSend class >> validateClass [
 
 { #category : 'verification' }
 AC02MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifTrue: [ 
-		aVerifiedObject type = OPBPMNNodeType Send ifTrue: [ 
-			counter := 0.
-			aVerifiedObject outgoing do: [ :each | (
-				(each isKindOf: OPBPMNMessageFlowModel) ifTrue: [ counter := 1 ]) ] ].
-			counter = 0 ifTrue: [ 
-			^ { (OPBPMNValidationMessageError
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(AC02) ' , aVerifiedObject class name
-					   ,
-					   ' of Message Send type has to have outgoing Message Flow.') } ] ].
-	^ {  }
+	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifFalse: [ ^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Send ifFalse: [ ^ {  } ].
+	(aVerifiedObject outgoing anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
+		ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageError
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(AC02) ' , aVerifiedObject class name
+			, ' of Message Send type has to have outgoing Message Flow.') }
 ]

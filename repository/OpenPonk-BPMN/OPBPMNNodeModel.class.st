@@ -89,8 +89,23 @@ OPBPMNNodeModel >> outgoing [
 	^ associations select: [ :each | each source = self ]
 ]
 
+{ #category : 'accessing' }
+OPBPMNNodeModel >> relatedElements [
+	^ (self incoming , self outgoing) asSet asOrderedCollection
+]
+
+{ #category : 'removing' }
+OPBPMNNodeModel >> remove: anElement [
+	(associations includes: anElement) ifTrue: [
+		anElement removeFrom: self.
+		associations remove: anElement ifAbsent: [ ].
+		self announceRemovedChild: anElement.
+		^ anElement ].
+	^ super remove: anElement
+]
+
 { #category : 'removing' }
 OPBPMNNodeModel >> removeAssociation: anAssociation [
-
-	associations remove: anAssociation
+	associations remove: anAssociation ifAbsent: [ ^ self ].
+	self announceRemovedChild: anAssociation
 ]

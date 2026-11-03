@@ -16,14 +16,15 @@ GW03ShouldSplitting class >> validateClass [
 
 { #category : 'verification' }
 GW03ShouldSplitting >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 
-		aVerifiedObject incoming size > 1
-		& (aVerifiedObject outgoing size > 1) ifTrue: [ 
-			^ { (OPBPMNValidationMessageWarning
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(GW03) ' , aVerifiedObject class name
-					   , ' should be either merging or splitting.') } ] ].
+	| incomingSequenceFlows outgoingSequenceFlows |
+	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifFalse: [ ^ {  } ].
+	incomingSequenceFlows := aVerifiedObject incoming select: [ :each | each isKindOf: OPBPMNFlowModel ].
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ].
+	(incomingSequenceFlows size > 1 and: [ outgoingSequenceFlows size > 1 ]) ifTrue: [
+		^ { (OPBPMNValidationMessageWarning
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(GW03) ' , aVerifiedObject class name
+				, ' should be either merging or splitting.') } ].
 	^ {  }
 ]

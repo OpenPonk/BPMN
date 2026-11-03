@@ -28,24 +28,10 @@ OPBPMNSubProcessController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNSubProcessController >> canBeTargetFor: aController [
-
-	(aController isKindOf: OPBPMNElementController) ifTrue: [ ^ true ].
-
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-			aController source model enclosingPool = self model enclosingPool
-				ifTrue: [ ^ false ] ].
-
-	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-			(aController source model isKindOf: OPBPMNDataObjectModel)
-				ifFalse: [ ^ false ] ].
-
+	(aController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ true ].
+	(aController isKindOf: OPBPMNPoolController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNLaneController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNNodeController) ifTrue: [ ^ true ].
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
-
-	^ aController source ~= self
-]
-
-{ #category : 'canvas actions' }
-OPBPMNSubProcessController >> showDenyFeedbackFor: aController [
-
-	^ nil
+	^ aController canConnectTo: self
 ]

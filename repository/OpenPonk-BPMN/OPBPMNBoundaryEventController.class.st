@@ -22,23 +22,21 @@ OPBPMNBoundaryEventController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNBoundaryEventController >> canBeSourceFor: aController [
-
-	^ (aController isKindOf: OPBPMNFlowController) or: [
-		  aController isKindOf: OPBPMNAssociationController ]
+	(aController isKindOf: OPBPMNAssociationController) ifTrue: [ ^ true ].
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [ ^ true ].
+	(aController isKindOf: OPBPMNFlowController) ifTrue: [
+		^ self model isNil or: [
+			(self model type = OPBPMNNodeType CatchCompensation
+				or: [ self model type = OPBPMNNodeType Compensation ]) not ] ].
+	^ false
 ]
 
 { #category : 'connecting' }
 OPBPMNBoundaryEventController >> canBeTargetFor: aController [
-
-	((aController isKindOf: OPBPMNMessageFlowController) or: [
-		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [
-		^ false ].
-
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-			aController source model enclosingPool = self model enclosingPool
-				ifTrue: [ ^ false ] ].
-
-	^ aController source ~= self
+	(aController isKindOf: OPBPMNFlowController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
+	^ aController canConnectTo: self
 ]
 
 { #category : 'construction' }

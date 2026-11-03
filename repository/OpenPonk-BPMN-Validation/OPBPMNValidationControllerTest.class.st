@@ -62,31 +62,52 @@ OPBPMNValidationControllerTest >> testValidate [
 
 { #category : 'tests' }
 OPBPMNValidationControllerTest >> testValidateProcess [
-
-	| activity array model controller results dataO startE |
+	| activity array model controller results dataObject startEvent endEvent |
 	activity := OPBPMNActivityModel new.
-	dataO := OPBPMNDataObjectModel new.
-	startE := OPBPMNStartEventModel new.
+	dataObject := OPBPMNDataObjectModel new.
+	startEvent := OPBPMNStartEventModel new.
+	endEvent := OPBPMNEndEventModel new.
 	array := {
-		         activity.
-		         dataO }.
+		activity.
+		dataObject }.
 	model := OPBPMNModel new.
 	model addAll: array.
 	controller := OPBPMNValidationController new.
 	results := controller validateProcess: model.
-	self assert: (results isKindOf: OPBPMNValidationResults).
-	self deny: (results hasErrors: activity).
-	self deny: (results hasErrors: dataO).
-	self assert: (results hasWarnings: model).
-	self deny: (results hasErrors: model).
+	self
+		assert: (results isKindOf: OPBPMNValidationResults)
+		description: 'Validation results must be an instance of OPBPMNValidationResults'.
+	self
+		deny: (results hasErrors: activity)
+		description: 'Process validation alone must not attach activity errors'.
+	self
+		deny: (results hasErrors: dataObject)
+		description: 'Process validation must not report errors on data object'.
+	self
+		assert: (results hasWarnings: model)
+		description: 'Model missing start and end events must have PR07 process warning'.
+	self
+		deny: (results hasErrors: model)
+		description: 'Model with an activity must not have process errors'.
 
-	model add: startE.
+	model add: startEvent.
+	model add: endEvent.
 	results := controller validateProcess: model.
-	self assert: (results isKindOf: OPBPMNValidationResults).
-	self deny: (results hasErrors: activity).
-	self deny: (results hasErrors: startE).
-	self deny: (results hasWarnings: model).
-	self deny: (results hasErrors: model)
+	self
+		assert: (results isKindOf: OPBPMNValidationResults)
+		description: 'Validation results must be an instance of OPBPMNValidationResults'.
+	self
+		deny: (results hasErrors: activity)
+		description: 'Activity must not have process errors'.
+	self
+		deny: (results hasErrors: startEvent)
+		description: 'Start event must not have process errors'.
+	self
+		deny: (results hasWarnings: model)
+		description: 'Model with activity, start event, and end event must have no process warnings'.
+	self
+		deny: (results hasErrors: model)
+		description: 'Model with activity, start event, and end event must have no process errors'
 ]
 
 { #category : 'tests' }

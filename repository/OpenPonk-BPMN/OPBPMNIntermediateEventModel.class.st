@@ -11,11 +11,16 @@ Class {
 
 { #category : 'printing' }
 OPBPMNIntermediateEventModel >> printType [
-
-	(type = OPBPMNNodeType None or: [
-		 type = OPBPMNNodeType Link or: [ type = OPBPMNNodeType Send ] ])
-		ifTrue: [ ^ 'intermediateThrowEvent' ].
-
+	| throwTypes |
+	throwTypes := {
+		OPBPMNNodeType None .
+		OPBPMNNodeType Send .
+		OPBPMNNodeType EscalationThrow .
+		OPBPMNNodeType LinkThrow .
+		OPBPMNNodeType CompensationThrow .
+		OPBPMNNodeType SignalThrow .
+		OPBPMNNodeType MultipleThrow }.
+	(throwTypes includes: type) ifTrue: [ ^ 'intermediateThrowEvent' ].
 	^ 'intermediateCatchEvent'
 ]
 

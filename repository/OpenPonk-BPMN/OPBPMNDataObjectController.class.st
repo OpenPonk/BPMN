@@ -29,10 +29,9 @@ OPBPMNDataObjectController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNDataObjectController >> canBeTargetFor: aController [
-
-	^ ((aController isKindOf: OPBPMNDataFlowController) or: [
-		   aController isKindOf: OPBPMNAssociationController ]) and: [
-		  aController source ~= self ]
+	((aController isKindOf: OPBPMNDataFlowController) or: [
+		aController isKindOf: OPBPMNAssociationController ]) ifFalse: [ ^ false ].
+	^ aController canConnectTo: self
 ]
 
 { #category : 'announcements' }

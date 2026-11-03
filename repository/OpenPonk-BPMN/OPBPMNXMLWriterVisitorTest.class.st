@@ -157,6 +157,32 @@ OPBPMNXMLWriterVisitorTest >> testExportExampleOrderFulfillmentSucceedsAndIsWell
 ]
 
 { #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testExportPoolAndRootProcessExportsBoundaryEventAttachedToActivity [
+	| pool lane task boundaryEvent visitor xml |
+	pool := OPBPMNPoolModel new name: 'Pool'.
+	lane := OPBPMNLaneModel new name: 'Lane'.
+	pool addLane: lane.
+	task := OPBPMNActivityModel new name: 'TaskWithBoundary'.
+	boundaryEvent := OPBPMNBoundaryEventModel new
+		name: 'TaskTimer';
+		type: OPBPMNNodeType Timer;
+		yourself.
+	task add: boundaryEvent.
+	lane add: task.
+
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitElement: pool.
+	xml := visitor writer asString.
+
+	self
+		assert: (xml includesSubstring: '<bpmn:boundaryEvent')
+		description: 'Boundary event attached to an activity inside a lane must be exported to XML'.
+	self
+		assert: (xml includesSubstring: 'attachedToRef="' , task printIdType , task uuid asString , '" ') not & (xml includesSubstring: 'attachedToRef="' , task printIdType , task uuid asString , '"')
+		description: 'Boundary event must reference its host activity in attachedToRef'
+]
+
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportPoolWithLanesExportsAnnotationsAndDataObjects [
 	| pool lane activity annotation dataObject visitor xml |
 	pool := OPBPMNPoolModel new.
@@ -279,6 +305,41 @@ OPBPMNXMLWriterVisitorTest >> testExportSubProcessExportsContainedNodesAndSequen
 		description: 'Inner end event must be exported inside subProcess'.
 	self assert: (xml includesSubstring: '<bpmn:sequenceFlow')
 		description: 'Inner sequence flow must be exported inside subProcess'
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testIntermediateEventPrintTypeDistinguishesCatchAndThrowTypes [
+	| catchTypes throwTypes |
+	catchTypes := {
+		OPBPMNNodeType Receive .
+		OPBPMNNodeType Timer .
+		OPBPMNNodeType Escalation .
+		OPBPMNNodeType Conditional .
+		OPBPMNNodeType Link .
+		OPBPMNNodeType Compensation .
+		OPBPMNNodeType Signal .
+		OPBPMNNodeType Multiple .
+		OPBPMNNodeType ParallelMultiple }.
+	throwTypes := {
+		OPBPMNNodeType None .
+		OPBPMNNodeType Send .
+		OPBPMNNodeType EscalationThrow .
+		OPBPMNNodeType LinkThrow .
+		OPBPMNNodeType CompensationThrow .
+		OPBPMNNodeType SignalThrow .
+		OPBPMNNodeType MultipleThrow }.
+	catchTypes do: [ :eachCatchType |
+		| eventModel |
+		eventModel := OPBPMNIntermediateEventModel new type: eachCatchType; yourself.
+		self
+			assert: eventModel printType
+			equals: 'intermediateCatchEvent' ].
+	throwTypes do: [ :eachThrowType |
+		| eventModel |
+		eventModel := OPBPMNIntermediateEventModel new type: eachThrowType; yourself.
+		self
+			assert: eventModel printType
+			equals: 'intermediateThrowEvent' ]
 ]
 
 { #category : 'tests' }

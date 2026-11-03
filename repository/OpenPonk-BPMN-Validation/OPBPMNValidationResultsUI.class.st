@@ -25,11 +25,15 @@ OPBPMNValidationResultsUI class >> createUIFor: aVerificationResults withControl
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> changeElementColor: aElement toColor: aColor [
-	| diagramElementArray |
-	diagramElementArray := (self controller controllers select: [ :aController | aController model = aElement ]) asArray.
-	diagramElementArray ifNotEmpty: [ diagramElementArray first diagramElement strokeColor: aColor.
-		diagramElementArray first diagramElement updateRenderFromSelf. ] .
+OPBPMNValidationResultsUI >> changeElementColor: anElement toColor: aColor [
+	| matchingControllers |
+	aColor ifNil: [ ^ self ].
+	matchingControllers := (self controller controllers select: [ :eachController |
+		eachController model = anElement ]) asArray.
+	matchingControllers ifNotEmpty: [ :foundControllers |
+		OPBPMNValidationUI
+			changeElementColorTo: aColor
+			using: foundControllers first ]
 ]
 
 { #category : 'accessing' }
@@ -43,19 +47,25 @@ OPBPMNValidationResultsUI >> controller: aController [
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> getElementColor: aElement [
-	(self controller controllers select: [ :aController | aController model = aElement ])
-		do: [ :aController | ^ aController diagramElement borderColor. ].
+OPBPMNValidationResultsUI >> getElementColor: anElement [
+	self controller controllers
+		detect: [ :eachController | eachController model = anElement ]
+		ifFound: [ :matchingController |
+			(matchingController respondsTo: #diagramElement) ifFalse: [ ^ nil ].
+			(matchingController diagramElement respondsTo: #borderColor)
+				ifTrue: [ ^ matchingController diagramElement borderColor ].
+			^ Color black ].
+	^ nil
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationResultsUI >> highlightElement: aElement [
-
-	highlighted ifNotNil: [ 
+OPBPMNValidationResultsUI >> highlightElement: anElement [
+	(highlighted isNotNil and: [ prevColor isNotNil ]) ifTrue: [
 		self changeElementColor: highlighted toColor: prevColor ].
-	highlighted := aElement.
-	prevColor := self getElementColor: aElement.
-	self changeElementColor: aElement toColor: Color green
+	highlighted := anElement.
+	prevColor := self getElementColor: anElement.
+	prevColor ifNotNil: [
+		self changeElementColor: anElement toColor: Color green ]
 ]
 
 { #category : 'accessing' }

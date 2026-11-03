@@ -220,32 +220,32 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 						collected := OrderedCollection new.
 						anElement lanes do: [ :eachLane |
 							collected addAll: eachLane elements ].
-						collected addAll: (anElement elements reject: [ :each | each isKindOf: OPBPMNLaneModel ]).
+						collected addAll: (anElement elements reject: [ :eachChild | eachChild isKindOf: OPBPMNLaneModel ]).
 						collected ]
 					ifFalse: [ anElement nodes ].
-				boundaryEvents := (poolElements flatCollect: [ :each |
-					(each isKindOf: OPBPMNSubProcessModel)
-						ifTrue: [ each elements select: [ :subElem | (subElem isKindOf: OPBPMNBoundaryEventModel) and: [ subElem owner = each ] ] ]
-						ifFalse: [ #( ) ] ]) asSet.
-				poolElements do: [ :each | self visitElement: each ].
-				boundaryEvents do: [ :each | self visitElement: each ].
-				poolAssociations := (poolElements flatCollect: [ :each |
-					| assocs |
-					assocs := OrderedCollection new.
-					(each respondsTo: #associations) ifTrue: [ assocs addAll: (each associations ifNil: [ #( ) ]) ].
-					(each respondsTo: #flows) ifTrue: [
-						assocs addAll: ((each flows ifNil: [ #( ) ]) select: [ :f |
-							(f isKindOf: OPBPMNAssociationModel) or: [ f isKindOf: OPBPMNDataFlowModel ] ]) ].
-					assocs ]) asSet.
-				poolAssociations do: [ :each | self visitElement: each ].
-				self allFlows do: [ :each |
-					self visitFlow: each type: 'sequenceFlow' ].
-				self allFlows do: [ :each | self removeFlow: each ] ].
+				boundaryEvents := (poolElements flatCollect: [ :eachElement |
+					eachElement elements select: [ :eachChild |
+						(eachChild isKindOf: OPBPMNBoundaryEventModel) and: [ eachChild owner = eachElement ] ] ]) asSet.
+				poolElements do: [ :eachElement | self visitElement: eachElement ].
+				boundaryEvents do: [ :eachBoundaryEvent | self visitElement: eachBoundaryEvent ].
+				poolAssociations := (poolElements flatCollect: [ :eachElement |
+					| elementAssociations |
+					elementAssociations := OrderedCollection new.
+					(eachElement respondsTo: #associations) ifTrue: [
+						elementAssociations addAll: (eachElement associations ifNil: [ #( ) ]) ].
+					(eachElement respondsTo: #flows) ifTrue: [
+						elementAssociations addAll: ((eachElement flows ifNil: [ #( ) ]) select: [ :eachFlow |
+							(eachFlow isKindOf: OPBPMNAssociationModel) or: [ eachFlow isKindOf: OPBPMNDataFlowModel ] ]) ].
+					elementAssociations ]) asSet.
+				poolAssociations do: [ :eachAssociation | self visitElement: eachAssociation ].
+				self allFlows do: [ :eachFlow |
+					self visitFlow: eachFlow type: 'sequenceFlow' ].
+				self allFlows copy do: [ :eachFlow | self removeFlow: eachFlow ] ].
 			((anElement isKindOf: OPBPMNSemanticNodeModel) and: [ (anElement isKindOf: OPBPMNPoolModel) not ]) ifTrue: [
-				(anElement incoming select: [ :each | each isKindOf: OPBPMNFlowModel ])
-					do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
-				(anElement outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ])
-					do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ] ]
+				(anElement incoming select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ])
+					do: [ :eachFlow | self visitFlowRef: eachFlow inOut: 'incoming' ].
+				(anElement outgoing select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ])
+					do: [ :eachFlow | self visitFlowRef: eachFlow inOut: 'outgoing' ] ] ]
 ]
 
 { #category : 'visiting' }

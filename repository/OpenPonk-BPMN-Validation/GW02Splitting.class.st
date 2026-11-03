@@ -16,15 +16,15 @@ GW02Splitting class >> validateClass [
 
 { #category : 'verification' }
 GW02Splitting >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifTrue: [ 
-		aVerifiedObject incoming size < 2
-		& (aVerifiedObject outgoing size < 2) ifTrue: [ 
-			^ { (OPBPMNValidationMessageError
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(GW02) ' , aVerifiedObject class name
-					   ,
-					   ' must be merging (more incoming sequence flows) or splitting  (more outgoing sequence flows).') } ] ].
+	| incomingSequenceFlows outgoingSequenceFlows |
+	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifFalse: [ ^ {  } ].
+	incomingSequenceFlows := aVerifiedObject incoming select: [ :each | each isKindOf: OPBPMNFlowModel ].
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ].
+	(incomingSequenceFlows size < 2 and: [ outgoingSequenceFlows size < 2 ]) ifTrue: [
+		^ { (OPBPMNValidationMessageError
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(GW02) ' , aVerifiedObject class name
+				, ' must be merging (more incoming sequence flows) or splitting  (more outgoing sequence flows).') } ].
 	^ {  }
 ]

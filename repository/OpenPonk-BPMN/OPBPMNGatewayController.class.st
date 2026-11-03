@@ -29,8 +29,7 @@ OPBPMNGatewayController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNGatewayController >> canBeTargetFor: aController [
-
-	^ ((aController isKindOf: OPBPMNFlowController) or: [
-		   aController isKindOf: OPBPMNAssociationController ]) and: [
-		  aController source ~= self ]
+	((aController isKindOf: OPBPMNFlowController) or: [
+		 aController isKindOf: OPBPMNAssociationController ]) ifFalse: [ ^ false ].
+	^ aController canConnectTo: self
 ]

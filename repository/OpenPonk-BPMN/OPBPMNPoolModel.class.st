@@ -16,13 +16,12 @@ OPBPMNPoolModel >> @ aName [
 
 { #category : 'accessing' }
 OPBPMNPoolModel >> addLane: aLaneModel [
-	| flowNodesToMigrate |
-	flowNodesToMigrate := (self elements select: [ :eachChildElement |
-		eachChildElement isKindOf: OPBPMNFlowNodeModel ]) copy.
+	| elementsToMigrate |
+	elementsToMigrate := (self elements reject: [ :eachChildElement |
+		eachChildElement isKindOf: OPBPMNLaneModel ]) copy.
 	self add: aLaneModel.
-	flowNodesToMigrate do: [ :eachFlowNode |
-		self remove: eachFlowNode.
-		aLaneModel add: eachFlowNode ].
+	elementsToMigrate do: [ :eachElement |
+		self relocateChildElement: eachElement from: self to: aLaneModel ].
 	^ aLaneModel
 ]
 
@@ -70,6 +69,12 @@ OPBPMNPoolModel >> hasLanes [
 	^ self lanes isNotEmpty
 ]
 
+{ #category : 'testing' }
+OPBPMNPoolModel >> isBlackBox [
+	"Answers whether this pool is an unpartitioned black-box pool without internal elements."
+	^ elements isEmpty and: [ self hasLanes not ]
+]
+
 { #category : 'accessing' }
 OPBPMNPoolModel >> laneFor: aNodeModel [
 	"Answers the lane containing the given node, or nil if the node is directly in the pool or not found."
@@ -104,6 +109,13 @@ OPBPMNPoolModel >> printType [
 	^ 'process'
 ]
 
+{ #category : 'private' }
+OPBPMNPoolModel >> relocateChildElement: aChildElement from: aSourceContainer to: aTargetContainer [
+	aSourceContainer elements remove: aChildElement ifAbsent: [ ].
+	aChildElement unsubscribe: aSourceContainer.
+	aTargetContainer add: aChildElement
+]
+
 { #category : 'removing' }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
@@ -111,13 +123,13 @@ OPBPMNPoolModel >> removeAllNodes [
 
 { #category : 'accessing' }
 OPBPMNPoolModel >> removeLane: aLaneModel [
-	| containedFlowNodes |
-	containedFlowNodes := aLaneModel flowNodes copy.
+	| isRemovingLastLane containedElements |
+	isRemovingLastLane := (self lanes copyWithout: aLaneModel) isEmpty.
+	isRemovingLastLane ifTrue: [
+		containedElements := aLaneModel elements copy.
+		containedElements do: [ :eachElement |
+			self relocateChildElement: eachElement from: aLaneModel to: self ] ].
 	self remove: aLaneModel.
-	self hasLanes ifFalse: [
-		containedFlowNodes do: [ :eachFlowNode |
-			aLaneModel remove: eachFlowNode.
-			self add: eachFlowNode ] ].
 	^ aLaneModel
 ]
 

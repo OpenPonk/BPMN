@@ -16,15 +16,14 @@ SE03MessageReceive class >> validateClass [
 
 { #category : 'verification' }
 SE03MessageReceive >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	(aVerifiedObject isKindOf: OPBPMNStartEventModel) ifTrue: [ 
-		aVerifiedObject type = OPBPMNNodeType Receive
-		& (aVerifiedObject incoming size = 0) ifTrue: [ 
+	(aVerifiedObject isKindOf: OPBPMNStartEventModel) ifFalse: [ ^ {  } ].
+	(aVerifiedObject type = OPBPMNNodeType Receive and: [
+		aVerifiedObject incoming noneSatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ] ])
+		ifTrue: [
 			^ { (OPBPMNValidationMessageError
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(SE03) ' , aVerifiedObject class name
-					   ,
-					   ' of Message Receive type has to have incoming Message Flow.') } ] ].
+				createFor: aVerifiedObject
+				withValidation: self
+				withText: '(SE03) ' , aVerifiedObject class name
+					, ' of Message Receive type has to have incoming Message Flow.') } ].
 	^ {  }
 ]

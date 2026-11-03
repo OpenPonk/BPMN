@@ -16,15 +16,15 @@ OPBPMNDiagramController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNDiagramController >> canBeTargetFor: aController [
-
 	(super canBeTargetFor: aController) ifTrue: [ ^ true ].
-
-	((aController isKindOf: OPBPMNBoundaryEventController) or: [
-		 aController modelClass inheritsFrom: OPBPMNFlowNodeModel ])
-		ifTrue: [
-				^ self controllers noneSatisfy: [ :any |
-					  any isKindOf: OPBPMNPoolController ] ].
-
+	(aController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNLaneController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNPoolController) ifTrue: [
+		^ self hasRootProcessElementsInDiagramOrModel not ].
+	(aController isKindOf: OPBPMNDataObjectController) ifTrue: [
+		^ self hasPoolsInDiagramOrModel not ].
+	(aController modelClass inheritsFrom: OPBPMNFlowNodeModel) ifTrue: [
+		^ self hasPoolsInDiagramOrModel not ].
 	^ aController isKindOf: OPBPMNNodeController
 ]
 
@@ -47,6 +47,32 @@ OPBPMNDiagramController >> controllerFactory [
 		register: OPBPMNDataFlowController forModel: OPBPMNDataFlowModel;
 		register: OPBPMNMessageFlowController forModel: OPBPMNMessageFlowModel;
 		register: OPBPMNAssociationController forModel: OPBPMNAssociationModel
+]
+
+{ #category : 'private' }
+OPBPMNDiagramController >> hasPoolsInDiagramOrModel [
+	(self controllers anySatisfy: [ :eachController |
+		eachController isKindOf: OPBPMNPoolController ]) ifTrue: [ ^ true ].
+	^ self model
+		ifNotNil: [ :diagramModel |
+			diagramModel nodes anySatisfy: [ :eachNode |
+				eachNode isKindOf: OPBPMNPoolModel ] ]
+		ifNil: [ false ]
+]
+
+{ #category : 'private' }
+OPBPMNDiagramController >> hasRootProcessElementsInDiagramOrModel [
+	(self controllers anySatisfy: [ :eachController |
+		((eachController isKindOf: OPBPMNDataObjectController) or: [
+			eachController modelClass inheritsFrom: OPBPMNFlowNodeModel ]) and: [
+			eachController model isNil or: [
+				eachController model enclosingPool == self model ] ] ]) ifTrue: [ ^ true ].
+	^ self model
+		ifNotNil: [ :diagramModel |
+			diagramModel nodes anySatisfy: [ :eachNode |
+				(eachNode isKindOf: OPBPMNFlowNodeModel) or: [
+					eachNode isKindOf: OPBPMNDataObjectModel ] ] ]
+		ifNil: [ false ]
 ]
 
 { #category : 'ui interaction' }

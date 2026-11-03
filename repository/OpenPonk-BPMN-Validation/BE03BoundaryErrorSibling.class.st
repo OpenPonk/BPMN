@@ -16,21 +16,15 @@ BE03BoundaryErrorSibling class >> validateClass [
 
 { #category : 'verification' }
 BE03BoundaryErrorSibling >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ 
-		(aVerifiedObject type = OPBPMNNodeType Error) ifTrue: [ 
-		counter := 0.
-		aVerifiedObject owner elements do: [ :each | (
-			(each isKindOf: OPBPMNEndEventModel) ifTrue: [ 
-				(each type = OPBPMNNodeType Error) ifTrue: [
-				
-				counter := 1 ]]) ].
-		counter = 0 ifTrue: [ 
-				^ { (OPBPMNValidationMessageWarning
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(BE03) ', aVerifiedObject class name
-						   ,
-						   ' should have pair Error End Event in Sub-Process.') } ] ]].
-	^ {  }
+	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifFalse: [ ^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Error ifFalse: [ ^ {  } ].
+	(aVerifiedObject owner isKindOf: OPBPMNSubProcessModel) ifFalse: [ ^ {  } ].
+	(aVerifiedObject owner elements anySatisfy: [ :each |
+		(each isKindOf: OPBPMNEndEventModel) and: [ each type = OPBPMNNodeType Error ] ])
+		ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageWarning
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(BE03) ' , aVerifiedObject class name
+			, ' should have pair Error End Event in Sub-Process.') }
 ]

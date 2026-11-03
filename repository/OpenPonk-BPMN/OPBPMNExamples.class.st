@@ -20,9 +20,7 @@ OPBPMNExamples class >> emptyModel [
 
 { #category : 'examples' }
 OPBPMNExamples class >> exampleOrderFulfillment [
-	"Answers a valid, fully connected BPMN model containing all 15 supported modeling constructs."
-
-	| model poolCustomer poolVendor laneSales laneWarehouse startEvent taskCheckStock gatewayInStock procureSubProcess taskOrderSupplier boundaryTimer collapsedSubProcess intermediateTimer endEventFulfilled endEventCanceled dataObjectOrder annotationSla flowStartToTask flowTaskToGateway flowGatewayToProcure flowGatewayToShip flowProcureToShip flowBoundaryToCancel flowShipToIntermediate flowIntermediateToEnd messageFlow dataFlow association |
+	| model poolCustomer poolVendor laneSales laneWarehouse startEvent taskCheckStock gatewayInStock procureSubProcess subStart taskOrderSupplier subEnd flowSubStartToTask flowTaskToSubEnd boundaryTimer gatewayReadyToShip collapsedSubProcess intermediateTimer endEventFulfilled endEventCanceled dataObjectOrder annotationSla flowStartToTask flowTaskToGateway flowGatewayToProcure flowGatewayToMerge flowProcureToMerge flowMergeToShip flowBoundaryToCancel flowShipToIntermediate flowIntermediateToEnd messageFlow dataFlow association |
 	model := self emptyModel.
 	model name: 'Order Fulfillment'.
 	poolCustomer := OPBPMNPoolModel new
@@ -60,19 +58,46 @@ OPBPMNExamples class >> exampleOrderFulfillment [
 	procureSubProcess := OPBPMNSubProcessModel new
 		name: 'Procure Items';
 		yourself.
+	subStart := OPBPMNStartEventModel new
+		name: String empty;
+		type: OPBPMNNodeType None;
+		yourself.
 	taskOrderSupplier := OPBPMNActivityModel new
 		name: 'Order from Vendor';
 		type: OPBPMNNodeType Service;
 		executableAttribute: 'vendorApi';
 		executableAttributeValue: 'postPurchaseOrder';
 		yourself.
-	procureSubProcess add: taskOrderSupplier.
+	subEnd := OPBPMNEndEventModel new
+		name: 'Vendor Ordered';
+		type: OPBPMNNodeType None;
+		yourself.
+	flowSubStartToTask := (OPBPMNFlowModel from: subStart to: taskOrderSupplier)
+		name: String empty;
+		type: 'Normal';
+		yourself.
+	subStart addFlow: flowSubStartToTask.
+	taskOrderSupplier addFlow: flowSubStartToTask.
+	flowTaskToSubEnd := (OPBPMNFlowModel from: taskOrderSupplier to: subEnd)
+		name: String empty;
+		type: 'Normal';
+		yourself.
+	taskOrderSupplier addFlow: flowTaskToSubEnd.
+	subEnd addFlow: flowTaskToSubEnd.
+	procureSubProcess
+		add: subStart;
+		add: taskOrderSupplier;
+		add: subEnd.
 	boundaryTimer := OPBPMNBoundaryEventModel new
 		name: '2 Days SLA';
 		type: OPBPMNNodeType Timer;
 		isNonInterrupting: false;
 		yourself.
 	procureSubProcess add: boundaryTimer.
+	gatewayReadyToShip := OPBPMNGatewayModel new
+		name: String empty;
+		type: OPBPMNNodeType Exclusive;
+		yourself.
 	collapsedSubProcess := OPBPMNCollapsedSubProcessModel new
 		name: 'Prepare Shipment';
 		type: OPBPMNNodeType None;
@@ -109,6 +134,7 @@ OPBPMNExamples class >> exampleOrderFulfillment [
 		add: annotationSla.
 
 	laneWarehouse
+		add: gatewayReadyToShip;
 		add: collapsedSubProcess;
 		add: intermediateTimer;
 		add: endEventFulfilled.
@@ -127,22 +153,28 @@ OPBPMNExamples class >> exampleOrderFulfillment [
 	gatewayInStock addFlow: flowTaskToGateway.
 	flowGatewayToProcure := (OPBPMNFlowModel from: gatewayInStock to: procureSubProcess)
 		name: 'Out of Stock';
-		type: 'Conditional';
+		type: 'Normal';
 		yourself.
 	gatewayInStock addFlow: flowGatewayToProcure.
 	procureSubProcess addFlow: flowGatewayToProcure.
-	flowGatewayToShip := (OPBPMNFlowModel from: gatewayInStock to: collapsedSubProcess)
+	flowGatewayToMerge := (OPBPMNFlowModel from: gatewayInStock to: gatewayReadyToShip)
 		name: 'In Stock';
 		type: 'Default';
 		yourself.
-	gatewayInStock addFlow: flowGatewayToShip.
-	collapsedSubProcess addFlow: flowGatewayToShip.
-	flowProcureToShip := (OPBPMNFlowModel from: procureSubProcess to: collapsedSubProcess)
+	gatewayInStock addFlow: flowGatewayToMerge.
+	gatewayReadyToShip addFlow: flowGatewayToMerge.
+	flowProcureToMerge := (OPBPMNFlowModel from: procureSubProcess to: gatewayReadyToShip)
 		name: 'Procured';
 		type: 'Normal';
 		yourself.
-	procureSubProcess addFlow: flowProcureToShip.
-	collapsedSubProcess addFlow: flowProcureToShip.
+	procureSubProcess addFlow: flowProcureToMerge.
+	gatewayReadyToShip addFlow: flowProcureToMerge.
+	flowMergeToShip := (OPBPMNFlowModel from: gatewayReadyToShip to: collapsedSubProcess)
+		name: String empty;
+		type: 'Normal';
+		yourself.
+	gatewayReadyToShip addFlow: flowMergeToShip.
+	collapsedSubProcess addFlow: flowMergeToShip.
 	flowBoundaryToCancel := (OPBPMNFlowModel from: boundaryTimer to: endEventCanceled)
 		name: 'SLA Breach';
 		type: 'Normal';

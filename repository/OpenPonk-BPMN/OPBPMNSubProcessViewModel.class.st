@@ -13,9 +13,33 @@ Class {
 OPBPMNSubProcessViewModel class >> modelClass [ ^ OPBPMNSubProcessModel
 ]
 
+{ #category : 'forms' }
+OPBPMNSubProcessViewModel >> buildEditorForm: aForm [
+	| droplist |
+	super buildEditorForm: aForm.
+	droplist := aForm
+		bindDroplist: 'Marker'
+		property: #type
+		items:
+			#( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation
+			   #MarkerAdhoc ).
+	droplist displayIcon: [ :eachMarker | self model typeIconFor: eachMarker ].
+	droplist display: [ :eachMarker | eachMarker asString ]
+]
+
 { #category : 'accessing' }
 OPBPMNSubProcessViewModel >> essentialChildrenModels [
-			^ self model nodes asArray , (self model nodes flatCollect: [ :each | each outgoing ]) asArray
+	"Answers all nodes and edges belonging directly or transitively to this subprocess."
+	| collectedNodes collectedEdges |
+	collectedNodes := Set new.
+	collectedEdges := Set new.
+	self model allElements do: [ :eachModelElement |
+		eachModelElement isNode ifTrue: [
+			collectedNodes add: eachModelElement.
+			collectedEdges addAll: eachModelElement edges ].
+		eachModelElement isEdge ifTrue: [
+			collectedEdges add: eachModelElement ] ].
+	^ (collectedNodes asArray , collectedEdges asArray) asSet asArray
 ]
 
 { #category : 'accessing' }

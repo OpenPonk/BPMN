@@ -16,16 +16,16 @@ AN06OnlyConditionalFlow class >> validateClass [
 
 { #category : 'verification' }
 AN06OnlyConditionalFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifTrue: [ 
-		aVerifiedObject outgoing size = 1 ifTrue: [ 
-			aVerifiedObject outgoing do: [ :each | 
-				(each isKindOf: OPBPMNFlowModel) ifTrue: [ 
-					each type = 'Conditional' ifTrue: [ 
-						^ { (OPBPMNValidationMessageError
-							   createFor: aVerifiedObject
-							   withValidation: self
-							   withText: '(AN06) ' , aVerifiedObject class name
-								   , ' could not have outgoing only Conditional Flow.') } ] ] ] ] ].
+	| outgoingSequenceFlows |
+	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifFalse: [ ^ {  } ].
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNFlowModel ].
+	(outgoingSequenceFlows isNotEmpty and: [
+		outgoingSequenceFlows allSatisfy: [ :eachFlow | eachFlow type = 'Conditional' ] ]) ifTrue: [
+		^ { (OPBPMNValidationMessageError
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(AN06) ' , aVerifiedObject class name
+				, ' could not have outgoing only Conditional Flow.') } ].
 	^ {  }
 ]

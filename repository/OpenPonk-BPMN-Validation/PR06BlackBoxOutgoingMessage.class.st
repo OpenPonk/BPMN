@@ -16,14 +16,13 @@ PR06BlackBoxOutgoingMessage class >> validateClass [
 
 { #category : 'verification' }
 PR06BlackBoxOutgoingMessage >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	
-	(aVerifiedObject isKindOf: OPBPMNPoolModel ) ifTrue: [ 
-		(aVerifiedObject outgoing size > 0) & (aVerifiedObject elements size >0) ifTrue: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(PR06) ', aVerifiedObject class name
-						   ,
-						   ' can have outgoing Message Flow only as Black-Box without elements inside.') } ] ].
+	(aVerifiedObject isKindOf: OPBPMNPoolModel) ifFalse: [ ^ {  } ].
+	((aVerifiedObject outgoing anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
+		and: [ aVerifiedObject elements isNotEmpty ]) ifTrue: [
+		^ { (OPBPMNValidationMessageError
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(PR06) ' , aVerifiedObject class name
+				, ' can have outgoing Message Flow only as Black-Box without elements inside.') } ].
 	^ {  }
 ]

@@ -39,11 +39,11 @@ OPBPMNLaneController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNLaneController >> canBeTargetFor: aController [
-
-	(aController isKindOf: OPBPMNAssociationController) ifTrue: [ ^ aController source ~~ self ].
-
+	(aController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNPoolController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNAssociationController) ifTrue: [
+		^ aController canConnectTo: self ].
 	(aController isKindOf: self class) ifTrue: [ ^ aController ~~ self ].
-
 	^ aController isKindOf: OPBPMNNodeController
 ]
 

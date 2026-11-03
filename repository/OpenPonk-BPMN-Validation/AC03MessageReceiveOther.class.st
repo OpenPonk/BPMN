@@ -16,19 +16,21 @@ AC03MessageReceiveOther class >> validateClass [
 
 { #category : 'verification' }
 AC03MessageReceiveOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifTrue: [ 
-		counter := 0.
-		aVerifiedObject incoming do: [ :each | (
-			(each isKindOf: OPBPMNMessageFlowModel) ifTrue: [ counter := 1 ]) ] ].
-		counter = 1 ifTrue: [ 
-			aVerifiedObject type = OPBPMNNodeType Receive
-			| (aVerifiedObject type = OPBPMNNodeType Multiple) ifFalse: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(AC03) ', aVerifiedObject class name
-						   ,
-						   ' can have incoming Message Flow only as Message Receive type.') } ] ].
-	^ {  }
+	| hasIncomingMessageFlow allowedTypes |
+	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifFalse: [ ^ {  } ].
+	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasIncomingMessageFlow ifFalse: [ ^ {  } ].
+	allowedTypes := {
+		OPBPMNNodeType Receive .
+		OPBPMNNodeType Service .
+		OPBPMNNodeType User .
+		OPBPMNNodeType None }.
+	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageError
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(AC03) ' , aVerifiedObject class name
+			, ' of type ' , aVerifiedObject type asString
+			, ' cannot have incoming Message Flow.') }
 ]

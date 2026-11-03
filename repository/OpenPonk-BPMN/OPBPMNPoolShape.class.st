@@ -106,6 +106,13 @@ OPBPMNPoolShape >> attachedShapes [
 ]
 
 { #category : 'accessing' }
+OPBPMNPoolShape >> borderColor [
+	^ roassalShape
+		ifNotNil: [ :activeShape | activeShape borderColor ]
+		ifNil: [ Color black ]
+]
+
+{ #category : 'accessing' }
 OPBPMNPoolShape >> directNodeRoassalShapes [
 	"Answers roassal shapes of direct children: lane shapes if partitioned, or positionable child shapes."
 	^ self hasLanes
@@ -418,6 +425,13 @@ OPBPMNPoolShape >> selectableInteraction [
 OPBPMNPoolShape >> shouldBeResizableByUser [
 
 	^ true
+]
+
+{ #category : 'accessing' }
+OPBPMNPoolShape >> strokeColor: aColor [
+	self isRendered ifFalse: [ ^ self ].
+	roassalShape borderColor: aColor.
+	nameAreaSeparator ifNotNil: [ :separator | separator color: aColor ]
 ]
 
 { #category : 'initialization' }

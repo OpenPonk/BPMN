@@ -22,24 +22,26 @@ OPBPMNPoolController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNPoolController >> canBeSourceFor: aController [
-
-	^ (aController isKindOf: OPBPMNMessageFlowController) or: [
-		  aController isKindOf: OPBPMNAssociationController ]
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
+		^ self isBlackBox ].
+	^ aController isKindOf: OPBPMNAssociationController
 ]
 
 { #category : 'connecting' }
 OPBPMNPoolController >> canBeTargetFor: aTargetController [
-
+	(aTargetController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ false ].
 	(aTargetController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aTargetController source model enclosingPool ~= self model enclosingPool and: [ aTargetController source ~= self ] ].
-
-	(aTargetController isKindOf: OPBPMNAssociationController) ifTrue: [ ^ aTargetController source ~= self ].
-
-	(aTargetController isKindOf: OPBPMNLaneController) ifTrue: [ ^ self model elements isEmpty or: [ self model hasLanes ] ].
-
+		^ aTargetController canConnectTo: self ].
+	(aTargetController isKindOf: OPBPMNAssociationController) ifTrue: [
+		^ aTargetController canConnectTo: self ].
+	(aTargetController isKindOf: OPBPMNLaneController) ifTrue: [ ^ true ].
 	(aTargetController isKindOf: self class) ifTrue: [ ^ false ].
-
 	self model hasLanes ifTrue: [ ^ false ].
-
 	^ aTargetController isKindOf: OPBPMNNodeController
+]
+
+{ #category : 'testing' }
+OPBPMNPoolController >> isBlackBox [
+	"Answers whether the underlying pool model is an unpartitioned black-box pool."
+	^ self model ifNil: [ true ] ifNotNil: [ :activeModel | activeModel isBlackBox ]
 ]

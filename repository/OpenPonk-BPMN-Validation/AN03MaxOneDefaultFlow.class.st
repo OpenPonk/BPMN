@@ -16,21 +16,22 @@ AN03MaxOneDefaultFlow class >> validateClass [
 
 { #category : 'verification' }
 AN03MaxOneDefaultFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	| aCounter |
-	aCounter := 0.
+	| outgoingSequenceFlows defaultCount canHaveDefaultFlow |
 	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifFalse: [ ^ {  } ].
-	aVerifiedObject outgoing ifEmpty: [ ^ {  } ].
-	aVerifiedObject outgoing do: [ :each |
-			(each isKindOf: OPBPMNFlowModel) ifTrue: [
-				each type = 'Default' ifTrue: [ aCounter := aCounter + 1 ] ] ].
-	(aCounter < 2 and: [
-		 aVerifiedObject outgoing size > 1 or: [ aCounter isZero ] ])
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNFlowModel ].
+	outgoingSequenceFlows ifEmpty: [ ^ {  } ].
+	defaultCount := (outgoingSequenceFlows select: [ :eachFlow | eachFlow type = 'Default' ]) size.
+	defaultCount isZero ifTrue: [ ^ {  } ].
+	canHaveDefaultFlow := (aVerifiedObject isKindOf: OPBPMNEventModel) not and: [
+		((aVerifiedObject isKindOf: OPBPMNGatewayModel) and: [
+			aVerifiedObject type = OPBPMNNodeType Parallel
+				or: [ aVerifiedObject type = OPBPMNNodeType Eventbased ] ]) not ].
+	(canHaveDefaultFlow and: [ defaultCount = 1 and: [ outgoingSequenceFlows size > 1 ] ])
 		ifTrue: [ ^ {  } ].
-		
 	^ { (OPBPMNValidationMessageError
-		   createFor: aVerifiedObject
-		   withValidation: self
-		   withText: '(AN03) ' , aVerifiedObject class name
-			   , ' could not have more than one Default Sequence Flow.') }
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(AN03) ' , aVerifiedObject class name
+			, ' could not have more than one Default Sequence Flow.') }
 ]

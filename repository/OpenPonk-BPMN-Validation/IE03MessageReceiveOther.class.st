@@ -9,6 +9,12 @@ Class {
 	#tag : 'Validation-Classes'
 }
 
+{ #category : 'testing' }
+IE03MessageReceiveOther class >> canValidate: aVerifiedObject [
+	^ (super canValidate: aVerifiedObject)
+		or: [ aVerifiedObject isKindOf: OPBPMNBoundaryEventModel ]
+]
+
 { #category : 'accessing' }
 IE03MessageReceiveOther class >> validateClass [
 	^ OPBPMNIntermediateEventModel.
@@ -16,19 +22,19 @@ IE03MessageReceiveOther class >> validateClass [
 
 { #category : 'verification' }
 IE03MessageReceiveOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifTrue: [ 
-		counter := 0.
-		aVerifiedObject incoming do: [ :each | (
-			(each isKindOf: OPBPMNMessageFlowModel) ifTrue: [ counter := 1 ]) ] ].
-		counter = 1 ifTrue: [ 
-			aVerifiedObject type = OPBPMNNodeType Receive
-			| (aVerifiedObject type = OPBPMNNodeType Multiple) ifFalse: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(IE03) ', aVerifiedObject class name
-						   ,
-						   ' can have incoming Message Flow only as Message or Multiple type.') } ] ].
-	^ {  }
+	| hasIncomingMessageFlow allowedTypes |
+	(self class canValidate: aVerifiedObject) ifFalse: [ ^ {  } ].
+	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasIncomingMessageFlow ifFalse: [ ^ {  } ].
+	allowedTypes := {
+		OPBPMNNodeType Receive .
+		OPBPMNNodeType Multiple .
+		OPBPMNNodeType ParallelMultiple }.
+	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageError
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(IE03) ' , aVerifiedObject class name
+			, ' can have incoming Message Flow only as Message, Multiple, or ParallelMultiple type.') }
 ]

@@ -28,12 +28,7 @@ OPBPMNCollapsedSubProcessController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNCollapsedSubProcessController >> canBeTargetFor: aController [
+	(aController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ true ].
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ aController source model enclosingPool ~= self model enclosingPool and: [
-			  aController source ~= self ] ].
-	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-		^ (aController source model isKindOf: OPBPMNDataObjectModel) and: [
-			  aController source ~= self ] ].
-	^ aController source ~= self
+	^ aController canConnectTo: self
 ]

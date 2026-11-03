@@ -28,7 +28,6 @@ OPBPMNAnnotationController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNAnnotationController >> canBeTargetFor: aController [
-
-	^ (aController isKindOf: OPBPMNAssociationController) and: [
-		  aController source ~= self ]
+	(aController isKindOf: OPBPMNAssociationController) ifFalse: [ ^ false ].
+	^ aController canConnectTo: self
 ]

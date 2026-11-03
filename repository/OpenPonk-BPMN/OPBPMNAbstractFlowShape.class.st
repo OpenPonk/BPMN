@@ -15,6 +15,13 @@ OPBPMNAbstractFlowShape >> associationCreated: anAssociation [
 	"do nothing"
 ]
 
+{ #category : 'accessing' }
+OPBPMNAbstractFlowShape >> borderColor [
+	^ roassalShape
+		ifNotNil: [ :activeShape | activeShape color ]
+		ifNil: [ Color black ]
+]
+
 { #category : 'initialization' }
 OPBPMNAbstractFlowShape >> createOwnedElementsWithoutController [
 	self ownedElements ifNotEmpty: [ ^ self ].

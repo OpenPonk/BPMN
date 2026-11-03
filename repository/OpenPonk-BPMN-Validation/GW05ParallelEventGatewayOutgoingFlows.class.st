@@ -16,25 +16,18 @@ GW05ParallelEventGatewayOutgoingFlows class >> validateClass [
 
 { #category : 'verification' }
 GW05ParallelEventGatewayOutgoingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
 	| foundWrongFlow |
 	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifFalse: [ ^ {  } ].
-
-	foundWrongFlow := false.
-
-	aVerifiedObject type = OPBPMNNodeType Parallel
-	| (aVerifiedObject type = OPBPMNNodeType Eventbased) ifTrue: [
-			aVerifiedObject outgoing do: [ :each |
-					(each isKindOf: OPBPMNFlowModel) ifTrue: [
-							each name ~= '' | (each type = 'Conditional') ifTrue: [
-								foundWrongFlow := true ] ] ] ].
-
+	(aVerifiedObject type = OPBPMNNodeType Parallel
+		or: [ aVerifiedObject type = OPBPMNNodeType Eventbased ]) ifFalse: [ ^ {  } ].
+	foundWrongFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow |
+		(eachFlow isKindOf: OPBPMNFlowModel) and: [
+			(eachFlow name isNotNil and: [ eachFlow name trimBoth isNotEmpty ])
+				or: [ eachFlow type = 'Conditional' or: [ eachFlow type = 'Default' ] ] ] ].
 	foundWrongFlow ifFalse: [ ^ {  } ].
-
 	^ { (OPBPMNValidationMessageError
-		   createFor: aVerifiedObject
-		   withValidation: self
-		   withText: '(GW05) ' , aVerifiedObject class name
-			   ,
-			   ' of type Parallel/Eventbased should not have conditional and labeled outgoing flows') }
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(GW05) ' , aVerifiedObject class name
+			, ' of type Parallel/Eventbased should not have conditional, default, or labeled outgoing flows') }
 ]

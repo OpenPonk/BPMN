@@ -87,7 +87,8 @@ OPBPMNSimulatorTest >> testDefaultStepping [
 OPBPMNSimulatorTest >> testOrderFulfillmentExampleStartEventIsSteppable [
 	| exampleModel sim startEvent startSim |
 	exampleModel := OPBPMNExamples exampleOrderFulfillment.
-	startEvent := exampleModel allElements detect: [ :each | each isKindOf: OPBPMNStartEventModel ].
+	startEvent := exampleModel allElements detect: [ :each |
+		(each isKindOf: OPBPMNStartEventModel) and: [ each name = 'Order Placed' ] ].
 
 	sim := self controllerClass model: exampleModel.
 	sim setDefaultStepping.

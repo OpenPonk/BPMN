@@ -31,6 +31,21 @@ OPBPMNValidationTest >> testCanValidate [
 		(self getTestedClass canValidate: self getNotValidatedClassInstance)
 ]
 
+{ #category : 'tests' }
+OPBPMNValidationTest >> testExampleOrderFulfillmentHasZeroValidationErrorsAndZeroWarnings [
+	| exampleModel results |
+	exampleModel := OPBPMNExamples exampleOrderFulfillment.
+	results := OPBPMNValidationController new validate: exampleModel.
+	self
+		assert: results selectErrors isEmpty
+		description: [ 'Expected 0 validation errors on exampleOrderFulfillment, got: '
+			, ((results selectErrors asArray collect: #messageText) sorted joinUsing: ', ') ].
+	self
+		assert: results selectWarnings isEmpty
+		description: [ 'Expected 0 validation warnings on exampleOrderFulfillment, got: '
+			, ((results selectWarnings asArray collect: #messageText) sorted joinUsing: ', ') ]
+]
+
 { #category : 'constants' }
 OPBPMNValidationTest >> testNew [
 	self newTest.

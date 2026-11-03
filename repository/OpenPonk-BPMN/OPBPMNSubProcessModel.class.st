@@ -44,3 +44,21 @@ OPBPMNSubProcessModel >> removeNode: aNode [
 
 	elements remove: aNode
 ]
+
+{ #category : 'printing' }
+OPBPMNSubProcessModel >> typeIconFor: aType [
+
+	aType = OPBPMNNodeType None ifTrue: [
+		^ OPBPMNIcon current activityNone ].
+	aType = OPBPMNNodeType MarkerParallel ifTrue: [
+		^ OPBPMNIcon current markerParallel ].
+	aType = OPBPMNNodeType MarkerSequential ifTrue: [
+		^ OPBPMNIcon current markerSequential ].
+	aType = OPBPMNNodeType MarkerLoop ifTrue: [
+		^ OPBPMNIcon current markerLoop ].
+	aType = OPBPMNNodeType MarkerCompensation ifTrue: [
+		^ OPBPMNIcon current markerCompensation ].
+	aType = OPBPMNNodeType MarkerAdhoc ifTrue: [
+		^ OPBPMNIcon current markerAdhoc ].
+	self error: 'Unknown type'
+]

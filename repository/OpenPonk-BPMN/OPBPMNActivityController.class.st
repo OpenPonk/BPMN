@@ -28,16 +28,7 @@ OPBPMNActivityController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNActivityController >> canBeTargetFor: aController [
-
+	(aController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ true ].
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
-
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-			aController source model enclosingPool = self model enclosingPool
-				ifTrue: [ ^ false ] ].
-
-	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-			(aController source model isKindOf: OPBPMNDataObjectModel)
-				ifFalse: [ ^ false ] ].
-
-	^ aController source ~= self
+	^ aController canConnectTo: self
 ]

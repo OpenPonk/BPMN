@@ -16,21 +16,27 @@ AN02FlowNodeOutgoingFlow class >> validateClass [
 
 { #category : 'verification' }
 AN02FlowNodeOutgoingFlow >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifTrue: [ 
-		(aVerifiedObject isKindOf: OPBPMNEndEventModel) ifFalse: [ 
-		counter := 0.
-		aVerifiedObject outgoing do: [ :each | (
-			(each isKindOf: OPBPMNFlowModel) ifTrue: [ counter := 1 ]) ] ].
-		(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifTrue: [ 
-			aVerifiedObject type = OPBPMNNodeType LinkThrow ifTrue: [ 
-				counter := 1 ] ].
-		counter = 0 ifTrue: [ 
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(AN02) ', aVerifiedObject class name
-						   ,
-						   ' must have outgoing Sequence Flow.') } ] ].
-	^ {  }
+	| hasOutgoingSequenceFlow |
+	(aVerifiedObject isKindOf: OPBPMNFlowNodeModel) ifFalse: [ ^ {  } ].
+	(aVerifiedObject isKindOf: OPBPMNEndEventModel) ifTrue: [ ^ {  } ].
+	((aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) and: [
+		aVerifiedObject type = OPBPMNNodeType LinkThrow ]) ifTrue: [ ^ {  } ].
+	hasOutgoingSequenceFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNFlowModel ].
+	((self isCompensationActivity: aVerifiedObject)
+		or: [ self isEventSubProcess: aVerifiedObject ]) ifTrue: [
+		hasOutgoingSequenceFlow ifFalse: [ ^ {  } ].
+		^ { (OPBPMNValidationMessageError
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(AN02) ' , aVerifiedObject class name
+				, ' used as Compensation or Event Sub-Process cannot have outgoing Sequence Flow.') } ].
+	((aVerifiedObject owner isKindOf: OPBPMNSubProcessModel) and: [
+		aVerifiedObject owner type = OPBPMNNodeType MarkerAdhoc ]) ifTrue: [ ^ {  } ].
+	hasOutgoingSequenceFlow ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageError
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(AN02) ' , aVerifiedObject class name
+			, ' must have outgoing Sequence Flow.') }
 ]

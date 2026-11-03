@@ -16,29 +16,30 @@ GW04Eventbased class >> validateClass [
 
 { #category : 'verification' }
 GW04Eventbased >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel)
-	& (aVerifiedObject type = OPBPMNNodeType Eventbased)
-	& (aVerifiedObject outgoing size > 1) ifTrue: [
-		counter := 0.
-		aVerifiedObject outgoing do: [ :each |
-			(each target isKindOf: OPBPMNIntermediateEventModel)
-			| (each target isKindOf: OPBPMNActivityModel)
-				ifTrue: [
-					each target type = OPBPMNNodeType Receive
-					| (each target type = OPBPMNNodeType Escalation)
-					| (each target type = OPBPMNNodeType Link)
-					| (each target type = OPBPMNNodeType Compensation)
-					| (each target type = OPBPMNNodeType Signal)
-					| (each target type = OPBPMNNodeType Multiple) ifFalse: [ counter := 1 ] ]
-				ifFalse: [ counter := 1 ].
-			counter = 1 ifTrue: [
-				^ { (OPBPMNValidationMessageError
-					   createFor: aVerifiedObject
-					   withValidation: self
-					   withText: '(GW04) ' , aVerifiedObject class name
-						   ,
-						   ' can have on outgoing flows only Intermediate Catching Events or Receive Task.') } ] ] ].
+	| outgoingSequenceFlows allowedEventTypes hasInvalidTarget |
+	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifFalse: [ ^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Eventbased ifFalse: [ ^ {  } ].
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ].
+	outgoingSequenceFlows ifEmpty: [ ^ {  } ].
+	allowedEventTypes := {
+		OPBPMNNodeType Receive .
+		OPBPMNNodeType Timer .
+		OPBPMNNodeType Conditional .
+		OPBPMNNodeType Signal .
+		OPBPMNNodeType Multiple .
+		OPBPMNNodeType ParallelMultiple }.
+	hasInvalidTarget := outgoingSequenceFlows anySatisfy: [ :eachFlow |
+		| targetNode |
+		targetNode := eachFlow target.
+		((targetNode isKindOf: OPBPMNIntermediateEventModel) and: [
+			allowedEventTypes includes: targetNode type ]) not and: [
+			((targetNode isKindOf: OPBPMNActivityModel) and: [
+				targetNode type = OPBPMNNodeType Receive ]) not ] ].
+	hasInvalidTarget ifTrue: [
+		^ { (OPBPMNValidationMessageError
+			createFor: aVerifiedObject
+			withValidation: self
+			withText: '(GW04) ' , aVerifiedObject class name
+				, ' can have on outgoing flows only Intermediate Catching Events or Receive Task.') } ].
 	^ {  }
 ]

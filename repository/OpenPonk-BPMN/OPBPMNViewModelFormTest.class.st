@@ -235,6 +235,34 @@ OPBPMNViewModelFormTest >> testStartEventViewModelBindsTypeAndConditionalTimerFi
 ]
 
 { #category : 'tests' }
+OPBPMNViewModelFormTest >> testSubProcessAndBoundaryEventViewModelsBindAllProperties [
+	| subModel subViewModel subForm boundaryModel boundaryViewModel boundaryController boundaryForm |
+	subModel := OPBPMNSubProcessModel new name: 'Expanded'.
+	subViewModel := OPBPMNSubProcessViewModel new model: subModel.
+	subForm := OPPropertiesForm new.
+	subForm viewModel: subViewModel.
+	self
+		assert: (subForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ])
+		description: 'Expanded subprocess view model must bind Marker (#type) in properties form'.
+
+	boundaryModel := OPBPMNBoundaryEventModel new.
+	boundaryModel type: OPBPMNNodeType Error.
+	boundaryViewModel := OPBPMNBoundaryEventViewModel new model: boundaryModel.
+	boundaryController := OPBPMNBoundaryEventController new viewModel: boundaryViewModel.
+	boundaryForm := OPPropertiesForm new.
+	boundaryForm viewModel: boundaryController.
+	self deny: (boundaryForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
+
+	boundaryController propertyNamed: #type put: OPBPMNNodeType Timer.
+	self
+		assert: (boundaryForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ])
+		description: 'Boundary event view model must rebuild form and bind timerType when switched to Timer'.
+	self
+		assert: (boundaryForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerValue ])
+		description: 'Boundary event view model must bind timerValue when switched to Timer'
+]
+
+{ #category : 'tests' }
 OPBPMNViewModelFormTest >> testSubProcessViewModelBindsMultilineName [
 	| model viewModel form |
 	model := OPBPMNSubProcessModel new name: 'SubProcess Node'.
@@ -242,4 +270,27 @@ OPBPMNViewModelFormTest >> testSubProcessViewModelBindsMultilineName [
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
 	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ])
+]
+
+{ #category : 'tests' }
+OPBPMNViewModelFormTest >> testSubProcessViewModelEssentialChildrenModelsIncludesNestedNodesAndIncomingAssociations [
+	| subProcess nestedSubProcess innerTask externalAnnotation incomingAssociation viewModel essential |
+	subProcess := OPBPMNSubProcessModel new name: 'Outer SubProcess'.
+	nestedSubProcess := OPBPMNSubProcessModel new name: 'Nested SubProcess'.
+	innerTask := OPBPMNActivityModel new name: 'Deep Task'.
+	nestedSubProcess add: innerTask.
+	subProcess add: nestedSubProcess.
+
+	externalAnnotation := OPBPMNAnnotationModel new text: 'Note'.
+	incomingAssociation := OPBPMNAssociationModel new
+		source: externalAnnotation;
+		target: innerTask;
+		yourself.
+	externalAnnotation addAssociation: incomingAssociation.
+	innerTask addAssociation: incomingAssociation.
+
+	viewModel := OPBPMNSubProcessViewModel new model: subProcess.
+	essential := viewModel essentialChildrenModels.
+
+	self assertCollection: essential includesAll: { nestedSubProcess . innerTask . incomingAssociation }
 ]

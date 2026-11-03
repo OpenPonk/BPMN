@@ -24,6 +24,30 @@ OPBPMNLaneModelTest >> testAddingFirstLaneAdoptsExistingFlowNodesFromPool [
 	self denyCollection: poolModel elements includesAny: { activityModel }
 ]
 
+{ #category : 'tests - adoption' }
+OPBPMNLaneModelTest >> testAddingFirstLaneAndRemovingLastLaneMigratesDataObjectsAndAnnotations [
+	| poolModel laneModel taskModel dataObjectModel annotationModel |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	taskModel := OPBPMNActivityModel new name: 'Process Order'.
+	dataObjectModel := OPBPMNDataObjectModel new name: 'Order Data'.
+	annotationModel := OPBPMNAnnotationModel new text: 'SLA 24h'.
+	poolModel add: taskModel; add: dataObjectModel; add: annotationModel.
+
+	laneModel := OPBPMNLaneModel new name: 'Sales'.
+	poolModel addLane: laneModel.
+
+	self assertCollection: laneModel elements includesAll: { taskModel . dataObjectModel . annotationModel }.
+	self assert: dataObjectModel owner equals: laneModel.
+	self assert: annotationModel owner equals: laneModel.
+	self denyCollection: poolModel elements includesAny: { taskModel . dataObjectModel . annotationModel }.
+
+	poolModel removeLane: laneModel.
+
+	self assertCollection: poolModel elements includesAll: { taskModel . dataObjectModel . annotationModel }.
+	self assert: dataObjectModel owner equals: poolModel.
+	self assert: annotationModel owner equals: poolModel
+]
+
 { #category : 'tests' }
 OPBPMNLaneModelTest >> testLaneContainsFlowNodesAndEnclosingPoolPropagates [
 	| poolModel laneModel activityModel |
@@ -128,6 +152,26 @@ OPBPMNLaneModelTest >> testRemovingLaneCascadesContainedNodesAndFlows [
 	self assert: laneSales owner isNil.
 	self assert: taskCheckStock owner isNil.
 	self deny: (taskPackItems incoming includes: flowModel)
+]
+
+{ #category : 'tests' }
+OPBPMNLaneModelTest >> testRemovingLaneDisconnectsAttachedAssociationsFromPeerNodes [
+	| poolModel laneModel annotationModel associationModel |
+	poolModel := OPBPMNPoolModel new name: 'Pool'.
+	laneModel := OPBPMNLaneModel new name: 'Sales'.
+	annotationModel := OPBPMNAnnotationModel new text: 'Lane Note'.
+	poolModel addLane: laneModel.
+	poolModel add: annotationModel.
+	associationModel := OPBPMNAssociationModel new
+		source: annotationModel;
+		target: laneModel;
+		yourself.
+	annotationModel addAssociation: associationModel.
+	laneModel addAssociation: associationModel.
+
+	poolModel removeLane: laneModel.
+
+	self denyCollection: annotationModel associations includesAny: { associationModel }
 ]
 
 { #category : 'tests - adoption' }

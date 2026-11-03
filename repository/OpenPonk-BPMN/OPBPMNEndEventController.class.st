@@ -29,15 +29,7 @@ OPBPMNEndEventController >> canBeSourceFor: aController [
 
 { #category : 'connecting' }
 OPBPMNEndEventController >> canBeTargetFor: aController [
-
-	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [
-		^ false ].
-
-	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [
-			(aController source model isKindOf: OPBPMNDataObjectModel)
-				ifFalse: [ ^ false ] ].
-
+	(aController isKindOf: OPBPMNMessageFlowController) ifTrue: [ ^ false ].
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
-
-	^ aController source ~= self
+	^ aController canConnectTo: self
 ]

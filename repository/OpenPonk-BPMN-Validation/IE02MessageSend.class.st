@@ -16,19 +16,13 @@ IE02MessageSend class >> validateClass [
 
 { #category : 'verification' }
 IE02MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-
-	| counter |
-	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifTrue: [ 
-		aVerifiedObject type = OPBPMNNodeType Send ifTrue: [ 
-			counter := 0.
-			aVerifiedObject outgoing do: [ :each | (
-				(each isKindOf: OPBPMNMessageFlowModel) ifTrue: [ counter := 1 ]) ] ].
-			counter = 0 ifTrue: [ 
-			^ { (OPBPMNValidationMessageError
-				   createFor: aVerifiedObject
-				   withValidation: self
-				   withText: '(IE02) ' , aVerifiedObject class name
-					   ,
-					   ' of Message Send type has to have outgoing Message Flow.') } ] ].
-	^ {  }
+	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifFalse: [ ^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Send ifFalse: [ ^ {  } ].
+	(aVerifiedObject outgoing anySatisfy: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNMessageFlowModel ]) ifTrue: [ ^ {  } ].
+	^ { (OPBPMNValidationMessageError
+		createFor: aVerifiedObject
+		withValidation: self
+		withText: '(IE02) ' , aVerifiedObject class name
+			, ' of Message Send type has to have outgoing Message Flow.') }
 ]
