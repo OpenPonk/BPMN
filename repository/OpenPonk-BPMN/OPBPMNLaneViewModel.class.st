@@ -19,6 +19,9 @@ OPBPMNLaneViewModel class >> modelClass [
 { #category : 'removing' }
 OPBPMNLaneViewModel >> basicRemoveModel [
 	self captureLanePosition.
+	self model pool ifNotNil: [ :enclosingPool |
+		enclosingPool removeLane: self model.
+		^ self ].
 	super basicRemoveModel
 ]
 
@@ -50,13 +53,6 @@ OPBPMNLaneViewModel >> captureLanePosition [
 ]
 
 { #category : 'accessing' }
-OPBPMNLaneViewModel >> dependentElements [
-	(self model pool isNotNil and: [ self model pool lanes size = 1 ])
-		ifTrue: [ ^ self model relatedElements asArray ].
-	^ super dependentElements
-]
-
-{ #category : 'accessing' }
 OPBPMNLaneViewModel >> icon [
 	"Answer the 27x16 BPMN lane icon."
 	^ OPBPMNIcon current lane
@@ -79,6 +75,16 @@ OPBPMNLaneViewModel >> registerModelIn: aParentModel [
 			ifTrue: [ aParentModel addLane: self model before: targetLaneModel ]
 			ifFalse: [ aParentModel addLane: self model after: targetLaneModel ] ].
 	^ aParentModel addLane: self model
+]
+
+{ #category : 'removing' }
+OPBPMNLaneViewModel >> removeDependentModels [
+	(self model pool isNotNil and: [ self model pool lanes size = 1 ])
+		ifTrue: [
+			self model relatedElements asSet do: [ :each |
+				(self registry viewModelFor: each) removeModel ].
+			^ self ].
+	super removeDependentModels
 ]
 
 { #category : 'accessing' }

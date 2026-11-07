@@ -120,13 +120,6 @@ OPBPMNPoolModel >> relocateChildElement: aChildElement from: aSourceContainer to
 ]
 
 { #category : 'removing' }
-OPBPMNPoolModel >> remove: anElement [
-	(anElement isKindOf: OPBPMNLaneModel) ifTrue: [
-		^ self removeLane: anElement ].
-	^ super remove: anElement
-]
-
-{ #category : 'removing' }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
 ]
