@@ -18,7 +18,7 @@ PR06BlackBoxOutgoingMessage class >> validateClass [
 PR06BlackBoxOutgoingMessage >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	(aVerifiedObject isKindOf: OPBPMNPoolModel) ifFalse: [ ^ {  } ].
 	((aVerifiedObject outgoing anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
-		and: [ aVerifiedObject elements isNotEmpty ]) ifTrue: [
+		and: [ aVerifiedObject isBlackBox not ]) ifTrue: [
 		^ { (OPBPMNValidationMessageError
 			createFor: aVerifiedObject
 			withValidation: self

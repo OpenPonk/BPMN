@@ -39,32 +39,6 @@ OPBPMNBoundaryEventController >> canBeTargetFor: aController [
 	^ aController canConnectTo: self
 ]
 
-{ #category : 'construction' }
-OPBPMNBoundaryEventController >> renderDiagramElement [
-	| shape parentCtrl |
-	shape := super renderDiagramElement.
-	
-	self model owner ifNil: [ ^ shape ].
-	
-	parentCtrl := self diagramController 
-		controllerForModel: self model owner 
-		ifNone: [ ^ shape ].
-	
-	RSLocation new
-		bottom;
-		right;
-		offset: -1 @ 22;
-		stick: shape
-		on: parentCtrl roassalShape.
-		
-	parentCtrl roassalShape
-		when: RSShapeRemovedEvent
-		do: [ shape remove ]
-		for: self.
-		
-	^ shape
-]
-
 { #category : 'accessing' }
 OPBPMNBoundaryEventController >> subscribeDiagram: aDiagram [
 

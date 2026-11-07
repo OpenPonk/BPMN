@@ -20,9 +20,9 @@ AC02MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	aVerifiedObject type = OPBPMNNodeType Send ifFalse: [ ^ {  } ].
 	(aVerifiedObject outgoing anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
 		ifTrue: [ ^ {  } ].
-	^ { (OPBPMNValidationMessageError
+	^ { (OPBPMNValidationMessageWarning
 		createFor: aVerifiedObject
 		withValidation: self
 		withText: '(AC02) ' , aVerifiedObject class name
-			, ' of Message Send type has to have outgoing Message Flow.') }
+			, ' of Message Send type should have outgoing Message Flow.') }
 ]

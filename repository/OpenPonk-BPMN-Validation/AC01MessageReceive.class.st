@@ -20,9 +20,9 @@ AC01MessageReceive >> validateObject: aVerifiedObject withModel: aVerifiedModel 
 	aVerifiedObject type = OPBPMNNodeType Receive ifFalse: [ ^ {  } ].
 	(aVerifiedObject incoming anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
 		ifTrue: [ ^ {  } ].
-	^ { (OPBPMNValidationMessageError
+	^ { (OPBPMNValidationMessageWarning
 		createFor: aVerifiedObject
 		withValidation: self
 		withText: '(AC01) ' , aVerifiedObject class name
-			, ' of Message Receive type has to have incoming Message Flow.') }
+			, ' of Message Receive type should have incoming Message Flow.') }
 ]

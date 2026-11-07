@@ -20,10 +20,10 @@ EE03MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
 	(aVerifiedObject type = OPBPMNNodeType Send and: [
 		aVerifiedObject outgoing noneSatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ] ])
 		ifTrue: [
-			^ { (OPBPMNValidationMessageError
+			^ { (OPBPMNValidationMessageWarning
 				createFor: aVerifiedObject
 				withValidation: self
 				withText: '(EE03) ' , aVerifiedObject class name
-					, ' of Message Send type has to have outgoing Message Flow.') } ].
+					, ' of Message Send type should have outgoing Message Flow.') } ].
 	^ {  }
 ]

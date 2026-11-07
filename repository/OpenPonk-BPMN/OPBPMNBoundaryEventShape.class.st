@@ -14,6 +14,32 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'rendering' }
+OPBPMNBoundaryEventShape >> attachToHostShape [
+	| hostElement hostRoassalShape boundarySiblings siblingIndex horizontalOffset |
+	self isRendered ifFalse: [ ^ self ].
+	hostElement := self hostDiagramElement.
+	(hostElement isNil or: [ hostElement isRendered not ]) ifTrue: [ ^ self ].
+	hostRoassalShape := hostElement roassalShape.
+	hostRoassalShape ifNil: [ ^ self ].
+	boundarySiblings := (self modelElement isNotNil and: [ self modelElement owner isNotNil ])
+		ifTrue: [
+			self modelElement owner elements select: [ :eachElement |
+				eachElement isKindOf: OPBPMNBoundaryEventModel ] ]
+		ifFalse: [
+			(hostElement ownedElements select: [ :eachElement |
+				(eachElement isKindOf: OPBPMNBoundaryEventShape) and: [ eachElement isRendered ] ])
+				collect: #modelElement ].
+	siblingIndex := (boundarySiblings indexOf: self modelElement) max: 1.
+	horizontalOffset := -1 - ((siblingIndex - 1) * 44).
+	RSLocation new
+		bottom;
+		right;
+		offset: horizontalOffset @ 22;
+		move: self roassalShape
+		on: hostRoassalShape
+]
+
 { #category : 'accessing' }
 OPBPMNBoundaryEventShape >> attachedShapes [
 
@@ -51,6 +77,15 @@ OPBPMNBoundaryEventShape >> createRoassalShape [
 		  yourself
 ]
 
+{ #category : 'accessing' }
+OPBPMNBoundaryEventShape >> hostDiagramElement [
+	| candidate |
+	candidate := self owningElement.
+	(candidate isNotNil and: [ candidate isKindOf: OPBoundNode ])
+		ifTrue: [ ^ candidate ].
+	^ nil
+]
+
 { #category : 'initialization' }
 OPBPMNBoundaryEventShape >> initialize [
 	super initialize.
@@ -59,14 +94,14 @@ OPBPMNBoundaryEventShape >> initialize [
 
 { #category : 'removing' }
 OPBPMNBoundaryEventShape >> removeRender [
-
+	self unsubscribeFromHostShape.
 	super removeRender.
-	innerCircle := nil
+	innerCircle := nil.
+	self repositionSiblingBoundaryShapes
 ]
 
 { #category : 'rendering' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
-
 	| label |
 	label := RSLabeled new.
 	label location below offset: 0 @ 2.
@@ -74,23 +109,32 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	roassalShape addInteraction: label.
 	self color: (Color fromHexString: 'fdd2d2').
 	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+		form: self typeIconForModel;
+		yourself.
 	self canvas add: icon.
 	RSLocation new stick: icon on: self roassalShape.
 
 	innerCircle := RSCircle new
-		               size: 31;
-		               borderColor: Color black;
-		               color: Color transparent;
-		               border: borderIn;
-		               yourself.
+		size: 31;
+		borderColor: Color black;
+		color: Color transparent;
+		border: borderIn;
+		yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape.
-	"TODO for what are good bounds?????"
-	"JanBliznicenko: To persist position and size for persistence"
-	"self bounds: nil"
-	"roassalShape @ OPRSSelectionDraggable."
+	self subscribeToHostShape.
+	self attachToHostShape.
+	self repositionSiblingBoundaryShapes
+]
+
+{ #category : 'rendering' }
+OPBPMNBoundaryEventShape >> repositionSiblingBoundaryShapes [
+	| hostDiagramElement |
+	hostDiagramElement := self owningElement.
+	hostDiagramElement ifNil: [ ^ self ].
+	hostDiagramElement ownedElements do: [ :eachOwnedElement |
+		(eachOwnedElement isKindOf: OPBPMNBoundaryEventShape) ifTrue: [
+			eachOwnedElement attachToHostShape ] ]
 ]
 
 { #category : 'interactions' }
@@ -101,12 +145,37 @@ OPBPMNBoundaryEventShape >> shouldBePositionableByUser [
 ]
 
 { #category : 'rendering' }
-OPBPMNBoundaryEventShape >> updateRenderFromModel [
+OPBPMNBoundaryEventShape >> subscribeToHostShape [
+	| hostElement |
+	hostElement := self hostDiagramElement.
+	(hostElement isNil or: [ hostElement isRendered not ]) ifTrue: [ ^ self ].
+	hostElement roassalShape announcer unsubscribe: self.
+	hostElement roassalShape
+		when: RSPositionChangedEvent
+		do: [ self attachToHostShape ]
+		for: self.
+	hostElement roassalShape
+		when: RSExtentChangedEvent
+		do: [ self attachToHostShape ]
+		for: self
+]
 
+{ #category : 'rendering' }
+OPBPMNBoundaryEventShape >> unsubscribeFromHostShape [
+	| hostElement |
+	hostElement := self hostDiagramElement.
+	(hostElement isNotNil and: [ hostElement roassalShape isNotNil ]) ifTrue: [
+		hostElement roassalShape announcer unsubscribe: self ]
+]
+
+{ #category : 'rendering' }
+OPBPMNBoundaryEventShape >> updateRenderFromModel [
 	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
 	self updateIcon.
 	self createBorder.
+	self subscribeToHostShape.
+	self attachToHostShape.
+	self repositionSiblingBoundaryShapes.
 	super updateRenderFromModel.
-
 	roassalShape signalUpdate
 ]

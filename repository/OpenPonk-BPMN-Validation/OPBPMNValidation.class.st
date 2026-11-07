@@ -45,16 +45,22 @@ OPBPMNValidation >> isCompensationActivity: aModelObject [
 
 { #category : 'testing' }
 OPBPMNValidation >> isEventSubProcess: aModelObject [
-	| eventStartTypes |
+	| eventStartTypes hasSequenceFlow |
 	(aModelObject isKindOf: OPBPMNSubProcessModel) ifFalse: [ ^ false ].
 	eventStartTypes := {
 		OPBPMNNodeType Error .
 		OPBPMNNodeType Escalation .
 		OPBPMNNodeType Compensation }.
-	^ aModelObject elements anySatisfy: [ :eachChild |
+	(aModelObject elements anySatisfy: [ :eachChild |
 		(eachChild isKindOf: OPBPMNStartEventModel) and: [
 			eachChild isNonInterrupting or: [
-				eventStartTypes includes: eachChild type ] ] ]
+				eventStartTypes includes: eachChild type ] ] ]) ifTrue: [ ^ true ].
+	hasSequenceFlow := (aModelObject incoming , aModelObject outgoing) anySatisfy: [ :eachFlow |
+		eachFlow isKindOf: OPBPMNFlowModel ].
+	hasSequenceFlow ifTrue: [ ^ false ].
+	^ aModelObject elements anySatisfy: [ :eachChild |
+		(eachChild isKindOf: OPBPMNStartEventModel) and: [
+			eachChild type ~= OPBPMNNodeType None ] ]
 ]
 
 { #category : 'verification' }

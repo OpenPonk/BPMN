@@ -35,12 +35,15 @@ OPBPMNValidationController >> isActivityNode: aModelObject [
 
 { #category : 'validating' }
 OPBPMNValidationController >> validate: aValidateModel [
-	| validateObjects validations results |
+	| validateObjects validations results rootModel |
 	validateObjects := self getValidateObjects: aValidateModel.
 	validations := self getValidations select: [ :validation |
 		OPBPMNValidationFrameworkSettings getInstance
 			getSettingFor: validation ].
 	results := OPBPMNValidationResults new.
+	rootModel := (aValidateModel respondsTo: #rootOwner)
+		ifTrue: [ aValidateModel rootOwner ]
+		ifFalse: [ aValidateModel ].
 
 	(aValidateModel isKindOf: OPBPMNModel) ifTrue: [
 		results addResults: (self validateProcess: aValidateModel) ].
@@ -51,7 +54,7 @@ OPBPMNValidationController >> validate: aValidateModel [
 		self
 			validateSingleObject: validateObject
 			withValidations: validations
-			withModel: validateObjects
+			withModel: rootModel
 			withResults: results ].
 	^ results
 ]

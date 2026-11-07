@@ -32,6 +32,7 @@ OPBPMNStartEventController >> canBeSourceFor: aController [
 { #category : 'connecting' }
 OPBPMNStartEventController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNFlowController) ifTrue: [ ^ false ].
+	(aController isKindOf: OPBPMNDataFlowController) ifTrue: [ ^ false ].
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 	^ aController canConnectTo: self
 ]

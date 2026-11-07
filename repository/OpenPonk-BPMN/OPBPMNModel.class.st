@@ -58,9 +58,7 @@ OPBPMNModel >> profileApplications [
 ]
 
 { #category : 'accessing' }
-OPBPMNModel >> profileApplications: aProfileApplication [
+OPBPMNModel >> profileApplications: aProfileApplicationCollection [
 	"References the ProfileApplications that indicate which profiles have been applied to the Package."
-	self profileApplications
-		removeAll;
-		addAll: aProfileApplication
+	profileApplications := aProfileApplicationCollection asOrderedCollection
 ]

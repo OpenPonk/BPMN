@@ -22,12 +22,11 @@ GW05ParallelEventGatewayOutgoingFlows >> validateObject: aVerifiedObject withMod
 		or: [ aVerifiedObject type = OPBPMNNodeType Eventbased ]) ifFalse: [ ^ {  } ].
 	foundWrongFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow |
 		(eachFlow isKindOf: OPBPMNFlowModel) and: [
-			(eachFlow name isNotNil and: [ eachFlow name trimBoth isNotEmpty ])
-				or: [ eachFlow type = 'Conditional' or: [ eachFlow type = 'Default' ] ] ] ].
+			eachFlow type = 'Conditional' or: [ eachFlow type = 'Default' ] ] ].
 	foundWrongFlow ifFalse: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
 		createFor: aVerifiedObject
 		withValidation: self
 		withText: '(GW05) ' , aVerifiedObject class name
-			, ' of type Parallel/Eventbased should not have conditional, default, or labeled outgoing flows') }
+			, ' of type Parallel/Eventbased should not have conditional or default outgoing flows') }
 ]

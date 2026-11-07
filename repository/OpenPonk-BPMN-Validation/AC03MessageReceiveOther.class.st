@@ -16,17 +16,12 @@ AC03MessageReceiveOther class >> validateClass [
 
 { #category : 'verification' }
 AC03MessageReceiveOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| hasIncomingMessageFlow allowedTypes |
+	| hasIncomingMessageFlow |
 	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifFalse: [ ^ {  } ].
 	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow |
 		eachFlow isKindOf: OPBPMNMessageFlowModel ].
 	hasIncomingMessageFlow ifFalse: [ ^ {  } ].
-	allowedTypes := {
-		OPBPMNNodeType Receive .
-		OPBPMNNodeType Service .
-		OPBPMNNodeType User .
-		OPBPMNNodeType None }.
-	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Send ifFalse: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
 		createFor: aVerifiedObject
 		withValidation: self

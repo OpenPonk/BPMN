@@ -71,8 +71,11 @@ OPBPMNPoolModel >> hasLanes [
 
 { #category : 'testing' }
 OPBPMNPoolModel >> isBlackBox [
-	"Answers whether this pool is an unpartitioned black-box pool without internal elements."
-	^ elements isEmpty and: [ self hasLanes not ]
+	"Answers whether this pool is an unpartitioned black-box pool without internal process elements."
+	^ self hasLanes not and: [
+		elements noneSatisfy: [ :eachElement |
+			(eachElement isKindOf: OPBPMNFlowNodeModel)
+				or: [ eachElement isKindOf: OPBPMNDataObjectModel ] ] ]
 ]
 
 { #category : 'accessing' }
@@ -117,6 +120,13 @@ OPBPMNPoolModel >> relocateChildElement: aChildElement from: aSourceContainer to
 ]
 
 { #category : 'removing' }
+OPBPMNPoolModel >> remove: anElement [
+	(anElement isKindOf: OPBPMNLaneModel) ifTrue: [
+		^ self removeLane: anElement ].
+	^ super remove: anElement
+]
+
+{ #category : 'removing' }
 OPBPMNPoolModel >> removeAllNodes [
 	self removeAll
 ]
@@ -129,7 +139,7 @@ OPBPMNPoolModel >> removeLane: aLaneModel [
 		containedElements := aLaneModel elements copy.
 		containedElements do: [ :eachElement |
 			self relocateChildElement: eachElement from: aLaneModel to: self ] ].
-	self remove: aLaneModel.
+	super remove: aLaneModel.
 	^ aLaneModel
 ]
 

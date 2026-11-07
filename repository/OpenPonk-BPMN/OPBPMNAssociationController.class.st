@@ -25,6 +25,7 @@ OPBPMNAssociationController >> canConnectSource: aSourceController toTarget: aTa
 	| sourceModel targetModel |
 	(super canConnectSource: aSourceController toTarget: aTargetController) ifFalse: [ ^ false ].
 	aSourceController ifNil: [ ^ true ].
+	aTargetController ifNil: [ ^ true ].
 	(aSourceController isKindOf: OPBPMNAnnotationController) ifTrue: [
 		^ (aTargetController isKindOf: OPBPMNAnnotationController) not ].
 	(aTargetController isKindOf: OPBPMNAnnotationController) ifTrue: [ ^ true ].
@@ -38,7 +39,7 @@ OPBPMNAssociationController >> canConnectSource: aSourceController toTarget: aTa
 		ifFalse: [ ^ false ].
 	sourceModel := aSourceController model.
 	targetModel := aTargetController model.
-	targetModel ifNil: [ ^ true ].
+	(sourceModel isNil or: [ targetModel isNil ]) ifTrue: [ ^ true ].
 	sourceModel owner == targetModel ifTrue: [ ^ false ].
 	(self enclosingSubProcessOf: sourceModel) == (self enclosingSubProcessOf: targetModel)
 		ifFalse: [ ^ false ].

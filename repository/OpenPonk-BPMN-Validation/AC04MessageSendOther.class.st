@@ -16,17 +16,12 @@ AC04MessageSendOther class >> validateClass [
 
 { #category : 'verification' }
 AC04MessageSendOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	| hasOutgoingMessageFlow allowedTypes |
+	| hasOutgoingMessageFlow |
 	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifFalse: [ ^ {  } ].
 	hasOutgoingMessageFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow |
 		eachFlow isKindOf: OPBPMNMessageFlowModel ].
 	hasOutgoingMessageFlow ifFalse: [ ^ {  } ].
-	allowedTypes := {
-		OPBPMNNodeType Send .
-		OPBPMNNodeType Service .
-		OPBPMNNodeType User .
-		OPBPMNNodeType None }.
-	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
+	aVerifiedObject type = OPBPMNNodeType Receive ifFalse: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
 		createFor: aVerifiedObject
 		withValidation: self

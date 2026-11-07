@@ -15,9 +15,10 @@ OPBPMNAssociationViewModel class >> modelClass [ ^ OPBPMNAssociationModel
 
 { #category : 'construction' }
 OPBPMNAssociationViewModel >> attachModelFrom: sourceViewModel to: targetViewModel [
-
 	self model source: sourceViewModel model.
 	self model target: targetViewModel model.
+	(sourceViewModel model isKindOf: OPBPMNBoundaryEventModel) ifTrue: [
+		self model associationDirection: OPBPMNAssociationModel associationDirectionOne ].
 	sourceViewModel model addAssociation: self model.
 	targetViewModel model addAssociation: self model
 ]

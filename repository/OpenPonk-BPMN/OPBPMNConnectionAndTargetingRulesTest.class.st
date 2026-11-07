@@ -108,6 +108,43 @@ OPBPMNConnectionAndTargetingRulesTest >> testAssociationCannotConnectTwoAnnotati
 		description: 'Association must not connect two annotations together'
 ]
 
+{ #category : 'tests - association' }
+OPBPMNConnectionAndTargetingRulesTest >> testAssociationFromActivityToAnnotationAndCompensationAssociationDirection [
+	| task boundaryEvent compTask annotation taskController annotationController assocController registry boundaryViewModel compTaskViewModel assocViewModel |
+	task := OPBPMNActivityModel new name: 'Task'.
+	boundaryEvent := OPBPMNBoundaryEventModel new
+		name: 'CompCatch';
+		type: OPBPMNNodeType CatchCompensation;
+		yourself.
+	task add: boundaryEvent.
+	compTask := OPBPMNActivityModel new name: 'CompHandler'.
+	annotation := OPBPMNAnnotationModel new text: 'Note'.
+	model add: task; add: compTask; add: annotation.
+
+	taskController := diagramController newControllerFor: task.
+	annotationController := diagramController newControllerFor: annotation.
+	assocController := OPBPMNAssociationController new.
+	assocController diagramController: diagramController.
+
+	self
+		assert: (assocController canConnectSource: taskController toTarget: nil)
+		description: 'Association must allow starting connection from an activity when target is not yet chosen'.
+	self
+		assert: (assocController canConnectSource: taskController toTarget: annotationController)
+		description: 'Association must allow connecting an activity to an annotation'.
+
+	registry := projectController viewModelRegistry.
+	boundaryViewModel := registry viewModelFor: boundaryEvent.
+	compTaskViewModel := registry viewModelFor: compTask.
+	assocViewModel := OPBPMNAssociationViewModel new
+		registry: registry;
+		createModelFrom: boundaryViewModel to: compTaskViewModel in: model;
+		yourself.
+	self
+		assert: assocViewModel model associationDirection
+		equals: OPBPMNAssociationModel associationDirectionOne
+]
+
 { #category : 'tests - containment' }
 OPBPMNConnectionAndTargetingRulesTest >> testCollapsedSubProcessCanBeTargetForBoundaryEvent [
 	| collapsedModel collapsedController boundaryEventController |
@@ -311,6 +348,77 @@ OPBPMNConnectionAndTargetingRulesTest >> testDataFlowCannotTargetStartEvent [
 	self
 		deny: (startEventController canBeTargetFor: dataFlowController)
 		description: 'Data flow must not target a start event'
+]
+
+{ #category : 'tests - data flow' }
+OPBPMNConnectionAndTargetingRulesTest >> testDataInputDataOutputAndDataStoreConnectionRules [
+	| pool1 pool2 taskInPool1 taskInPool2 dataInput dataOutput dataStore catchEvent throwEvent startEvent task1Controller task2Controller dataInputController dataOutputController dataStoreController catchEventController throwEventController startEventController dataFlowController |
+	pool1 := OPBPMNPoolModel new name: 'Pool 1'.
+	pool2 := OPBPMNPoolModel new name: 'Pool 2'.
+	taskInPool1 := OPBPMNActivityModel new name: 'Task 1'.
+	taskInPool2 := OPBPMNActivityModel new name: 'Task 2'.
+	dataInput := OPBPMNDataObjectModel new
+		name: 'Input';
+		type: OPBPMNNodeType DataInput;
+		yourself.
+	dataOutput := OPBPMNDataObjectModel new
+		name: 'Output';
+		type: OPBPMNNodeType DataOutput;
+		yourself.
+	dataStore := OPBPMNDataObjectModel new
+		name: 'Shared Store';
+		type: OPBPMNNodeType DataStore;
+		yourself.
+	catchEvent := OPBPMNIntermediateEventModel new
+		name: 'Catch Msg';
+		type: OPBPMNNodeType Receive;
+		yourself.
+	throwEvent := OPBPMNIntermediateEventModel new
+		name: 'Throw Msg';
+		type: OPBPMNNodeType Send;
+		yourself.
+	startEvent := OPBPMNStartEventModel new name: 'Start'.
+	pool1
+		add: taskInPool1;
+		add: dataInput;
+		add: dataOutput;
+		add: dataStore;
+		add: catchEvent;
+		add: throwEvent;
+		add: startEvent.
+	pool2 add: taskInPool2.
+	model add: pool1; add: pool2.
+
+	task1Controller := diagramController newControllerFor: taskInPool1.
+	task2Controller := diagramController newControllerFor: taskInPool2.
+	dataInputController := diagramController newControllerFor: dataInput.
+	dataOutputController := diagramController newControllerFor: dataOutput.
+	dataStoreController := diagramController newControllerFor: dataStore.
+	catchEventController := diagramController newControllerFor: catchEvent.
+	throwEventController := diagramController newControllerFor: throwEvent.
+	startEventController := diagramController newControllerFor: startEvent.
+	dataFlowController := OPBPMNDataFlowController new.
+	dataFlowController diagramController: diagramController.
+
+	self
+		deny: (dataFlowController canConnectSource: dataOutputController toTarget: task1Controller)
+		description: 'DataOutput must not be allowed as source of a DataFlow'.
+	self
+		deny: (dataFlowController canConnectSource: task1Controller toTarget: dataInputController)
+		description: 'DataInput must not be allowed as target of a DataFlow'.
+	dataFlowController source: dataInputController.
+	self
+		deny: (startEventController canBeTargetFor: dataFlowController)
+		description: 'StartEventController must reject DataFlowController in canBeTargetFor:'.
+	self
+		deny: (dataFlowController canConnectSource: dataInputController toTarget: catchEventController)
+		description: 'Catching IntermediateEvent must not be target of DataFlow'.
+	self
+		deny: (dataFlowController canConnectSource: throwEventController toTarget: dataOutputController)
+		description: 'Throwing IntermediateEvent must not be source of DataFlow'.
+	self
+		assert: (dataFlowController canConnectSource: dataStoreController toTarget: task2Controller)
+		description: 'DataStore must be allowed to connect via DataFlow across different pools'
 ]
 
 { #category : 'tests - containment' }
@@ -520,6 +628,32 @@ OPBPMNConnectionAndTargetingRulesTest >> testMessageFlowCannotTargetWhiteBoxPool
 	self
 		deny: (whiteBoxController canBeTargetFor: msgFlowController)
 		description: 'Message flow must not target the boundary of a white-box pool containing elements'
+]
+
+{ #category : 'tests - containment' }
+OPBPMNConnectionAndTargetingRulesTest >> testMultipleBoundaryEventsOnSameActivityDoNotOverlap [
+	| activityModel firstBoundary secondBoundary firstShape secondShape |
+	activityModel := OPBPMNActivityModel new name: 'Host Task'.
+	firstBoundary := OPBPMNBoundaryEventModel new
+		name: 'B1';
+		type: OPBPMNNodeType Timer;
+		yourself.
+	secondBoundary := OPBPMNBoundaryEventModel new
+		name: 'B2';
+		type: OPBPMNNodeType Error;
+		yourself.
+	activityModel
+		add: firstBoundary;
+		add: secondBoundary.
+	model add: activityModel.
+	diagramController showAllElements.
+
+	firstShape := (diagramController controllerForModel: firstBoundary) roassalShape.
+	secondShape := (diagramController controllerForModel: secondBoundary) roassalShape.
+
+	self
+		deny: (firstShape encompassingRectangle intersects: secondShape encompassingRectangle)
+		description: 'Multiple boundary events attached to the same activity must not overlap visually'
 ]
 
 { #category : 'tests - containment' }

@@ -50,6 +50,13 @@ OPBPMNLaneViewModel >> captureLanePosition [
 ]
 
 { #category : 'accessing' }
+OPBPMNLaneViewModel >> dependentElements [
+	(self model pool isNotNil and: [ self model pool lanes size = 1 ])
+		ifTrue: [ ^ self model relatedElements asArray ].
+	^ super dependentElements
+]
+
+{ #category : 'accessing' }
 OPBPMNLaneViewModel >> icon [
 	"Answer the 27x16 BPMN lane icon."
 	^ OPBPMNIcon current lane
