@@ -68,17 +68,35 @@ OPBPMNLaneShape >> createInvisibleBox [
 ]
 
 { #category : 'accessing' }
+OPBPMNLaneShape >> defaultLaneHeight [
+	self owningElement ifExists: [ :owner |
+		((owner isKindOf: OPBPMNPoolShape) and: [
+			(owner isRendered or: [ owner bounds isNotNil ]) and: [
+				owner laneElements size <= 1 and: [
+					owner modelElement isNil or: [ owner modelElement lanes size <= 1 ] ] ] ])
+			ifTrue: [ ^ owner height ] ].
+	^ 220
+]
+
+{ #category : 'private' }
+OPBPMNLaneShape >> evacuateOwnedElementsToPoolIfLastLane [
+	| poolElement remainingLanes |
+	poolElement := self owningElement.
+	poolElement ifNotExists: [ ^ self ].
+	(poolElement respondsTo: #laneElements) ifFalse: [ ^ self ].
+	((poolElement respondsTo: #isRemovingRender) and: [ poolElement isRemovingRender ])
+		ifTrue: [ ^ self ].
+	remainingLanes := poolElement laneElements copyWithout: self.
+	remainingLanes ifNotEmpty: [ ^ self ].
+	self ownedElements copy do: [ :eachElement |
+		eachElement owningElement: poolElement ]
+]
+
+{ #category : 'accessing' }
 OPBPMNLaneShape >> height [
 	"Answers the visual height of this lane, falling back to configured laneHeight when not rendered."
 	roassalShape ifNotNil: [ ^ roassalShape height ].
 	^ self laneHeight
-]
-
-{ #category : 'initialization' }
-OPBPMNLaneShape >> initialize [
-
-	super initialize.
-	laneHeight ifNil: [ laneHeight := 220 ]
 ]
 
 { #category : 'testing' }
@@ -95,7 +113,7 @@ OPBPMNLaneShape >> isLastLaneInPool [
 
 { #category : 'accessing' }
 OPBPMNLaneShape >> laneHeight [
-	^ laneHeight ifNil: [ laneHeight := 220 ]
+	^ laneHeight ifNil: [ laneHeight := self defaultLaneHeight ]
 ]
 
 { #category : 'accessing' }
@@ -122,8 +140,15 @@ OPBPMNLaneShape >> nameAreaWidth [
 ]
 
 { #category : 'removing' }
+OPBPMNLaneShape >> remove [
+	self evacuateOwnedElementsToPoolIfLastLane.
+	super remove
+]
+
+{ #category : 'removing' }
 OPBPMNLaneShape >> removeRender [
 	"Cleans up attached shapes and visual references when removing render."
+	self evacuateOwnedElementsToPoolIfLastLane.
 	self roassalShape ifNotNil: [ :shape | shape announcer unsubscribe: self ].
 	nameLabel ifNotNil: [ :label | label announcer unsubscribe: self ].
 	super removeRender.
@@ -135,12 +160,13 @@ OPBPMNLaneShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNLaneShape >> renderBasicShape [
+
 	^ RSBox new
-		width: 600;
-		height: 150;
-		color: Color transparent;
-		borderColor: Color transparent;
-		yourself
+		  width: 600;
+		  height: self laneHeight;
+		  color: Color transparent;
+		  borderColor: Color transparent;
+		  yourself
 ]
 
 { #category : 'rendering' }
@@ -224,7 +250,10 @@ OPBPMNLaneShape >> updatePosition [
 	isLastLane := self isLastLaneInPool.
 	laneSeparator ifNotNil: [ :separator |
 		separator color: (isLastLane ifTrue: [ Color transparent ] ifFalse: [ Color black ]).
-		separator signalUpdate ]
+		separator signalUpdate ].
+
+	self pushBack.
+	self owningElement ifExists: [ :owner | owner pushBack ]
 ]
 
 { #category : 'rendering' }

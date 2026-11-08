@@ -16,12 +16,11 @@ OPBPMNPoolModel >> @ aName [
 
 { #category : 'accessing' }
 OPBPMNPoolModel >> addLane: aLaneModel [
+
 	| elementsToMigrate |
-	elementsToMigrate := (self elements reject: [ :eachChildElement |
-		eachChildElement isKindOf: OPBPMNLaneModel ]) copy.
+	elementsToMigrate := self elements reject: [ :eachChildElement | eachChildElement isKindOf: OPBPMNLaneModel ].
 	self add: aLaneModel.
-	elementsToMigrate do: [ :eachElement |
-		self relocateChildElement: eachElement from: self to: aLaneModel ].
+	elementsToMigrate do: [ :eachElement | self relocateChildElement: eachElement from: self to: aLaneModel ].
 	^ aLaneModel
 ]
 

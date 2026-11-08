@@ -14,6 +14,16 @@ OPBPMNPoolViewModel class >> modelClass [ ^ OPBPMNPoolModel
 ]
 
 { #category : 'accessing' }
+OPBPMNPoolViewModel >> auxiliaryRemovalCommandsIn: aProjectController [
+	aProjectController ifNil: [ ^ #( ) ].
+	^ (self model lanes flatCollect: [ :eachLane |
+		eachLane elements copy collect: [ :eachElement |
+			OPRemoveModelElementCommand
+				model: eachElement
+				projectController: aProjectController ] ]) asArray
+]
+
+{ #category : 'accessing' }
 OPBPMNPoolViewModel >> essentialChildrenModels [
 	"Answers all nodes and edges belonging directly or transitively to this pool."
 	| collectedNodes collectedEdges |

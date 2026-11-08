@@ -62,9 +62,11 @@ OPBPMNLaneViewModelTest >> testRegisteredInViewModelRegistry [
 
 { #category : 'tests' }
 OPBPMNLaneViewModelTest >> testRemoveLastLaneViaViewModelPreservesContainedElementsAndUpdatesParentViewModel [
-	| project registry poolModel laneModel taskModel taskViewModel laneViewModel |
+	| project projectController registry undoManager poolModel laneModel taskModel taskViewModel laneViewModel removeCommand |
 	project := OPProject new.
-	registry := OPViewModelRegistry forProject: project.
+	projectController := OPProjectController forProject: project.
+	registry := projectController viewModelRegistry.
+	undoManager := projectController undoManager.
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	taskModel := OPBPMNActivityModel new name: 'Process Order'.
 	poolModel add: taskModel.
@@ -80,7 +82,10 @@ OPBPMNLaneViewModelTest >> testRemoveLastLaneViaViewModelPreservesContainedEleme
 	self assert: taskModel owner equals: laneModel.
 	self assert: taskViewModel parentViewModel equals: laneViewModel.
 
-	laneViewModel removeModel.
+	removeCommand := OPRemoveModelElementCommand
+		model: laneModel
+		projectController: projectController.
+	undoManager inTransaction: [ undoManager execute: removeCommand ].
 
 	self deny: poolModel hasLanes.
 	self assertCollection: poolModel elements includesAll: { taskModel }.

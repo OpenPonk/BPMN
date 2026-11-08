@@ -31,11 +31,8 @@ OPBPMNAnnotationControllerTest >> modelClass [
 OPBPMNAnnotationControllerTest >> testDescriptionName [
 
 	| diagramElement |
-	model := Mock new.
-	model stub class willReturn: self modelClass.
 	model stub text willReturn: 'bravo'.
 	diagramElement := Mock new.
-	diagramElement stub class willReturn: self diagramElementClass.
 	controller diagramController: diagramController.
 	controller model: model.
 	controller diagramElement: diagramElement.

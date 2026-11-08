@@ -32,6 +32,48 @@ OPBPMNLaneControllerTest >> modelClass [
 ]
 
 { #category : 'tests' }
+OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSupportsUndoRedo [
+	| poolModel taskModel poolController taskController laneController laneModel |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	taskModel := OPBPMNActivityModel new name: 'Process Order'.
+	poolModel add: taskModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	poolController := diagramController controllerForModel: poolModel.
+	taskController := diagramController controllerForModel: taskModel.
+
+	self assert: taskController diagramElement owningElement equals: poolController diagramElement.
+	self assert: taskController diagramElement isRendered.
+
+	laneController := OPBPMNLaneController new.
+	poolController addAsTargetFor: laneController onPosition: 100 @ 100.
+	laneModel := laneController model.
+
+	self assert: (poolModel lanes includes: laneModel).
+	self assert: taskModel owner equals: laneModel.
+	self assert: taskController viewModel parentViewModel equals: laneController viewModel.
+	self assert: taskController diagramElement owningElement equals: laneController diagramElement.
+	self assert: taskController diagramElement isRendered.
+
+	diagramController undo.
+
+	self deny: poolModel hasLanes.
+	self assert: taskModel owner equals: poolModel.
+	self assert: taskController viewModel parentViewModel equals: poolController viewModel.
+	self assert: taskController diagramElement owningElement equals: poolController diagramElement.
+	self assert: taskController diagramElement isRendered.
+
+	diagramController redo.
+
+	self assert: (poolModel lanes includes: laneModel).
+	self assert: taskModel owner equals: laneModel.
+	self assert: taskController viewModel parentViewModel equals: (diagramController controllerForModel: laneModel) viewModel.
+	self assert: taskController diagramElement owningElement equals: (diagramController controllerForModel: laneModel) diagramElement.
+	self assert: taskController diagramElement isRendered
+]
+
+{ #category : 'tests' }
 OPBPMNLaneControllerTest >> testAddLaneTargetingExistingLaneInsertsBeforeOrAfterBasedOnPosition [
 	| poolModel firstLaneModel secondLaneModel newLaneControllerBefore newLaneControllerAfter poolController poolShape clickAboveCenter clickBelowCenter |
 	poolModel := OPBPMNPoolModel new name: 'Process Pool'.
@@ -122,4 +164,81 @@ OPBPMNLaneControllerTest >> testMoveLaneSeparatorUpdatesLaneHeightsAndSupportsUn
 	firstLaneController undoManager redo.
 	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight + accumulatedDelta.
 	self assert: secondLaneController diagramElement laneHeight equals: initialSecondHeight - accumulatedDelta
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAndSupportsUndoRedo [
+	| poolModel laneModel firstTaskModel secondTaskModel flowModel annotationModel laneAssociationModel poolController firstTaskController secondTaskController restoredLaneController |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	laneModel := OPBPMNLaneModel new name: 'Sales'.
+	firstTaskModel := OPBPMNActivityModel new name: 'Check Stock'.
+	secondTaskModel := OPBPMNActivityModel new name: 'Ship Order'.
+	flowModel := (OPBPMNFlowModel from: firstTaskModel to: secondTaskModel)
+		name: '';
+		type: 'Normal';
+		yourself.
+	firstTaskModel addFlow: flowModel.
+	secondTaskModel addFlow: flowModel.
+	annotationModel := OPBPMNAnnotationModel new text: 'Lane Note'.
+	laneAssociationModel := OPBPMNAssociationModel new
+		source: annotationModel;
+		target: laneModel;
+		yourself.
+	annotationModel addAssociation: laneAssociationModel.
+	laneModel addAssociation: laneAssociationModel.
+
+	poolModel addLane: laneModel.
+	laneModel
+		add: firstTaskModel;
+		add: secondTaskModel;
+		add: annotationModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	poolController := diagramController controllerForModel: poolModel.
+	controller := diagramController controllerForModel: laneModel.
+	firstTaskController := diagramController controllerForModel: firstTaskModel.
+	secondTaskController := diagramController controllerForModel: secondTaskModel.
+
+	self assert: firstTaskController diagramElement owningElement equals: controller diagramElement.
+	self assert: secondTaskController diagramElement owningElement equals: controller diagramElement.
+	self assert: firstTaskController diagramElement isRendered.
+
+	diagramController removeModelElement: laneModel.
+
+	self deny: poolModel hasLanes.
+	self assertCollection: poolModel elements includesAll: { firstTaskModel . secondTaskModel . annotationModel }.
+	self assert: firstTaskModel owner equals: poolModel.
+	self assert: secondTaskModel owner equals: poolModel.
+	self assert: firstTaskController viewModel parentViewModel equals: poolController viewModel.
+	self assertCollection: firstTaskModel outgoing includesAll: { flowModel }.
+	self denyCollection: annotationModel associations includesAny: { laneAssociationModel }.
+	self deny: (diagramController hasControllerForModel: laneAssociationModel).
+	self assert: (diagramController hasControllerForModel: firstTaskModel).
+	self assert: firstTaskController diagramElement isRendered.
+	self assert: secondTaskController diagramElement isRendered.
+	self assert: firstTaskController diagramElement owningElement equals: poolController diagramElement.
+	self assert: secondTaskController diagramElement owningElement equals: poolController diagramElement.
+
+	diagramController undo.
+
+	self assert: (poolModel lanes includes: laneModel).
+	self assert: firstTaskModel owner equals: laneModel.
+	self assert: secondTaskModel owner equals: laneModel.
+	restoredLaneController := diagramController controllerForModel: laneModel.
+	self assert: firstTaskController viewModel parentViewModel equals: restoredLaneController viewModel.
+	self assert: firstTaskController diagramElement isRendered.
+	self assert: firstTaskController diagramElement owningElement equals: restoredLaneController diagramElement.
+	self assert: secondTaskController diagramElement owningElement equals: restoredLaneController diagramElement.
+	self assertCollection: annotationModel associations includesAll: { laneAssociationModel }.
+	self assert: (diagramController hasControllerForModel: laneAssociationModel).
+
+	diagramController redo.
+
+	self deny: poolModel hasLanes.
+	self assert: firstTaskModel owner equals: poolModel.
+	self assert: secondTaskModel owner equals: poolModel.
+	self assert: firstTaskController diagramElement isRendered.
+	self assert: firstTaskController diagramElement owningElement equals: poolController diagramElement.
+	self assert: secondTaskController diagramElement owningElement equals: poolController diagramElement
 ]

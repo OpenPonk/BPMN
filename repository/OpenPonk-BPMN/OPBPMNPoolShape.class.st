@@ -89,6 +89,19 @@ OPBPMNPoolShape >> adjustExtentToLanes [
 	self relocateLanesDisplacingElements: true
 ]
 
+{ #category : 'private' }
+OPBPMNPoolShape >> adoptOwnedElementsIntoLane: aLaneShape [
+	| laneModel elementsToAdopt |
+	laneModel := aLaneShape modelElement.
+	laneModel ifNil: [ ^ self ].
+	elementsToAdopt := self ownedElements select: [ :eachElement |
+		(eachElement isKindOf: OPBPMNLaneShape) not and: [
+			eachElement modelElement isNotNil and: [
+				eachElement modelElement owner == laneModel ] ] ].
+	elementsToAdopt copy do: [ :eachElement |
+		eachElement owningElement: aLaneShape ]
+]
+
 { #category : 'reacting' }
 OPBPMNPoolShape >> associationCreated: anAssociation [
 
@@ -173,6 +186,11 @@ OPBPMNPoolShape >> isContainer [
 	^ true
 ]
 
+{ #category : 'testing' }
+OPBPMNPoolShape >> isRemovingRender [
+	^ isAdjustingExtent ifNil: [ false ]
+]
+
 { #category : 'accessing' }
 OPBPMNPoolShape >> laneElements [
 	"Answers all lane diagram elements owned by this pool in model order if model is present, or in owned order."
@@ -235,14 +253,17 @@ OPBPMNPoolShape >> nameLabel [
 
 { #category : 'rendering' }
 OPBPMNPoolShape >> ownedElement: aDiagramElement renderedIn: aCanvas [
+
 	super ownedElement: aDiagramElement renderedIn: aCanvas.
-	(aDiagramElement isKindOf: OPBPMNLaneShape) ifTrue: [
-		self adjustExtentToLanes ]
+	(aDiagramElement isKindOf: OPBPMNLaneShape) ifFalse: [ ^ self ].
+	self adjustExtentToLanes.
+	self adoptOwnedElementsIntoLane: aDiagramElement
 ]
 
 { #category : 'rendering' }
 OPBPMNPoolShape >> ownedElementRemovedRender: aDiagramElement [
 	super ownedElementRemovedRender: aDiagramElement.
+	self isRemovingRender ifTrue: [ ^ self ].
 	(aDiagramElement isKindOf: OPBPMNLaneShape) ifTrue: [
 		self adjustExtentToLanes ]
 ]
@@ -286,7 +307,8 @@ OPBPMNPoolShape >> relocateLanesDisplacingElements: aBoolean [
 OPBPMNPoolShape >> removeRender [
 	self roassalShape ifNotNil: [ :shape | shape announcer unsubscribe: self ].
 	nameLabel ifNotNil: [ :label | label announcer unsubscribe: self ].
-	super removeRender.
+	isAdjustingExtent := true.
+	[ super removeRender ] ensure: [ isAdjustingExtent := false ].
 	topBox := nil.
 	bottomBox := nil.
 	nameLabel := nil.
