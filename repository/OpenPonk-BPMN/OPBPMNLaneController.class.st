@@ -74,6 +74,15 @@ OPBPMNLaneController >> creationCommandIn: aParentModel andShowInDiagram: aDiagr
 		position: nil
 ]
 
+{ #category : 'construction' }
+OPBPMNLaneController >> hookDiagramElement [
+	super hookDiagramElement.
+	self diagramElement
+		when: OPBPMNLaneSeparatorMoved
+		send: #laneSeparatorMoved:
+		to: self
+]
+
 { #category : 'diagram elements' }
 OPBPMNLaneController >> intendedModelOfOwningDiagramElement [
 	"Resolves the model element of the owning diagram element, prioritizing domain pool ownership."
@@ -86,6 +95,11 @@ OPBPMNLaneController >> intendedModelOfOwningDiagramElement [
 			(self diagramController hasControllerForModel: ownerModel) ifTrue: [
 				^ ownerModel ] ] ].
 	^ super intendedModelOfOwningDiagramElement
+]
+
+{ #category : 'geometry' }
+OPBPMNLaneController >> laneSeparatorMoved: anAnnouncement [
+	self moveSeparatorBy: anAnnouncement delta
 ]
 
 { #category : 'geometry' }
@@ -120,4 +134,10 @@ OPBPMNLaneController >> parentWhenTargetFor: aCreatedController [
 			self model pool ifNotNil: [ :enclosingPool | ^ enclosingPool ] ].
 		^ self model owner ].
 	^ super parentWhenTargetFor: aCreatedController
+]
+
+{ #category : 'diagram elements' }
+OPBPMNLaneController >> unhookDiagramElement [
+	super unhookDiagramElement.
+	self diagramElement unsubscribe: self
 ]

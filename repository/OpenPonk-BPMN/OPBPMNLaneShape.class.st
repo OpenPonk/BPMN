@@ -6,6 +6,7 @@ Class {
 		'leftBox',
 		'rightBox',
 		'laneSeparator',
+		'separatorHandle',
 		'laneHeight'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
@@ -67,6 +68,22 @@ OPBPMNLaneShape >> createInvisibleBox [
 		yourself
 ]
 
+{ #category : 'rendering' }
+OPBPMNLaneShape >> createSeparatorHandle [
+	| handle |
+	handle := RSEllipse new
+		color: Color white;
+		border: (RSBorder new
+			width: 2;
+			color: Color blue;
+			yourself);
+		size: 14;
+		model: self;
+		yourself.
+	self registerSeparatorHandleEventsOn: handle.
+	^ handle
+]
+
 { #category : 'accessing' }
 OPBPMNLaneShape >> defaultLaneHeight [
 	self owningElement ifExists: [ :owner |
@@ -92,6 +109,20 @@ OPBPMNLaneShape >> evacuateOwnedElementsToPoolIfLastLane [
 		eachElement owningElement: poolElement ]
 ]
 
+{ #category : 'interactions' }
+OPBPMNLaneShape >> handleHighlighted: anEvent [
+	roassalShape ifNotNil: [ :shape |
+		shape propertyAt: #isLaneHighlighted put: true ].
+	self updateAdjacentSeparatorHandles
+]
+
+{ #category : 'interactions' }
+OPBPMNLaneShape >> handleUnhighlighted: anEvent [
+	roassalShape ifNotNil: [ :shape |
+		shape propertyAt: #isLaneHighlighted put: false ].
+	self updateAdjacentSeparatorHandles
+]
+
 { #category : 'accessing' }
 OPBPMNLaneShape >> height [
 	"Answers the visual height of this lane, falling back to configured laneHeight when not rendered."
@@ -102,6 +133,13 @@ OPBPMNLaneShape >> height [
 { #category : 'testing' }
 OPBPMNLaneShape >> isContainer [
 	^ true
+]
+
+{ #category : 'testing' }
+OPBPMNLaneShape >> isLaneHighlighted [
+	^ roassalShape
+		ifNotNil: [ :shape | shape propertyAt: #isLaneHighlighted ifAbsent: [ false ] ]
+		ifNil: [ false ]
 ]
 
 { #category : 'testing' }
@@ -139,6 +177,70 @@ OPBPMNLaneShape >> nameAreaWidth [
 	^ 30
 ]
 
+{ #category : 'accessing' }
+OPBPMNLaneShape >> nextLaneShape [
+	| poolShape lanes currentIndex |
+	poolShape := self owningElement.
+	(poolShape isNotNil and: [ poolShape respondsTo: #laneShapes ]) ifFalse: [ ^ nil ].
+	lanes := poolShape laneShapes.
+	currentIndex := lanes indexOf: self.
+	(currentIndex > 0 and: [ currentIndex < lanes size ]) ifFalse: [ ^ nil ].
+	^ lanes at: currentIndex + 1
+]
+
+{ #category : 'accessing' }
+OPBPMNLaneShape >> previousLaneShape [
+	| poolShape lanes currentIndex |
+	poolShape := self owningElement.
+	(poolShape isNotNil and: [ poolShape respondsTo: #laneShapes ]) ifFalse: [ ^ nil ].
+	lanes := poolShape laneShapes.
+	currentIndex := lanes indexOf: self.
+	currentIndex > 1 ifFalse: [ ^ nil ].
+	^ lanes at: currentIndex - 1
+]
+
+{ #category : 'rendering' }
+OPBPMNLaneShape >> registerSeparatorHandleEventsOn: aHandleShape [
+
+	| rawDeltaY initialFirstHeight initialSecondHeight nextShape |
+	nextShape := self nextLaneShape.
+	rawDeltaY := 0.0.
+	initialFirstHeight := self laneHeight.
+	initialSecondHeight := nextShape ifNil: [ 0 ] ifNotNil: [ :theShape | theShape laneHeight ].
+	aHandleShape
+		when: RSMouseEnter do: [ :event | self showSeparatorResizeCursor ] for: self;
+		when: RSMouseLeave do: [ :event | self removeSeparatorResizeCursor ] for: self;
+		when: RSMouseLeftDragStart do: [ :event |
+				nextShape := self nextLaneShape.
+				nextShape ifNotNil: [
+							rawDeltaY := 0.0.
+							initialFirstHeight := self laneHeight.
+							initialSecondHeight := nextShape laneHeight ] ]
+		for: self;
+		when: RSMouseDragging do: [ :event |
+				nextShape ifNotNil: [
+							| stepDeltaY currentDelta maxShrinkFirst maxShrinkSecond clampedDelta |
+							stepDeltaY := (event camera distanceFromPixelToSpace: event step) y.
+							rawDeltaY := rawDeltaY + stepDeltaY.
+							currentDelta := rawDeltaY rounded.
+							maxShrinkFirst := initialFirstHeight - self minimumHeight max: 0.
+							maxShrinkSecond := initialSecondHeight - nextShape minimumHeight max: 0.
+							clampedDelta := (currentDelta min: maxShrinkSecond) max: maxShrinkFirst negated.
+							self laneHeight: initialFirstHeight + clampedDelta.
+							nextShape laneHeight: initialSecondHeight - clampedDelta.
+							self owningElement ifExists: [ :pool | pool relocateLanesDisplacingElements: false ] ] ]
+		for: self;
+		when: RSMouseDragEnd do: [ :event |
+				nextShape ifNotNil: [
+							| effectiveDelta |
+							effectiveDelta := (self laneHeight - initialFirstHeight) asInteger.
+							self laneHeight: initialFirstHeight.
+							nextShape laneHeight: initialSecondHeight.
+							nextShape := nil.
+							effectiveDelta isZero ifFalse: [ self announcer announce: (OPBPMNLaneSeparatorMoved delta: effectiveDelta) ] ] ]
+		for: self
+]
+
 { #category : 'removing' }
 OPBPMNLaneShape >> remove [
 	self evacuateOwnedElementsToPoolIfLastLane.
@@ -149,13 +251,31 @@ OPBPMNLaneShape >> remove [
 OPBPMNLaneShape >> removeRender [
 	"Cleans up attached shapes and visual references when removing render."
 	self evacuateOwnedElementsToPoolIfLastLane.
-	self roassalShape ifNotNil: [ :shape | shape announcer unsubscribe: self ].
+	self removeSeparatorHandle.
+	self roassalShape ifNotNil: [ :shape |
+		shape propertyAt: #isLaneHighlighted put: false.
+		shape announcer unsubscribe: self ].
 	nameLabel ifNotNil: [ :label | label announcer unsubscribe: self ].
 	super removeRender.
 	nameLabel := nil.
 	leftBox := nil.
 	rightBox := nil.
 	laneSeparator := nil
+]
+
+{ #category : 'removing' }
+OPBPMNLaneShape >> removeSeparatorHandle [
+	separatorHandle ifNil: [ ^ self ].
+	self removeSeparatorResizeCursor.
+	separatorHandle announcer unsubscribe: self.
+	separatorHandle remove.
+	separatorHandle := nil
+]
+
+{ #category : 'cursor' }
+OPBPMNLaneShape >> removeSeparatorResizeCursor [
+	self currentWorld ifNotNil: [ :world |
+		world currentHand showTemporaryCursor: nil ]
 ]
 
 { #category : 'rendering' }
@@ -191,7 +311,7 @@ OPBPMNLaneShape >> renderNameAreaLabel [
 OPBPMNLaneShape >> renderSeparator [
 	leftBox := self createInvisibleBox.
 	rightBox := self createInvisibleBox.
-	laneSeparator := RSLine new
+	laneSeparator := OPBPMNLaneSeparatorLine new
 		width: 1;
 		color: Color black;
 		model: self;
@@ -201,8 +321,7 @@ OPBPMNLaneShape >> renderSeparator [
 	self canvas
 		add: leftBox;
 		add: rightBox;
-		add: laneSeparator.
-	laneSeparator pushBack
+		add: laneSeparator
 ]
 
 { #category : 'rendering' }
@@ -219,7 +338,33 @@ OPBPMNLaneShape >> renderShapeDetails [
 
 { #category : 'interactions' }
 OPBPMNLaneShape >> selectableInteraction [
-	^ OPRSSelectable highlightBorderColorBlue
+	| interaction |
+	interaction := OPRSSelectable highlightBorderColorBlue.
+	interaction
+		when: RSHighlightEvent send: #handleHighlighted: to: self;
+		when: RSUnHighlightEvent send: #handleUnhighlighted: to: self.
+	^ interaction
+]
+
+{ #category : 'accessing' }
+OPBPMNLaneShape >> separatorHandle [
+	^ separatorHandle
+]
+
+{ #category : 'testing' }
+OPBPMNLaneShape >> shouldShowSeparatorHandle [
+	| adjacentLane |
+	self isRendered ifFalse: [ ^ false ].
+	self isLastLaneInPool ifTrue: [ ^ false ].
+	adjacentLane := self nextLaneShape.
+	adjacentLane ifNil: [ ^ false ].
+	^ self isLaneHighlighted or: [ adjacentLane isLaneHighlighted ]
+]
+
+{ #category : 'cursor' }
+OPBPMNLaneShape >> showSeparatorResizeCursor [
+	self currentWorld ifNotNil: [ :world |
+		world currentHand showTemporaryCursor: Cursor resizeTop ]
 ]
 
 { #category : 'geometry' }
@@ -233,27 +378,33 @@ OPBPMNLaneShape >> translateContainedElementsPositionsBy: aDeltaPoint [
 ]
 
 { #category : 'updating' }
+OPBPMNLaneShape >> updateAdjacentSeparatorHandles [
+	self updateSeparatorHandle.
+	self previousLaneShape ifNotNil: [ :previousLane |
+		previousLane updateSeparatorHandle ].
+	roassalShape ifNotNil: [ :shape | shape signalUpdate ]
+]
+
+{ #category : 'updating' }
 OPBPMNLaneShape >> updatePosition [
 	| laneLeft laneRight laneBottom labelX labelY isLastLane |
 	roassalShape ifNil: [ ^ self ].
 	laneLeft := roassalShape position x - (roassalShape width / 2).
 	laneRight := roassalShape position x + (roassalShape width / 2).
 	laneBottom := roassalShape position y + (roassalShape height / 2).
-
 	leftBox ifNotNil: [ :box | box translateTo: laneLeft @ laneBottom ].
 	rightBox ifNotNil: [ :box | box translateTo: laneRight @ laneBottom ].
-
 	labelX := laneLeft + (self nameAreaWidth / 2).
 	labelY := roassalShape position y.
 	nameLabel ifNotNil: [ :label | label translateTo: labelX @ labelY ].
-
 	isLastLane := self isLastLaneInPool.
+	self pushBack.
+	self owningElement ifExists: [ :owner | owner pushBack ].
 	laneSeparator ifNotNil: [ :separator |
 		separator color: (isLastLane ifTrue: [ Color transparent ] ifFalse: [ Color black ]).
-		separator signalUpdate ].
-
-	self pushBack.
-	self owningElement ifExists: [ :owner | owner pushBack ]
+		separator signalUpdate.
+		isLastLane ifFalse: [ separator pushFront ] ].
+	self updateSeparatorHandle
 ]
 
 { #category : 'rendering' }
@@ -263,4 +414,20 @@ OPBPMNLaneShape >> updateRenderFromModel [
 	super updateRenderFromModel.
 	self updatePosition.
 	roassalShape signalUpdate
+]
+
+{ #category : 'updating' }
+OPBPMNLaneShape >> updateSeparatorHandle [
+	| separatorCenter |
+	self shouldShowSeparatorHandle ifFalse: [
+		self removeSeparatorHandle.
+		^ self ].
+	separatorHandle ifNil: [
+		separatorHandle := self createSeparatorHandle.
+		self canvas add: separatorHandle ].
+	separatorCenter := laneSeparator
+		ifNotNil: [ :separator | separator position ]
+		ifNil: [ roassalShape position x @ (roassalShape position y + (roassalShape height / 2)) ].
+	separatorHandle translateTo: separatorCenter.
+	separatorHandle pushFront
 ]

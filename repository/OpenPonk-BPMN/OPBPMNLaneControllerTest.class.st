@@ -117,6 +117,168 @@ OPBPMNLaneControllerTest >> testCanBeTargetForLaneController [
 ]
 
 { #category : 'tests' }
+OPBPMNLaneControllerTest >> testDraggingLaneSeparatorOnCanvasUpdatesLaneHeightsAndSupportsUndoRedo [
+	| poolModel firstLaneModel secondLaneModel firstTaskModel secondTaskModel poolController firstLaneController secondLaneController firstTaskController secondTaskController firstTaskInitialPosition secondTaskInitialPosition initialFirstHeight initialSecondHeight canvas selectable separatorPoint pixelPoint hitShape dragDelta |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
+	secondLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
+	firstTaskModel := OPBPMNActivityModel new name: 'Check Stock'.
+	secondTaskModel := OPBPMNActivityModel new name: 'Ship Items'.
+
+	firstLaneModel add: firstTaskModel.
+	secondLaneModel add: secondTaskModel.
+	poolModel addLane: firstLaneModel.
+	poolModel addLane: secondLaneModel.
+
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	poolController := diagramController controllerForModel: poolModel.
+	poolController modelChanged.
+
+	firstLaneController := diagramController controllerForModel: firstLaneModel.
+	secondLaneController := diagramController controllerForModel: secondLaneModel.
+	firstTaskController := diagramController controllerForModel: firstTaskModel.
+	secondTaskController := diagramController controllerForModel: secondTaskModel.
+
+	firstTaskInitialPosition := firstTaskController diagramElement roassalShape position copy.
+	secondTaskInitialPosition := secondTaskController diagramElement roassalShape position copy.
+
+	initialFirstHeight := firstLaneController diagramElement laneHeight.
+	initialSecondHeight := secondLaneController diagramElement laneHeight.
+	self assert: initialFirstHeight equals: 220.
+	self assert: initialSecondHeight equals: 220.
+
+	canvas := diagramController canvas.
+	"Translate camera to verify no pixel-vs-space coordinate jump occurs on DragStart"
+	canvas camera translateTo: 180 @ 120.
+
+	selectable := firstLaneController roassalShape propertyAt: OPRSSelectable.
+	selectable doHighlight: firstLaneController roassalShape.
+
+	separatorPoint := firstLaneController diagramElement laneSeparator position.
+	pixelPoint := canvas camera fromSpaceToPixel: separatorPoint.
+	hitShape := canvas shapeWithAction: RSMouseLeftDragStart forPositionInPixels: pixelPoint.
+
+	self assert: hitShape equals: firstLaneController diagramElement separatorHandle.
+
+	dragDelta := 0 @ 40.
+	"RSEventProcessor leaves position in pixels on DragStart, and converts to space with step on Dragging"
+	hitShape announce: (RSMouseLeftDragStart new
+		shape: hitShape;
+		canvas: canvas;
+		position: pixelPoint;
+		yourself).
+	hitShape announce: (RSMouseDragging new
+		shape: hitShape;
+		canvas: canvas;
+		position: separatorPoint + dragDelta;
+		step: dragDelta;
+		yourself).
+	hitShape announce: (RSMouseDragEnd new
+		shape: hitShape;
+		canvas: canvas;
+		position: separatorPoint + dragDelta;
+		yourself).
+
+	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight + 40.
+	self assert: secondLaneController diagramElement laneHeight equals: initialSecondHeight - 40.
+	self assert: hitShape position equals: firstLaneController diagramElement laneSeparator position.
+	self assert: (firstTaskController diagramElement roassalShape position - firstTaskInitialPosition) equals: (0 @ 0).
+	self assert: (secondTaskController diagramElement roassalShape position - secondTaskInitialPosition) equals: (0 @ 0).
+
+	firstLaneController undoManager undo.
+	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight.
+	self assert: secondLaneController diagramElement laneHeight equals: initialSecondHeight.
+	self assert: hitShape position equals: firstLaneController diagramElement laneSeparator position.
+
+	firstLaneController undoManager redo.
+	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight + 40.
+	self assert: secondLaneController diagramElement laneHeight equals: initialSecondHeight - 40.
+	self assert: hitShape position equals: firstLaneController diagramElement laneSeparator position
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testDraggingLaneSeparatorRespectsMinimumLaneHeight [
+	| poolModel firstLaneModel secondLaneModel poolController firstLaneController secondLaneController canvas selectable handle separatorPoint dragUpDelta dragDownDelta |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
+	secondLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
+	poolModel addLane: firstLaneModel.
+	poolModel addLane: secondLaneModel.
+
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	poolController := diagramController controllerForModel: poolModel.
+	poolController modelChanged.
+
+	firstLaneController := diagramController controllerForModel: firstLaneModel.
+	secondLaneController := diagramController controllerForModel: secondLaneModel.
+
+	canvas := diagramController canvas.
+	selectable := secondLaneController roassalShape propertyAt: OPRSSelectable.
+	selectable doHighlight: secondLaneController roassalShape.
+
+	handle := firstLaneController diagramElement separatorHandle.
+	self assert: handle isNotNil.
+
+	separatorPoint := firstLaneController diagramElement laneSeparator position.
+	dragUpDelta := 0 @ -300.
+
+	handle announce: (RSMouseLeftDragStart new
+		shape: handle;
+		canvas: canvas;
+		position: separatorPoint;
+		yourself).
+	handle announce: (RSMouseDragging new
+		shape: handle;
+		canvas: canvas;
+		position: separatorPoint + dragUpDelta;
+		step: dragUpDelta;
+		yourself).
+	handle announce: (RSMouseDragEnd new
+		shape: handle;
+		canvas: canvas;
+		position: separatorPoint + dragUpDelta;
+		yourself).
+
+	self assert: firstLaneController diagramElement laneHeight equals: 50.
+	self assert: secondLaneController diagramElement laneHeight equals: 390.
+
+	"Verify handle can be dragged back down after clamping at minimumHeight"
+	separatorPoint := firstLaneController diagramElement laneSeparator position.
+	dragDownDelta := 0 @ 100.
+	handle announce: (RSMouseLeftDragStart new
+		shape: handle;
+		canvas: canvas;
+		position: separatorPoint;
+		yourself).
+	handle announce: (RSMouseDragging new
+		shape: handle;
+		canvas: canvas;
+		position: separatorPoint + dragDownDelta;
+		step: dragDownDelta;
+		yourself).
+	handle announce: (RSMouseDragEnd new
+		shape: handle;
+		canvas: canvas;
+		position: separatorPoint + dragDownDelta;
+		yourself).
+
+	self assert: firstLaneController diagramElement laneHeight equals: 150.
+	self assert: secondLaneController diagramElement laneHeight equals: 290.
+
+	firstLaneController undoManager undo.
+	self assert: firstLaneController diagramElement laneHeight equals: 50.
+	self assert: secondLaneController diagramElement laneHeight equals: 390.
+
+	firstLaneController undoManager undo.
+	self assert: firstLaneController diagramElement laneHeight equals: 220.
+	self assert: secondLaneController diagramElement laneHeight equals: 220
+]
+
+{ #category : 'tests' }
 OPBPMNLaneControllerTest >> testMoveLaneSeparatorUpdatesLaneHeightsAndSupportsUndoRedo [
 	| poolModel firstLaneModel secondLaneModel firstTaskModel secondTaskModel poolController firstLaneController secondLaneController firstTaskController secondTaskController firstTaskInitialPosition secondTaskInitialPosition initialFirstHeight initialSecondHeight accumulatedDelta |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
