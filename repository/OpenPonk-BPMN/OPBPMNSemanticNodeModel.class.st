@@ -157,3 +157,8 @@ OPBPMNSemanticNodeModel >> type: aParticipantType [
 	type := aParticipantType.
 	self changed
 ]
+
+{ #category : 'printing' }
+OPBPMNSemanticNodeModel >> typeIconFor: aType [
+	^ OPBPMNUnknownNodeTypeError signalForType: aType
+]

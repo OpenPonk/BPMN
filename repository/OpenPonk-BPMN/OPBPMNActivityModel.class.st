@@ -59,5 +59,5 @@ OPBPMNActivityModel >> typeIconFor: aType [
 		^ OPBPMNIcon current activityReceive ].
 	aType = OPBPMNNodeType None ifTrue: [
 		^ OPBPMNIcon current activityNone ].
-	self error: 'Unknown type'
+	^ super typeIconFor: aType
 ]

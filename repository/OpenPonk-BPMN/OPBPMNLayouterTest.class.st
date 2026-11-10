@@ -60,33 +60,39 @@ OPBPMNLayouterTest >> testDefaultLayoutIsUndoable [
 									                  eachController diagramElement isPositionableByUser or: [
 										                  eachController diagramElement isResizableByUser ] ] ] ] ]
 		                  thenCollect: #diagramElement) asSet.
+	self denyEmpty: boundElements.
 	initialPositions := Dictionary new.
 	initialExtents := Dictionary new.
 	boundElements do: [ :eachElement |
-			eachElement roassalShape ifNotNil: [ :eachShape |
-					initialPositions at: eachElement put: eachShape position copy.
-					initialExtents at: eachElement put: eachShape extent copy ] ].
+			| eachShape |
+			eachShape := eachElement roassalShape.
+			self assert: eachShape isNotNil.
+			initialPositions at: eachElement put: eachShape position copy.
+			initialExtents at: eachElement put: eachShape extent copy ].
 	layouter defaultLayout.
 	self assert: undoManager canUndo.
 	diagramController undo.
 	boundElements do: [ :eachElement |
-			eachElement roassalShape ifNotNil: [ :eachShape |
-					self assert: eachShape position x closeTo: (initialPositions at: eachElement) x precision: 0.5.
-					self assert: eachShape position y closeTo: (initialPositions at: eachElement) y precision: 0.5.
-					self assert: eachShape extent x closeTo: (initialExtents at: eachElement) x precision: 0.5.
-					self assert: eachShape extent y closeTo: (initialExtents at: eachElement) y precision: 0.5 ] ]
+			| eachShape |
+			eachShape := eachElement roassalShape.
+			self assert: eachShape isNotNil.
+			self assert: eachShape position x closeTo: (initialPositions at: eachElement) x precision: 0.5.
+			self assert: eachShape position y closeTo: (initialPositions at: eachElement) y precision: 0.5.
+			self assert: eachShape extent x closeTo: (initialExtents at: eachElement) x precision: 0.5.
+			self assert: eachShape extent y closeTo: (initialExtents at: eachElement) y precision: 0.5 ]
 ]
 
 { #category : 'tests' }
 OPBPMNLayouterTest >> testPoolEncompassesInnerNodesAfterDefaultLayout [
+
 	| layouter poolController poolShape innerShapes |
 	layouter := OPBPMNLayouter new diagramController: diagramController.
 	layouter defaultLayout.
 	poolController := diagramController controllers detect: [ :eachController |
-		(eachController isKindOf: OPBPMNPoolController) and: [ eachController model name = 'Order Fulfillment' ] ].
+		                  (eachController isKindOf: OPBPMNPoolController) and: [ eachController model name = 'Order Fulfillment' ] ].
 	poolShape := poolController roassalShape.
 	innerShapes := poolController diagramElement innerNodeRoassalShapes.
-	self assert: innerShapes isNotEmpty.
+	self denyEmpty: innerShapes.
 	innerShapes do: [ :eachNodeShape |
 		self assert: (poolShape encompassingRectangle containsRect: eachNodeShape encompassingRectangle) ]
 ]

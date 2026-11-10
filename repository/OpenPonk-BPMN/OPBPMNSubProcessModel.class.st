@@ -60,5 +60,5 @@ OPBPMNSubProcessModel >> typeIconFor: aType [
 		^ OPBPMNIcon current markerCompensation ].
 	aType = OPBPMNNodeType MarkerAdhoc ifTrue: [
 		^ OPBPMNIcon current markerAdhoc ].
-	self error: 'Unknown type'
+	^ super typeIconFor: aType
 ]

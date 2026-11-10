@@ -56,5 +56,5 @@ OPBPMNStartEventModel >> typeIconFor: aType [
 		^ OPBPMNIcon current eventMultiple ].
 	aType = OPBPMNNodeType ParallelMultiple ifTrue: [
 		^ OPBPMNIcon current eventParallelMultiple ].
-	self error: 'Unknown type'
+	^ super typeIconFor: aType
 ]

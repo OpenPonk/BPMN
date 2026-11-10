@@ -1,3 +1,6 @@
+"
+Verifies structural containment, lane management, and element lifecycle operations within BPMN pool models.
+"
 Class {
 	#name : 'OPBPMNPoolModelTest',
 	#superclass : 'TestCase',

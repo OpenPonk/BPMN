@@ -1,3 +1,6 @@
+"
+Verifies property descriptions, model synchronization, and containment rules for lane view models.
+"
 Class {
 	#name : 'OPBPMNLaneViewModelTest',
 	#superclass : 'TestCase',

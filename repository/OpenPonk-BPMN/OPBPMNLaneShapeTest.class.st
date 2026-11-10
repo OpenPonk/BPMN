@@ -1,3 +1,6 @@
+"
+Verifies visual rendering, label interaction forwarding, and structural constraints of lane shapes on the Roassal canvas.
+"
 Class {
 	#name : 'OPBPMNLaneShapeTest',
 	#superclass : 'TestCase',
@@ -63,7 +66,8 @@ OPBPMNLaneShapeTest >> testClickingNameLabelForwardsClickToRoassalShape [
 
 { #category : 'tests' }
 OPBPMNLaneShapeTest >> testDoesNotHaveBoundsSlot [
-	self deny: (OPBPMNLaneShape allInstVarNames includes: 'bounds')
+
+	self denyCollection: OPBPMNLaneShape allInstVarNames includesAny: { 'bounds' }
 ]
 
 { #category : 'tests' }

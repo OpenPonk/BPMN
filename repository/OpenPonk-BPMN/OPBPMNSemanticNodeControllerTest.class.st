@@ -75,6 +75,8 @@ OPBPMNSemanticNodeControllerTest >> testSelectableTypesAreSameAsShowable [
 	notSelectableTypes do: [ :each |
 			| icon |
 			icon := nil.
-			self should: [ icon := self model typeIconFor: each ] raise: Error.
-			self assert: (icon isNil or: [ icon isForm not ]) ]
+			self
+				should: [ icon := self model typeIconFor: each ]
+				raise: OPBPMNUnknownNodeTypeError.
+			self assert: icon isNil ]
 ]

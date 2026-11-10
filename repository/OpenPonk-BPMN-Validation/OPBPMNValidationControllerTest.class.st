@@ -35,9 +35,8 @@ OPBPMNValidationControllerTest >> testGetValidations [
 	controller := OPBPMNValidationController new.
 	validations := controller getValidations.
 	self assert: (validations isKindOf: Collection).
-	self deny: validations isEmpty.
-	self assert: (validations allSatisfy: [ :validationClass |
-			 validationClass packageTag name = 'Validation-Classes' ])
+	self denyEmpty: validations.
+	self assert: (validations allSatisfy: [ :validationClass | validationClass packageTag name = 'Validation-Classes' ])
 ]
 
 { #category : 'tests' }

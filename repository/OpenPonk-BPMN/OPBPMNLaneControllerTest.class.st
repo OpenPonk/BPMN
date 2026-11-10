@@ -1,3 +1,6 @@
+"
+Verifies controller lifecycle, element migration between pools and lanes, and transactional undo/redo support for BPMN lanes.
+"
 Class {
 	#name : 'OPBPMNLaneControllerTest',
 	#superclass : 'OPBPMNNodeControllerTest',
@@ -33,6 +36,7 @@ OPBPMNLaneControllerTest >> modelClass [
 
 { #category : 'tests' }
 OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSupportsUndoRedo [
+
 	| poolModel taskModel poolController taskController laneController laneModel |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	taskModel := OPBPMNActivityModel new name: 'Process Order'.
@@ -49,8 +53,7 @@ OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSu
 	laneController := OPBPMNLaneController new.
 	poolController addAsTargetFor: laneController onPosition: 100 @ 100.
 	laneModel := laneController model.
-
-	self assert: (poolModel lanes includes: laneModel).
+	self assertCollection: poolModel lanes includesAll: { laneModel }.
 	self assert: taskModel owner equals: laneModel.
 	self assert: taskController viewModel parentViewModel equals: laneController viewModel.
 	self assert: taskController diagramElement owningElement equals: laneController diagramElement.
@@ -65,8 +68,7 @@ OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSu
 	self assert: taskController diagramElement isRendered.
 
 	diagramController redo.
-
-	self assert: (poolModel lanes includes: laneModel).
+	self assertCollection: poolModel lanes includesAll: { laneModel }.
 	self assert: taskModel owner equals: laneModel.
 	self assert: taskController viewModel parentViewModel equals: (diagramController controllerForModel: laneModel) viewModel.
 	self assert: taskController diagramElement owningElement equals: (diagramController controllerForModel: laneModel) diagramElement.
@@ -330,22 +332,23 @@ OPBPMNLaneControllerTest >> testMoveLaneSeparatorUpdatesLaneHeightsAndSupportsUn
 
 { #category : 'tests' }
 OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAndSupportsUndoRedo [
+
 	| poolModel laneModel firstTaskModel secondTaskModel flowModel annotationModel laneAssociationModel poolController firstTaskController secondTaskController restoredLaneController |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	laneModel := OPBPMNLaneModel new name: 'Sales'.
 	firstTaskModel := OPBPMNActivityModel new name: 'Check Stock'.
 	secondTaskModel := OPBPMNActivityModel new name: 'Ship Order'.
 	flowModel := (OPBPMNFlowModel from: firstTaskModel to: secondTaskModel)
-		name: '';
-		type: 'Normal';
-		yourself.
+		             name: '';
+		             type: 'Normal';
+		             yourself.
 	firstTaskModel addFlow: flowModel.
 	secondTaskModel addFlow: flowModel.
 	annotationModel := OPBPMNAnnotationModel new text: 'Lane Note'.
 	laneAssociationModel := OPBPMNAssociationModel new
-		source: annotationModel;
-		target: laneModel;
-		yourself.
+		                        source: annotationModel;
+		                        target: laneModel;
+		                        yourself.
 	annotationModel addAssociation: laneAssociationModel.
 	laneModel addAssociation: laneAssociationModel.
 
@@ -369,7 +372,10 @@ OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAnd
 	diagramController removeModelElement: laneModel.
 
 	self deny: poolModel hasLanes.
-	self assertCollection: poolModel elements includesAll: { firstTaskModel . secondTaskModel . annotationModel }.
+	self assertCollection: poolModel elements includesAll: {
+			firstTaskModel.
+			secondTaskModel.
+			annotationModel }.
 	self assert: firstTaskModel owner equals: poolModel.
 	self assert: secondTaskModel owner equals: poolModel.
 	self assert: firstTaskController viewModel parentViewModel equals: poolController viewModel.
@@ -383,8 +389,7 @@ OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAnd
 	self assert: secondTaskController diagramElement owningElement equals: poolController diagramElement.
 
 	diagramController undo.
-
-	self assert: (poolModel lanes includes: laneModel).
+	self assertCollection: poolModel lanes includesAll: { laneModel }.
 	self assert: firstTaskModel owner equals: laneModel.
 	self assert: secondTaskModel owner equals: laneModel.
 	restoredLaneController := diagramController controllerForModel: laneModel.

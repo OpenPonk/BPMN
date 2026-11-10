@@ -1,3 +1,6 @@
+"
+Verifies the population, activation state, and command execution within the BPMN editor toolbar menu.
+"
 Class {
 	#name : 'OPBPMNModelMenuTest',
 	#superclass : 'TestCase',

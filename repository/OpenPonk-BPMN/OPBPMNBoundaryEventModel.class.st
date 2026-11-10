@@ -116,5 +116,5 @@ OPBPMNBoundaryEventModel >> typeIconFor: aType [
 		^ OPBPMNIcon current eventParallelMultiple ].
 	aType = OPBPMNNodeType CatchCompensation ifTrue: [
 		^ OPBPMNIcon current eventCatchCompensation ].
-	self error: 'Unknown type'
+	^ super typeIconFor: aType
 ]

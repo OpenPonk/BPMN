@@ -56,5 +56,5 @@ OPBPMNDataObjectModel >> typeIconFor: aType [
 		^ OPBPMNIcon current dataOutput ].
 	aType = OPBPMNNodeType DataStore ifTrue: [
 		^ OPBPMNIcon current dataStore ].
-	self error: 'Unknown type'
+	^ super typeIconFor: aType
 ]

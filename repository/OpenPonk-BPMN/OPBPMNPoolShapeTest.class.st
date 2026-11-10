@@ -1,3 +1,6 @@
+"
+Verifies visual rendering, header orientation, and label interaction behavior for BPMN pool shapes.
+"
 Class {
 	#name : 'OPBPMNPoolShapeTest',
 	#superclass : 'TestCase',

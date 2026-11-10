@@ -27,6 +27,7 @@ OPBPMNPoolControllerTest >> modelClass [
 { #category : 'tests' }
 OPBPMNPoolControllerTest >> testAddLaneAsTargetAlignsWithinPoolAndSupportsUndoRedo [
 	"Verify that adding a lane from palette positions it within the pool and supports undo/redo without errors."
+
 	| poolModel poolShape laneController laneShape undoManager expectedLaneWidth expectedLaneHeight expectedLaneCenterX expectedLaneCenterY |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	diagramController model add: poolModel.
@@ -36,23 +37,24 @@ OPBPMNPoolControllerTest >> testAddLaneAsTargetAlignsWithinPoolAndSupportsUndoRe
 		createDiagramElement;
 		renderDiagramElement.
 	diagramController showAllElements.
-	
+
 
 	poolShape := controller diagramElement.
 	undoManager := diagramController undoManager.
 	undoManager ifNil: [
-		diagramController projectController ifNotNil: [ :projectController |
-			projectController instVarNamed: #undoManager put: OPUndoManager new.
-			undoManager := diagramController undoManager ] ].
+			diagramController projectController ifNotNil: [ :projectController |
+					projectController instVarNamed: #undoManager put: OPUndoManager new.
+					undoManager := diagramController undoManager ] ].
 
 	laneController := OPBPMNLaneController new.
-	controller addAsTargetFor: laneController onPosition: (100 @ 100).
+	controller addAsTargetFor: laneController onPosition: 100 @ 100.
 
 	laneShape := laneController diagramElement.
 	self assert: laneShape isRendered.
 	expectedLaneWidth := poolShape roassalShape width - poolShape nameAreaWidth.
 	expectedLaneHeight := poolShape roassalShape height.
-	expectedLaneCenterX := poolShape roassalShape position x - (poolShape roassalShape width / 2) + poolShape nameAreaWidth + (expectedLaneWidth / 2).
+	expectedLaneCenterX := poolShape roassalShape position x - (poolShape roassalShape width / 2) + poolShape nameAreaWidth
+	                       + (expectedLaneWidth / 2).
 	expectedLaneCenterY := poolShape roassalShape position y.
 
 	self assert: laneShape roassalShape position x equals: expectedLaneCenterX.
@@ -60,8 +62,8 @@ OPBPMNPoolControllerTest >> testAddLaneAsTargetAlignsWithinPoolAndSupportsUndoRe
 	self assert: laneShape roassalShape extent equals: expectedLaneWidth @ expectedLaneHeight.
 
 	undoManager undo.
-	self assert: poolModel lanes isEmpty.
-	self assert: poolShape laneShapes isEmpty.
+	self assertEmpty: poolModel lanes.
+	self assertEmpty: poolShape laneShapes.
 
 	undoManager redo.
 	self assert: poolModel lanes size equals: 1.
@@ -143,7 +145,11 @@ OPBPMNPoolControllerTest >> testAddingLaneInMiddleDisplacesFlowNodesInSubsequent
 
 { #category : 'tests' }
 OPBPMNPoolControllerTest >> testAssignmentToParent [
-	"not by pool"
+	| otherPool |
+	otherPool := self controllerClass new.
+	otherPool diagramController: diagramController.
+	self deny: (otherPool canBeTargetFor: controller).
+	self deny: (controller canBeTargetFor: otherPool)
 ]
 
 { #category : 'tests - targeting' }
@@ -219,6 +225,7 @@ OPBPMNPoolControllerTest >> testFlowNodesDisplacedWhenLaneRelocatedInLayout [
 
 { #category : 'tests' }
 OPBPMNPoolControllerTest >> testMovingPoolDragsAllContainedLanes [
+
 	| poolModel laneModel poolShape laneController laneShape initialLanePosition dragDelta |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	laneModel := OPBPMNLaneModel new name: 'Sales'.
@@ -230,14 +237,13 @@ OPBPMNPoolControllerTest >> testMovingPoolDragsAllContainedLanes [
 		createDiagramElement;
 		renderDiagramElement.
 	diagramController showAllElements.
-	
+
 
 	laneController := diagramController controllerForModel: laneModel.
 	poolShape := controller diagramElement.
 	laneShape := laneController diagramElement roassalShape.
 	initialLanePosition := laneShape position copy.
-
-	self deny: (poolShape innerDraggableRoassalShapes includes: laneShape).
+	self denyCollection: poolShape innerDraggableRoassalShapes includesAny: { laneShape }.
 
 	dragDelta := 50 @ 30.
 	poolShape roassalShape translateBy: dragDelta.

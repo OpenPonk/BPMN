@@ -35,5 +35,5 @@ OPBPMNEndEventModel >> typeIconFor: aType [
 		^ OPBPMNIcon current eventTerminate ].
 	aType = OPBPMNNodeType None ifTrue: [
 		^ OPBPMNIcon current activityNone ].
-	self error: 'Unknown type'
+	^ super typeIconFor: aType
 ]

@@ -1,3 +1,6 @@
+"
+Verifies cascading removal, node containment, and ownership transitions within BPMN lane models.
+"
 Class {
 	#name : 'OPBPMNLaneModelTest',
 	#superclass : 'TestCase',
@@ -126,6 +129,7 @@ OPBPMNLaneModelTest >> testPoolLanesCollectionManipulation [
 
 { #category : 'tests' }
 OPBPMNLaneModelTest >> testRemovingLaneCascadesContainedNodesAndFlows [
+
 	| poolModel laneSales laneWarehouse taskCheckStock taskPackItems flowModel |
 	poolModel := OPBPMNPoolModel new.
 	poolModel name: 'Order Fulfillment'.
@@ -142,16 +146,16 @@ OPBPMNLaneModelTest >> testRemovingLaneCascadesContainedNodesAndFlows [
 	laneSales add: taskCheckStock.
 	laneWarehouse add: taskPackItems.
 	flowModel := (OPBPMNFlowModel from: taskCheckStock to: taskPackItems)
-		name: '';
-		type: 'Normal';
-		yourself.
+		             name: '';
+		             type: 'Normal';
+		             yourself.
 	taskCheckStock addFlow: flowModel.
 	taskPackItems addFlow: flowModel.
 	poolModel removeLane: laneSales.
-	self deny: (poolModel lanes includes: laneSales).
+	self denyCollection: poolModel lanes includesAny: { laneSales }.
 	self assert: laneSales owner isNil.
 	self assert: taskCheckStock owner isNil.
-	self deny: (taskPackItems incoming includes: flowModel)
+	self denyCollection: taskPackItems incoming includesAny: { flowModel }
 ]
 
 { #category : 'tests' }
