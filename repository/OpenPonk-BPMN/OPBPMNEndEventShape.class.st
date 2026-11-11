@@ -19,3 +19,9 @@ OPBPMNEndEventShape >> createRoassalShape [
 		width: 5);
 		yourself
 ]
+
+{ #category : 'rendering' }
+OPBPMNEndEventShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory endEventIconForType: self modelElement type
+]

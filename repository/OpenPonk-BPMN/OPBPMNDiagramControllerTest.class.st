@@ -4,9 +4,9 @@ Tests diagram controller interactions, lane containment, and pool management in 
 Class {
 	#name : 'OPBPMNDiagramControllerTest',
 	#superclass : 'OPAbstractDiagramControllerTest',
-	#category : 'OpenPonk-BPMN-Controllers',
+	#category : 'OpenPonk-BPMN-Tests',
 	#package : 'OpenPonk-BPMN',
-	#tag : 'Controllers'
+	#tag : 'Tests'
 }
 
 { #category : 'accessing' }

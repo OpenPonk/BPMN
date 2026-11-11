@@ -70,13 +70,48 @@ OPBPMNSemanticNodeControllerTest >> testSelectableTypesAreSameAsShowable [
 	notSelectableTypes := allTypes asSet difference: selectableTypes.
 	selectableTypes do: [ :each |
 			| icon |
-			icon := self model typeIconFor: each.
+			icon := self controller viewModel typeIconFor: each.
 			self assert: icon width > 10 ].
 	notSelectableTypes do: [ :each |
 			| icon |
 			icon := nil.
 			self
-				should: [ icon := self model typeIconFor: each ]
+				should: [ icon := self controller viewModel typeIconFor: each ]
 				raise: OPBPMNUnknownNodeTypeError.
 			self assert: icon isNil ]
+]
+
+{ #category : 'tests' }
+OPBPMNSemanticNodeControllerTest >> testSelectableTypesRenderAsVectorShapesWithoutBitmaps [
+
+	| selectableTypes allTypes notSelectableTypes canvas |
+	self deny: (self model respondsTo: #typeIconFor:).
+	self showInDiagram.
+	canvas := diagramController canvas.
+	selectableTypes := self selectableTypes.
+	allTypes := OPBPMNNodeType class selectors collect: [ :each |
+		(MessageSend receiver: OPBPMNNodeType selector: each) value ].
+	notSelectableTypes := allTypes asSet difference: selectableTypes.
+	self
+		assert: (canvas shapes noneSatisfy: [ :eachShape | eachShape isKindOf: RSBitmap ])
+		description: 'Canvas must not contain any RSBitmap shapes after initial render'.
+	self
+		assert: (self controller diagramElement attachedShapes noneSatisfy: [ :eachShape | eachShape isKindOf: RSBitmap ])
+		description: 'Attached shapes must not contain any RSBitmap instances'.
+	selectableTypes do: [ :eachType |
+		self model type: eachType.
+		self controller modelChanged.
+		self
+			assert: (canvas shapes noneSatisfy: [ :eachShape | eachShape isKindOf: RSBitmap ])
+			description: 'Canvas must not contain any RSBitmap shapes for type ' , eachType asString.
+		self
+			assert: (self controller diagramElement attachedShapes noneSatisfy: [ :eachShape | eachShape isKindOf: RSBitmap ])
+			description: 'Attached shapes must not contain any RSBitmap for type ' , eachType asString ].
+	selectableTypes ifNotEmpty: [
+		notSelectableTypes do: [ :eachInvalidType |
+			self
+				should: [
+					self model type: eachInvalidType.
+					self controller diagramElement updateIcon ]
+				raise: OPBPMNUnknownNodeTypeError ] ]
 ]

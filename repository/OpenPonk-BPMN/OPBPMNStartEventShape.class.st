@@ -35,6 +35,12 @@ OPBPMNStartEventShape >> createRoassalShape [
 		yourself
 ]
 
+{ #category : 'rendering' }
+OPBPMNStartEventShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory startEventIconForType: self modelElement type
+]
+
 { #category : 'initialization' }
 OPBPMNStartEventShape >> initialize [
 	super initialize.

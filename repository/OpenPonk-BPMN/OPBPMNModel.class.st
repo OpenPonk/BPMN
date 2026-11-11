@@ -5,8 +5,7 @@ Class {
 	#name : 'OPBPMNModel',
 	#superclass : 'OPModelObject',
 	#instVars : [
-		'isExecutable',
-		'profileApplications'
+		'isExecutable'
 	],
 	#category : 'OpenPonk-BPMN-Models',
 	#package : 'OpenPonk-BPMN',
@@ -49,16 +48,4 @@ OPBPMNModel >> nodes [
 { #category : 'accessing' }
 OPBPMNModel >> printType [
 	^ 'process'
-]
-
-{ #category : 'accessing' }
-OPBPMNModel >> profileApplications [
-	"References the ProfileApplications that indicate which profiles have been applied to the Package."
-	^ profileApplications ifNil: [ self edges ]
-]
-
-{ #category : 'accessing' }
-OPBPMNModel >> profileApplications: aProfileApplicationCollection [
-	"References the ProfileApplications that indicate which profiles have been applied to the Package."
-	profileApplications := aProfileApplicationCollection asOrderedCollection
 ]

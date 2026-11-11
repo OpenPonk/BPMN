@@ -24,7 +24,7 @@ OPBPMNCollapsedSubProcessViewModel >> buildEditorForm: aForm [
 		items:
 			#( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation
 			   #MarkerAdhoc ).
-	droplist displayIcon: [ :eachMarker | self model typeIconFor: eachMarker ].
+	droplist displayIcon: [ :eachMarker | self typeIconFor: eachMarker ].
 	droplist display: [ :eachMarker | eachMarker asString ].
 	aForm bindCheckbox: 'Is Call Activity?' property: #isCallActivity
 ]
@@ -36,4 +36,21 @@ OPBPMNCollapsedSubProcessViewModel >> icon [ ^ OPBPMNIcon current subProcessColl
 { #category : 'testing' }
 OPBPMNCollapsedSubProcessViewModel >> isNameMultiline [
 	^ true
+]
+
+{ #category : 'forms' }
+OPBPMNCollapsedSubProcessViewModel >> typeIconFor: aType [
+	aType = OPBPMNNodeType None ifTrue: [
+		^ OPBPMNIcon current activityNone ].
+	aType = OPBPMNNodeType MarkerParallel ifTrue: [
+		^ OPBPMNIcon current markerParallel ].
+	aType = OPBPMNNodeType MarkerSequential ifTrue: [
+		^ OPBPMNIcon current markerSequential ].
+	aType = OPBPMNNodeType MarkerLoop ifTrue: [
+		^ OPBPMNIcon current markerLoop ].
+	aType = OPBPMNNodeType MarkerCompensation ifTrue: [
+		^ OPBPMNIcon current markerCompensation ].
+	aType = OPBPMNNodeType MarkerAdhoc ifTrue: [
+		^ OPBPMNIcon current markerAdhoc ].
+	^ super typeIconFor: aType
 ]

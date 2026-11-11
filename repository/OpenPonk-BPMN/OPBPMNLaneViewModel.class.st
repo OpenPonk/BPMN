@@ -85,11 +85,6 @@ OPBPMNLaneViewModel >> registerModelIn: aParentModel [
 ]
 
 { #category : 'accessing' }
-OPBPMNLaneViewModel >> targetLaneModel [
-	^ targetLaneModel
-]
-
-{ #category : 'accessing' }
 OPBPMNLaneViewModel >> targetLaneModel: aLaneModel [
 	targetLaneModel := aLaneModel
 ]

@@ -38,6 +38,22 @@ OPBPMNSubProcessShape >> createRoassalShape [
 		  yourself
 ]
 
+{ #category : 'rendering' }
+OPBPMNSubProcessShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory subProcessMarkerForType: self modelElement type
+]
+
+{ #category : 'rendering' }
+OPBPMNSubProcessShape >> iconLocation [
+	^ RSLocation new
+		inner;
+		bottom;
+		center;
+		offset: 0 @ -4;
+		yourself
+]
+
 { #category : 'testing' }
 OPBPMNSubProcessShape >> isContainer [
 	^ true
@@ -51,13 +67,16 @@ OPBPMNSubProcessShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNSubProcessShape >> renderShapeDetails [
-
 	labeled := OPRSLabeled new.
 	labeled color: Color black.
 	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
 	labeled location top offset: 0 @ 17.
 	labeled text: ''.
-	roassalShape @ labeled
+	roassalShape @ labeled.
+
+	icon := self createTypeIconShape.
+	self canvas add: icon.
+	self attachIconShape
 ]
 
 { #category : 'interactions' }
@@ -65,18 +84,6 @@ OPBPMNSubProcessShape >> shouldBeResizableByUser [
 	"Subprocesses are expandable container nodes that can be resized by the user or layout algorithms."
 
 	^ true
-]
-
-{ #category : 'connecting' }
-OPBPMNSubProcessShape >> typeIconForModel [
-
-	
-]
-
-{ #category : 'update' }
-OPBPMNSubProcessShape >> updateIcon [
-
-	
 ]
 
 { #category : 'rendering' }

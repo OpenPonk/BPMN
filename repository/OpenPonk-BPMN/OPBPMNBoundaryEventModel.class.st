@@ -5,7 +5,6 @@ Class {
 	#name : 'OPBPMNBoundaryEventModel',
 	#superclass : 'OPBPMNSemanticNodeModel',
 	#instVars : [
-		'subscribeDiagram',
 		'isNonInterrupting',
 		'timerType',
 		'timerValue'
@@ -14,12 +13,6 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Models'
 }
-
-{ #category : 'accessing' }
-OPBPMNBoundaryEventModel >> @ aName [
-
-	^ self nodeNamed: aName
-]
 
 { #category : 'updating' }
 OPBPMNBoundaryEventModel >> changed [
@@ -50,27 +43,9 @@ OPBPMNBoundaryEventModel >> isNonInterrupting: aValue [
 	isNonInterrupting := aValue. 
 ]
 
-{ #category : 'accessing' }
-OPBPMNBoundaryEventModel >> nodeNamed: aName [
-
-	^ self elementNamed: aName
-]
-
 { #category : 'printing' }
 OPBPMNBoundaryEventModel >> printType [
 	^ 'boundaryEvent'
-]
-
-{ #category : 'accessing' }
-OPBPMNBoundaryEventModel >> subscribeDiagram [
-
-	^ subscribeDiagram
-]
-
-{ #category : 'accessing' }
-OPBPMNBoundaryEventModel >> subscribeDiagram: aDiagram [
-
-	subscribeDiagram := aDiagram
 ]
 
 { #category : 'accessing' }
@@ -91,30 +66,4 @@ OPBPMNBoundaryEventModel >> timerValue [
 { #category : 'accessing' }
 OPBPMNBoundaryEventModel >> timerValue: aValue [
 	timerValue := aValue
-]
-
-{ #category : 'printing' }
-OPBPMNBoundaryEventModel >> typeIconFor: aType [
-
-	aType = OPBPMNNodeType Receive ifTrue: [
-		^ OPBPMNIcon current activityReceiveSquare ].
-	aType = OPBPMNNodeType Timer ifTrue: [
-		^ OPBPMNIcon current eventTimer ].
-	aType = OPBPMNNodeType Escalation ifTrue: [
-		^ OPBPMNIcon current eventEscalation ].
-	aType = OPBPMNNodeType Conditional ifTrue: [
-		^ OPBPMNIcon current eventCondition ].
-	aType = OPBPMNNodeType Error ifTrue: [
-		^ OPBPMNIcon current eventError ].
-	aType = OPBPMNNodeType Cancel ifTrue: [
-		^ OPBPMNIcon current eventCancel ].
-	aType = OPBPMNNodeType Signal ifTrue: [
-		^ OPBPMNIcon current eventSignal ].
-	aType = OPBPMNNodeType Multiple ifTrue: [
-		^ OPBPMNIcon current eventMultiple ].
-	aType = OPBPMNNodeType ParallelMultiple ifTrue: [
-		^ OPBPMNIcon current eventParallelMultiple ].
-	aType = OPBPMNNodeType CatchCompensation ifTrue: [
-		^ OPBPMNIcon current eventCatchCompensation ].
-	^ super typeIconFor: aType
 ]

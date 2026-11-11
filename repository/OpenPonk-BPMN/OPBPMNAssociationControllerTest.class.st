@@ -59,12 +59,6 @@ OPBPMNAssociationControllerTest >> targetControllerClass [
 	^ OPBPMNAnnotationController
 ]
 
-{ #category : 'constants' }
-OPBPMNAssociationControllerTest >> targetModelClass [
-
-	^ OPBPMNAnnotationModel
-]
-
 { #category : 'tests' }
 OPBPMNAssociationControllerTest >> testBeingCopiedWithDiagram [
 	| diagram diagramElement diagramControllerOfCopy |

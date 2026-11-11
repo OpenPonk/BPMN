@@ -8,13 +8,3 @@ Class {
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Controllers'
 }
-
-{ #category : 'announcements' }
-OPBPMNElementController >> subscribeToViewModel [
-
-	super subscribeToViewModel.
-	self viewModel announcer weak
-		when: OPBPMNPlaceTokensChanged
-		send: #modelChanged
-		to: self
-]

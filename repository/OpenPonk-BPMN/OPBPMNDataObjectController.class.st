@@ -33,19 +33,3 @@ OPBPMNDataObjectController >> canBeTargetFor: aController [
 		aController isKindOf: OPBPMNAssociationController ]) ifFalse: [ ^ false ].
 	^ aController canConnectTo: self
 ]
-
-{ #category : 'announcements' }
-OPBPMNDataObjectController >> subscribeToViewModel [
-
-	super subscribeToViewModel.
-	self viewModel announcer weak
-		when: OPBPMNPlaceTokensChanged
-		send: #modelChanged
-		to: self
-]
-
-{ #category : 'deprecation' }
-OPBPMNDataObjectController >> typeIconFor: aType [
-	self deprecated: 'Use viewModel instead' transformWith: '`@receiver typeIconFor: `@arg1' -> '`@receiver viewModel typeIconFor: `@arg1'.
-	^ self viewModel typeIconFor: aType
-]

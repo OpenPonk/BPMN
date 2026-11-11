@@ -14,6 +14,13 @@ Class {
 	#tag : 'DiagramElements'
 }
 
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> attachIconShape [
+	super attachIconShape.
+	subprocessIcon ifNotNil: [
+		self subprocessIconLocation stick: subprocessIcon on: self roassalShape ]
+]
+
 { #category : 'accessing' }
 OPBPMNCollapsedSubProcessShape >> attachedShapes [
 
@@ -44,6 +51,19 @@ OPBPMNCollapsedSubProcessShape >> createRoassalShape [
 	
 ]
 
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory subProcessMarkerForType: self modelElement type
+]
+
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> iconLocation [
+	^ RSLocation new
+		offset: -16 @ 16;
+		yourself
+]
+
 { #category : 'initialization' }
 OPBPMNCollapsedSubProcessShape >> initialize [
 	super initialize.
@@ -67,26 +87,26 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 	labeled text: ''.
 	roassalShape @ labeled.
 
-	subprocessIcon := RSBitmap new
-		form: self typeBasicIcon;
-		yourself.
-	icon := RSBitmap new
-		form: self typeIconForModel;
-		yourself.
+	subprocessIcon := OPBPMNRoassalIconFactory markerSubProcess.
+	icon := self createTypeIconShape.
 	self canvas add: subprocessIcon.
 	self canvas add: icon.
-	RSLocation new
-		stick: icon on: self roassalShape;
-		offset: -16 @ 18.
-	RSLocation new
-		stick: subprocessIcon on: self roassalShape;
-		offset: 0 @ 18.
+	self attachIconShape.
 	self color: (Color fromHexString: 'f2f2f2')
 ]
 
 { #category : 'rendering' }
-OPBPMNCollapsedSubProcessShape >> typeBasicIcon [
-		^ OPBPMNIcon current markerSubProcess 
+OPBPMNCollapsedSubProcessShape >> subprocessIconLocation [
+	^ RSLocation new
+		offset: 0 @ 16;
+		yourself
+]
+
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> updateIconPosition [
+	super updateIconPosition.
+	subprocessIcon ifNotNil: [
+		self subprocessIconLocation move: subprocessIcon on: self roassalShape ]
 ]
 
 { #category : 'rendering' }

@@ -19,6 +19,12 @@ OPBPMNGatewayShape >> createRoassalShape [
 ]
 
 { #category : 'rendering' }
+OPBPMNGatewayShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory gatewayIconForType: self modelElement type
+]
+
+{ #category : 'rendering' }
 OPBPMNGatewayShape >> renderShapeDetails [ 
 	super renderShapeDetails.
 	self color: (Color fromHexString: 'bce2fe').

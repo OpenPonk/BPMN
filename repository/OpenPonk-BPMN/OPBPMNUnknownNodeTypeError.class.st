@@ -20,11 +20,6 @@ OPBPMNUnknownNodeTypeError class >> signalForType: aNodeType [
 ]
 
 { #category : 'accessing' }
-OPBPMNUnknownNodeTypeError >> nodeType [
-	^ nodeType
-]
-
-{ #category : 'accessing' }
 OPBPMNUnknownNodeTypeError >> nodeType: aNodeType [
 	nodeType := aNodeType
 ]

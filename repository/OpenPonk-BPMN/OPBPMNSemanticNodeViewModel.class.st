@@ -37,3 +37,8 @@ OPBPMNSemanticNodeViewModel >> childrenModels [
 OPBPMNSemanticNodeViewModel >> isNameMultiline [
 	^ false
 ]
+
+{ #category : 'forms' }
+OPBPMNSemanticNodeViewModel >> typeIconFor: aType [
+	^ OPBPMNUnknownNodeTypeError signalForType: aType
+]

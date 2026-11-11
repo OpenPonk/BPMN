@@ -38,9 +38,3 @@ OPBPMNBoundaryEventController >> canBeTargetFor: aController [
 	(aController isKindOf: OPBPMNEdgeController) ifFalse: [ ^ false ].
 	^ aController canConnectTo: self
 ]
-
-{ #category : 'accessing' }
-OPBPMNBoundaryEventController >> subscribeDiagram: aDiagram [
-
-	self model subscribeDiagram: aDiagram
-]

@@ -9,6 +9,18 @@ Class {
 	#tag : 'Examples'
 }
 
+{ #category : 'private' }
+OPBPMNExamples class >> connectSequenceFlowChain: aNodeCollection [
+	aNodeCollection overlappingPairsDo: [ :sourceNode :targetNode |
+		| flow |
+		flow := (OPBPMNFlowModel from: sourceNode to: targetNode)
+			name: String empty;
+			type: 'Normal';
+			yourself.
+		sourceNode addFlow: flow.
+		targetNode addFlow: flow ]
+]
+
 { #category : 'accessing' }
 OPBPMNExamples class >> emptyModel [
 	"Answers a newly initialized, empty BPMN process model."
@@ -16,6 +28,232 @@ OPBPMNExamples class >> emptyModel [
 	^ OPBPMNModel new
 		name: 'New BPMN Model';
 		yourself
+]
+
+{ #category : 'examples' }
+OPBPMNExamples class >> exampleAllElementsAndTypes [
+	"Answers a comprehensive BPMN model showcasing all node types, markers, event triggers, timer types, call activities, non-interrupting events, data objects, annotations, and flow types."
+
+	| model externalPool mainPool laneActivitiesAndData laneStartAndGateways laneIntermediateEvents laneSubProcessesAndEnds activities callActivity dataObjects startEvents timerConfigs gateways intermediateEvents collapsedSubProcesses expandedSubProcesses endEvents flowDefault flowConditional msgFlow1 msgFlow2 |
+	model := self emptyModel.
+	model
+		name: 'All BPMN Elements and Types';
+		isExecutable: true.
+
+	externalPool := OPBPMNPoolModel new
+		name: 'External Participant (Black-Box Pool)';
+		yourself.
+	mainPool := OPBPMNPoolModel new
+		name: 'Comprehensive BPMN Showcase';
+		yourself.
+	model
+		add: externalPool;
+		add: mainPool.
+
+	laneActivitiesAndData := OPBPMNLaneModel new name: '1. Activities & Data'; yourself.
+	laneStartAndGateways := OPBPMNLaneModel new name: '2. Start & Gateways'; yourself.
+	laneIntermediateEvents := OPBPMNLaneModel new name: '3. Intermediate Events'; yourself.
+	laneSubProcessesAndEnds := OPBPMNLaneModel new name: '4. SubProcesses & Ends'; yourself.
+	mainPool
+		addLane: laneActivitiesAndData;
+		addLane: laneStartAndGateways;
+		addLane: laneIntermediateEvents;
+		addLane: laneSubProcessesAndEnds.
+
+	activities := #( #None #Service #User #Manual #Send #Receive ) collect: [ :eachType |
+		| activity |
+		activity := OPBPMNActivityModel new
+			name: 'Task: ' , eachType asString;
+			type: eachType;
+			isCallActivity: false;
+			yourself.
+		eachType = OPBPMNNodeType Service ifTrue: [
+			activity
+				executableAttribute: 'implementation';
+				executableAttributeValue: '##WebService' ].
+		laneActivitiesAndData add: activity.
+		activity ].
+	callActivity := OPBPMNActivityModel new
+		name: 'Call Activity (User)';
+		type: OPBPMNNodeType User;
+		isCallActivity: true;
+		yourself.
+	laneActivitiesAndData add: callActivity.
+	self connectSequenceFlowChain: activities , { callActivity }.
+
+	dataObjects := #( #DataObject #DataInput #DataOutput #DataStore ) withIndexCollect: [ :eachDataType :index |
+		| dataObj hostTask dataFlow |
+		dataObj := OPBPMNDataObjectModel new
+			name: eachDataType asString;
+			type: eachDataType;
+			yourself.
+		laneActivitiesAndData add: dataObj.
+		hostTask := activities at: index.
+		dataFlow := eachDataType = OPBPMNNodeType DataOutput
+			ifTrue: [ OPBPMNDataFlowModel from: hostTask to: dataObj ]
+			ifFalse: [ OPBPMNDataFlowModel from: dataObj to: hostTask ].
+		dataFlow name: String empty.
+		dataObj addFlow: dataFlow.
+		hostTask addFlow: dataFlow.
+		dataObj ].
+
+	#( #None #One #Both ) withIndexDo: [ :eachDirection :index |
+		| note targetTask association |
+		note := OPBPMNAnnotationModel new
+			text: 'Annotation (' , eachDirection asString , ')';
+			yourself.
+		laneActivitiesAndData add: note.
+		targetTask := activities at: index + 3.
+		association := OPBPMNAssociationModel new
+			source: note;
+			target: targetTask;
+			associationDirection: eachDirection;
+			yourself.
+		note addAssociation: association.
+		targetTask addAssociation: association ].
+
+	startEvents := OrderedCollection new.
+	#( #None #Receive #Timer #Escalation #Conditional #Error #Compensation #Signal #Multiple #ParallelMultiple )
+		withIndexDo: [ :eachStartType :index |
+			| startEvent |
+			startEvent := OPBPMNStartEventModel new
+				name: eachStartType asString , (index even ifTrue: [ ' (Non-Int)' ] ifFalse: [ '' ]);
+				type: eachStartType;
+				isNonInterrupting: index even;
+				yourself.
+			eachStartType = OPBPMNNodeType Timer ifTrue: [
+				startEvent
+					timerType: #timeDuration;
+					timerValue: 'PT15M' ].
+			laneStartAndGateways add: startEvent.
+			startEvents add: startEvent ].
+
+	timerConfigs := {
+		#none -> ''.
+		#timeDate -> '2026-12-31T23:59:00Z'.
+		#timeDuration -> 'PT4H'.
+		#timeCycle -> 'R3/PT10M' }.
+
+	gateways := #( #'Exclusive (empty)' #Exclusive #Inclusive #Parallel #Complex #Eventbased ) collect: [ :eachGwType |
+		| gw |
+		gw := OPBPMNGatewayModel new
+			name: eachGwType asString;
+			type: eachGwType;
+			yourself.
+		laneStartAndGateways add: gw.
+		gw ].
+
+	self connectSequenceFlowChain: startEvents asArray , gateways.
+	flowDefault := (gateways first outgoing detect: [ :each | each isKindOf: OPBPMNFlowModel ]).
+	flowDefault
+		name: 'Default';
+		type: 'Default'.
+	flowConditional := (gateways second outgoing detect: [ :each | each isKindOf: OPBPMNFlowModel ]).
+	flowConditional
+		name: 'Conditional';
+		type: 'Conditional'.
+
+	intermediateEvents := #(
+		#None #Send #Receive #Timer #Escalation #EscalationThrow
+		#Conditional #Link #LinkThrow #Compensation #CompensationThrow
+		#Signal #SignalThrow #Multiple #MultipleThrow #ParallelMultiple )
+		withIndexCollect: [ :eachIntType :index |
+			| intEvent |
+			intEvent := OPBPMNIntermediateEventModel new
+				name: eachIntType asString;
+				type: eachIntType;
+				yourself.
+			eachIntType = OPBPMNNodeType Timer ifTrue: [
+				| cfg |
+				cfg := timerConfigs at: ((index - 1) \\ timerConfigs size) + 1.
+				intEvent
+					timerType: cfg key;
+					timerValue: cfg value ].
+			laneIntermediateEvents add: intEvent.
+			intEvent ].
+	self connectSequenceFlowChain: intermediateEvents.
+
+	collapsedSubProcesses := #( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation #MarkerAdhoc )
+		withIndexCollect: [ :eachMarker :index |
+			| collapsed |
+			collapsed := OPBPMNCollapsedSubProcessModel new
+				name: eachMarker asString;
+				type: eachMarker;
+				isCallActivity: index even;
+				yourself.
+			laneSubProcessesAndEnds add: collapsed.
+			collapsed ].
+
+	expandedSubProcesses := #( #None #MarkerParallel #MarkerSequential #MarkerLoop #MarkerCompensation #MarkerAdhoc )
+		collect: [ :eachMarker |
+			| expanded innerStart innerEnd innerFlow |
+			expanded := OPBPMNSubProcessModel new
+				name: 'Sub: ' , eachMarker asString;
+				type: eachMarker;
+				yourself.
+			innerStart := OPBPMNStartEventModel new
+				name: 'In';
+				type: OPBPMNNodeType None;
+				yourself.
+			innerEnd := OPBPMNEndEventModel new
+				name: 'Out';
+				type: OPBPMNNodeType None;
+				yourself.
+			innerFlow := (OPBPMNFlowModel from: innerStart to: innerEnd)
+				name: String empty;
+				type: 'Normal';
+				yourself.
+			innerStart addFlow: innerFlow.
+			innerEnd addFlow: innerFlow.
+			expanded
+				add: innerStart;
+				add: innerEnd.
+			laneSubProcessesAndEnds add: expanded.
+			expanded ].
+
+	#( #Receive #Timer #Escalation #Conditional #Error #Cancel #CatchCompensation #Signal #Multiple #ParallelMultiple )
+		withIndexDo: [ :eachBoundaryType :index |
+			| hostNode boundaryEvent cfg |
+			hostNode := index <= 6
+				ifTrue: [ collapsedSubProcesses at: index ]
+				ifFalse: [ expandedSubProcesses at: index - 6 ].
+			boundaryEvent := OPBPMNBoundaryEventModel new
+				name: eachBoundaryType asString;
+				type: eachBoundaryType;
+				isNonInterrupting: index even;
+				yourself.
+			eachBoundaryType = OPBPMNNodeType Timer ifTrue: [
+				cfg := timerConfigs last.
+				boundaryEvent
+					timerType: cfg key;
+					timerValue: cfg value ].
+			hostNode add: boundaryEvent ].
+
+	endEvents := #( #None #Send #EscalationThrow #Error #Cancel #CompensationThrow #SignalThrow #MultipleThrow #Terminate )
+		collect: [ :eachEndType |
+			| endEvent |
+			endEvent := OPBPMNEndEventModel new
+				name: eachEndType asString;
+				type: eachEndType;
+				yourself.
+			laneSubProcessesAndEnds add: endEvent.
+			endEvent ].
+
+	self connectSequenceFlowChain: collapsedSubProcesses , expandedSubProcesses , endEvents.
+
+	msgFlow1 := (OPBPMNMessageFlowModel from: externalPool to: startEvents second)
+		name: 'Inbound Msg';
+		yourself.
+	externalPool addFlow: msgFlow1.
+	startEvents second addFlow: msgFlow1.
+
+	msgFlow2 := (OPBPMNMessageFlowModel from: activities fifth to: externalPool)
+		name: 'Outbound Msg';
+		yourself.
+	activities fifth addFlow: msgFlow2.
+	externalPool addFlow: msgFlow2.
+
+	^ model
 ]
 
 { #category : 'examples' }
@@ -224,6 +462,14 @@ OPBPMNExamples class >> openExample: aModel [
 	[ newWorkbench showAllElementsInAllDiagrams ]
 		ifCurtailed: [ newWorkbench close ].
 	^ newWorkbench
+]
+
+{ #category : 'examples' }
+OPBPMNExamples class >> openExampleAllElementsAndTypes [
+	"Creates and opens the comprehensive BPMN showcase containing all node types, markers, and properties."
+
+	<example>
+	^ self openExample: self exampleAllElementsAndTypes
 ]
 
 { #category : 'examples' }

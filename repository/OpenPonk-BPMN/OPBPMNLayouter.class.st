@@ -297,12 +297,6 @@ OPBPMNLayouter >> layoutSecondaryShapes: aCollectionOfSecondaryShapes [
 ]
 
 { #category : 'layouts' }
-OPBPMNLayouter >> layoutSecondaryShapes: aCollectionOfSecondaryShapes inPool: anIgnoredPool [
-	"Delegates secondary shape layout directly."
-	self layoutSecondaryShapes: aCollectionOfSecondaryShapes
-]
-
-{ #category : 'layouts' }
 OPBPMNLayouter >> layoutSubProcessContent: aSubProcessShape shapes: directShapes edges: directEdges [
 	"Arranges inner nodes of a subprocess with horizontal dominance tree layout."
 	directShapes ifNotEmpty: [

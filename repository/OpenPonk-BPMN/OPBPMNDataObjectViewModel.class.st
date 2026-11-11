@@ -46,5 +46,5 @@ OPBPMNDataObjectViewModel >> typeIconFor: aType [
 		^ OPBPMNIcon current dataOutput16 ].
 	aType = OPBPMNNodeType DataStore ifTrue: [
 		^ OPBPMNIcon current dataStore16 ].
-	^ OPBPMNUnknownNodeTypeError signalForType: aType
+	^ super typeIconFor: aType
 ]

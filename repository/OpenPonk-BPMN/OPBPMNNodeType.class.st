@@ -141,11 +141,6 @@ OPBPMNNodeType class >> MarkerSequential [
 ]
 
 { #category : 'values' }
-OPBPMNNodeType class >> MarkerSubProcess [	
-	^ #MarkerSubProcess
-]
-
-{ #category : 'values' }
 OPBPMNNodeType class >> Multiple [
 
 	^ #Multiple

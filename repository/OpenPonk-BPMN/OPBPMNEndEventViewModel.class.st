@@ -15,19 +15,18 @@ OPBPMNEndEventViewModel class >> modelClass [ ^ OPBPMNEndEventModel
 
 { #category : 'forms' }
 OPBPMNEndEventViewModel >> buildEditorForm: aForm [
+
 	| droplist |
 	super buildEditorForm: aForm.
 	droplist := aForm
-		bindDroplist: 'Type'
-		property: #type
-		items:
-			#( #Send #EscalationThrow #Error #Cancel #CompensationThrow
-			   #SignalThrow #MultipleThrow #Terminate #None ).
-	droplist displayIcon: [ :eachType | self model typeIconFor: eachType ].
+		            bindDroplist: 'Type'
+		            property: #type
+		            items: #( #Send #EscalationThrow #Error #Cancel #CompensationThrow #SignalThrow #MultipleThrow #Terminate #None ).
+	droplist displayIcon: [ :eachType | self typeIconFor: eachType ].
 	droplist display: [ :eachType | eachType asString ].
-	self model type = OPBPMNNodeType Send ifTrue: [
-		aForm bindTextInput: 'Executable attribute' property: #executableAttribute.
-		aForm bindTextInput: 'Executable attribute value' property: #executableAttributeValue ]
+	self model type = OPBPMNNodeType Send ifFalse: [ ^ self ].
+	aForm bindTextInput: 'Executable attribute' property: #executableAttribute.
+	aForm bindTextInput: 'Executable attribute value' property: #executableAttributeValue
 ]
 
 { #category : 'accessing' }
@@ -37,4 +36,27 @@ OPBPMNEndEventViewModel >> icon [ ^ OPBPMNIcon current endEvent
 { #category : 'accessing' }
 OPBPMNEndEventViewModel >> structuralPropertySelectors [
 	^ #( #type )
+]
+
+{ #category : 'forms' }
+OPBPMNEndEventViewModel >> typeIconFor: aType [
+	aType = OPBPMNNodeType Send ifTrue: [
+		^ OPBPMNIcon current activitySendSquare ].
+	aType = OPBPMNNodeType EscalationThrow ifTrue: [
+		^ OPBPMNIcon current eventEscalationThrow ].
+	aType = OPBPMNNodeType Error ifTrue: [
+		^ OPBPMNIcon current eventError ].
+	aType = OPBPMNNodeType Cancel ifTrue: [
+		^ OPBPMNIcon current eventCancel ].
+	aType = OPBPMNNodeType CompensationThrow ifTrue: [
+		^ OPBPMNIcon current eventCompensationThrow ].
+	aType = OPBPMNNodeType SignalThrow ifTrue: [
+		^ OPBPMNIcon current eventSignalThrow ].
+	aType = OPBPMNNodeType MultipleThrow ifTrue: [
+		^ OPBPMNIcon current eventMultipleThrow ].
+	aType = OPBPMNNodeType Terminate ifTrue: [
+		^ OPBPMNIcon current eventTerminate ].
+	aType = OPBPMNNodeType None ifTrue: [
+		^ OPBPMNIcon current activityNone ].
+	^ super typeIconFor: aType
 ]

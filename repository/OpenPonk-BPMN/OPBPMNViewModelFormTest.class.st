@@ -215,6 +215,45 @@ OPBPMNViewModelFormTest >> testPoolViewModelBindsNameOnly [
 ]
 
 { #category : 'tests' }
+OPBPMNViewModelFormTest >> testSemanticNodeViewModelsProvideTypeIconsWithoutModelDependency [
+	| viewModelClasses |
+	viewModelClasses := {
+		OPBPMNActivityViewModel.
+		OPBPMNBoundaryEventViewModel.
+		OPBPMNCollapsedSubProcessViewModel.
+		OPBPMNDataObjectViewModel.
+		OPBPMNEndEventViewModel.
+		OPBPMNGatewayViewModel.
+		OPBPMNIntermediateEventViewModel.
+		OPBPMNStartEventViewModel.
+		OPBPMNSubProcessViewModel }.
+	viewModelClasses do: [ :eachViewModelClass |
+		| viewModel form capturedDropList capturedItems iconBlock |
+		viewModel := eachViewModelClass new.
+		viewModel model: eachViewModelClass modelClass new.
+		form := Mock new.
+		capturedDropList := Mock new.
+		capturedItems := #().
+		iconBlock := nil.
+		(form stub bindDroplist: Any property: #type items: Any) will: [ :labelArg :propertyArg :itemsArg |
+			capturedItems := itemsArg.
+			capturedDropList ].
+		(capturedDropList stub displayIcon: Any) will: [ :aBlock |
+			iconBlock := aBlock.
+			capturedDropList ].
+		viewModel buildEditorForm: form.
+		self denyEmpty: capturedItems.
+		self assert: iconBlock isNotNil.
+		capturedItems do: [ :eachType |
+			| icon expectedIcon |
+			icon := iconBlock value: eachType.
+			expectedIcon := viewModel typeIconFor: eachType.
+			self assert: icon isForm.
+			self assert: icon width > 10.
+			self assert: icon bits equals: expectedIcon bits ] ]
+]
+
+{ #category : 'tests' }
 OPBPMNViewModelFormTest >> testStartEventViewModelBindsTypeAndConditionalTimerFields [
 	| model viewModel controller form |
 	model := OPBPMNStartEventModel new.

@@ -10,11 +10,6 @@ Class {
 }
 
 { #category : 'accessing' }
-OPBPMNPoolModel >> @ aName [
-	^ self nodeNamed: aName
-]
-
-{ #category : 'accessing' }
 OPBPMNPoolModel >> addLane: aLaneModel [
 
 	| elementsToMigrate |
@@ -95,17 +90,6 @@ OPBPMNPoolModel >> lanes [
 	^ (self elements select: [ :eachElement | eachElement isKindOf: OPBPMNLaneModel ]) asOrderedCollection
 ]
 
-{ #category : 'accessing' }
-OPBPMNPoolModel >> lanesCount [
-	"Answers the number of lanes in this pool."
-	^ self lanes size
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolModel >> nodeNamed: aName [
-	^ self elementNamed: aName
-]
-
 { #category : 'printing' }
 OPBPMNPoolModel >> printType [
 	^ 'process'
@@ -118,11 +102,6 @@ OPBPMNPoolModel >> relocateChildElement: aChildElement from: aSourceContainer to
 	aTargetContainer add: aChildElement
 ]
 
-{ #category : 'removing' }
-OPBPMNPoolModel >> removeAllNodes [
-	self removeAll
-]
-
 { #category : 'accessing' }
 OPBPMNPoolModel >> removeLane: aLaneModel [
 	| isRemovingLastLane containedElements |
@@ -133,9 +112,4 @@ OPBPMNPoolModel >> removeLane: aLaneModel [
 			self relocateChildElement: eachElement from: aLaneModel to: self ] ].
 	super remove: aLaneModel.
 	^ aLaneModel
-]
-
-{ #category : 'accessing' }
-OPBPMNPoolModel >> removeNode: aNode [
-	elements remove: aNode
 ]

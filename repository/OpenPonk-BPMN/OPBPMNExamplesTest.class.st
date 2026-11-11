@@ -51,6 +51,21 @@ OPBPMNExamplesTest >> testEssentialChildrenModelsResolvesAllElements [
 ]
 
 { #category : 'tests' }
+OPBPMNExamplesTest >> testExampleAllElementsAndTypesRendersAllVectorsWithoutBitmaps [
+	| exampleModel activeDiagramController canvas |
+	exampleModel := OPBPMNExamples exampleAllElementsAndTypes.
+	workbench := OPBPMNExamples openExample: exampleModel.
+	activeDiagramController := workbench focusedEditor diagramController.
+	canvas := activeDiagramController canvas.
+	self
+		assert: (canvas shapes noneSatisfy: [ :eachShape | eachShape isKindOf: RSBitmap ])
+		description: 'Comprehensive BPMN showcase must not render any RSBitmap shapes'.
+	self
+		deny: workbench projectController undoManager canUndo
+		description: 'Example initialization must have clean undo history'
+]
+
+{ #category : 'tests' }
 OPBPMNExamplesTest >> testExampleOrderFulfillmentContainsAllElementTypes [
 	| model allElements expectedClasses presentClasses |
 	model := OPBPMNExamples exampleOrderFulfillment.

@@ -19,6 +19,12 @@ OPBPMNNodeShape >> associationCreated: anAssociation [
 	"do nothing"
 ]
 
+{ #category : 'rendering' }
+OPBPMNNodeShape >> attachIconShape [
+	icon ifNil: [ ^ self ].
+	self iconLocation stick: icon on: self roassalShape
+]
+
 { #category : 'accessing' }
 OPBPMNNodeShape >> attachedShapes [
 
@@ -49,6 +55,16 @@ OPBPMNNodeShape >> createRoassalShape [
 	
 ]
 
+{ #category : 'rendering' }
+OPBPMNNodeShape >> createTypeIconShape [
+	^ OPBPMNRoassalIconFactory emptyIcon
+]
+
+{ #category : 'rendering' }
+OPBPMNNodeShape >> iconLocation [
+	^ RSLocation new
+]
+
 { #category : 'initialization' }
 OPBPMNNodeShape >> initialize [ 
 	super initialize.
@@ -70,18 +86,15 @@ OPBPMNNodeShape >> renderBasicShape [
 
 { #category : 'rendering' }
 OPBPMNNodeShape >> renderShapeDetails [
-
 	| label |
 	label := RSLabeled new.
 	label location below.
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 
-	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+	icon := self createTypeIconShape.
 	self canvas add: icon.
-	RSLocation new stick: icon on: self roassalShape
+	self attachIconShape
 ]
 
 { #category : 'interactions' }
@@ -97,15 +110,22 @@ OPBPMNNodeShape >> strokeColor: aColor [
 		roassalShape borderColor: aColor ]
 ]
 
-{ #category : 'connecting' }
-OPBPMNNodeShape >> typeIconForModel [
-
-	^ self modelElement typeIconFor: self modelElement type
-]
-
 { #category : 'update' }
 OPBPMNNodeShape >> updateIcon [
-	icon form: self typeIconForModel.
+	| newIconComposite |
+	icon ifNil: [ ^ self ].
+	newIconComposite := self createTypeIconShape.
+	icon resetChildren.
+	newIconComposite children copy do: [ :eachChild |
+		icon add: eachChild ].
+	icon adjustToChildren.
+	self updateIconPosition
+]
+
+{ #category : 'rendering' }
+OPBPMNNodeShape >> updateIconPosition [
+	icon ifNil: [ ^ self ].
+	self iconLocation move: icon on: self roassalShape
 ]
 
 { #category : 'rendering' }

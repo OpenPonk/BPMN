@@ -37,6 +37,19 @@ OPBPMNActivityShape >> createRoassalShape [
 	
 ]
 
+{ #category : 'rendering' }
+OPBPMNActivityShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory activityIconForType: self modelElement type
+]
+
+{ #category : 'rendering' }
+OPBPMNActivityShape >> iconLocation [
+	^ RSLocation new
+		offset: -28 @ -16;
+		yourself
+]
+
 { #category : 'initialization' }
 OPBPMNActivityShape >> initialize [
 
@@ -59,13 +72,9 @@ OPBPMNActivityShape >> renderShapeDetails [
 	labeled text: ''.
 	roassalShape @ labeled.
 
-	icon := RSBitmap new
-		form: self typeIconForModel;
-		yourself.
+	icon := self createTypeIconShape.
 	self canvas add: icon.
-	RSLocation new
-		stick: icon on: self roassalShape;
-		offset: -28 @ -16.
+	self attachIconShape.
 
 	self color: (Color fromHexString: 'f2f2f2')
 ]

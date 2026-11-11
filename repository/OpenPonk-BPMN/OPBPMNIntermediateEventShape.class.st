@@ -26,6 +26,12 @@ OPBPMNIntermediateEventShape >> createRoassalShape [
 		yourself
 ]
 
+{ #category : 'rendering' }
+OPBPMNIntermediateEventShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory intermediateEventIconForType: self modelElement type
+]
+
 { #category : 'removing' }
 OPBPMNIntermediateEventShape >> removeRender [
 
@@ -35,24 +41,21 @@ OPBPMNIntermediateEventShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNIntermediateEventShape >> renderShapeDetails [
-
 	| label |
 	label := RSLabeled new.
 	label location below.
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 
-	icon := RSBitmap new
-		        form: self typeIconForModel;
-		        yourself.
+	icon := self createTypeIconShape.
 	self canvas add: icon.
-	RSLocation new stick: icon on: self roassalShape.
+	self attachIconShape.
 
 	innerCircle := RSCircle new
-		               size: 31;
-		               borderColor: Color black;
-		               color: Color transparent;
-		               yourself.
+		size: 31;
+		borderColor: Color black;
+		color: Color transparent;
+		yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape
 ]

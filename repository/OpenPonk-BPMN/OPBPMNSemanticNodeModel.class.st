@@ -15,12 +15,6 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'associating' }
-OPBPMNSemanticNodeModel >> => aNode [
-
-	^ OPBPMNFactory flowFrom: self to: aNode
-]
-
 { #category : 'adding' }
 OPBPMNSemanticNodeModel >> addFlow: aFlow [
 	(flows includes: aFlow)
@@ -126,25 +120,9 @@ OPBPMNSemanticNodeModel >> remove: anElement [
 ]
 
 { #category : 'removing' }
-OPBPMNSemanticNodeModel >> removeAllFlows [
-	flows copy
-		do: [ :each | 
-			each source removeFlow: each.
-			each target removeFlow: each ]
-]
-
-{ #category : 'removing' }
 OPBPMNSemanticNodeModel >> removeFlow: aFlow [
 	flows remove: aFlow ifAbsent: [ ^ self ].
 	self announceRemovedChild: aFlow
-]
-
-{ #category : 'removing' }
-OPBPMNSemanticNodeModel >> removedFrom: aDiagram [
-	self
-		removedFrom: aDiagram
-		do: [ self incoming do: [ :each | aDiagram remove: each ].
-			self outgoing do: [ :each | aDiagram remove: each ] ]
 ]
 
 { #category : 'accessing' }
@@ -156,9 +134,4 @@ OPBPMNSemanticNodeModel >> type [
 OPBPMNSemanticNodeModel >> type: aParticipantType [
 	type := aParticipantType.
 	self changed
-]
-
-{ #category : 'printing' }
-OPBPMNSemanticNodeModel >> typeIconFor: aType [
-	^ OPBPMNUnknownNodeTypeError signalForType: aType
 ]

@@ -12,12 +12,6 @@ OPBPMNLaneModel >> flowNodes [
 	^ (self elements select: [ :eachChildNode | eachChildNode isKindOf: OPBPMNFlowNodeModel ]) asOrderedCollection
 ]
 
-{ #category : 'testing' }
-OPBPMNLaneModel >> isLane [
-	"Answers whether this node acts as a BPMN lane."
-	^ true
-]
-
 { #category : 'accessing' }
 OPBPMNLaneModel >> pool [
 	"Answer the enclosing BPMN pool model."

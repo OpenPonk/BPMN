@@ -20,6 +20,12 @@ OPBPMNDataObjectShape >> associationCreated: anAssociation [
 	
 ]
 
+{ #category : 'rendering' }
+OPBPMNDataObjectShape >> attachIconShape [
+	icon ifNil: [ ^ self ].
+	RSLocation new stick: icon on: self roassalShape
+]
+
 { #category : 'accessing' }
 OPBPMNDataObjectShape >> attachedShapes [
 
@@ -46,23 +52,31 @@ OPBPMNDataObjectShape >> color: aColor [
 
 { #category : 'update' }
 OPBPMNDataObjectShape >> createRoassalShape [
+	| composite boundingBox |
+	composite := RSComposite new.
+	boundingBox := RSBox new
+		width: 50;
+		height: 50;
+		border: (RSBorder new
+			width: 1;
+			color: Color transparent);
+		color: Color transparent.
+	composite add: boundingBox.
+	composite adjustToChildren.
+	^ composite
+]
 
-	| com b1 |
-	com := RSComposite new.
-	b1 := RSBox new
-		      width: 50;
-		      height: 50;
-				border: (RSBorder new
-							width: 1;
-				          color: Color transparent);
-		      color: Color transparent.
-	"bitmap := RSBitmap new
-		        form: self typeIconForModel.
-		
-	com add: bitmap."
-	com add: b1.
-	com adjustToChildren.
-	^ com
+{ #category : 'rendering' }
+OPBPMNDataObjectShape >> createTypeIconShape [
+	self modelElement ifNil: [
+		^ OPBPMNRoassalIconFactory
+			dataObjectIconForType: OPBPMNNodeType DataObject
+			fillColor: self color
+			borderColor: borderColor ].
+	^ OPBPMNRoassalIconFactory
+		dataObjectIconForType: self modelElement type
+		fillColor: self color
+		borderColor: borderColor
 ]
 
 { #category : 'initialization' }
@@ -99,11 +113,9 @@ OPBPMNDataObjectShape >> renderShapeDetails [
 	labeled text: ''.
 	roassalShape @ labeled.
 
-	icon := RSBitmap new
-		form: self typeIconForModel;
-		yourself.
+	icon := self createTypeIconShape.
 	self canvas add: icon.
-	RSLocation new stick: icon on: self roassalShape
+	self attachIconShape
 ]
 
 { #category : 'interactions' }
@@ -114,22 +126,31 @@ OPBPMNDataObjectShape >> selectableInteraction [
 
 { #category : 'accessing' }
 OPBPMNDataObjectShape >> strokeColor: aColor [
+
 	borderColor := aColor = Color black
-		ifTrue: [ Color transparent ]
-		ifFalse: [ aColor ].
-	self isRendered ifTrue: [
-		roassalShape borderColor: borderColor ]
-]
-
-{ #category : 'update' }
-OPBPMNDataObjectShape >> typeIconForModel [
-
-	^ self modelElement typeIconFor: self modelElement type
+		               ifTrue: [ Color transparent ]
+		               ifFalse: [ aColor ].
+	self isRendered ifFalse: [ ^ self ].
+	roassalShape borderColor: borderColor.
+	self updateIcon
 ]
 
 { #category : 'update' }
 OPBPMNDataObjectShape >> updateIcon [
-	icon form: self typeIconForModel.
+	| newIconComposite |
+	icon ifNil: [ ^ self ].
+	newIconComposite := self createTypeIconShape.
+	icon resetChildren.
+	newIconComposite children copy do: [ :eachChild |
+		icon add: eachChild ].
+	icon adjustToChildren.
+	self updateIconPosition
+]
+
+{ #category : 'rendering' }
+OPBPMNDataObjectShape >> updateIconPosition [
+	icon ifNil: [ ^ self ].
+	RSLocation new move: icon on: self roassalShape
 ]
 
 { #category : 'rendering' }
@@ -145,5 +166,6 @@ OPBPMNDataObjectShape >> updateRenderFromModel [
 OPBPMNDataObjectShape >> updateRenderFromSelf [
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape color: self color.
+	self updateIcon.
 	super updateRenderFromSelf
 ]

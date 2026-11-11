@@ -15,12 +15,6 @@ OPBPMNEdgeLabel >> defaultAnchorConstraintPosition [
 	^ OPRSAnchorConstraintBalanceReference balance: 0.4
 ]
 
-{ #category : 'accessing' }
-OPBPMNEdgeLabel >> defaultBalance [
-
-	^ 0.4
-]
-
 { #category : 'adding' }
 OPBPMNEdgeLabel >> defaultMinDistance [
 

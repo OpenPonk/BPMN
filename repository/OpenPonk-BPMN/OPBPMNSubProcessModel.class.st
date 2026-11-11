@@ -9,12 +9,6 @@ Class {
 	#tag : 'Models'
 }
 
-{ #category : 'accessing' }
-OPBPMNSubProcessModel >> @ aName [
-
-	^ self nodeNamed: aName
-]
-
 { #category : 'updating' }
 OPBPMNSubProcessModel >> changed [
 
@@ -22,43 +16,7 @@ OPBPMNSubProcessModel >> changed [
 	owner changed
 ]
 
-{ #category : 'accessing' }
-OPBPMNSubProcessModel >> nodeNamed: aName [
-
-	^ self elementNamed: aName
-]
-
 { #category : 'printing' }
 OPBPMNSubProcessModel >> printType [
 	^ 'subProcess'
-]
-
-{ #category : 'removing' }
-OPBPMNSubProcessModel >> removeAllNodes [
-
-	self removeAll
-]
-
-{ #category : 'removing' }
-OPBPMNSubProcessModel >> removeNode: aNode [
-
-	elements remove: aNode
-]
-
-{ #category : 'printing' }
-OPBPMNSubProcessModel >> typeIconFor: aType [
-
-	aType = OPBPMNNodeType None ifTrue: [
-		^ OPBPMNIcon current activityNone ].
-	aType = OPBPMNNodeType MarkerParallel ifTrue: [
-		^ OPBPMNIcon current markerParallel ].
-	aType = OPBPMNNodeType MarkerSequential ifTrue: [
-		^ OPBPMNIcon current markerSequential ].
-	aType = OPBPMNNodeType MarkerLoop ifTrue: [
-		^ OPBPMNIcon current markerLoop ].
-	aType = OPBPMNNodeType MarkerCompensation ifTrue: [
-		^ OPBPMNIcon current markerCompensation ].
-	aType = OPBPMNNodeType MarkerAdhoc ifTrue: [
-		^ OPBPMNIcon current markerAdhoc ].
-	^ super typeIconFor: aType
 ]

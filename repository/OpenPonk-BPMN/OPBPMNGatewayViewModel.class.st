@@ -22,10 +22,27 @@ OPBPMNGatewayViewModel >> buildEditorForm: aForm [
 		bindDroplist: 'Type'
 		property: #type
 		items: #( #'Exclusive (empty)' #Exclusive #Inclusive #Parallel #Complex #Eventbased ).
-	droplist displayIcon: [ :eachGatewayType | self model typeIconFor: eachGatewayType ].
+	droplist displayIcon: [ :eachGatewayType | self typeIconFor: eachGatewayType ].
 	droplist display: [ :eachGatewayType | eachGatewayType asString ]
 ]
 
 { #category : 'accessing' }
 OPBPMNGatewayViewModel >> icon [ ^ OPBPMNIcon current gateway
+]
+
+{ #category : 'forms' }
+OPBPMNGatewayViewModel >> typeIconFor: aType [
+	aType = OPBPMNNodeType ExclusiveEmpty ifTrue: [
+		^ Smalltalk ui theme iconNamed: #empty ].
+	aType = OPBPMNNodeType Parallel ifTrue: [
+		^ OPBPMNIcon current gatewayParallel ].
+	aType = OPBPMNNodeType Inclusive ifTrue: [
+		^ OPBPMNIcon current gatewayInclusive ].
+	aType = OPBPMNNodeType Exclusive ifTrue: [
+		^ OPBPMNIcon current gatewayExclusive ].
+	aType = OPBPMNNodeType Complex ifTrue: [
+		^ OPBPMNIcon current gatewayComplex ].
+	aType = OPBPMNNodeType Eventbased ifTrue: [
+		^ OPBPMNIcon current gatewayEvent ].
+	^ super typeIconFor: aType
 ]

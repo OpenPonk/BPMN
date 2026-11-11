@@ -77,6 +77,12 @@ OPBPMNBoundaryEventShape >> createRoassalShape [
 		  yourself
 ]
 
+{ #category : 'rendering' }
+OPBPMNBoundaryEventShape >> createTypeIconShape [
+	self modelElement ifNil: [ ^ OPBPMNRoassalIconFactory emptyIcon ].
+	^ OPBPMNRoassalIconFactory boundaryEventIconForType: self modelElement type
+]
+
 { #category : 'accessing' }
 OPBPMNBoundaryEventShape >> hostDiagramElement [
 	| candidate |
@@ -108,11 +114,9 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	label shapeBuilder labelShape color: Color black.
 	roassalShape addInteraction: label.
 	self color: (Color fromHexString: 'fdd2d2').
-	icon := RSBitmap new
-		form: self typeIconForModel;
-		yourself.
+	icon := self createTypeIconShape.
 	self canvas add: icon.
-	RSLocation new stick: icon on: self roassalShape.
+	self attachIconShape.
 
 	innerCircle := RSCircle new
 		size: 31;

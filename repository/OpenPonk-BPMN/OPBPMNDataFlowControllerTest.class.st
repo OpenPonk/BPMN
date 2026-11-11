@@ -39,8 +39,3 @@ OPBPMNDataFlowControllerTest >> sourceModelClass [
 OPBPMNDataFlowControllerTest >> targetControllerClass [
 	^ OPBPMNActivityController
 ]
-
-{ #category : 'constants' }
-OPBPMNDataFlowControllerTest >> targetModelClass [
-	^ OPBPMNActivityModel
-]
