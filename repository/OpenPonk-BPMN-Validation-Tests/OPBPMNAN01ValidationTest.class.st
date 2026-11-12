@@ -1,0 +1,35 @@
+"
+I am a unit test class verifying the AN01FlowNodeIncomingFlow validation rule. I ensure it correctly detects standard flow nodes missing at least one incoming sequence flow.
+"
+Class {
+	#name : 'OPBPMNAN01ValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation-Tests',
+	#tag : 'Validation-Classes'
+}
+
+{ #category : 'constants' }
+OPBPMNAN01ValidationTest >> getTestedClass [
+	^ AN01FlowNodeIncomingFlow.
+]
+
+{ #category : 'constants' }
+OPBPMNAN01ValidationTest >> getValidatedClass [
+	^ OPBPMNFlowNodeModel.
+]
+
+{ #category : 'constants' }
+OPBPMNAN01ValidationTest >> testCanValidate [
+	self canValidateTest.
+]
+
+{ #category : 'constants' }
+OPBPMNAN01ValidationTest >> testNew [
+	self newTest.
+]
+
+{ #category : 'constants' }
+OPBPMNAN01ValidationTest >> testValidatedClass [
+	self validatedClassTest.
+]

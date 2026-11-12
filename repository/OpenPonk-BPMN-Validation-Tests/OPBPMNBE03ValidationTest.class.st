@@ -1,0 +1,35 @@
+"
+I am a unit test class verifying the BE03BoundaryErrorSibling validation rule. I ensure it correctly enforces constraints against having multiple error boundary events attached to the same activity.
+"
+Class {
+	#name : 'OPBPMNBE03ValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation-Tests',
+	#tag : 'Validation-Classes'
+}
+
+{ #category : 'constants' }
+OPBPMNBE03ValidationTest >> getTestedClass [
+	^ BE03BoundaryErrorSibling.
+]
+
+{ #category : 'constants' }
+OPBPMNBE03ValidationTest >> getValidatedClass [
+	^ OPBPMNBoundaryEventModel.
+]
+
+{ #category : 'constants' }
+OPBPMNBE03ValidationTest >> testCanValidate [
+	self canValidateTest.
+]
+
+{ #category : 'constants' }
+OPBPMNBE03ValidationTest >> testNew [
+	self newTest.
+]
+
+{ #category : 'constants' }
+OPBPMNBE03ValidationTest >> testValidatedClass [
+	self validatedClassTest.
+]

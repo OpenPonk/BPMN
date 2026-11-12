@@ -1,0 +1,97 @@
+"
+Verifies property descriptions, model synchronization, and containment rules for lane view models.
+"
+Class {
+	#name : 'OPBPMNLaneViewModelTest',
+	#superclass : 'TestCase',
+	#category : 'OpenPonk-BPMN-Tests-ViewModels',
+	#package : 'OpenPonk-BPMN-Tests',
+	#tag : 'ViewModels'
+}
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testChildrenModelsContainsContainedNodes [
+	| laneModel taskModel laneViewModel |
+	laneModel := OPBPMNLaneModel new name: 'Operations'.
+	taskModel := OPBPMNActivityModel new name: 'Check Stock'.
+	laneModel add: taskModel.
+	laneViewModel := OPBPMNLaneViewModel new model: laneModel.
+	self assertCollection: laneViewModel childrenModels includesAll: { taskModel }
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testFormBindsName [
+	| laneModel laneViewModel propertiesForm |
+	laneModel := OPBPMNLaneModel new name: 'Operations'.
+	laneViewModel := OPBPMNLaneViewModel new model: laneModel.
+	propertiesForm := OPPropertiesForm new.
+	propertiesForm viewModel: laneViewModel.
+	self assert: (propertiesForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ])
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testIcon [
+	| laneViewModel expectedIcon |
+	laneViewModel := OPBPMNLaneViewModel new.
+	expectedIcon := OPBPMNIcon current lane.
+	self assert: laneViewModel icon isForm.
+	self assert: laneViewModel icon extent equals: expectedIcon extent.
+	self assert: laneViewModel icon bits equals: expectedIcon bits
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testModelClass [
+	self assert: OPBPMNLaneViewModel modelClass equals: OPBPMNLaneModel
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testParentViewModelResolvesToPoolViewModel [
+	| project registry poolModel laneModel poolViewModel laneViewModel |
+	project := OPProject new.
+	registry := OPViewModelRegistry forProject: project.
+	poolModel := OPBPMNPoolModel new name: 'Process Pool'.
+	laneModel := OPBPMNLaneModel new name: 'Sales'.
+	poolModel addLane: laneModel.
+	poolViewModel := registry viewModelFor: poolModel.
+	laneViewModel := registry viewModelFor: laneModel.
+	self assert: laneViewModel parentViewModel equals: poolViewModel
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testRegisteredInViewModelRegistry [
+	OPViewModelRegistry resetCache.
+	self assert: (OPViewModelRegistry viewModelClassFor: OPBPMNLaneModel) equals: OPBPMNLaneViewModel
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testRemoveLastLaneViaViewModelPreservesContainedElementsAndUpdatesParentViewModel [
+	| project projectController registry undoManager poolModel laneModel taskModel taskViewModel laneViewModel removeCommand |
+	project := OPProject new.
+	projectController := OPProjectController forProject: project.
+	registry := projectController viewModelRegistry.
+	undoManager := projectController undoManager.
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	taskModel := OPBPMNActivityModel new name: 'Process Order'.
+	poolModel add: taskModel.
+	project addModel: poolModel.
+
+	taskViewModel := registry viewModelFor: taskModel.
+	self assert: taskViewModel parentViewModel equals: (registry viewModelFor: poolModel).
+
+	laneModel := OPBPMNLaneModel new name: 'Sales'.
+	poolModel addLane: laneModel.
+	laneViewModel := registry viewModelFor: laneModel.
+
+	self assert: taskModel owner equals: laneModel.
+	self assert: taskViewModel parentViewModel equals: laneViewModel.
+
+	removeCommand := OPRemoveModelElementCommand
+		model: laneModel
+		projectController: projectController.
+	undoManager inTransaction: [ undoManager execute: removeCommand ].
+
+	self deny: poolModel hasLanes.
+	self assertCollection: poolModel elements includesAll: { taskModel }.
+	self assert: taskModel owner equals: poolModel.
+	self assert: taskViewModel parentViewModel equals: (registry viewModelFor: poolModel)
+]

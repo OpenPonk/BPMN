@@ -1,0 +1,35 @@
+"
+I am a unit test class verifying the AC03MessageReceiveOther validation rule. I ensure it correctly identifies invalid incoming messages on activities other than explicit Receive Tasks.
+"
+Class {
+	#name : 'OPBPMNAC03ValidationTest',
+	#superclass : 'OPBPMNAbstractValidationTest',
+	#category : 'OpenPonk-BPMN-Validation-Tests-Validation-Classes',
+	#package : 'OpenPonk-BPMN-Validation-Tests',
+	#tag : 'Validation-Classes'
+}
+
+{ #category : 'constants' }
+OPBPMNAC03ValidationTest >> getTestedClass [
+	^ AC03MessageReceiveOther 
+]
+
+{ #category : 'constants' }
+OPBPMNAC03ValidationTest >> getValidatedClass [
+	^ OPBPMNActivityModel.
+]
+
+{ #category : 'constants' }
+OPBPMNAC03ValidationTest >> testCanValidate [
+	self canValidateTest.
+]
+
+{ #category : 'constants' }
+OPBPMNAC03ValidationTest >> testNew [
+	self newTest.
+]
+
+{ #category : 'constants' }
+OPBPMNAC03ValidationTest >> testValidatedClass [
+	self validatedClassTest.
+]
