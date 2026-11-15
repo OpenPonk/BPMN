@@ -25,11 +25,11 @@ OPBPMNMessageFlowSimulatorTest >> exampleModel [
 { #category : 'tests' }
 OPBPMNMessageFlowSimulatorTest >> testFire [
 
-	self assert: simulator target blocked.
+	self assert: simulator target blocked description: 'Message flow target must start blocked'.
 	simulator addBpmnTokens: 3.
 	self assert: simulator bpmnTokens equals: 3.
 	simulator fire.
-	self assert: simulator target blocked not.
+	self deny: simulator target blocked description: 'Message flow target must be unblocked after firing'.
 	self assert: simulator bpmnTokens equals: 0
 ]
 

@@ -12,10 +12,12 @@ Class {
 { #category : 'constants' }
 OPBPMNAbstractValidationTest >> canValidateTest [
 
-	self deny:
-		(self getTestedClass canValidate: self getNotValidatedClassInstance).
-	self assert:
-		(self getTestedClass canValidate: self getValidatedClassInstance)
+	self
+		deny: (self getTestedClass canValidate: self getNotValidatedClassInstance)
+		description: 'Validation rule must reject unsupported model class'.
+	self
+		assert: (self getTestedClass canValidate: self getValidatedClassInstance)
+		description: 'Validation rule must accept its target model class'
 ]
 
 { #category : 'constants' }

@@ -11,7 +11,8 @@ Class {
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testActivityIncomingContainsOnlySequenceFlows [
-	| activity sourceActivity sequenceFlow annotation association visitor xml |
+
+	| activity sourceActivity sequenceFlow annotation association visitor xml expectedXml unexpectedIncoming |
 	activity := OPBPMNActivityModel new.
 	activity name: 'Check Stock'.
 
@@ -35,14 +36,34 @@ OPBPMNXMLWriterVisitorTest >> testActivityIncomingContainsOnlySequenceFlows [
 	visitor visitElementActivity: activity.
 	xml := visitor writer asString.
 
-	self assert: (xml includesSubstring: '<bpmn:incoming>' , sequenceFlow printIdType , sequenceFlow uuid asString , '</bpmn:incoming>').
-	self deny: (xml includesSubstring: '<bpmn:incoming>' , association printIdType , association uuid asString , '</bpmn:incoming>')
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:task name="Check Stock" id="_6-'.
+			               stream nextPutAll: activity uuid asString.
+			               stream nextPutAll: '">'.
+			               stream cr.
+			               stream nextPutAll: '    <bpmn:incoming>'.
+			               stream nextPutAll: sequenceFlow printIdType.
+			               stream nextPutAll: sequenceFlow uuid asString.
+			               stream nextPutAll: '</bpmn:incoming>'.
+			               stream cr.
+			               stream nextPutAll: '</bpmn:task>' ].
+	unexpectedIncoming := String streamContents: [ :stream |
+			                      stream nextPutAll: '<bpmn:incoming>'.
+			                      stream nextPutAll: association printIdType.
+			                      stream nextPutAll: association uuid asString.
+			                      stream nextPutAll: '</bpmn:incoming>' ].
+	self assert: xml equals: expectedXml.
+	self
+		deny: (xml includesSubstring: unexpectedIncoming)
 		description: 'Associations must not be exported as <incoming> flow references'
 ]
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testBoundaryEventExportsAttachedToRef [
-	| subProcess boundaryEvent visitor xml |
+
+	| subProcess boundaryEvent visitor xml expectedXml |
 	subProcess := OPBPMNSubProcessModel new.
 	subProcess name: 'Procure Items'.
 
@@ -54,9 +75,16 @@ OPBPMNXMLWriterVisitorTest >> testBoundaryEventExportsAttachedToRef [
 	visitor visitElement: boundaryEvent.
 	xml := visitor writer asString.
 
-	self assert: (xml includesSubstring: '<bpmn:boundaryEvent').
-	self assert: (xml includesSubstring: 'attachedToRef="' , subProcess printIdType , subProcess uuid asString , '"')
-		description: 'Boundary event must declare attachedToRef attribute pointing to its owner'
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:boundaryEvent id="_6-'.
+			               stream nextPutAll: boundaryEvent uuid asString.
+			               stream nextPutAll: '" name="2 Days SLA" attachedToRef="'.
+			               stream nextPutAll: subProcess printIdType.
+			               stream nextPutAll: subProcess uuid asString.
+			               stream nextPutAll: '"/>' ].
+	self assert: xml equals: expectedXml
 ]
 
 { #category : 'tests' }
@@ -66,7 +94,8 @@ OPBPMNXMLWriterVisitorTest >> testBoundaryEventModelPrintTypeIsBoundaryEvent [
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportAnnotationDoesNotCrashOnPrintType [
-	| annotation visitor xmlContent |
+
+	| annotation visitor xmlContent expectedXml |
 	annotation := OPBPMNAnnotationModel new.
 	annotation text: 'Implementation notes'.
 
@@ -74,13 +103,23 @@ OPBPMNXMLWriterVisitorTest >> testExportAnnotationDoesNotCrashOnPrintType [
 	visitor visitElement: annotation.
 	xmlContent := visitor contents.
 
-	self assert: (xmlContent includesSubstring: 'textAnnotation').
-	self assert: (xmlContent includesSubstring: 'Implementation notes')
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:textAnnotation id="_6-'.
+			               stream nextPutAll: annotation uuid asString.
+			               stream nextPutAll: '">'.
+			               stream cr.
+			               stream nextPutAll: '    <bpmn:text>Implementation notes</bpmn:text>'.
+			               stream cr.
+			               stream nextPutAll: '</bpmn:textAnnotation>' ].
+	self assert: xmlContent equals: expectedXml
 ]
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportAssociationDoesNotCrashOnPrintIdType [
-	| task annotation association visitor xmlContent |
+
+	| task annotation association visitor xmlContent expectedXml |
 	task := OPBPMNActivityModel new.
 	task name: 'Write Code'.
 
@@ -95,14 +134,23 @@ OPBPMNXMLWriterVisitorTest >> testExportAssociationDoesNotCrashOnPrintIdType [
 	visitor visitElement: association.
 	xmlContent := visitor contents.
 
-	self assert: (xmlContent includesSubstring: 'association').
-	self assert: (xmlContent includesSubstring: task uuid asString).
-	self assert: (xmlContent includesSubstring: annotation uuid asString)
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:association id="_6-'.
+			               stream nextPutAll: association uuid asString.
+			               stream nextPutAll: '" sourceRef="_6-'.
+			               stream nextPutAll: task uuid asString.
+			               stream nextPutAll: '" targetRef="_6-'.
+			               stream nextPutAll: annotation uuid asString.
+			               stream nextPutAll: '" associationDirection="None"/>' ].
+	self assert: xmlContent equals: expectedXml
 ]
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportBoundaryEventWithTimerDoesNotCrashOnTimerType [
-	| boundaryEvent visitor xml |
+
+	| boundaryEvent visitor xml expectedXml |
 	boundaryEvent := OPBPMNBoundaryEventModel new.
 	boundaryEvent name: '2 Days SLA'.
 	boundaryEvent type: OPBPMNNodeType Timer.
@@ -111,14 +159,25 @@ OPBPMNXMLWriterVisitorTest >> testExportBoundaryEventWithTimerDoesNotCrashOnTime
 	visitor visitElementBoundaryEvent: boundaryEvent.
 	xml := visitor writer asString.
 
-	self assert: (xml includesSubstring: '<bpmn:boundaryEvent').
-	self assert: (xml includesSubstring: '<bpmn:timerEventDefinition')
-		description: 'Timer boundary event must emit timerEventDefinition'
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:boundaryEvent id="_6-'.
+			               stream nextPutAll: boundaryEvent uuid asString.
+			               stream nextPutAll: '" name="2 Days SLA">'.
+			               stream cr.
+			               stream nextPutAll: '    <bpmn:timerEventDefinition id="timerEventDefinition_'.
+			               stream nextPutAll: boundaryEvent uuid asString.
+			               stream nextPutAll: '"/>'.
+			               stream cr.
+			               stream nextPutAll: '</bpmn:boundaryEvent>' ].
+	self assert: xml equals: expectedXml
 ]
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportCollapsedSubProcessCallActivity [
-	| subProcess visitor xmlContent |
+
+	| subProcess visitor xmlContent expectedXml |
 	subProcess := OPBPMNCollapsedSubProcessModel new.
 	subProcess name: 'External Service'.
 	subProcess isCallActivity: true.
@@ -127,13 +186,19 @@ OPBPMNXMLWriterVisitorTest >> testExportCollapsedSubProcessCallActivity [
 	visitor visitElement: subProcess.
 	xmlContent := visitor contents.
 
-	self assert: (xmlContent includesSubstring: 'External Service').
-	self assert: (xmlContent includesSubstring: 'callActivity')
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:callActivity name="External Service" id="_6-'.
+			               stream nextPutAll: subProcess uuid asString.
+			               stream nextPutAll: '"/>' ].
+	self assert: xmlContent equals: expectedXml
 ]
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportCollapsedSubProcessDoesNotCrash [
-	| subProcess visitor xmlContent |
+
+	| subProcess visitor xmlContent expectedXml |
 	subProcess := OPBPMNCollapsedSubProcessModel new.
 	subProcess name: 'Order Processing'.
 
@@ -141,19 +206,25 @@ OPBPMNXMLWriterVisitorTest >> testExportCollapsedSubProcessDoesNotCrash [
 	visitor visitElement: subProcess.
 	xmlContent := visitor contents.
 
-	self assert: (xmlContent includesSubstring: 'Order Processing').
-	self assert: (xmlContent includesSubstring: 'subProcess')
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:subProcess name="Order Processing" id="_6-'.
+			               stream nextPutAll: subProcess uuid asString.
+			               stream nextPutAll: '"/>' ].
+	self assert: xmlContent equals: expectedXml
 ]
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportExampleOrderFulfillmentSucceedsAndIsWellFormed [
-	| model xml |
+
+	| model xml document |
 	model := OPBPMNExamples exampleOrderFulfillment.
 	xml := OPBPMNXMLWriter toString: model.
+	document := XMLDOMParser parse: xml.
 
-	self assert: (xml includesSubstring: '<bpmn:definitions').
-	self assert: (xml includesSubstring: 'targetNamespace="https://openponk.org/"').
-	XMLDOMParser parse: xml
+	self assert: document root name equals: 'bpmn:definitions'.
+	self assert: (document root attributeAt: 'targetNamespace') equals: 'https://openponk.org/'
 ]
 
 { #category : 'tests' }
@@ -390,7 +461,8 @@ OPBPMNXMLWriterVisitorTest >> testVisitDefinitionsIncludesTargetNamespace [
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitDiagramAssociationProducesBpmnEdge [
-	| association sourceModel targetModel mockSourceElement mockTargetElement sourceController targetController associationController viewModel visitor xmlContent |
+
+	| association sourceModel targetModel mockSourceElement mockTargetElement sourceController targetController associationController viewModel visitor xmlContent expectedXml |
 	sourceModel := OPBPMNActivityModel new.
 	targetModel := OPBPMNAnnotationModel new.
 
@@ -422,9 +494,19 @@ OPBPMNXMLWriterVisitorTest >> testVisitDiagramAssociationProducesBpmnEdge [
 	visitor visitDiagramElement: associationController.
 	xmlContent := visitor contents.
 
-	self assert: (xmlContent includesSubstring: '<bpmndi:BPMNEdge bpmnElement="_6-' , association uuid asString).
-	self assert: (xmlContent includesSubstring: 'x="10.0" y="20.0"').
-	self assert: (xmlContent includesSubstring: 'x="100.0" y="200.0"')
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmndi:BPMNEdge bpmnElement="_6-'.
+			               stream nextPutAll: association uuid asString.
+			               stream nextPutAll: '">'.
+			               stream cr.
+			               stream nextPutAll: '    <di:waypoint x="10.0" y="20.0"/>'.
+			               stream cr.
+			               stream nextPutAll: '    <di:waypoint x="100.0" y="200.0"/>'.
+			               stream cr.
+			               stream nextPutAll: '</bpmndi:BPMNEdge>' ].
+	self assert: xmlContent equals: expectedXml
 ]
 
 { #category : 'tests' }
@@ -458,15 +540,22 @@ self assert: writerVisitor writer asString equals:
 
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitElementActivityDoesNotEmitEmptyAttribute [
-	| activity visitor xml |
+
+	| activity visitor xml expectedXml |
 	activity := OPBPMNActivityModel new.
 	activity name: 'Check Stock'.
 	visitor := OPBPMNXMLWriterVisitor new.
 	visitor visitElementActivity: activity.
 	xml := visitor writer asString.
+
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:task name="Check Stock" id="_6-'.
+			               stream nextPutAll: activity uuid asString.
+			               stream nextPutAll: '"/>' ].
 	self deny: (xml includesSubstring: '=""') description: 'XML must not contain invalid empty attribute name =""'.
-	self assert: (xml includesSubstring: 'id="_6-' , activity uuid asString , '"').
-	self assert: (xml includesSubstring: 'name="Check Stock"')
+	self assert: xml equals: expectedXml
 ]
 
 { #category : 'tests' }

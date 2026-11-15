@@ -62,22 +62,17 @@ OPBPMNSimulatorTest >> testDefaultStepping [
 	items := simulator itemsForAction.
 	self assert: items size equals: 2.
 	items do: [ :each |
-		self assert: each isSimulable.
-		self assert: each isSteppable ].
-	self assert: (items first isKindOf: OPBPMNStartEventSimulator).
-	self assert: (items second isKindOf: OPBPMNSequenceFlowSimulator).
+			self assert: each isSimulable description: 'Default stepping item must be simulable'.
+			self assert: each isSteppable description: 'Default stepping item must be steppable' ].
+	self assert: (items collect: #class as: Array) equals: {
+			OPBPMNStartEventSimulator.
+			OPBPMNSequenceFlowSimulator }.
 
 	stepped := OrderedCollection new.
 	didAction := OrderedCollection new.
 	simulator simulableElementsDo: [ :each |
-		each
-			when: OPSimulatorStepped
-			do: [ :event | stepped add: event ]
-			for: self.
-		each
-			when: OPSimulatorDidAction
-			do: [ :event | didAction add: event ]
-			for: self ].
+			each when: OPSimulatorStepped do: [ :event | stepped add: event ] for: self.
+			each when: OPSimulatorDidAction do: [ :event | didAction add: event ] for: self ].
 	simulator step.
 	self assert: stepped size equals: 2.
 	self assert: didAction size equals: 2
@@ -85,17 +80,18 @@ OPBPMNSimulatorTest >> testDefaultStepping [
 
 { #category : 'tests' }
 OPBPMNSimulatorTest >> testOrderFulfillmentExampleStartEventIsSteppable [
+
 	| exampleModel sim startEvent startSim |
 	exampleModel := OPBPMNExamples exampleOrderFulfillment.
 	startEvent := exampleModel allElements detect: [ :each |
-		(each isKindOf: OPBPMNStartEventModel) and: [ each name = 'Order Placed' ] ].
+		              (each isKindOf: OPBPMNStartEventModel) and: [ each name = 'Order Placed' ] ].
 
 	sim := self controllerClass model: exampleModel.
 	sim setDefaultStepping.
 
 	startSim := sim simulatorOf: startEvent.
 	self assert: startSim bpmnTokens equals: 1.
-	self assert: startSim isSteppable.
+	self assert: startSim isSteppable description: 'Order Placed start event must be steppable with initial token'.
 
 	sim step.
 	self assert: startSim bpmnTokens equals: 0
@@ -118,6 +114,7 @@ OPBPMNSimulatorTest >> testSimulationWithAssociation [
 
 { #category : 'tests' }
 OPBPMNSimulatorTest >> testStartEventInLaneReceivesInitialTokenAndIsSteppable [
+
 	| testModel pool lane start task flow sim startSim |
 	testModel := OPBPMNModel new name: 'Process Model'.
 	pool := OPBPMNPoolModel new name: 'Pool'.
@@ -126,17 +123,19 @@ OPBPMNSimulatorTest >> testStartEventInLaneReceivesInitialTokenAndIsSteppable [
 	testModel add: pool.
 
 	start := OPBPMNStartEventModel new
-		name: 'Start';
-		type: OPBPMNNodeType Receive;
-		yourself.
+		         name: 'Start';
+		         type: OPBPMNNodeType Receive;
+		         yourself.
 	task := OPBPMNActivityModel new name: 'Task'.
 	flow := (OPBPMNFlowModel from: start to: task)
-		name: 'Flow';
-		yourself.
+		        name: 'Flow';
+		        yourself.
 	start addFlow: flow.
 	task addFlow: flow.
 
-	lane add: start; add: task.
+	lane
+		add: start;
+		add: task.
 	testModel add: flow.
 
 	sim := self controllerClass model: testModel.
@@ -144,7 +143,7 @@ OPBPMNSimulatorTest >> testStartEventInLaneReceivesInitialTokenAndIsSteppable [
 
 	startSim := sim simulatorOf: start.
 	self assert: startSim bpmnTokens equals: 1.
-	self assert: startSim isSteppable.
+	self assert: startSim isSteppable description: 'Start event inside a lane must be steppable with initial token'.
 
 	sim step.
 	self assert: startSim bpmnTokens equals: 0.

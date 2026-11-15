@@ -27,23 +27,19 @@ OPBPMNValidationTest >> getValidatedClassInstance [
 { #category : 'constants' }
 OPBPMNValidationTest >> testCanValidate [
 
-	self deny:
-		(self getTestedClass canValidate: self getNotValidatedClassInstance)
+	self
+		deny: (self getTestedClass canValidate: self getNotValidatedClassInstance)
+		description: 'Abstract OPBPMNValidation must reject arbitrary model instances'
 ]
 
 { #category : 'tests' }
 OPBPMNValidationTest >> testExampleOrderFulfillmentHasZeroValidationErrorsAndZeroWarnings [
+
 	| exampleModel results |
 	exampleModel := OPBPMNExamples exampleOrderFulfillment.
 	results := OPBPMNValidationController new validate: exampleModel.
-	self
-		assert: results selectErrors isEmpty
-		description: [ 'Expected 0 validation errors on exampleOrderFulfillment, got: '
-			, ((results selectErrors asArray collect: #messageText) sorted joinUsing: ', ') ].
-	self
-		assert: results selectWarnings isEmpty
-		description: [ 'Expected 0 validation warnings on exampleOrderFulfillment, got: '
-			, ((results selectWarnings asArray collect: #messageText) sorted joinUsing: ', ') ]
+	self assertEmpty: (results selectErrors collect: #messageText as: Array) sorted.
+	self assertEmpty: (results selectWarnings collect: #messageText as: Array) sorted
 ]
 
 { #category : 'constants' }
@@ -53,6 +49,7 @@ OPBPMNValidationTest >> testNew [
 
 { #category : 'tests' }
 OPBPMNValidationTest >> testValidateModelWithLanesDoesNotReportMissingActivityOrStartEvent [
+
 	| validationController results exampleModel modelErrors modelWarnings |
 	validationController := OPBPMNValidationController new.
 	exampleModel := OPBPMNExamples exampleOrderFulfillment.
@@ -61,22 +58,14 @@ OPBPMNValidationTest >> testValidateModelWithLanesDoesNotReportMissingActivityOr
 	modelErrors := results selectErrors select: [ :each | each objectReference = exampleModel ].
 	modelWarnings := results selectWarnings select: [ :each | each objectReference = exampleModel ].
 
-	self
-		assert: modelErrors isEmpty
-		description: [ 'Expected no errors for ' , exampleModel name , ' but got: ' , (modelErrors collect: #messageText) asArray asString ].
-	self
-		assert: modelWarnings isEmpty
-		description: [ 'Expected no warnings for ' , exampleModel name , ' but got: ' , (modelWarnings collect: #messageText) asArray asString ]
+	self assertEmpty: (modelErrors collect: #messageText as: Array).
+	self assertEmpty: (modelWarnings collect: #messageText as: Array)
 ]
 
 { #category : 'constants' }
 OPBPMNValidationTest >> testValidateObjectWithModel [
-	self
-		assertCollection:
-			(self getTestedClass
-				validate: self getValidatedClassInstance
-				withModel: 'dummyModel')
-		hasSameElements: {}
+
+	self assertEmpty: (self getTestedClass validate: self getValidatedClassInstance withModel: 'dummyModel')
 ]
 
 { #category : 'constants' }
