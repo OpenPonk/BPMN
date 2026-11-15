@@ -32,15 +32,17 @@ OPBPMNLaneShapeTest >> tearDown [
 
 { #category : 'tests' }
 OPBPMNLaneShapeTest >> testAttachedShapesContainsHorizontalSeparatorAndNoVerticalSeparator [
+
 	laneShape renderIn: canvas.
-	self assert: (laneShape instVarNamed: #laneSeparator) isNotNil.
-	self assert: (laneShape instVarNamed: #leftBox) isNotNil.
-	self assert: (laneShape instVarNamed: #rightBox) isNotNil.
+	self assert: (laneShape instVarNamed: #laneSeparator) class identicalTo: OPBPMNLaneSeparatorLine.
+	self assert: (laneShape instVarNamed: #leftBox) class identicalTo: RSBox.
+	self assert: (laneShape instVarNamed: #rightBox) class identicalTo: RSBox.
+	self assert: (laneShape instVarNamed: #nameLabel) class identicalTo: RSLabel.
 	self assertCollection: laneShape attachedShapes hasSameElements: {
-		(laneShape instVarNamed: #nameLabel).
-		(laneShape instVarNamed: #leftBox).
-		(laneShape instVarNamed: #rightBox).
-		(laneShape instVarNamed: #laneSeparator) }
+			(laneShape instVarNamed: #nameLabel).
+			(laneShape instVarNamed: #leftBox).
+			(laneShape instVarNamed: #rightBox).
+			(laneShape instVarNamed: #laneSeparator) }
 ]
 
 { #category : 'tests' }
@@ -55,13 +57,17 @@ OPBPMNLaneShapeTest >> testAttachedShapesIncludesHeaderElements [
 
 { #category : 'tests - interaction' }
 OPBPMNLaneShapeTest >> testClickingNameLabelForwardsClickToRoassalShape [
-	| clickAnnounced nameLabel |
+
+	| forwardedEvents nameLabel |
 	laneShape renderIn: canvas.
 	nameLabel := laneShape instVarNamed: #nameLabel.
-	clickAnnounced := false.
-	laneShape roassalShape when: RSMouseClick do: [ clickAnnounced := true ] for: self.
-	nameLabel announce: (RSMouseClick new shape: nameLabel; yourself).
-	self assert: clickAnnounced
+	forwardedEvents := OrderedCollection new.
+	laneShape roassalShape when: RSMouseClick do: [ :eachEvent | forwardedEvents add: eachEvent ] for: self.
+	nameLabel announce: (RSMouseClick new
+			 shape: nameLabel;
+			 yourself).
+	self assert: forwardedEvents size equals: 1.
+	self assert: forwardedEvents first shape identicalTo: laneShape roassalShape
 ]
 
 { #category : 'tests' }
@@ -93,12 +99,14 @@ OPBPMNLaneShapeTest >> testInheritsFromOPNode [
 
 { #category : 'tests' }
 OPBPMNLaneShapeTest >> testIsNotPositionableByUser [
-	self deny: laneShape shouldBePositionableByUser
+
+	self deny: laneShape shouldBePositionableByUser description: 'BPMN lane shape must not be positionable directly by user'
 ]
 
 { #category : 'tests' }
 OPBPMNLaneShapeTest >> testIsNotResizableByUser [
-	self deny: laneShape shouldBeResizableByUser
+
+	self deny: laneShape shouldBeResizableByUser description: 'BPMN lane shape must not be resizable directly by user'
 ]
 
 { #category : 'tests' }
@@ -119,7 +127,7 @@ OPBPMNLaneShapeTest >> testLaneLabelPositionedInsideLaneHeader [
 { #category : 'tests - geometry' }
 OPBPMNLaneShapeTest >> testLaneShapeHasLaneHeightAndSerializesToSton [
 
-	| poolShape laneShape1 laneShape2 stonString materializedPool materializedLane1 materializedLane2 |
+	| poolShape laneShape1 laneShape2 stonString serializedLaneHeightLines materializedPool materializedLane1 materializedLane2 |
 	poolShape := OPBPMNPoolShape new.
 	poolShape bounds: (OPNodeBounds withPosition: 0 @ 0 extent: 600 @ 440).
 
@@ -138,12 +146,18 @@ OPBPMNLaneShapeTest >> testLaneShapeHasLaneHeightAndSerializesToSton [
 	self assert: laneShape2 laneHeight equals: 180.
 
 	stonString := STON toStringPretty: poolShape.
-	self assert: (stonString includesSubstring: 'laneHeight').
+	serializedLaneHeightLines := (stonString lines
+		                              select: [ :eachLine | eachLine trimBoth beginsWith: '#laneHeight :' ]
+		                              thenCollect: #trimBoth) asArray.
+	self assert: serializedLaneHeightLines equals: #( '#laneHeight : 260' '#laneHeight : 180' ).
 
 	materializedPool := STON fromString: stonString.
+	self assert: materializedPool class identicalTo: OPBPMNPoolShape.
+	self assert: materializedPool ownedElements size equals: 2.
 	materializedLane1 := materializedPool ownedElements first.
 	materializedLane2 := materializedPool ownedElements second.
-
+	self assert: materializedLane1 class identicalTo: OPBPMNLaneShape.
+	self assert: materializedLane2 class identicalTo: OPBPMNLaneShape.
 	self assert: materializedLane1 laneHeight equals: 260.
 	self assert: materializedLane2 laneHeight equals: 180
 ]
@@ -158,14 +172,16 @@ OPBPMNLaneShapeTest >> testRenderBasicShapeHasTransparentBorderAndFill [
 
 { #category : 'tests - interaction' }
 OPBPMNLaneShapeTest >> testSelectableInteractionIsSelectable [
+
 	| interaction |
 	interaction := laneShape selectableInteraction.
-	self assert: (interaction isKindOf: OPRSSelectable).
-	self deny: (interaction isKindOf: OPRSNoInteraction)
+	self assert: interaction class identicalTo: OPRSSelectable.
+	self deny: interaction class identicalTo: OPRSNoInteraction
 ]
 
 { #category : 'tests - interaction' }
 OPBPMNLaneShapeTest >> testSelectingLaneShowsSeparatorHandleOnAdjacentInternalSeparatorsAndDeselectingRemovesIt [
+
 	| poolModel lane1Model lane2Model lane3Model poolShape laneShape1 laneShape2 laneShape3 selectable1 selectable2 selectable3 handle1 handle2 |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
@@ -189,10 +205,9 @@ OPBPMNLaneShapeTest >> testSelectingLaneShowsSeparatorHandleOnAdjacentInternalSe
 	laneShape3 renderIn: canvas.
 	poolShape layoutLanes.
 
-	self assert: (laneShape1 respondsTo: #separatorHandle).
-	self assert: laneShape1 separatorHandle isNil.
-	self assert: laneShape2 separatorHandle isNil.
-	self assert: laneShape3 separatorHandle isNil.
+	self assert: laneShape1 separatorHandle identicalTo: nil.
+	self assert: laneShape2 separatorHandle identicalTo: nil.
+	self assert: laneShape3 separatorHandle identicalTo: nil.
 
 	selectable1 := laneShape1 roassalShape propertyAt: OPRSSelectable.
 	selectable2 := laneShape2 roassalShape propertyAt: OPRSSelectable.
@@ -201,44 +216,44 @@ OPBPMNLaneShapeTest >> testSelectingLaneShowsSeparatorHandleOnAdjacentInternalSe
 	"1. Select first lane -> only separator 1-2 has handle"
 	selectable1 doHighlight: laneShape1 roassalShape.
 	handle1 := laneShape1 separatorHandle.
-	self assert: handle1 isNotNil.
-	self assert: handle1 isInACanvas.
-	self assert: handle1 class equals: RSEllipse.
+	self assert: handle1 class identicalTo: RSEllipse.
+	self assert: handle1 canvas identicalTo: canvas.
 	self assert: handle1 extent equals: 14 @ 14.
 	self assert: handle1 color equals: Color white.
 	self assert: handle1 border width equals: 2.
 	self assert: handle1 border color equals: Color blue.
 	self assert: handle1 position equals: laneShape1 laneSeparator position.
-	self assert: laneShape2 separatorHandle isNil.
-	self assert: laneShape3 separatorHandle isNil.
+	self assert: laneShape2 separatorHandle identicalTo: nil.
+	self assert: laneShape3 separatorHandle identicalTo: nil.
 
 	"2. Select middle lane -> both separator 1-2 and separator 2-3 have handles"
 	selectable2 doHighlight: laneShape2 roassalShape.
 	handle1 := laneShape1 separatorHandle.
 	handle2 := laneShape2 separatorHandle.
-	self assert: handle1 isNotNil.
-	self assert: handle1 isInACanvas.
-	self assert: handle2 isNotNil.
-	self assert: handle2 isInACanvas.
+	self assert: handle1 class identicalTo: RSEllipse.
+	self assert: handle1 canvas identicalTo: canvas.
+	self assert: handle2 class identicalTo: RSEllipse.
+	self assert: handle2 canvas identicalTo: canvas.
 	self assert: handle2 position equals: laneShape2 laneSeparator position.
-	self assert: laneShape3 separatorHandle isNil.
+	self assert: laneShape3 separatorHandle identicalTo: nil.
 
 	"3. Select bottom lane -> only separator 2-3 (owned by lane 2) has handle"
 	selectable3 doHighlight: laneShape3 roassalShape.
-	self assert: laneShape1 separatorHandle isNil.
-	self assert: laneShape2 separatorHandle isNotNil.
-	self assert: laneShape2 separatorHandle isInACanvas.
-	self assert: laneShape3 separatorHandle isNil.
+	self assert: laneShape1 separatorHandle identicalTo: nil.
+	self assert: laneShape2 separatorHandle class identicalTo: RSEllipse.
+	self assert: laneShape2 separatorHandle canvas identicalTo: canvas.
+	self assert: laneShape3 separatorHandle identicalTo: nil.
 
 	"4. Unhighlight all -> all handles removed"
 	selectable3 unhighlightRecordedShapes: canvas.
-	self assert: laneShape1 separatorHandle isNil.
-	self assert: laneShape2 separatorHandle isNil.
-	self assert: laneShape3 separatorHandle isNil
+	self assert: laneShape1 separatorHandle identicalTo: nil.
+	self assert: laneShape2 separatorHandle identicalTo: nil.
+	self assert: laneShape3 separatorHandle identicalTo: nil
 ]
 
 { #category : 'tests - interaction' }
 OPBPMNLaneShapeTest >> testSeparatorHandleStaysInFrontOfInnerNodesAndRemainsDraggableAtMinimumHeight [
+
 	| poolModel lane1Model lane2Model taskModel poolShape laneShape1 laneShape2 taskShape selectable1 handle pixelPoint hitShape |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
@@ -264,12 +279,15 @@ OPBPMNLaneShapeTest >> testSeparatorHandleStaysInFrontOfInnerNodesAndRemainsDrag
 	taskShape renderIn: canvas.
 	taskShape roassalShape translateTo: laneShape1 laneSeparator position.
 
-	self deny: laneShape1 laneSeparator hasEventCallback.
+	self
+		deny: laneShape1 laneSeparator hasEventCallback
+		description: 'Lane separator line must not intercept pointer events directly'.
 
 	selectable1 := laneShape1 roassalShape propertyAt: OPRSSelectable.
 	selectable1 doHighlight: laneShape1 roassalShape.
 	handle := laneShape1 separatorHandle.
-	self assert: handle isNotNil.
+	self assert: handle class identicalTo: RSEllipse.
+	self assert: handle canvas identicalTo: canvas.
 
 	pixelPoint := canvas camera fromSpaceToPixel: handle position.
 	hitShape := canvas shapeWithAction: RSMouseLeftDragStart forPositionInPixels: pixelPoint.
@@ -277,21 +295,21 @@ OPBPMNLaneShapeTest >> testSeparatorHandleStaysInFrontOfInnerNodesAndRemainsDrag
 
 	"Drag all the way up to minimumHeight = 50"
 	handle announce: (RSMouseLeftDragStart new
-		shape: handle;
-		canvas: canvas;
-		position: pixelPoint;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: pixelPoint;
+			 yourself).
 	handle announce: (RSMouseDragging new
-		shape: handle;
-		canvas: canvas;
-		position: handle position + (0 @ -300);
-		step: 0 @ -300;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: handle position + (0 @ -300);
+			 step: 0 @ -300;
+			 yourself).
 	handle announce: (RSMouseDragEnd new
-		shape: handle;
-		canvas: canvas;
-		position: handle position;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: handle position;
+			 yourself).
 
 	"Even after layout/updatePosition, handle must remain topmost hit target at separator position"
 	laneShape1 laneHeight: 50.

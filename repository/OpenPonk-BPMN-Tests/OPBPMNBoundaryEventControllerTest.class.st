@@ -38,5 +38,5 @@ OPBPMNBoundaryEventControllerTest >> modelClass [
 OPBPMNBoundaryEventControllerTest >> testCannotConnectByDefault [
 
 	controller model: model.
-	self deny: (controller canBeSourceFor: nil)
+	self deny: (controller canBeSourceFor: nil) description: 'Boundary event controller must reject nil connection source check'
 ]

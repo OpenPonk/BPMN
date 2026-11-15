@@ -48,7 +48,7 @@ OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSu
 	taskController := diagramController controllerForModel: taskModel.
 
 	self assert: taskController diagramElement owningElement equals: poolController diagramElement.
-	self assert: taskController diagramElement isRendered.
+	self assert: taskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 
 	laneController := OPBPMNLaneController new.
 	poolController addAsTargetFor: laneController onPosition: 100 @ 100.
@@ -57,22 +57,23 @@ OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSu
 	self assert: taskModel owner equals: laneModel.
 	self assert: taskController viewModel parentViewModel equals: laneController viewModel.
 	self assert: taskController diagramElement owningElement equals: laneController diagramElement.
-	self assert: taskController diagramElement isRendered.
+	self assert: taskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 
 	diagramController undo.
 
-	self deny: poolModel hasLanes.
+	self assertEmpty: poolModel lanes.
+	self deny: poolModel hasLanes description: 'Pool must not have lanes after undoing first lane addition'.
 	self assert: taskModel owner equals: poolModel.
 	self assert: taskController viewModel parentViewModel equals: poolController viewModel.
 	self assert: taskController diagramElement owningElement equals: poolController diagramElement.
-	self assert: taskController diagramElement isRendered.
+	self assert: taskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 
 	diagramController redo.
 	self assertCollection: poolModel lanes includesAll: { laneModel }.
 	self assert: taskModel owner equals: laneModel.
 	self assert: taskController viewModel parentViewModel equals: (diagramController controllerForModel: laneModel) viewModel.
 	self assert: taskController diagramElement owningElement equals: (diagramController controllerForModel: laneModel) diagramElement.
-	self assert: taskController diagramElement isRendered
+	self assert: taskController diagramElement roassalShape canvas identicalTo: diagramController canvas
 ]
 
 { #category : 'tests' }
@@ -115,7 +116,10 @@ OPBPMNLaneControllerTest >> testAddLaneTargetingExistingLaneInsertsBeforeOrAfter
 
 { #category : 'tests' }
 OPBPMNLaneControllerTest >> testCanBeTargetForLaneController [
-	self assert: (controller canBeTargetFor: OPBPMNLaneController new)
+
+	self
+		assert: (controller canBeTargetFor: OPBPMNLaneController new)
+		description: 'Lane controller must accept another lane controller as drop target'
 ]
 
 { #category : 'tests' }
@@ -202,6 +206,7 @@ OPBPMNLaneControllerTest >> testDraggingLaneSeparatorOnCanvasUpdatesLaneHeightsA
 
 { #category : 'tests' }
 OPBPMNLaneControllerTest >> testDraggingLaneSeparatorRespectsMinimumLaneHeight [
+
 	| poolModel firstLaneModel secondLaneModel poolController firstLaneController secondLaneController canvas selectable handle separatorPoint dragUpDelta dragDownDelta |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
@@ -223,27 +228,28 @@ OPBPMNLaneControllerTest >> testDraggingLaneSeparatorRespectsMinimumLaneHeight [
 	selectable doHighlight: secondLaneController roassalShape.
 
 	handle := firstLaneController diagramElement separatorHandle.
-	self assert: handle isNotNil.
+	self assert: handle class identicalTo: RSEllipse.
+	self assert: handle canvas identicalTo: canvas.
 
 	separatorPoint := firstLaneController diagramElement laneSeparator position.
 	dragUpDelta := 0 @ -300.
 
 	handle announce: (RSMouseLeftDragStart new
-		shape: handle;
-		canvas: canvas;
-		position: separatorPoint;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: separatorPoint;
+			 yourself).
 	handle announce: (RSMouseDragging new
-		shape: handle;
-		canvas: canvas;
-		position: separatorPoint + dragUpDelta;
-		step: dragUpDelta;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: separatorPoint + dragUpDelta;
+			 step: dragUpDelta;
+			 yourself).
 	handle announce: (RSMouseDragEnd new
-		shape: handle;
-		canvas: canvas;
-		position: separatorPoint + dragUpDelta;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: separatorPoint + dragUpDelta;
+			 yourself).
 
 	self assert: firstLaneController diagramElement laneHeight equals: 50.
 	self assert: secondLaneController diagramElement laneHeight equals: 390.
@@ -252,21 +258,21 @@ OPBPMNLaneControllerTest >> testDraggingLaneSeparatorRespectsMinimumLaneHeight [
 	separatorPoint := firstLaneController diagramElement laneSeparator position.
 	dragDownDelta := 0 @ 100.
 	handle announce: (RSMouseLeftDragStart new
-		shape: handle;
-		canvas: canvas;
-		position: separatorPoint;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: separatorPoint;
+			 yourself).
 	handle announce: (RSMouseDragging new
-		shape: handle;
-		canvas: canvas;
-		position: separatorPoint + dragDownDelta;
-		step: dragDownDelta;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: separatorPoint + dragDownDelta;
+			 step: dragDownDelta;
+			 yourself).
 	handle announce: (RSMouseDragEnd new
-		shape: handle;
-		canvas: canvas;
-		position: separatorPoint + dragDownDelta;
-		yourself).
+			 shape: handle;
+			 canvas: canvas;
+			 position: separatorPoint + dragDownDelta;
+			 yourself).
 
 	self assert: firstLaneController diagramElement laneHeight equals: 150.
 	self assert: secondLaneController diagramElement laneHeight equals: 290.
@@ -367,11 +373,12 @@ OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAnd
 
 	self assert: firstTaskController diagramElement owningElement equals: controller diagramElement.
 	self assert: secondTaskController diagramElement owningElement equals: controller diagramElement.
-	self assert: firstTaskController diagramElement isRendered.
+	self assert: firstTaskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 
 	diagramController removeModelElement: laneModel.
 
-	self deny: poolModel hasLanes.
+	self assertEmpty: poolModel lanes.
+	self deny: poolModel hasLanes description: 'Pool must not have lanes after removing the last lane'.
 	self assertCollection: poolModel elements includesAll: {
 			firstTaskModel.
 			secondTaskModel.
@@ -381,10 +388,16 @@ OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAnd
 	self assert: firstTaskController viewModel parentViewModel equals: poolController viewModel.
 	self assertCollection: firstTaskModel outgoing includesAll: { flowModel }.
 	self denyCollection: annotationModel associations includesAny: { laneAssociationModel }.
-	self deny: (diagramController hasControllerForModel: laneAssociationModel).
-	self assert: (diagramController hasControllerForModel: firstTaskModel).
-	self assert: firstTaskController diagramElement isRendered.
-	self assert: secondTaskController diagramElement isRendered.
+	self denyCollection: (diagramController controllers collect: #model) includesAny: { laneAssociationModel }.
+	self
+		deny: (diagramController hasControllerForModel: laneAssociationModel)
+		description: 'Removed lane association controller must be unregistered'.
+	self assertCollection: (diagramController controllers collect: #model) includesAll: { firstTaskModel }.
+	self
+		assert: (diagramController hasControllerForModel: firstTaskModel)
+		description: 'Migrated task controller must stay registered in diagram controller'.
+	self assert: firstTaskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
+	self assert: secondTaskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 	self assert: firstTaskController diagramElement owningElement equals: poolController diagramElement.
 	self assert: secondTaskController diagramElement owningElement equals: poolController diagramElement.
 
@@ -394,18 +407,22 @@ OPBPMNLaneControllerTest >> testRemoveLastLaneMigratesContainedElementsToPoolAnd
 	self assert: secondTaskModel owner equals: laneModel.
 	restoredLaneController := diagramController controllerForModel: laneModel.
 	self assert: firstTaskController viewModel parentViewModel equals: restoredLaneController viewModel.
-	self assert: firstTaskController diagramElement isRendered.
+	self assert: firstTaskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 	self assert: firstTaskController diagramElement owningElement equals: restoredLaneController diagramElement.
 	self assert: secondTaskController diagramElement owningElement equals: restoredLaneController diagramElement.
 	self assertCollection: annotationModel associations includesAll: { laneAssociationModel }.
-	self assert: (diagramController hasControllerForModel: laneAssociationModel).
+	self assertCollection: (diagramController controllers collect: #model) includesAll: { laneAssociationModel }.
+	self
+		assert: (diagramController hasControllerForModel: laneAssociationModel)
+		description: 'Undoing lane removal must restore lane association controller'.
 
 	diagramController redo.
 
-	self deny: poolModel hasLanes.
+	self assertEmpty: poolModel lanes.
+	self deny: poolModel hasLanes description: 'Pool must not have lanes after redoing last lane removal'.
 	self assert: firstTaskModel owner equals: poolModel.
 	self assert: secondTaskModel owner equals: poolModel.
-	self assert: firstTaskController diagramElement isRendered.
+	self assert: firstTaskController diagramElement roassalShape canvas identicalTo: diagramController canvas.
 	self assert: firstTaskController diagramElement owningElement equals: poolController diagramElement.
 	self assert: secondTaskController diagramElement owningElement equals: poolController diagramElement
 ]

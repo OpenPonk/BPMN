@@ -61,36 +61,31 @@ OPBPMNAssociationControllerTest >> targetControllerClass [
 
 { #category : 'tests' }
 OPBPMNAssociationControllerTest >> testBeingCopiedWithDiagram [
-	| diagram diagramElement diagramControllerOfCopy |
+
+	| diagram diagramElement diagramControllerOfCopy copiedDiagram |
 	self assertEmpty: diagramController controllers.
 	self showInDiagram.
 	diagram := diagramController diagramElement.
 	diagramElement := controller diagramElement.
-	self assert: (diagramController hasControllerForModel: self model).
 	self
-		assertCollection: diagram allOwnedElements
-		includesAll: { diagramElement }.
-	self
-		assertCollection: diagramController controllers
-		includesAll: { controller }.
+		assert: (diagramController hasControllerForModel: self model)
+		description: 'Diagram controller should have controller for shown association model'.
+	self assertCollection: diagram allOwnedElements includesAll: { diagramElement }.
+	self assertCollection: diagramController controllers includesAll: { controller }.
 	diagramControllerOfCopy := self diagramControllerClass new.
 	diagramController projectController addDiagramController: diagramControllerOfCopy.
 	diagramControllerOfCopy model: diagramController model.
-	self
-		shouldnt: [ diagramControllerOfCopy diagramElement: diagram newCopy ]
-		raise: OPInvalidWarning.
+	copiedDiagram := diagram newCopy.
+	diagramControllerOfCopy diagramElement: copiedDiagram.
+	self assert: diagramControllerOfCopy diagramElement identicalTo: copiedDiagram.
 	diagramControllerOfCopy canvasPresenter: (OPCanvasPresenter new
-			canvas: RSCanvas new;
-			yourself).
+			 canvas: RSCanvas new;
+			 yourself).
 	diagramControllerOfCopy diagramFocused.
 	self
-		assertCollection:
-			(diagramControllerOfCopy diagram allOwnedElements collect:
-				#modelElement)
-		hasSameElements:
-		(diagramController diagram allOwnedElements collect: #modelElement).
+		assertCollection: (diagramControllerOfCopy diagram allOwnedElements collect: #modelElement)
+		hasSameElements: (diagramController diagram allOwnedElements collect: #modelElement).
 	self
-		assertCollection:
-		(diagramControllerOfCopy controllers collect: #model)
+		assertCollection: (diagramControllerOfCopy controllers collect: #model)
 		hasSameElements: (diagramController controllers collect: #model)
 ]

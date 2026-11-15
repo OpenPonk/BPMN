@@ -11,14 +11,18 @@ Class {
 
 { #category : 'tests - interactions' }
 OPBPMNPoolShapeTest >> testClickingNameLabelForwardsClickToRoassalShape [
-	| poolShape clickAnnounced nameLabel |
+
+	| poolShape forwardedEvents nameLabel |
 	poolShape := OPBPMNPoolShape new.
 	poolShape renderIn: RSCanvas new.
 	nameLabel := poolShape instVarNamed: #nameLabel.
-	clickAnnounced := false.
-	poolShape roassalShape when: RSMouseClick do: [ clickAnnounced := true ] for: self.
-	nameLabel announce: (RSMouseClick new shape: nameLabel; yourself).
-	self assert: clickAnnounced
+	forwardedEvents := OrderedCollection new.
+	poolShape roassalShape when: RSMouseClick do: [ :eachEvent | forwardedEvents add: eachEvent ] for: self.
+	nameLabel announce: (RSMouseClick new
+			 shape: nameLabel;
+			 yourself).
+	self assert: forwardedEvents size equals: 1.
+	self assert: forwardedEvents first shape identicalTo: poolShape roassalShape
 ]
 
 { #category : 'tests - moving' }
@@ -99,6 +103,7 @@ OPBPMNPoolShapeTest >> testRemovingLaneShrinksPoolToRemainingLaneHeight [
 
 { #category : 'tests - resizing' }
 OPBPMNPoolShapeTest >> testResizingPoolBottomEdgePastMinimumLaneHeightAndBackPreservesLaneHeight [
+
 	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
@@ -129,7 +134,7 @@ OPBPMNPoolShapeTest >> testResizingPoolBottomEdgePastMinimumLaneHeightAndBackPre
 	poolShape roassalShape translateTo: 0 @ 0.
 	self assert: laneShape2 laneHeight equals: 220.
 	self assert: laneShape1 laneHeight equals: 220.
-	self assert: (laneShape2 roassalShape encompassingRectangle bottom closeTo: poolShape roassalShape encompassingRectangle bottom)
+	self assert: laneShape2 roassalShape encompassingRectangle bottom closeTo: poolShape roassalShape encompassingRectangle bottom
 ]
 
 { #category : 'tests - resizing' }
@@ -224,6 +229,7 @@ OPBPMNPoolShapeTest >> testResizingPoolFromTopEdgeExpandsFirstLaneAndPreservesSe
 
 { #category : 'tests - resizing' }
 OPBPMNPoolShapeTest >> testResizingPoolTopEdgePastMinimumLaneHeightAndBackPreservesLaneHeight [
+
 	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
@@ -254,7 +260,7 @@ OPBPMNPoolShapeTest >> testResizingPoolTopEdgePastMinimumLaneHeightAndBackPreser
 	poolShape roassalShape translateTo: 0 @ 0.
 	self assert: laneShape1 laneHeight equals: 220.
 	self assert: laneShape2 laneHeight equals: 220.
-	self assert: (laneShape1 roassalShape encompassingRectangle top closeTo: poolShape roassalShape encompassingRectangle top)
+	self assert: laneShape1 roassalShape encompassingRectangle top closeTo: poolShape roassalShape encompassingRectangle top
 ]
 
 { #category : 'tests - resizing' }
@@ -303,6 +309,7 @@ OPBPMNPoolShapeTest >> testResizingPoolWidthPreservesLaneHeights [
 
 { #category : 'tests - resizing' }
 OPBPMNPoolShapeTest >> testTranslatingAndResizingWidthDoesNotChangeLaneHeights [
+
 	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 initialSeparatorY |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
@@ -330,15 +337,18 @@ OPBPMNPoolShapeTest >> testTranslatingAndResizingWidthDoesNotChangeLaneHeights [
 	poolShape resizeToRectangle: (Rectangle center: 50 @ 100 extent: 700 @ 440).
 	self assert: laneShape1 laneHeight equals: 220.
 	self assert: laneShape2 laneHeight equals: 220.
-	self assert: (laneShape1 roassalShape encompassingRectangle bottom closeTo: initialSeparatorY + 100).
-	self assert: (laneShape2 roassalShape encompassingRectangle top closeTo: initialSeparatorY + 100)
+	self assert: laneShape1 roassalShape encompassingRectangle bottom closeTo: initialSeparatorY + 100.
+	self assert: laneShape2 roassalShape encompassingRectangle top closeTo: initialSeparatorY + 100
 ]
 
 { #category : 'tests - undo' }
 OPBPMNPoolShapeTest >> testUndoRemovePoolPreservesLaneOrder [
+
 	| model project diagram undoManager projectController diagramController poolController poolModel removeCmd restoredPoolController restoredPoolModel |
 	model := OPBPMNExamples exampleOrderFulfillment.
-	project := OPProject new addModel: model; yourself.
+	project := OPProject new
+		           addModel: model;
+		           yourself.
 	diagram := OPOpenPonkDiagram forModelElement: model.
 	project addDiagram: diagram.
 	undoManager := OPUndoManager new.
@@ -347,35 +357,33 @@ OPBPMNPoolShapeTest >> testUndoRemovePoolPreservesLaneOrder [
 	diagramController := OPBPMNDiagramController new.
 	projectController addDiagramController: diagramController.
 	diagramController
-		canvasPresenter: (OPCanvasPresenter new canvas: RSCanvas new; yourself);
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
 		diagramElement: diagram;
 		model: model.
 	diagramController showAllElements.
 
-	poolController := diagramController controllers
-		detect: [ :each | (each isKindOf: OPBPMNPoolController) and: [ each model name = 'Order Fulfillment' ] ].
+	poolController := diagramController controllers detect: [ :each |
+		                  (each isKindOf: OPBPMNPoolController) and: [ each model name = 'Order Fulfillment' ] ].
 	poolModel := poolController model.
 
-	self
-		assert: (poolModel lanes collect: #name) asArray
-		equals: #('Sales' 'Warehouse').
+	self assert: (poolModel lanes collect: #name as: Array) equals: #( 'Sales' 'Warehouse' ).
 
 	undoManager inTransaction: [
-		removeCmd := OPRemoveModelElementCommand model: poolModel projectController: projectController.
-		undoManager execute: removeCmd ].
+			removeCmd := OPRemoveModelElementCommand model: poolModel projectController: projectController.
+			undoManager execute: removeCmd ].
 
-	self assert: undoManager canUndo.
+	self assert: undoManager undoStack size equals: 1.
+	self assert: undoManager canUndo description: 'Removing pool inside transaction must record an undoable command'.
 	undoManager undo.
 
 	restoredPoolController := diagramController controllers
-		detect: [ :each | (each isKindOf: OPBPMNPoolController) and: [ each model name = 'Order Fulfillment' ] ]
-		ifNone: [ nil ].
-	self
-		assert: restoredPoolController isNotNil
-		description: [ 'Restored pool controller must be present in diagram controllers after undo' ].
+		                          detect: [ :each |
+		                          (each isKindOf: OPBPMNPoolController) and: [ each model name = 'Order Fulfillment' ] ]
+		                          ifNone: [ nil ].
+	self assert: restoredPoolController class identicalTo: OPBPMNPoolController.
 
 	restoredPoolModel := restoredPoolController model.
-	self
-		assert: (restoredPoolModel lanes collect: #name) asArray
-		equals: #('Sales' 'Warehouse')
+	self assert: (restoredPoolModel lanes collect: #name as: Array) equals: #( 'Sales' 'Warehouse' )
 ]

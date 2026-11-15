@@ -49,7 +49,8 @@ OPBPMNAnnotationControllerTest >> testDescriptionName [
 
 { #category : 'tests' }
 OPBPMNAnnotationControllerTest >> testUpdateRenderFromModelRendersTextImmediately [
-	| annotationModel annotationShape canvas renderedLabelText |
+
+	| annotationModel annotationShape canvas renderedLabelText expectedExtent |
 	annotationModel := OPBPMNAnnotationModel new.
 	annotationModel text: 'SLA: 24 hours'.
 	annotationShape := OPBPMNAnnotationShape new.
@@ -59,10 +60,12 @@ OPBPMNAnnotationControllerTest >> testUpdateRenderFromModelRendersTextImmediatel
 	annotationShape updateRenderFromModel.
 
 	renderedLabelText := (annotationShape instVarNamed: 'labeled')
-		ifNotNil: [ :activeLabeled | activeLabeled labelShape text ]
-		ifNil: [ '' ].
+		                     ifNotNil: [ :activeLabeled | activeLabeled labelShape text ]
+		                     ifNil: [ '' ].
 
 	self assert: renderedLabelText equals: 'SLA: 24 hours'.
-	self assert: annotationShape roassalShape extent x > 0.
-	self assert: annotationShape roassalShape extent y > 0
+	expectedExtent := (annotationShape instVarNamed: 'labeled') labelShape extent + (annotationShape textPadding * 2) max:
+		                  annotationShape minExtent.
+	self assert: annotationShape roassalShape extent equals: expectedExtent.
+	self deny: annotationShape roassalShape width equals: annotationShape minExtent x
 ]

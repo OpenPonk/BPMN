@@ -71,6 +71,7 @@ OPBPMNNodeControllerTest >> showCompatibleControllerInDiagram: aController [
 
 { #category : 'tests' }
 OPBPMNNodeControllerTest >> testCanBeAssociationSource [
+
 	| assocController targetController |
 	assocController := OPBPMNAssociationController new.
 	assocController diagramController: diagramController.
@@ -90,14 +91,16 @@ OPBPMNNodeControllerTest >> testCanBeAssociationSource [
 	assocController createDiagramElement.
 	assocController renderDiagramElement.
 
-	self assert: assocController diagramElement isNotNil.
-	self assert: assocController roassalShape isNotNil.
+	self assert: assocController diagramElement class identicalTo: OPBPMNAssociationShape.
+	self assert: assocController roassalShape class identicalTo: OPRSPolyline.
+	self assert: assocController roassalShape canvas identicalTo: diagramController canvas.
 	self assert: assocController roassalShape from equals: controller roassalShape.
 	self assert: assocController roassalShape to equals: targetController roassalShape
 ]
 
 { #category : 'tests' }
 OPBPMNNodeControllerTest >> testCanBeAssociationTarget [
+
 	| assocController sourceController |
 	assocController := OPBPMNAssociationController new.
 	assocController diagramController: diagramController.
@@ -118,8 +121,9 @@ OPBPMNNodeControllerTest >> testCanBeAssociationTarget [
 	assocController createDiagramElement.
 	assocController renderDiagramElement.
 
-	self assert: assocController diagramElement isNotNil.
-	self assert: assocController roassalShape isNotNil.
+	self assert: assocController diagramElement class identicalTo: OPBPMNAssociationShape.
+	self assert: assocController roassalShape class identicalTo: OPRSPolyline.
+	self assert: assocController roassalShape canvas identicalTo: diagramController canvas.
 	self assert: assocController roassalShape from equals: sourceController roassalShape.
 	self assert: assocController roassalShape to equals: controller roassalShape
 ]

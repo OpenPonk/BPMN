@@ -21,20 +21,26 @@ OPBPMNLaneViewModelTest >> testChildrenModelsContainsContainedNodes [
 
 { #category : 'tests' }
 OPBPMNLaneViewModelTest >> testFormBindsName [
+
 	| laneModel laneViewModel propertiesForm |
 	laneModel := OPBPMNLaneModel new name: 'Operations'.
 	laneViewModel := OPBPMNLaneViewModel new model: laneModel.
 	propertiesForm := OPPropertiesForm new.
 	propertiesForm viewModel: laneViewModel.
-	self assert: (propertiesForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ])
+	self assert: (propertiesForm bindings collect: #selector as: Array) equals: #( #name ).
+	self assert: (propertiesForm bindings collect: #class as: Array) equals: { OPFormTextBinding }.
+	self
+		assert: (propertiesForm bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array)
+		equals: { SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNLaneViewModelTest >> testIcon [
+
 	| laneViewModel expectedIcon |
 	laneViewModel := OPBPMNLaneViewModel new.
 	expectedIcon := OPBPMNIcon current lane.
-	self assert: laneViewModel icon isForm.
+	self assert: laneViewModel icon class identicalTo: Form.
 	self assert: laneViewModel icon extent equals: expectedIcon extent.
 	self assert: laneViewModel icon bits equals: expectedIcon bits
 ]
@@ -65,6 +71,7 @@ OPBPMNLaneViewModelTest >> testRegisteredInViewModelRegistry [
 
 { #category : 'tests' }
 OPBPMNLaneViewModelTest >> testRemoveLastLaneViaViewModelPreservesContainedElementsAndUpdatesParentViewModel [
+
 	| project projectController registry undoManager poolModel laneModel taskModel taskViewModel laneViewModel removeCommand |
 	project := OPProject new.
 	projectController := OPProjectController forProject: project.
@@ -85,12 +92,11 @@ OPBPMNLaneViewModelTest >> testRemoveLastLaneViaViewModelPreservesContainedEleme
 	self assert: taskModel owner equals: laneModel.
 	self assert: taskViewModel parentViewModel equals: laneViewModel.
 
-	removeCommand := OPRemoveModelElementCommand
-		model: laneModel
-		projectController: projectController.
+	removeCommand := OPRemoveModelElementCommand model: laneModel projectController: projectController.
 	undoManager inTransaction: [ undoManager execute: removeCommand ].
 
-	self deny: poolModel hasLanes.
+	self assertEmpty: poolModel lanes.
+	self deny: poolModel hasLanes description: 'Pool must not have lanes after removing the last lane'.
 	self assertCollection: poolModel elements includesAll: { taskModel }.
 	self assert: taskModel owner equals: poolModel.
 	self assert: taskViewModel parentViewModel equals: (registry viewModelFor: poolModel)

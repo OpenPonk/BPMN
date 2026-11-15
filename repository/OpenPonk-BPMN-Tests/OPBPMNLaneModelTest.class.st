@@ -83,6 +83,7 @@ OPBPMNLaneModelTest >> testLaneEnclosingPool [
 
 { #category : 'tests' }
 OPBPMNLaneModelTest >> testPoolLanesAndQueryMethods [
+
 	| poolModel laneSales laneWarehouse taskCheckStock taskPackItems |
 	poolModel := OPBPMNPoolModel new.
 	poolModel name: 'Order Fulfillment'.
@@ -98,14 +99,18 @@ OPBPMNLaneModelTest >> testPoolLanesAndQueryMethods [
 	taskPackItems name: 'Pack Items'.
 	laneSales add: taskCheckStock.
 	laneWarehouse add: taskPackItems.
-	self assert: poolModel hasLanes.
-	self assertCollection: poolModel lanes hasSameElements: { laneSales . laneWarehouse }.
+	self assert: poolModel hasLanes description: 'Pool with added lanes must report hasLanes'.
+	self assertCollection: poolModel lanes hasSameElements: {
+			laneSales.
+			laneWarehouse }.
 	self assert: (poolModel laneFor: taskCheckStock) equals: laneSales.
 	self assert: (poolModel laneFor: taskPackItems) equals: laneWarehouse.
-	self assertCollection: poolModel flowNodesInLanes hasSameElements: { taskCheckStock . taskPackItems }.
+	self assertCollection: poolModel flowNodesInLanes hasSameElements: {
+			taskCheckStock.
+			taskPackItems }.
 	self assert: (poolModel laneNamed: 'Sales') equals: laneSales.
 	self assert: (poolModel laneNamed: 'Warehouse') equals: laneWarehouse.
-	self assert: (poolModel laneNamed: 'Finance') isNil
+	self assert: (poolModel laneNamed: 'Finance') identicalTo: nil
 ]
 
 { #category : 'tests' }
@@ -153,8 +158,8 @@ OPBPMNLaneModelTest >> testRemovingLaneCascadesContainedNodesAndFlows [
 	taskPackItems addFlow: flowModel.
 	poolModel removeLane: laneSales.
 	self denyCollection: poolModel lanes includesAny: { laneSales }.
-	self assert: laneSales owner isNil.
-	self assert: taskCheckStock owner isNil.
+	self assert: laneSales owner identicalTo: nil.
+	self assert: taskCheckStock owner identicalTo: nil.
 	self denyCollection: taskPackItems incoming includesAny: { flowModel }
 ]
 
@@ -180,16 +185,18 @@ OPBPMNLaneModelTest >> testRemovingLaneDisconnectsAttachedAssociationsFromPeerNo
 
 { #category : 'tests - adoption' }
 OPBPMNLaneModelTest >> testRemovingLastLaneRestoresFlowNodesToPool [
+
 	| poolModel laneModel activityModel |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	laneModel := OPBPMNLaneModel new name: 'Sales'.
 	poolModel addLane: laneModel.
 	activityModel := OPBPMNActivityModel new name: 'Process Order'.
 	laneModel add: activityModel.
-	
+
 	poolModel removeLane: laneModel.
-	
-	self deny: poolModel hasLanes.
+
+	self assertEmpty: poolModel lanes.
+	self deny: poolModel hasLanes description: 'Pool must not have lanes after removing the last lane'.
 	self assertCollection: poolModel elements includesAll: { activityModel }.
 	self assert: activityModel owner equals: poolModel.
 	self assert: activityModel enclosingPool equals: poolModel

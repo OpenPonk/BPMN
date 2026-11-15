@@ -38,7 +38,6 @@ OPBPMNPoolControllerTest >> testAddLaneAsTargetAlignsWithinPoolAndSupportsUndoRe
 		renderDiagramElement.
 	diagramController showAllElements.
 
-
 	poolShape := controller diagramElement.
 	undoManager := diagramController undoManager.
 	undoManager ifNil: [
@@ -50,7 +49,7 @@ OPBPMNPoolControllerTest >> testAddLaneAsTargetAlignsWithinPoolAndSupportsUndoRe
 	controller addAsTargetFor: laneController onPosition: 100 @ 100.
 
 	laneShape := laneController diagramElement.
-	self assert: laneShape isRendered.
+	self assert: laneShape roassalShape canvas identicalTo: diagramController canvas.
 	expectedLaneWidth := poolShape roassalShape width - poolShape nameAreaWidth.
 	expectedLaneHeight := poolShape roassalShape height.
 	expectedLaneCenterX := poolShape roassalShape position x - (poolShape roassalShape width / 2) + poolShape nameAreaWidth
@@ -145,32 +144,41 @@ OPBPMNPoolControllerTest >> testAddingLaneInMiddleDisplacesFlowNodesInSubsequent
 
 { #category : 'tests' }
 OPBPMNPoolControllerTest >> testAssignmentToParent [
+
 	| otherPool |
 	otherPool := self controllerClass new.
 	otherPool diagramController: diagramController.
-	self deny: (otherPool canBeTargetFor: controller).
-	self deny: (controller canBeTargetFor: otherPool)
+	self deny: (otherPool canBeTargetFor: controller) description: 'Pool controller must not accept another pool controller as child'.
+	self
+		deny: (controller canBeTargetFor: otherPool)
+		description: 'Pool controller must not be targetable by another pool controller'
 ]
 
 { #category : 'tests - targeting' }
 OPBPMNPoolControllerTest >> testCanBeTargetForLaneControllerEvenWhenPoolHasLanes [
+
 	| poolModel laneController |
 	poolModel := OPBPMNPoolModel new name: 'TestPool'.
 	poolModel addLane: (OPBPMNLaneModel new name: 'ExistingLane').
 	controller model: poolModel.
 	laneController := OPBPMNLaneController new.
-	self assert: (controller canBeTargetFor: laneController)
+	self
+		assert: (controller canBeTargetFor: laneController)
+		description: 'Pool controller must accept lane controller even when pool already has lanes'
 ]
 
 { #category : 'tests - targeting' }
 OPBPMNPoolControllerTest >> testCannotBeTargetForFlowNodeWhenPoolHasLanes [
+
 	| poolModel laneModel activityController |
 	poolModel := OPBPMNPoolModel new name: 'TestPool'.
 	laneModel := OPBPMNLaneModel new name: 'TestLane'.
 	poolModel addLane: laneModel.
 	controller model: poolModel.
 	activityController := OPBPMNActivityController new.
-	self deny: (controller canBeTargetFor: activityController)
+	self
+		deny: (controller canBeTargetFor: activityController)
+		description: 'Partitioned pool controller must reject direct flow node drops'
 ]
 
 { #category : 'tests' }
@@ -184,10 +192,9 @@ OPBPMNPoolControllerTest >> testFigureRefresh [
 		renderDiagramElement.
 	self assert: controller diagramElement nameLabel text equals: ''.
 	controller model name: 'new name'.
-	
+
 	text := controller diagramElement nameLabel text.
-	self assert:
-		((text last: 8) = 'new name' or: [ (text first: 8) = 'new name' ])
+	self assert: text equals: 'new name'
 ]
 
 { #category : 'tests' }
@@ -348,6 +355,7 @@ OPBPMNPoolControllerTest >> testRemovingLaneInMiddleDisplacesFlowNodesUpwardInSu
 
 { #category : 'tests - resizing' }
 OPBPMNPoolControllerTest >> testResizingPoolFromLeftEdgeDoesNotDisplaceFlowNodesInLane [
+
 	| poolModel laneModel taskModel poolShape taskShape initialTaskPosition resizableInteraction leftHandle dragEvent |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	laneModel := OPBPMNLaneModel new name: 'Sales'.
@@ -368,25 +376,27 @@ OPBPMNPoolControllerTest >> testResizingPoolFromLeftEdgeDoesNotDisplaceFlowNodes
 	initialTaskPosition := taskShape roassalShape position copy.
 
 	resizableInteraction := poolShape roassalShape propertyAt: OPRSResizable ifAbsent: [ nil ].
-	self assert: resizableInteraction isNotNil.
+	self assert: resizableInteraction class identicalTo: OPRSResizable.
 	resizableInteraction showHandles: (RSSelectionChangedEvent new
-		shape: poolShape roassalShape;
-		canvas: poolShape roassalShape canvas;
-		yourself).
+			 shape: poolShape roassalShape;
+			 canvas: poolShape roassalShape canvas;
+			 yourself).
 	leftHandle := resizableInteraction handles
-		detect: [ :eachHandle |
-			eachHandle model ifNotNil: [ :handleModel |
-				(handleModel respondsTo: #key) and: [ handleModel key = #leftCenter ] ] ifNil: [ false ] ]
-		ifNone: [ nil ].
-	self assert: leftHandle isNotNil.
+		              detect: [ :eachHandle |
+				              eachHandle model
+					              ifNotNil: [ :handleModel | handleModel class == Association and: [ handleModel key = #leftCenter ] ]
+					              ifNil: [ false ] ]
+		              ifNone: [ nil ].
+	self assert: leftHandle class identicalTo: RSEllipse.
+	self assert: leftHandle model key equals: #leftCenter.
 
 	resizableInteraction handleDragStarted: nil.
-	leftHandle position: (leftHandle position x - 80) @ leftHandle position y.
+	leftHandle position: leftHandle position x - 80 @ leftHandle position y.
 	dragEvent := RSMouseDragging new
-		shape: leftHandle;
-		position: leftHandle position;
-		step: (-80 @ 0);
-		yourself.
+		             shape: leftHandle;
+		             position: leftHandle position;
+		             step: -80 @ 0;
+		             yourself.
 	resizableInteraction updateCurrentShape: dragEvent.
 	resizableInteraction handleDragEnded: nil.
 
@@ -395,7 +405,8 @@ OPBPMNPoolControllerTest >> testResizingPoolFromLeftEdgeDoesNotDisplaceFlowNodes
 
 { #category : 'tests' }
 OPBPMNPoolControllerTest >> testResizingPoolPreservesFlowNodesPositions [
-	| poolModel firstLaneModel secondLaneModel firstTaskModel secondTaskModel poolShape firstLaneShape secondLaneShape firstTaskShape secondTaskShape firstTaskInitialPosition secondTaskInitialPosition resizableInteraction bottomCenterHandle dragEvent |
+
+	| poolModel firstLaneModel secondLaneModel firstTaskModel secondTaskModel poolShape firstTaskShape secondTaskShape firstTaskInitialPosition secondTaskInitialPosition resizableInteraction bottomCenterHandle dragEvent |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
 	secondLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
@@ -414,11 +425,8 @@ OPBPMNPoolControllerTest >> testResizingPoolPreservesFlowNodesPositions [
 		createDiagramElement;
 		renderDiagramElement.
 	diagramController showAllElements.
-	
 
 	poolShape := controller diagramElement.
-	firstLaneShape := (diagramController controllerForModel: firstLaneModel) diagramElement.
-	secondLaneShape := (diagramController controllerForModel: secondLaneModel) diagramElement.
 	firstTaskShape := (diagramController controllerForModel: firstTaskModel) diagramElement.
 	secondTaskShape := (diagramController controllerForModel: secondTaskModel) diagramElement.
 
@@ -426,28 +434,33 @@ OPBPMNPoolControllerTest >> testResizingPoolPreservesFlowNodesPositions [
 	secondTaskInitialPosition := secondTaskShape roassalShape position copy.
 
 	resizableInteraction := poolShape roassalShape propertyAt: OPRSResizable ifAbsent: [ nil ].
-	self assert: resizableInteraction isNotNil description: 'Pool must have OPRSResizable interaction attached'.
+	self assert: resizableInteraction class identicalTo: OPRSResizable.
 
-	resizableInteraction showHandles: (RSSelectionChangedEvent new shape: poolShape roassalShape; canvas: poolShape roassalShape canvas; yourself).
+	resizableInteraction showHandles: (RSSelectionChangedEvent new
+			 shape: poolShape roassalShape;
+			 canvas: poolShape roassalShape canvas;
+			 yourself).
 	bottomCenterHandle := resizableInteraction handles
-		detect: [ :eachHandle |
-			eachHandle model ifNotNil: [ :handleModel |
-				(handleModel respondsTo: #key) and: [ handleModel key = #bottomCenter ] ] ifNil: [ false ] ]
-		ifNone: [ nil ].
-	self assert: bottomCenterHandle isNotNil description: 'bottomCenter handle must be present on resizable pool'.
+		                      detect: [ :eachHandle |
+				                      eachHandle model
+					                      ifNotNil: [ :handleModel | handleModel class == Association and: [ handleModel key = #bottomCenter ] ]
+					                      ifNil: [ false ] ]
+		                      ifNone: [ nil ].
+	self assert: bottomCenterHandle class identicalTo: RSEllipse.
+	self assert: bottomCenterHandle model key equals: #bottomCenter.
 
 	resizableInteraction handleDragStarted: nil.
-	bottomCenterHandle position: (bottomCenterHandle position x @ (bottomCenterHandle position y + 100)).
+	bottomCenterHandle position: bottomCenterHandle position x @ (bottomCenterHandle position y + 100).
 	dragEvent := RSMouseDragging new
-		shape: bottomCenterHandle;
-		position: bottomCenterHandle position;
-		step: (0 @ 100);
-		yourself.
+		             shape: bottomCenterHandle;
+		             position: bottomCenterHandle position;
+		             step: 0 @ 100;
+		             yourself.
 	resizableInteraction updateCurrentShape: dragEvent.
 	resizableInteraction handleDragEnded: nil.
 
-	self assert: (firstTaskShape roassalShape position - firstTaskInitialPosition) equals: (0 @ 0).
-	self assert: (secondTaskShape roassalShape position - secondTaskInitialPosition) equals: (0 @ 0)
+	self assert: firstTaskShape roassalShape position - firstTaskInitialPosition equals: 0 @ 0.
+	self assert: secondTaskShape roassalShape position - secondTaskInitialPosition equals: 0 @ 0
 ]
 
 { #category : 'tests - resizing' }

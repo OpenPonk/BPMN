@@ -11,17 +11,27 @@ Class {
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testActivityViewModelBindsMultilineName [
+
 	| model viewModel form |
 	model := OPBPMNActivityModel new name: 'Process Task'.
 	viewModel := OPBPMNActivityViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isCallActivity ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testActivityViewModelRebuildsFormOnTypeChange [
-	| model viewModel controller form initialCount newCount |
+
+	| model viewModel controller form |
 	model := OPBPMNActivityModel new.
 	model type: OPBPMNNodeType User.
 	viewModel := OPBPMNActivityViewModel new model: model.
@@ -29,18 +39,37 @@ OPBPMNViewModelFormTest >> testActivityViewModelRebuildsFormOnTypeChange [
 
 	form := OPPropertiesForm new.
 	form viewModel: controller.
-	initialCount := form bindings size.
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isCallActivity ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter }.
 
 	controller propertyNamed: #type put: OPBPMNNodeType Service.
-	newCount := form bindings size.
-
-	self assert: initialCount equals: 3.
-	self assert: newCount equals: 5.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttribute ])
+	self
+		assert: (form bindings collect: #selector as: Array)
+		equals: #( #name #type #isCallActivity #executableAttribute #executableAttributeValue ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding.
+			OPFormTextBinding.
+			OPFormTextBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter.
+			SpTextInputFieldPresenter.
+			SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testActivityViewModelRebuildsFormOnUndo [
+
 	| model viewModel controller form changeCmd |
 	model := OPBPMNActivityModel new.
 	model type: OPBPMNNodeType User.
@@ -51,17 +80,28 @@ OPBPMNViewModelFormTest >> testActivityViewModelRebuildsFormOnUndo [
 	form viewModel: controller.
 
 	changeCmd := OPPropertyChangeCommand
-		viewModel: controller
-		selector: #type
-		oldValue: OPBPMNNodeType User
-		newValue: OPBPMNNodeType Service.
+		             viewModel: controller
+		             selector: #type
+		             oldValue: OPBPMNNodeType User
+		             newValue: OPBPMNNodeType Service.
 
 	changeCmd execute.
-	self assert: form bindings size equals: 5.
+	self
+		assert: (form bindings collect: #selector as: Array)
+		equals: #( #name #type #isCallActivity #executableAttribute #executableAttributeValue ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding.
+			OPFormTextBinding.
+			OPFormTextBinding }.
 
 	changeCmd undo.
-	self assert: form bindings size equals: 3.
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttribute ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isCallActivity ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }
 ]
 
 { #category : 'tests' }
@@ -82,48 +122,79 @@ OPBPMNViewModelFormTest >> testAnnotationViewModelReportsAssociationsAsChildrenM
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testAssociationViewModelBindsAssociationDirection [
+
 	| model viewModel form |
 	model := OPBPMNAssociationModel new.
 	viewModel := OPBPMNAssociationViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #associationDirection ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #associationDirection ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testBoundaryEventViewModelBindsTypeAndIsNonInterrupting [
+
 	| model viewModel form |
 	model := OPBPMNBoundaryEventModel new.
 	viewModel := OPBPMNBoundaryEventViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #isNonInterrupting ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isNonInterrupting ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testCollapsedSubProcessViewModelBindsTypeAndIsCallActivity [
+
 	| model viewModel form |
 	model := OPBPMNCollapsedSubProcessModel new.
 	viewModel := OPBPMNCollapsedSubProcessViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #isCallActivity ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isCallActivity ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testDataObjectViewModelBindsType [
+
 	| model viewModel form |
 	model := OPBPMNDataObjectModel new.
 	viewModel := OPBPMNDataObjectViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testEndEventViewModelBindsExecutableAttributesWhenSendType [
+
 	| model viewModel controller form |
 	model := OPBPMNEndEventModel new.
 	model type: OPBPMNNodeType None.
@@ -132,37 +203,65 @@ OPBPMNViewModelFormTest >> testEndEventViewModelBindsExecutableAttributesWhenSen
 	form := OPPropertiesForm new.
 	form viewModel: controller.
 
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ]).
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttribute ]).
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter }.
 
 	controller propertyNamed: #type put: OPBPMNNodeType Send.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttribute ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttributeValue ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #executableAttribute #executableAttributeValue ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormTextBinding.
+			OPFormTextBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpTextInputFieldPresenter.
+			SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testFlowViewModelBindsType [
+
 	| model viewModel form |
 	model := OPBPMNFlowModel new.
 	viewModel := OPBPMNFlowViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testGatewayViewModelBindsType [
+
 	| model viewModel form |
 	model := OPBPMNGatewayModel new.
 	viewModel := OPBPMNGatewayViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testIntermediateEventViewModelBindsTimerAndSendFieldsConditionally [
+
 	| model viewModel controller form changeCmd |
 	model := OPBPMNIntermediateEventModel new.
 	model type: OPBPMNNodeType None.
@@ -171,36 +270,54 @@ OPBPMNViewModelFormTest >> testIntermediateEventViewModelBindsTimerAndSendFields
 	form := OPPropertiesForm new.
 	form viewModel: controller.
 
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ]).
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttribute ]).
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter }.
 
 	changeCmd := OPPropertyChangeCommand
-		viewModel: controller
-		selector: #type
-		oldValue: OPBPMNNodeType None
-		newValue: OPBPMNNodeType Timer.
+		             viewModel: controller
+		             selector: #type
+		             oldValue: OPBPMNNodeType None
+		             newValue: OPBPMNNodeType Timer.
 	changeCmd execute.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerValue ]).
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #timerType #timerValue ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormDropListBinding.
+			OPFormTextBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpDropListPresenter.
+			SpTextInputFieldPresenter }.
 
 	changeCmd undo.
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
 
 	changeCmd := OPPropertyChangeCommand
-		viewModel: controller
-		selector: #type
-		oldValue: OPBPMNNodeType None
-		newValue: OPBPMNNodeType Send.
+		             viewModel: controller
+		             selector: #type
+		             oldValue: OPBPMNNodeType None
+		             newValue: OPBPMNNodeType Send.
 	changeCmd execute.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttribute ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #executableAttributeValue ]).
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #executableAttribute #executableAttributeValue ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormTextBinding.
+			OPFormTextBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpTextInputFieldPresenter.
+			SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testPoolViewModelBindsNameOnly [
+
 	| poolModel poolViewModel poolController form |
 	poolModel := OPBPMNPoolModel new name: 'Corporate Pool'.
 	poolViewModel := OPBPMNPoolViewModel new model: poolModel.
@@ -209,52 +326,58 @@ OPBPMNViewModelFormTest >> testPoolViewModelBindsNameOnly [
 	form := OPPropertiesForm new.
 	form viewModel: poolController.
 
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ]).
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #lanes ]).
-	self assert: form bindings size equals: 1
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name ).
+	self assert: (form bindings collect: #class as: Array) equals: { OPFormTextBinding }.
+	self
+		assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array)
+		equals: { SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testSemanticNodeViewModelsProvideTypeIconsWithoutModelDependency [
+
 	| viewModelClasses |
 	viewModelClasses := {
-		OPBPMNActivityViewModel.
-		OPBPMNBoundaryEventViewModel.
-		OPBPMNCollapsedSubProcessViewModel.
-		OPBPMNDataObjectViewModel.
-		OPBPMNEndEventViewModel.
-		OPBPMNGatewayViewModel.
-		OPBPMNIntermediateEventViewModel.
-		OPBPMNStartEventViewModel.
-		OPBPMNSubProcessViewModel }.
+		                    OPBPMNActivityViewModel.
+		                    OPBPMNBoundaryEventViewModel.
+		                    OPBPMNCollapsedSubProcessViewModel.
+		                    OPBPMNDataObjectViewModel.
+		                    OPBPMNEndEventViewModel.
+		                    OPBPMNGatewayViewModel.
+		                    OPBPMNIntermediateEventViewModel.
+		                    OPBPMNStartEventViewModel.
+		                    OPBPMNSubProcessViewModel }.
 	viewModelClasses do: [ :eachViewModelClass |
-		| viewModel form capturedDropList capturedItems iconBlock |
-		viewModel := eachViewModelClass new.
-		viewModel model: eachViewModelClass modelClass new.
-		form := Mock new.
-		capturedDropList := Mock new.
-		capturedItems := #().
-		iconBlock := nil.
-		(form stub bindDroplist: Any property: #type items: Any) will: [ :labelArg :propertyArg :itemsArg |
-			capturedItems := itemsArg.
-			capturedDropList ].
-		(capturedDropList stub displayIcon: Any) will: [ :aBlock |
-			iconBlock := aBlock.
-			capturedDropList ].
-		viewModel buildEditorForm: form.
-		self denyEmpty: capturedItems.
-		self assert: iconBlock isNotNil.
-		capturedItems do: [ :eachType |
-			| icon expectedIcon |
-			icon := iconBlock value: eachType.
-			expectedIcon := viewModel typeIconFor: eachType.
-			self assert: icon isForm.
-			self assert: icon width > 10.
-			self assert: icon bits equals: expectedIcon bits ] ]
+			| viewModel form capturedDropList capturedItems iconBlock |
+			viewModel := eachViewModelClass new.
+			viewModel model: eachViewModelClass modelClass new.
+			form := Mock new.
+			capturedDropList := Mock new.
+			capturedItems := #(  ).
+			iconBlock := nil.
+			(form stub bindDroplist: Any property: #type items: Any) will: [ :labelArg :propertyArg :itemsArg |
+					capturedItems := itemsArg.
+					capturedDropList ].
+			(capturedDropList stub displayIcon: Any) will: [ :aBlock |
+					iconBlock := aBlock.
+					capturedDropList ].
+			viewModel buildEditorForm: form.
+			self denyEmpty: capturedItems.
+			self deny: iconBlock identicalTo: nil.
+			capturedItems do: [ :eachType |
+					| icon expectedIcon |
+					icon := iconBlock value: eachType.
+					expectedIcon := viewModel typeIconFor: eachType.
+					self assert: icon class identicalTo: Form.
+					self assert: icon extent equals: expectedIcon extent.
+					self deny: icon extent equals: 0 @ 0.
+					self assert: icon depth equals: 32.
+					self assert: icon bits equals: expectedIcon bits ] ]
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testStartEventViewModelBindsTypeAndConditionalTimerFields [
+
 	| model viewModel controller form |
 	model := OPBPMNStartEventModel new.
 	model type: OPBPMNNodeType None.
@@ -263,26 +386,47 @@ OPBPMNViewModelFormTest >> testStartEventViewModelBindsTypeAndConditionalTimerFi
 	form := OPPropertiesForm new.
 	form viewModel: controller.
 
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #isNonInterrupting ]).
-	self deny: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isNonInterrupting ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter }.
 
 	controller propertyNamed: #type put: OPBPMNNodeType Timer.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerValue ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type #isNonInterrupting #timerType #timerValue ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding.
+			OPFormDropListBinding.
+			OPFormTextBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter.
+			SpDropListPresenter.
+			SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testSubProcessAndBoundaryEventViewModelsBindAllProperties [
+
 	| subModel subViewModel subForm boundaryModel boundaryViewModel boundaryController boundaryForm |
 	subModel := OPBPMNSubProcessModel new name: 'Expanded'.
 	subViewModel := OPBPMNSubProcessViewModel new model: subModel.
 	subForm := OPPropertiesForm new.
 	subForm viewModel: subViewModel.
-	self
-		assert: (subForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #type ])
-		description: 'Expanded subprocess view model must bind Marker (#type) in properties form'.
+	self assert: (subForm bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (subForm bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (subForm bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter }.
 
 	boundaryModel := OPBPMNBoundaryEventModel new.
 	boundaryModel type: OPBPMNNodeType Error.
@@ -290,25 +434,45 @@ OPBPMNViewModelFormTest >> testSubProcessAndBoundaryEventViewModelsBindAllProper
 	boundaryController := OPBPMNBoundaryEventController new viewModel: boundaryViewModel.
 	boundaryForm := OPPropertiesForm new.
 	boundaryForm viewModel: boundaryController.
-	self deny: (boundaryForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ]).
+	self assert: (boundaryForm bindings collect: #selector as: Array) equals: #( #name #type #isNonInterrupting ).
+	self assert: (boundaryForm bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding }.
 
 	boundaryController propertyNamed: #type put: OPBPMNNodeType Timer.
 	self
-		assert: (boundaryForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerType ])
-		description: 'Boundary event view model must rebuild form and bind timerType when switched to Timer'.
-	self
-		assert: (boundaryForm bindings anySatisfy: [ :eachBinding | eachBinding selector = #timerValue ])
-		description: 'Boundary event view model must bind timerValue when switched to Timer'
+		assert: (boundaryForm bindings collect: #selector as: Array)
+		equals: #( #name #type #isNonInterrupting #timerType #timerValue ).
+	self assert: (boundaryForm bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding.
+			OPFormCheckboxBinding.
+			OPFormDropListBinding.
+			OPFormTextBinding }.
+	self assert: (boundaryForm bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextInputFieldPresenter.
+			SpDropListPresenter.
+			SpCheckBoxPresenter.
+			SpDropListPresenter.
+			SpTextInputFieldPresenter }
 ]
 
 { #category : 'tests' }
 OPBPMNViewModelFormTest >> testSubProcessViewModelBindsMultilineName [
+
 	| model viewModel form |
 	model := OPBPMNSubProcessModel new name: 'SubProcess Node'.
 	viewModel := OPBPMNSubProcessViewModel new model: model.
 	form := OPPropertiesForm new.
 	form viewModel: viewModel.
-	self assert: (form bindings anySatisfy: [ :eachBinding | eachBinding selector = #name ])
+	self assert: (form bindings collect: #selector as: Array) equals: #( #name #type ).
+	self assert: (form bindings collect: #class as: Array) equals: {
+			OPFormTextBinding.
+			OPFormDropListBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
+			SpTextPresenter.
+			SpDropListPresenter }
 ]
 
 { #category : 'tests' }
