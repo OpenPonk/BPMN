@@ -67,11 +67,6 @@ OPBPMNXMLWriterVisitor >> namespace: aValue [
 	namespace := aValue
 ]
 
-{ #category : 'initialization' }
-OPBPMNXMLWriterVisitor >> removeAllFlows [
-	allFlows removeAll.
-]
-
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> removeFlow: aFlow [
 	aFlow ifNotNil: [ allFlows remove: aFlow ifAbsent: [ nil ] ]
@@ -102,53 +97,71 @@ OPBPMNXMLWriterVisitor >> visit: aRootElement [
 			diagramRoot ifNotNil: [ self visitDiagram: diagramRoot ] ]
 ]
 
+{ #category : 'visiting' }
+OPBPMNXMLWriterVisitor >> visitAssociationsFor: aCollectionOfElements [
+
+	| associations |
+	associations := (aCollectionOfElements flatCollect: [ :eachElement |
+			                 | elementAssociations |
+			                 elementAssociations := OrderedCollection new.
+			                 (eachElement isKindOf: OPBPMNNodeModel) ifTrue: [
+				                 elementAssociations addAll: (eachElement associations ifNil: [ #(  ) ]) ].
+			                 (eachElement isKindOf: OPBPMNSemanticNodeModel) ifTrue: [
+					                 elementAssociations addAll: ((eachElement flows ifNil: [ #(  ) ]) select: [ :eachFlow |
+							                  (eachFlow isKindOf: OPBPMNAssociationModel) or: [ eachFlow isKindOf: OPBPMNDataFlowModel ] ]) ].
+			                 elementAssociations ]) asSet.
+	associations do: [ :eachAssociation | self visitElement: eachAssociation ]
+]
+
+{ #category : 'visiting' }
+OPBPMNXMLWriterVisitor >> visitBoundaryEventsFor: aCollectionOfElements [
+
+	| boundaryEvents |
+	boundaryEvents := (aCollectionOfElements flatCollect: [ :eachElement |
+		                   eachElement elements select: [ :eachChild |
+			                   (eachChild isKindOf: OPBPMNBoundaryEventModel) and: [ eachChild owner = eachElement ] ] ]) asSet.
+	boundaryEvents do: [ :eachBoundaryEvent | self visitElement: eachBoundaryEvent ]
+]
+
 { #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitDiagram: aRootElement [
-"<bpmndi:BPMNDiagram id=""BPMNDiagram_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"" 
-							name=""New Project"" resolution=""96.0"">
-        <bpmndi:BPMNPlane bpmnElement=""process_0e5130ce-1e7d-0d00-a4c5-09a30e3ea2c6"">"
+
+	| modelName |
+	modelName := aRootElement model name ifNil: [ '' ].
 	writer
 		tag: self diagramNamespace , 'BPMNDiagram'
 		attributes:
-			(Array
-				with: 'id' -> ('BPMNDiagram_' , aRootElement model uuid asString)
-				with: 'name' -> aRootElement model name
-				with: 'resolution' -> '96.0')
-		with: [ writer
-				tag: self diagramNamespace , 'BPMNPlane'
-				attributes:
-					(Array
-						with:
-							'bpmnElement'
-								-> (aRootElement model printType , '_' , aRootElement model uuid asString))
-				with: [ aRootElement controllers
-						do: [ :each | self visitDiagramElement: each ] ] ]
+		(Array with: 'id' -> ('BPMNDiagram_' , aRootElement model uuid asString) with: 'name' -> modelName with: 'resolution' -> '96.0')
+		with: [
+				writer
+					tag: self diagramNamespace , 'BPMNPlane'
+					attributes: (Array with: 'bpmnElement' -> (String streamContents: [ :stream |
+									  stream << aRootElement model printType.
+									  stream << '_'.
+									  stream << aRootElement model uuid asString ]))
+					with: [ aRootElement controllers do: [ :each | self visitDiagramElement: each ] ] ]
+]
+
+{ #category : 'visiting' }
+OPBPMNXMLWriterVisitor >> visitDiagramBoundsFor: aDiagramElement [
+
+	writer tag: 'dc:Bounds' attributes: (Array
+			 with: 'height' -> aDiagramElement height asString
+			 with: 'width' -> aDiagramElement width asString
+			 with: 'x' -> (aDiagramElement position x - (aDiagramElement width / 2.0)) asString
+			 with: 'y' -> (aDiagramElement position y - (aDiagramElement height / 2.0)) asString).
+	writer tag: self diagramNamespace , 'BPMNLabel'
 ]
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitDiagramElement: anElement [
-	(anElement isKindOf: OPBPMNEdgeController)
-		ifTrue: [ self visitDiagramFlow: anElement ]
-		ifFalse: [
-			(anElement isKindOf: OPBPMNPoolController)
-				ifTrue: [ self visitDiagramParticipant: anElement ]
-				ifFalse: [
-					writer
-						tag: self diagramNamespace , 'BPMNShape'
-						attributes: (Array with: 'bpmnElement'
-								 ->
-								 (anElement model printIdType
-								  , anElement model uuid asString))
-						with: [
-							writer tag: 'dc:Bounds' attributes: (Array
-										 with:
-											 'height' -> anElement diagramElement height asString
-										 with: 'width' -> anElement diagramElement width asString
-										 with: 'x' -> (anElement diagramElement position x
-												  - (anElement diagramElement width / 2.0)) asString
-										 with: 'y' -> (anElement diagramElement position y
-												  - (anElement diagramElement height / 2.0)) asString).
-							writer tag: self diagramNamespace , 'BPMNLabel' ] ] ]
+
+	(anElement isKindOf: OPBPMNEdgeController) ifTrue: [ ^ self visitDiagramFlow: anElement ].
+	(anElement isKindOf: OPBPMNPoolController) ifTrue: [ ^ self visitDiagramParticipant: anElement ].
+	writer
+		tag: self diagramNamespace , 'BPMNShape'
+		attributes: (Array with: 'bpmnElement' -> (anElement model printIdType , anElement model uuid asString))
+		with: [ self visitDiagramBoundsFor: anElement diagramElement ]
 ]
 
 { #category : 'initialization' }
@@ -176,76 +189,49 @@ OPBPMNXMLWriterVisitor >> visitDiagramParticipant: anElement [
 
 	writer
 		tag: self diagramNamespace , 'BPMNShape'
-		attributes: (Array with:
-				 'bpmnElement' -> ('participant_' , anElement model uuid asString))
-		with: [
-			writer tag: 'dc:Bounds' attributes: (Array
-					 with: 'height' -> anElement diagramElement height asString
-					 with: 'width' -> anElement diagramElement width asString
-					 with: 'x' -> (anElement diagramElement position x
-						  - (anElement diagramElement width / 2.0)) asString
-					 with: 'y' -> (anElement diagramElement position y
-						  - (anElement diagramElement height / 2.0)) asString).
-			writer tag: self diagramNamespace , 'BPMNLabel' ]
+		attributes: (Array with: 'bpmnElement' -> ('participant_' , anElement model uuid asString))
+		with: [ self visitDiagramBoundsFor: anElement diagramElement ]
 ]
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitElement: anElement [
-	(anElement isKindOf: OPBPMNActivityModel)
-		ifTrue: [ ^ self visitElementActivity: anElement ].
-	(anElement isKindOf: OPBPMNBoundaryEventModel)
-		ifTrue: [ ^ self visitElementBoundaryEvent: anElement ].
-	(anElement isKindOf: OPBPMNEventModel)
-		ifTrue: [ ^ self visitElementEvent: anElement ].
-	(anElement isKindOf: OPBPMNAnnotationModel)
-		ifTrue: [ ^ self visitElementAnnotation: anElement ].
-	((anElement isKindOf: OPBPMNAssociationModel) or: [ anElement isKindOf: OPBPMNDataFlowModel ])
-		ifTrue: [ ^ self visitElementAssociation: anElement ].
-	(anElement isKindOf: OPBPMNSubProcessModel)
-		ifTrue: [ ^ self visitElementSubProcess: anElement ].
+
+	(anElement isKindOf: OPBPMNActivityModel) ifTrue: [ ^ self visitElementActivity: anElement ].
+	(anElement isKindOf: OPBPMNBoundaryEventModel) ifTrue: [ ^ self visitElementBoundaryEvent: anElement ].
+	(anElement isKindOf: OPBPMNEventModel) ifTrue: [ ^ self visitElementEvent: anElement ].
+	(anElement isKindOf: OPBPMNAnnotationModel) ifTrue: [ ^ self visitElementAnnotation: anElement ].
+	((anElement isKindOf: OPBPMNAssociationModel) or: [ anElement isKindOf: OPBPMNDataFlowModel ]) ifTrue: [
+		^ self visitElementAssociation: anElement ].
+	(anElement isKindOf: OPBPMNSubProcessModel) ifTrue: [ ^ self visitElementSubProcess: anElement ].
 
 	writer
 		tag: self namespace , anElement printType
-		attributes: (Array
-				 with: 'name' -> (anElement name ifNil: [ '' ])
-				 with:
-				 'id' -> (anElement printIdType , anElement uuid asString))
+		attributes:
+		(Array with: 'name' -> (anElement name ifNil: [ '' ]) with: 'id' -> (anElement printIdType , anElement uuid asString))
 		with: [
-			(anElement isKindOf: OPBPMNPoolModel) ifTrue: [
-				| poolElements poolAssociations boundaryEvents |
-				poolElements := anElement hasLanes
-					ifTrue: [
-						| collected |
-						self visitLaneSet: anElement.
-						collected := OrderedCollection new.
-						anElement lanes do: [ :eachLane |
-							collected addAll: eachLane elements ].
-						collected addAll: (anElement elements reject: [ :eachChild | eachChild isKindOf: OPBPMNLaneModel ]).
-						collected ]
-					ifFalse: [ anElement nodes ].
-				boundaryEvents := (poolElements flatCollect: [ :eachElement |
-					eachElement elements select: [ :eachChild |
-						(eachChild isKindOf: OPBPMNBoundaryEventModel) and: [ eachChild owner = eachElement ] ] ]) asSet.
-				poolElements do: [ :eachElement | self visitElement: eachElement ].
-				boundaryEvents do: [ :eachBoundaryEvent | self visitElement: eachBoundaryEvent ].
-				poolAssociations := (poolElements flatCollect: [ :eachElement |
-					| elementAssociations |
-					elementAssociations := OrderedCollection new.
-					(eachElement respondsTo: #associations) ifTrue: [
-						elementAssociations addAll: (eachElement associations ifNil: [ #( ) ]) ].
-					(eachElement respondsTo: #flows) ifTrue: [
-						elementAssociations addAll: ((eachElement flows ifNil: [ #( ) ]) select: [ :eachFlow |
-							(eachFlow isKindOf: OPBPMNAssociationModel) or: [ eachFlow isKindOf: OPBPMNDataFlowModel ] ]) ].
-					elementAssociations ]) asSet.
-				poolAssociations do: [ :eachAssociation | self visitElement: eachAssociation ].
-				self allFlows do: [ :eachFlow |
-					self visitFlow: eachFlow type: 'sequenceFlow' ].
-				self allFlows copy do: [ :eachFlow | self removeFlow: eachFlow ] ].
-			((anElement isKindOf: OPBPMNSemanticNodeModel) and: [ (anElement isKindOf: OPBPMNPoolModel) not ]) ifTrue: [
-				(anElement incoming select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ])
-					do: [ :eachFlow | self visitFlowRef: eachFlow inOut: 'incoming' ].
-				(anElement outgoing select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ])
-					do: [ :eachFlow | self visitFlowRef: eachFlow inOut: 'outgoing' ] ] ]
+				(anElement isKindOf: OPBPMNPoolModel) ifTrue: [
+						| poolElements |
+						poolElements := anElement hasLanes
+							                ifTrue: [
+									                | collected |
+									                self visitLaneSet: anElement.
+									                collected := OrderedCollection new.
+									                anElement lanes do: [ :eachLane | collected addAll: eachLane elements ].
+									                collected addAll: (anElement elements reject: [ :eachChild | eachChild isKindOf: OPBPMNLaneModel ]).
+									                collected ]
+							                ifFalse: [ anElement nodes ].
+						poolElements do: [ :eachElement | self visitElement: eachElement ].
+						self visitBoundaryEventsFor: poolElements.
+						self visitAssociationsFor: poolElements.
+						self allFlows do: [ :eachFlow | self visitFlow: eachFlow type: 'sequenceFlow' ].
+						self allFlows copy do: [ :eachFlow | self removeFlow: eachFlow ] ].
+				((anElement isKindOf: OPBPMNSemanticNodeModel) and: [ (anElement isKindOf: OPBPMNPoolModel) not ]) ifTrue: [
+						anElement incoming
+							select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ]
+							thenDo: [ :eachFlow | self visitFlowRef: eachFlow inOut: 'incoming' ].
+						anElement outgoing
+							select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ]
+							thenDo: [ :eachFlow | self visitFlowRef: eachFlow inOut: 'outgoing' ] ] ]
 ]
 
 { #category : 'visiting' }
@@ -362,42 +348,42 @@ OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitElementSubProcess: aSubProcess [
+
 	| innerElements innerFlows |
 	innerElements := aSubProcess elements reject: [ :each |
-		(each isKindOf: OPBPMNEdgeModel) or: [
-			(each isKindOf: OPBPMNBoundaryEventModel) and: [ each owner = aSubProcess ] ] ].
+		                 (each isKindOf: OPBPMNEdgeModel) or: [
+			                 (each isKindOf: OPBPMNBoundaryEventModel) and: [ each owner = aSubProcess ] ] ].
 	writer
 		tag: self namespace , aSubProcess printType
-		attributes: (Array
-				 with: 'name' -> (aSubProcess name ifNil: [ '' ])
-				 with: 'id' -> (aSubProcess printIdType , aSubProcess uuid asString))
+		attributes:
+		(Array with: 'name' -> (aSubProcess name ifNil: [ '' ]) with: 'id' -> (aSubProcess printIdType , aSubProcess uuid asString))
 		with: [
-			(aSubProcess incoming select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
-			(aSubProcess outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
-			innerElements do: [ :each |
-				self visitElement: each ].
-			innerFlows := (aSubProcess elements select: [ :each | each isKindOf: OPBPMNEdgeModel ]) asSet.
-			innerFlows addAll: (self allFlows select: [ :eachFlow |
-				(innerElements includes: eachFlow source) and: [ innerElements includes: eachFlow target ] ]).
-			innerFlows do: [ :each |
-				self visitFlow: each type: 'sequenceFlow'.
-				self removeFlow: each ] ]
+				aSubProcess incoming
+					select: [ :each | each isKindOf: OPBPMNFlowModel ]
+					thenDo: [ :each | self visitFlowRef: each inOut: 'incoming' ].
+				aSubProcess outgoing
+					select: [ :each | each isKindOf: OPBPMNFlowModel ]
+					thenDo: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
+				innerElements do: [ :each | self visitElement: each ].
+				self visitBoundaryEventsFor: innerElements.
+				innerFlows := (aSubProcess elements select: [ :each | each isKindOf: OPBPMNEdgeModel ]) asSet.
+				innerFlows addAll:
+					(self allFlows select: [ :eachFlow |
+						 (innerElements includes: eachFlow source) and: [ innerElements includes: eachFlow target ] ]).
+				innerFlows do: [ :each |
+						self visitFlow: each type: 'sequenceFlow'.
+						self removeFlow: each ] ]
 ]
 
 { #category : 'initialization' }
 OPBPMNXMLWriterVisitor >> visitFlow: aFlow type: aType [
-"<semantic:sequenceFlow sourceRef=""_6-0e5130ce-1e7d-0d00-a4c6-bd810e3ea2c6"" targetRef=""_6-0e5130ce-1e7d-0d00-a4c7-8c720e3ea2c6"" name="" id=""_6-0e5130ce-1e7d-0d00-a4cb-427f0e3ea2c6""/>"
-	aType = aFlow printType
-		ifTrue: [ writer
-				tag: self namespace , aFlow printType
-				attributes:
-					(Array
-						with: 'sourceRef' -> (aFlow printIdType , aFlow source uuid asString)
-						with: 'targetRef' -> (aFlow printIdType , aFlow target uuid asString)
-						with: 'name' -> aFlow name
-						with: 'id' -> (aFlow printIdType , aFlow uuid asString)) ]
+
+	aType = aFlow printType ifTrue: [
+			writer tag: self namespace , aFlow printType attributes: (Array
+					 with: 'sourceRef' -> (aFlow printIdType , aFlow source uuid asString)
+					 with: 'targetRef' -> (aFlow printIdType , aFlow target uuid asString)
+					 with: 'name' -> (aFlow name ifNil: [ '' ])
+					 with: 'id' -> (aFlow printIdType , aFlow uuid asString)) ]
 ]
 
 { #category : 'initialization' }
@@ -445,40 +431,42 @@ OPBPMNXMLWriterVisitor >> visitParticipantRef: anElement [
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitSemantic: aRootElement [
+
 	| counter allNodes |
 	counter := 0.
 	allNodes := aRootElement nodes.
-	allNodes do: [ :each |
-		(each isKindOf: OPBPMNPoolModel)
-			ifTrue: [ counter := counter + 1 ] ].
+	allNodes do: [ :each | (each isKindOf: OPBPMNPoolModel) ifTrue: [ counter := counter + 1 ] ].
 	counter = 0
 		ifTrue: [
-			writer
-				tag: self namespace , aRootElement printType
-				attributes: (Array
-						 with: 'isExecutable' -> aRootElement isExecutable asString
-						 with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
-				with: [
-					aRootElement nodes do: [ :each | self visitElement: each ].
-					self allFlows do: [ :each | self visitFlow: each type: 'sequenceFlow' ] ] ]
+				writer
+					tag: self namespace , aRootElement printType
+					attributes:
+						(Array with: 'isExecutable' -> aRootElement isExecutable asString with: 'id' -> (String streamContents: [ :stream |
+									  stream << aRootElement printType.
+									  stream << '_'.
+									  stream << aRootElement uuid asString ]))
+					with: [
+							allNodes do: [ :each | self visitElement: each ].
+							self visitBoundaryEventsFor: allNodes.
+							self visitAssociationsFor: allNodes.
+							self allFlows do: [ :each | self visitFlow: each type: 'sequenceFlow' ] ] ]
 		ifFalse: [
-			| msgFlows |
-			msgFlows := (allNodes flatCollect: [ :eachNode |
-				(eachNode respondsTo: #flows)
-					ifTrue: [ eachNode flows select: [ :f | f isKindOf: OPBPMNMessageFlowModel ] ]
-					ifFalse: [ #( ) ] ]) asSet.
-			msgFlows do: [ :each | self addMessageFlow: each ].
-			allNodes do: [ :each | self visitElement: each ].
-			writer
-				tag: self namespace , 'collaboration'
-				attributes: (Array
-						 with: 'id' -> (aRootElement printType , '_' , aRootElement uuid asString))
-				with: [
-					allNodes do: [ :each |
-						(each isKindOf: OPBPMNPoolModel)
-							ifTrue: [ self visitParticipantRef: each ] ].
-					self allMessageFlows
-						do: [ :each | self visitFlow: each type: 'messageFlow' ] ] ]
+				| msgFlows |
+				msgFlows := (allNodes flatCollect: [ :eachNode |
+						             (eachNode isKindOf: OPBPMNSemanticNodeModel)
+							             ifTrue: [ eachNode flows select: [ :f | f isKindOf: OPBPMNMessageFlowModel ] ]
+							             ifFalse: [ #(  ) ] ]) asSet.
+				msgFlows do: [ :each | self addMessageFlow: each ].
+				allNodes do: [ :each | self visitElement: each ].
+				writer
+					tag: self namespace , 'collaboration'
+					attributes: (Array with: 'id' -> (String streamContents: [ :stream |
+									  stream << aRootElement printType.
+									  stream << '_'.
+									  stream << aRootElement uuid asString ]))
+					with: [
+							allNodes do: [ :each | (each isKindOf: OPBPMNPoolModel) ifTrue: [ self visitParticipantRef: each ] ].
+							self allMessageFlows do: [ :each | self visitFlow: each type: 'messageFlow' ] ] ]
 ]
 
 { #category : 'initialization' }

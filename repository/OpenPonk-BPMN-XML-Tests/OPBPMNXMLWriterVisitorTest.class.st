@@ -93,6 +93,22 @@ OPBPMNXMLWriterVisitorTest >> testBoundaryEventModelPrintTypeIsBoundaryEvent [
 ]
 
 { #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testCustomNamespacePrefix [
+
+	| visitor task xml |
+	task := OPBPMNActivityModel new
+		        name: 'Custom';
+		        yourself.
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor namespace: 'semantic:'.
+	visitor visitElement: task.
+	xml := visitor contents.
+	self
+		assert: (xml includesSubstring: '<semantic:task name="Custom"')
+		description: 'Visitor must use custom namespace prefix when configured'
+]
+
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportAnnotationDoesNotCrashOnPrintType [
 
 	| annotation visitor xmlContent expectedXml |
@@ -213,6 +229,35 @@ OPBPMNXMLWriterVisitorTest >> testExportCollapsedSubProcessDoesNotCrash [
 			               stream nextPutAll: subProcess uuid asString.
 			               stream nextPutAll: '"/>' ].
 	self assert: xmlContent equals: expectedXml
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testExportDiagramControllerExampleOrderFulfillmentProducesBPMNDiagram [
+
+	| model project projectController controller xml document shapes edges |
+	model := OPBPMNExamples exampleOrderFulfillment.
+	project := OPProject named: 'Test'.
+	project addModel: model.
+	projectController := OPProjectController forProject: project.
+	controller := OPBPMNDiagramController new.
+	projectController addDiagramController: controller.
+	controller model: model.
+	controller diagramElement: (OPOpenPonkDiagram forModelElement: model).
+	controller canvasPresenter: (OPHeadlessCanvasPresenter new
+			 canvas: RSCanvas new;
+			 yourself).
+	controller showAllElements.
+	xml := OPBPMNXMLWriter toString: controller.
+	document := XMLDOMParser parse: xml.
+	self assert: (document allElementsNamed: 'bpmndi:BPMNDiagram') size equals: 1.
+	self assert: (document allElementsNamed: 'bpmndi:BPMNPlane') size equals: 1.
+	shapes := document allElementsNamed: 'bpmndi:BPMNShape'.
+	edges := document allElementsNamed: 'bpmndi:BPMNEdge'.
+	self assert: shapes size equals: 19.
+	self assert: edges size equals: 14.
+	self
+		assert: (shapes anySatisfy: [ :each | (each attributeAt: 'bpmnElement') beginsWith: 'participant_' ])
+		description: 'Pools must be exported as BPMNShape referencing participant_ ID'
 ]
 
 { #category : 'tests' }
@@ -348,6 +393,81 @@ OPBPMNXMLWriterVisitorTest >> testExportPoolWithLanesExportsDataFlowAsAssociatio
 ]
 
 { #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testExportPoollessModelExportsAssociationsDataFlowsAndBoundaryEvents [
+
+	| model task annotation association dataObject dataFlow boundaryEvent xml |
+	model := OPBPMNModel new.
+	model name: 'Poolless'.
+	task := OPBPMNActivityModel new
+		        name: 'Task 1';
+		        yourself.
+	annotation := OPBPMNAnnotationModel new
+		              text: 'Note';
+		              yourself.
+	association := OPBPMNAssociationModel new
+		               source: annotation;
+		               target: task;
+		               yourself.
+	annotation addAssociation: association.
+	task addAssociation: association.
+	dataObject := OPBPMNDataObjectModel new
+		              name: 'Data 1';
+		              yourself.
+	dataFlow := OPBPMNDataFlowModel from: dataObject to: task.
+	dataObject addFlow: dataFlow.
+	task addFlow: dataFlow.
+	boundaryEvent := OPBPMNBoundaryEventModel new
+		                 name: 'Timeout';
+		                 type: OPBPMNNodeType Timer;
+		                 yourself.
+	task add: boundaryEvent.
+	model
+		add: task;
+		add: annotation;
+		add: dataObject.
+	xml := OPBPMNXMLWriter toString: model.
+	self
+		assert: (xml includesSubstring: '<bpmn:association id="_6-' , association uuid asString)
+		description: 'Poolless BPMN process must export associations'.
+	self
+		assert: (xml includesSubstring: dataFlow printIdType , dataFlow uuid asString)
+		description: 'Poolless BPMN process must export data flows'.
+	self
+		assert: (xml includesSubstring: '<bpmn:boundaryEvent id="_6-' , boundaryEvent uuid asString)
+		description: 'Poolless BPMN process must export boundary events attached to top-level nodes'
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testExportSubProcessExportsBoundaryEventAttachedToInnerTask [
+
+	| subProcess innerTask boundaryEvent visitor xml expectedIdFragment expectedRefFragment |
+	subProcess := OPBPMNSubProcessModel new
+		              name: 'Sub';
+		              yourself.
+	innerTask := OPBPMNActivityModel new
+		             name: 'Inner Task';
+		             yourself.
+	boundaryEvent := OPBPMNBoundaryEventModel new
+		                 name: 'Inner Timer';
+		                 type: OPBPMNNodeType Timer;
+		                 yourself.
+	innerTask add: boundaryEvent.
+	subProcess add: innerTask.
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitElement: subProcess.
+	xml := visitor contents.
+	expectedIdFragment := '<bpmn:boundaryEvent id="_6-' , boundaryEvent uuid asString.
+	expectedRefFragment := String streamContents: [ :stream |
+			                       stream nextPutAll: 'attachedToRef="_6-'.
+			                       stream nextPutAll: innerTask uuid asString.
+			                       stream nextPutAll: '"' ].
+	self
+		assert: (xml includesSubstring: expectedIdFragment)
+		description: 'SubProcess must export boundary events attached to inner tasks'.
+	self assert: (xml includesSubstring: expectedRefFragment) description: 'Inner boundary event must reference its inner host task'
+]
+
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testExportSubProcessExportsContainedNodesAndSequenceFlows [
 	| subProcess startTask endTask flow visitor xml |
 	subProcess := OPBPMNSubProcessModel new.
@@ -443,20 +563,56 @@ OPBPMNXMLWriterVisitorTest >> testSubProcessModelPrintTypeIsCamelCase [
 ]
 
 { #category : 'tests' }
-OPBPMNXMLWriterVisitorTest >> testVisitDefinitionsIncludesTargetNamespace [
-	| mockRoot mockModel visitor xml |
-	mockModel := OPBPMNModel new.
-	mockModel name: 'Test Model'.
-	mockModel isExecutable: false.
-	mockRoot := Mock new.
-	mockRoot stub model willReturn: mockModel.
-	mockRoot stub controllers willReturn: #( ).
+OPBPMNXMLWriterVisitorTest >> testVisitBoundaryEventNonInterruptingWithIncomingAndNilName [
+
+	| boundaryEvent sourceTask flow visitor xml |
+	sourceTask := OPBPMNActivityModel new
+		              name: 'Prev';
+		              yourself.
+	boundaryEvent := OPBPMNBoundaryEventModel new
+		                 name: nil;
+		                 isNonInterrupting: true;
+		                 type: OPBPMNNodeType None;
+		                 yourself.
+	flow := OPBPMNFlowModel from: sourceTask to: boundaryEvent.
+	sourceTask addFlow: flow.
+	boundaryEvent addFlow: flow.
 	visitor := OPBPMNXMLWriterVisitor new.
-	visitor visit: mockRoot.
+	visitor visitElementBoundaryEvent: boundaryEvent.
 	xml := visitor contents.
-	self assert: (xml includesSubstring: 'targetNamespace="https://openponk.org/"')
-		description: 'BPMN 2.0 definitions must declare targetNamespace'.
-	XMLDOMParser parse: xml
+	self
+		assert: (xml includesSubstring: 'name="" cancelActivity="false"')
+		description: 'Non-interrupting boundary event with nil name must emit empty name and cancelActivity=false'.
+	self
+		assert: (xml includesSubstring: '<bpmn:incoming>_6-' , flow uuid asString)
+		description: 'Boundary event must export incoming sequence flow reference'
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testVisitDefinitionsIncludesTargetNamespace [
+
+	| model project projectController controller visitor xml document diagramElements |
+	model := OPBPMNModel new.
+	model name: 'Test Model'.
+	model isExecutable: false.
+	project := OPProject named: 'Test'.
+	project addModel: model.
+	projectController := OPProjectController forProject: project.
+	controller := OPBPMNDiagramController new.
+	projectController addDiagramController: controller.
+	controller model: model.
+	controller diagramElement: (OPOpenPonkDiagram forModelElement: model).
+	controller canvasPresenter: (OPHeadlessCanvasPresenter new
+			 canvas: RSCanvas new;
+			 yourself).
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visit: controller.
+	xml := visitor contents.
+	document := XMLDOMParser parse: xml.
+	self assert: (document root attributeAt: 'targetNamespace') equals: 'https://openponk.org/'.
+	diagramElements := document allElementsNamed: 'bpmndi:BPMNDiagram'.
+	self assert: diagramElements size equals: 1.
+	self assert: (diagramElements first attributeAt: 'name') equals: 'Test Model'
 ]
 
 { #category : 'tests' }
@@ -507,6 +663,34 @@ OPBPMNXMLWriterVisitorTest >> testVisitDiagramAssociationProducesBpmnEdge [
 			               stream cr.
 			               stream nextPutAll: '</bpmndi:BPMNEdge>' ].
 	self assert: xmlContent equals: expectedXml
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testVisitDiagramWithNilModelNameDoesNotCrash [
+
+	| model project projectController controller visitor xml expectedFragment |
+	model := OPBPMNModel new.
+	model name: nil.
+	project := OPProject named: 'Test'.
+	project addModel: model.
+	projectController := OPProjectController forProject: project.
+	controller := OPBPMNDiagramController new.
+	projectController addDiagramController: controller.
+	controller model: model.
+	controller diagramElement: (OPOpenPonkDiagram forModelElement: model).
+	controller canvasPresenter: (OPHeadlessCanvasPresenter new
+			 canvas: RSCanvas new;
+			 yourself).
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visit: controller.
+	xml := visitor contents.
+	expectedFragment := String streamContents: [ :stream |
+			                    stream nextPutAll: '<bpmndi:BPMNDiagram id="BPMNDiagram_'.
+			                    stream nextPutAll: model uuid asString.
+			                    stream nextPutAll: '" name="" resolution="96.0">' ].
+	self
+		assert: (xml includesSubstring: expectedFragment)
+		description: 'BPMNDiagram name attribute should fall back to empty string when model name is nil'
 ]
 
 { #category : 'tests' }
@@ -596,6 +780,37 @@ self assert: writerVisitor writer asString equals:
 ]
 
 { #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testVisitEventWithExecutableAttributeAndNilValues [
+
+	| event dataObject visitor xml |
+	event := OPBPMNStartEventModel new
+		         name: nil;
+		         executableAttribute: 'customAttr';
+		         executableAttributeValue: nil;
+		         type: OPBPMNNodeType Timer;
+		         timerType: #timeCycle;
+		         timerValue: nil;
+		         yourself.
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitElementEvent: event.
+	xml := visitor contents.
+	self assert: (xml includesSubstring: 'name=""') description: 'Event with nil name must emit empty name attribute'.
+	self
+		assert: (xml includesSubstring: 'customAttr=""')
+		description: 'Event with nil executableAttributeValue must emit empty attribute value'.
+	self
+		assert: (xml includesSubstring: '<bpmn:timeCycle xsi:type="semantic:tFormalExpression"/>')
+		description: 'Timer event with nil timerValue must emit empty formal expression'.
+
+	dataObject := OPBPMNDataObjectModel new.
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitElementEventTimer: dataObject.
+	self
+		assert: (visitor contents includesSubstring: '<bpmn:timerEventDefinition id="timerEventDefinition_' , dataObject uuid asString)
+		description: 'visitElementEventTimer: must handle elements without timerType/timerValue'
+]
+
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitFlowRefInOut [
 | model writerVisitor modelSource modelTarget |
 modelSource := OPBPMNActivityModel new.
@@ -616,6 +831,18 @@ self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding
 ]
 
 { #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testVisitFlowRefOutgoingMessageFlow [
+
+	| pool startEvent messageFlow visitor |
+	pool := OPBPMNPoolModel new.
+	startEvent := OPBPMNStartEventModel new.
+	messageFlow := OPBPMNMessageFlowModel from: pool to: startEvent.
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitFlowRef: messageFlow inOut: 'outgoing'.
+	self assertCollection: visitor allMessageFlows hasSameElements: { messageFlow }
+]
+
+{ #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitFlowType [
 | model writerVisitor modelSource modelTarget |
 modelSource := OPBPMNActivityModel new.
@@ -628,6 +855,93 @@ writerVisitor := OPBPMNXMLWriterVisitor new.
 writerVisitor visitFlow: model type: 'sequenceFlow'.
 self assert: writerVisitor writer asString equals: '<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:sequenceFlow sourceRef="_6-', modelSource uuid asString ,'" targetRef="_6-', modelTarget uuid asString ,'" name="Test name" id="_6-', model uuid asString, '"/>'
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testVisitFlowWithNilNameDoesNotCrash [
+
+	| modelSource modelTarget flow visitor xml expectedXml |
+	modelSource := OPBPMNActivityModel new.
+	modelTarget := OPBPMNActivityModel new.
+	flow := OPBPMNFlowModel new.
+	flow source: modelSource.
+	flow target: modelTarget.
+	flow name: nil.
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitFlow: flow type: 'sequenceFlow'.
+	xml := visitor contents.
+	expectedXml := String streamContents: [ :stream |
+			               stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'.
+			               stream cr.
+			               stream nextPutAll: '<bpmn:sequenceFlow sourceRef="_6-'.
+			               stream nextPutAll: modelSource uuid asString.
+			               stream nextPutAll: '" targetRef="_6-'.
+			               stream nextPutAll: modelTarget uuid asString.
+			               stream nextPutAll: '" name="" id="_6-'.
+			               stream nextPutAll: flow uuid asString.
+			               stream nextPutAll: '"/>' ].
+	self assert: xml equals: expectedXml
+]
+
+{ #category : 'tests' }
+OPBPMNXMLWriterVisitorTest >> testVisitNilFieldsAndPoolWithoutLanesAndRootAnnotation [
+
+	| model pool task annotation subProcess lane activityNil flow visitor xml |
+	model := OPBPMNModel new.
+	pool := OPBPMNPoolModel new
+		        name: nil;
+		        yourself.
+	lane := OPBPMNLaneModel new
+		        name: nil;
+		        yourself.
+	activityNil := OPBPMNActivityModel new
+		               name: nil;
+		               executableAttribute: 'attr';
+		               executableAttributeValue: nil;
+		               yourself.
+	annotation := OPBPMNAnnotationModel new
+		              text: nil;
+		              yourself.
+	subProcess := OPBPMNSubProcessModel new
+		              name: nil;
+		              yourself.
+	lane
+		add: activityNil;
+		add: annotation;
+		add: subProcess.
+	pool addLane: lane.
+	model
+		add: pool;
+		add: (OPBPMNAnnotationModel new
+				 text: 'Root note';
+				 yourself).
+
+	visitor := OPBPMNXMLWriterVisitor new.
+	visitor visitSemantic: model.
+	xml := visitor contents.
+	self assert: (xml includesSubstring: '<bpmn:lane name=""') description: 'Lane with nil name must emit empty name'.
+	self assert: (xml includesSubstring: '<bpmn:task name=""') description: 'Activity with nil name must emit empty name'.
+	self
+		assert: (xml includesSubstring: 'attr=""')
+		description: 'Activity with nil executableAttributeValue must emit empty attribute'.
+	self assert: (xml includesSubstring: '<bpmn:text/>') description: 'Annotation with nil text must emit empty text tag'.
+	self assert: (xml includesSubstring: '<bpmn:subProcess name=""') description: 'SubProcess with nil name must emit empty name'.
+
+	model := OPBPMNModel new.
+	task := OPBPMNActivityModel new
+		        name: 'T1';
+		        yourself.
+	subProcess := OPBPMNSubProcessModel new
+		              name: 'S1';
+		              yourself.
+	flow := OPBPMNFlowModel from: task to: subProcess.
+	task addFlow: flow.
+	subProcess addFlow: flow.
+	model
+		add: task;
+		add: subProcess.
+	xml := OPBPMNXMLWriter toString: model.
+	self assert: (xml includesSubstring: '<bpmn:sequenceFlow') description: 'Poolless BPMN model must export sequence flows'
 ]
 
 { #category : 'tests' }
