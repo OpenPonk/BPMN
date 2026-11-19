@@ -16,6 +16,7 @@ Class {
 
 { #category : 'rendering' }
 OPBPMNBoundaryEventShape >> attachToHostShape [
+
 	| hostElement hostRoassalShape boundarySiblings siblingIndex horizontalOffset |
 	self isRendered ifFalse: [ ^ self ].
 	hostElement := self hostDiagramElement.
@@ -23,21 +24,20 @@ OPBPMNBoundaryEventShape >> attachToHostShape [
 	hostRoassalShape := hostElement roassalShape.
 	hostRoassalShape ifNil: [ ^ self ].
 	boundarySiblings := (self modelElement isNotNil and: [ self modelElement owner isNotNil ])
-		ifTrue: [
-			self modelElement owner elements select: [ :eachElement |
-				eachElement isKindOf: OPBPMNBoundaryEventModel ] ]
-		ifFalse: [
-			(hostElement ownedElements select: [ :eachElement |
-				(eachElement isKindOf: OPBPMNBoundaryEventShape) and: [ eachElement isRendered ] ])
-				collect: #modelElement ].
+		                    ifTrue: [
+		                    self modelElement owner elements select: [ :eachElement | eachElement isKindOf: OPBPMNBoundaryEventModel ] ]
+		                    ifFalse: [
+				                    hostElement ownedElements
+					                    select: [ :eachElement |
+					                    (eachElement isKindOf: OPBPMNBoundaryEventShape) and: [ eachElement isRendered ] ]
+					                    thenCollect: #modelElement ].
 	siblingIndex := (boundarySiblings indexOf: self modelElement) max: 1.
-	horizontalOffset := -1 - ((siblingIndex - 1) * 44).
+	horizontalOffset := -1 - (siblingIndex - 1 * 48).
 	RSLocation new
 		bottom;
 		right;
 		offset: horizontalOffset @ 22;
-		move: self roassalShape
-		on: hostRoassalShape
+		move: self roassalShape on: hostRoassalShape
 ]
 
 { #category : 'accessing' }
@@ -71,7 +71,7 @@ OPBPMNBoundaryEventShape >> createBorder [
 OPBPMNBoundaryEventShape >> createRoassalShape [
 
 	^ RSCircle new
-		  size: 39;
+		  size: 44;
 		  borderColor: Color black;
 		  border: borderOut;
 		  yourself
@@ -108,6 +108,7 @@ OPBPMNBoundaryEventShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNBoundaryEventShape >> renderShapeDetails [
+
 	| label |
 	label := RSLabeled new.
 	label location below offset: 0 @ 2.
@@ -119,11 +120,11 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 	self attachIconShape.
 
 	innerCircle := RSCircle new
-		size: 31;
-		borderColor: Color black;
-		color: Color transparent;
-		border: borderIn;
-		yourself.
+		               size: 36;
+		               borderColor: Color black;
+		               color: Color transparent;
+		               border: borderIn;
+		               yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape.
 	self subscribeToHostShape.

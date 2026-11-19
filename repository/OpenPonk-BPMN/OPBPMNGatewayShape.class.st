@@ -12,10 +12,14 @@ Class {
 { #category : 'connecting' }
 OPBPMNGatewayShape >> createRoassalShape [
 
-	^  RSPolygon new
-		points: { 0@24. 24@0. 0@(-24). -24@0. };
-		borderColor: Color black;
-		yourself.
+	^ RSPolygon new
+		  points: {
+				  (0 @ 26).
+				  (26 @ 0).
+				  (0 @ -26).
+				  (-26 @ 0) };
+		  borderColor: Color black;
+		  yourself
 ]
 
 { #category : 'rendering' }

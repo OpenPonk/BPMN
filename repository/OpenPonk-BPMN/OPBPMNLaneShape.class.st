@@ -28,16 +28,21 @@ OPBPMNLaneShape class >> stonAllInstVarNames [
 { #category : 'layout' }
 OPBPMNLaneShape >> adaptBoundsToInnerBounds: anInnerRectangle [
 	"Resizes lane shape to encompass inner flow nodes, accounting for lane header width."
+
 	| laneShape laneLeft laneRight laneTop laneBottom laneRectangle |
 	laneShape := self roassalShape.
 	self innerNodeElements ifEmpty: [
-		laneShape extent: 600 @ 120.
-		^ self ].
+			laneShape extent: 620 @ 150.
+			^ self ].
 	laneLeft := anInnerRectangle left - (self nameAreaWidth + 30).
 	laneRight := anInnerRectangle right + 40.
-	laneTop := anInnerRectangle top - 35.
-	laneBottom := anInnerRectangle bottom + 35.
-	laneRectangle := Rectangle left: laneLeft right: laneRight top: laneTop bottom: laneBottom.
+	laneTop := anInnerRectangle top - 40.
+	laneBottom := anInnerRectangle bottom + 45.
+	laneRectangle := Rectangle
+		                 left: laneLeft
+		                 right: laneRight
+		                 top: laneTop
+		                 bottom: laneBottom.
 	laneShape
 		extent: laneRectangle extent;
 		translateTo: laneRectangle center

@@ -25,31 +25,35 @@ OPBPMNPoolShape class >> minimumHeight [
 { #category : 'layout' }
 OPBPMNPoolShape >> adaptBoundsToInnerBounds: anInnerRectangle [
 	"Resizes pool shape to encompass inner nodes or lanes, accounting for pool header width."
+
 	| poolShape poolLeft poolRight poolTop poolBottom poolRectangle |
 	poolShape := self roassalShape.
 	self innerNodeElements ifEmpty: [
-		poolShape extent: 650 @ 120.
-		^ self ].
+			poolShape extent: 650 @ 200.
+			^ self ].
 	self hasLanes
 		ifTrue: [
-			poolLeft := anInnerRectangle left - self nameAreaWidth.
-			poolRight := anInnerRectangle right.
-			poolTop := anInnerRectangle top.
-			poolBottom := anInnerRectangle bottom ]
+				poolLeft := anInnerRectangle left - self nameAreaWidth.
+				poolRight := anInnerRectangle right.
+				poolTop := anInnerRectangle top.
+				poolBottom := anInnerRectangle bottom ]
 		ifFalse: [
-			poolLeft := anInnerRectangle left - (self nameAreaWidth + 30).
-			poolRight := anInnerRectangle right + 40.
-			poolTop := anInnerRectangle top - 35.
-			poolBottom := anInnerRectangle bottom + 35 ].
-	poolRectangle := Rectangle left: poolLeft right: poolRight top: poolTop bottom: poolBottom.
+				poolLeft := anInnerRectangle left - (self nameAreaWidth + 30).
+				poolRight := anInnerRectangle right + 40.
+				poolTop := anInnerRectangle top - 40.
+				poolBottom := anInnerRectangle bottom + 45 ].
+	poolRectangle := Rectangle
+		                 left: poolLeft
+		                 right: poolRight
+		                 top: poolTop
+		                 bottom: poolBottom.
 	isAdjustingExtent := true.
 	[
 		poolShape
 			translateTo: poolRectangle center;
 			extent: poolRectangle extent.
 		self lastRectangle: poolRectangle.
-		self updateNameArea
-	] ensure: [ isAdjustingExtent := false ].
+		self updateNameArea ] ensure: [ isAdjustingExtent := false ].
 	self hasLanes ifTrue: [ self relocateLanesDisplacingElements: false ]
 ]
 
@@ -320,7 +324,7 @@ OPBPMNPoolShape >> renderBasicShape [
 
 	^ RSBox new
 		  width: 650;
-		  height: 400;
+		  height: 200;
 		  color: Color transparent;
 		  borderColor: Color black
 ]

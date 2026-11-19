@@ -51,7 +51,7 @@ OPBPMNAnnotationShape >> isSecondaryLayoutShape [
 { #category : 'rendering' }
 OPBPMNAnnotationShape >> minExtent [
 
-	^ self visibleBorderWidth + 2 @ 30
+	^ self visibleBorderWidth + 2 @ 38
 ]
 
 { #category : 'removing' }

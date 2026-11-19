@@ -52,15 +52,16 @@ OPBPMNDataObjectShape >> color: aColor [
 
 { #category : 'update' }
 OPBPMNDataObjectShape >> createRoassalShape [
+
 	| composite boundingBox |
 	composite := RSComposite new.
 	boundingBox := RSBox new
-		width: 50;
-		height: 50;
-		border: (RSBorder new
-			width: 1;
-			color: Color transparent);
-		color: Color transparent.
+		               width: 55;
+		               height: 55;
+		               border: (RSBorder new
+				                width: 1;
+				                color: Color transparent);
+		               color: Color transparent.
 	composite add: boundingBox.
 	composite adjustToChildren.
 	^ composite

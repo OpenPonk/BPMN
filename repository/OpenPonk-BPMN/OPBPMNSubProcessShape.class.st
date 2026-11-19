@@ -5,7 +5,8 @@ Class {
 	#name : 'OPBPMNSubProcessShape',
 	#superclass : 'OPBPMNNodeShape',
 	#instVars : [
-		'labeled'
+		'labeled',
+		'wrappedForWidth'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
@@ -15,8 +16,9 @@ Class {
 { #category : 'layout' }
 OPBPMNSubProcessShape >> adaptBoundsToInnerBounds: anInnerRectangle [
 	"Adapts subprocess shape extent and position to safely enclose inner nodes."
+
 	| requiredExtent |
-	requiredExtent := (anInnerRectangle extent + (60 @ 40)) max: 200 @ 120.
+	requiredExtent := anInnerRectangle extent + (70 @ 60) max: 250 @ 150.
 	self roassalShape extent: requiredExtent.
 	self roassalShape translateTo: anInnerRectangle center
 ]
@@ -30,7 +32,7 @@ OPBPMNSubProcessShape >> addSelectionDraggableInteraction [
 OPBPMNSubProcessShape >> createRoassalShape [
 
 	^ RSBox new
-		  extent: 150 @ 100;
+		  extent: 190 @ 125;
 		  border: (RSBorder new
 				   color: Color black;
 				   width: 1);
@@ -61,18 +63,33 @@ OPBPMNSubProcessShape >> isContainer [
 
 { #category : 'removing' }
 OPBPMNSubProcessShape >> removeRender [
+
+	roassalShape ifNotNil: [ :shape | shape announcer unsubscribe: self ].
 	super removeRender.
-	labeled := nil
+	labeled := nil.
+	wrappedForWidth := nil
 ]
 
 { #category : 'rendering' }
 OPBPMNSubProcessShape >> renderShapeDetails [
+
 	labeled := OPRSLabeled new.
 	labeled color: Color black.
-	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
-	labeled location top offset: 0 @ 17.
+	labeled shapeBuilder wrapStrategy: (RSWrapStrategy new wrapMaxWidth: self wrapMaxWidth).
+	labeled location
+		inner;
+		top;
+		center;
+		offset: 0 @ 6.
 	labeled text: ''.
 	roassalShape @ labeled.
+	wrappedForWidth := roassalShape width.
+	roassalShape
+		when: RSExtentChangedEvent
+		do: [
+				(wrappedForWidth isNil or: [ (roassalShape width closeTo: wrappedForWidth absolutePrecision: 0.99) not ]) ifTrue: [
+					self updateLabel ] ]
+		for: self.
 
 	icon := self createTypeIconShape.
 	self canvas add: icon.
@@ -87,9 +104,19 @@ OPBPMNSubProcessShape >> shouldBeResizableByUser [
 ]
 
 { #category : 'rendering' }
+OPBPMNSubProcessShape >> textPadding [
+
+	^ 8
+]
+
+{ #category : 'rendering' }
 OPBPMNSubProcessShape >> updateLabel [
-	labeled ifNotNil: [
-		labeled text: (self modelElement name ifNil: [ '' ]) ]
+
+	labeled ifNil: [ ^ self ].
+	wrappedForWidth := roassalShape width.
+	labeled
+		wrapMaxWidth: self wrapMaxWidth;
+		text: (self modelElement name ifNil: [ '' ])
 ]
 
 { #category : 'rendering' }
@@ -99,4 +126,10 @@ OPBPMNSubProcessShape >> updateRenderFromSelf [
 	roassalShape color: self color.
 
 	super updateRenderFromSelf
+]
+
+{ #category : 'rendering' }
+OPBPMNSubProcessShape >> wrapMaxWidth [
+
+	^ self width - (self textPadding * 2) max: 20
 ]

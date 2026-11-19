@@ -36,24 +36,17 @@ OPBPMNCollapsedSubProcessControllerTest >> modelClass [
 
 { #category : 'tests' }
 OPBPMNCollapsedSubProcessControllerTest >> testIconPositionsRemainAtOffsetsAfterUpdateRenderFromModel [
-	| shape roassalCenter iconPos subprocessIconPos |
+
+	| shape hostRect iconRect subprocessIconRect |
 	self showInDiagram.
 	self model type: OPBPMNNodeType MarkerParallel.
 	self controller modelChanged.
 	shape := self controller diagramElement.
-	roassalCenter := shape roassalShape position.
-	iconPos := (shape instVarNamed: #icon) position.
-	subprocessIconPos := (shape instVarNamed: #subprocessIcon) position.
-	self
-		assert: (iconPos x closeTo: roassalCenter x - 16)
-		description: 'Marker icon X must be offset by -16 from center, but was ' , (iconPos x - roassalCenter x) asString.
-	self
-		assert: (iconPos y closeTo: roassalCenter y + 16)
-		description: 'Marker icon Y must be offset by +16 from center, but was ' , (iconPos y - roassalCenter y) asString.
-	self
-		assert: (subprocessIconPos x closeTo: roassalCenter x)
-		description: 'Subprocess [+] icon X must be aligned with center, but was ' , (subprocessIconPos x - roassalCenter x) asString.
-	self
-		assert: (subprocessIconPos y closeTo: roassalCenter y + 16)
-		description: 'Subprocess [+] icon Y must be offset by +16 from center, but was ' , (subprocessIconPos y - roassalCenter y) asString
+	hostRect := shape roassalShape encompassingRectangle.
+	iconRect := (shape instVarNamed: #icon) encompassingRectangle.
+	subprocessIconRect := (shape instVarNamed: #subprocessIcon) encompassingRectangle.
+	self assert: iconRect floatCenter x closeTo: hostRect floatCenter x - 18 precision: 0.5.
+	self assert: iconRect bottom closeTo: hostRect bottom - 4 precision: 0.5.
+	self assert: subprocessIconRect floatCenter x closeTo: hostRect floatCenter x precision: 0.5.
+	self assert: subprocessIconRect bottom closeTo: hostRect bottom - 4 precision: 0.5
 ]

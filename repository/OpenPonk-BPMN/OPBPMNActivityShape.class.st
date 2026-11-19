@@ -29,12 +29,12 @@ OPBPMNActivityShape >> createBorder [
 
 { #category : 'connecting' }
 OPBPMNActivityShape >> createRoassalShape [
+
 	^ RSBox new
-		extent: 85@55;
-		border: border;
-		cornerRadius: 10;
-		yourself
-	
+		  extent: 110 @ 70;
+		  border: border;
+		  cornerRadius: 10;
+		  yourself
 ]
 
 { #category : 'rendering' }
@@ -45,9 +45,13 @@ OPBPMNActivityShape >> createTypeIconShape [
 
 { #category : 'rendering' }
 OPBPMNActivityShape >> iconLocation [
+
 	^ RSLocation new
-		offset: -28 @ -16;
-		yourself
+		  inner;
+		  top;
+		  left;
+		  offset: 6 @ 5;
+		  yourself
 ]
 
 { #category : 'initialization' }
@@ -65,10 +69,15 @@ OPBPMNActivityShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNActivityShape >> renderShapeDetails [
+
 	labeled := OPRSLabeled new.
 	labeled color: Color black.
-	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
-	labeled location middle.
+	labeled shapeBuilder wrapStrategy: (RSWrapStrategy new wrapMaxWidth: self wrapMaxWidth).
+	labeled location
+		inner;
+		center;
+		middle;
+		offset: self textOffset.
 	labeled text: ''.
 	roassalShape @ labeled.
 
@@ -80,13 +89,36 @@ OPBPMNActivityShape >> renderShapeDetails [
 ]
 
 { #category : 'rendering' }
+OPBPMNActivityShape >> textOffset [
+
+	(self modelElement isNotNil and: [ self modelElement type ~= OPBPMNNodeType None ]) ifTrue: [ ^ 0 @ 6 ].
+	^ 0 @ 0
+]
+
+{ #category : 'rendering' }
+OPBPMNActivityShape >> textPadding [
+
+	^ 5
+]
+
+{ #category : 'rendering' }
 OPBPMNActivityShape >> updateLabel [
+
 	labeled ifNotNil: [
-		labeled text: (self modelElement name ifNil: [ '' ]) ]
+			labeled location offset: self textOffset.
+			labeled
+				wrapMaxWidth: self wrapMaxWidth;
+				text: (self modelElement name ifNil: [ '' ]) ]
 ]
 
 { #category : 'rendering' }
 OPBPMNActivityShape >> updateRenderFromModel [
 	self createBorder.
 	super updateRenderFromModel
+]
+
+{ #category : 'rendering' }
+OPBPMNActivityShape >> wrapMaxWidth [
+
+	^ self width - (self textPadding * 2) max: 20
 ]

@@ -28,11 +28,12 @@ OPBPMNStartEventShape >> createBorder [
 
 { #category : 'connecting' }
 OPBPMNStartEventShape >> createRoassalShape [
+
 	^ RSCircle new
-		size: 39;
-		borderColor: Color black;
-		border: border;
-		yourself
+		  size: 44;
+		  borderColor: Color black;
+		  border: border;
+		  yourself
 ]
 
 { #category : 'rendering' }

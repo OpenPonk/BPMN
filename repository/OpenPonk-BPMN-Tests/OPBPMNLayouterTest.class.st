@@ -118,8 +118,8 @@ OPBPMNLayouterTest >> testPoolWithLanesAdaptsLaneHeightsToEncompassContainedElem
 	salesRect := salesShape encompassingRectangle.
 	warehouseRect := warehouseShape encompassingRectangle.
 
-	self assert: salesController diagramElement laneHeight equals: 220.
-	self assert: warehouseController diagramElement laneHeight equals: 106.
+	self assert: salesController diagramElement laneHeight equals: 285.
+	self assert: warehouseController diagramElement laneHeight equals: 141.
 
 	salesNodes := salesController diagramElement directNodeRoassalShapes.
 	salesNodes do: [ :eachNode |
@@ -167,6 +167,31 @@ OPBPMNLayouterTest >> testPoolWithLanesStacksLanesVerticallyWithZeroGap [
 ]
 
 { #category : 'tests' }
+OPBPMNLayouterTest >> testSecondaryShapesDoNotOverlapTargetFlowNodesAfterDefaultLayout [
+
+	| layouter checkStockShape orderDetailsShape slaAnnotationShape checkStockRect orderDetailsRect slaRect |
+	layouter := OPBPMNLayouter new diagramController: diagramController.
+	layouter defaultLayout.
+	checkStockShape := (diagramController controllers detect: [ :eachController | eachController model name = 'Check Stock' ])
+		                   roassalShape.
+	orderDetailsShape := (diagramController controllers detect: [ :eachController | eachController model name = 'Order Details' ])
+		                     roassalShape.
+	slaAnnotationShape := (diagramController controllers detect: [ :eachController |
+		                       eachController isKindOf: OPBPMNAnnotationController ]) roassalShape.
+
+	checkStockRect := checkStockShape encompassingRectangle.
+	orderDetailsRect := orderDetailsShape encompassingRectangle.
+	slaRect := slaAnnotationShape encompassingRectangle.
+
+	self
+		assert: slaRect bottom <= (checkStockRect top - 15)
+		description: 'Annotation must sit clearly above its target activity without overlapping'.
+	self
+		assert: orderDetailsRect top >= (checkStockRect bottom + 15)
+		description: 'Data object must sit clearly below its target activity without overlapping'
+]
+
+{ #category : 'tests' }
 OPBPMNLayouterTest >> testSequenceFlowFollowsLeftToRightDirection [
 
 	| layouter startShape checkStockShape gatewayShape subProcessShape shipmentShape endShape orderedPositions |
@@ -192,7 +217,7 @@ OPBPMNLayouterTest >> testSequenceFlowFollowsLeftToRightDirection [
 		                    subProcessShape.
 		                    shipmentShape.
 		                    endShape } collect: [ :eachShape | eachShape position x ].
-	self assert: orderedPositions equals: #( 80.0 193.0 310.5 538.5 884.0 1087.5 )
+	self assert: orderedPositions equals: #( 108.0 246.0 388.0 660.0 1074.0 1317.0 )
 ]
 
 { #category : 'tests' }

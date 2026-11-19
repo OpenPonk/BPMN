@@ -43,12 +43,12 @@ OPBPMNCollapsedSubProcessShape >> createBorder [
 
 { #category : 'connecting' }
 OPBPMNCollapsedSubProcessShape >> createRoassalShape [
+
 	^ RSBox new
-		extent: 85@55;
-		border: border;
-		cornerRadius: 10;
-		yourself
-	
+		  extent: 110 @ 70;
+		  border: border;
+		  cornerRadius: 10;
+		  yourself
 ]
 
 { #category : 'rendering' }
@@ -59,9 +59,13 @@ OPBPMNCollapsedSubProcessShape >> createTypeIconShape [
 
 { #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> iconLocation [
+
 	^ RSLocation new
-		offset: -16 @ 16;
-		yourself
+		  inner;
+		  bottom;
+		  center;
+		  offset: -18 @ -4;
+		  yourself
 ]
 
 { #category : 'initialization' }
@@ -80,10 +84,15 @@ OPBPMNCollapsedSubProcessShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
+
 	labeled := OPRSLabeled new.
 	labeled color: Color black.
-	labeled shapeBuilder wrapStrategy: RSWrapStrategy new.
-	labeled location middle.
+	labeled shapeBuilder wrapStrategy: (RSWrapStrategy new wrapMaxWidth: self wrapMaxWidth).
+	labeled location
+		inner;
+		center;
+		middle;
+		offset: self textOffset.
 	labeled text: ''.
 	roassalShape @ labeled.
 
@@ -97,9 +106,25 @@ OPBPMNCollapsedSubProcessShape >> renderShapeDetails [
 
 { #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> subprocessIconLocation [
+
 	^ RSLocation new
-		offset: 0 @ 16;
-		yourself
+		  inner;
+		  bottom;
+		  center;
+		  offset: 0 @ -4;
+		  yourself
+]
+
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> textOffset [
+
+	^ 0 @ -7
+]
+
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> textPadding [
+
+	^ 5
 ]
 
 { #category : 'rendering' }
@@ -111,12 +136,22 @@ OPBPMNCollapsedSubProcessShape >> updateIconPosition [
 
 { #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> updateLabel [
+
 	labeled ifNotNil: [
-		labeled text: (self modelElement name ifNil: [ '' ]) ]
+			labeled location offset: self textOffset.
+			labeled
+				wrapMaxWidth: self wrapMaxWidth;
+				text: (self modelElement name ifNil: [ '' ]) ]
 ]
 
 { #category : 'rendering' }
 OPBPMNCollapsedSubProcessShape >> updateRenderFromModel [
 	self createBorder.
 	super updateRenderFromModel
+]
+
+{ #category : 'rendering' }
+OPBPMNCollapsedSubProcessShape >> wrapMaxWidth [
+
+	^ self width - (self textPadding * 2) max: 20
 ]

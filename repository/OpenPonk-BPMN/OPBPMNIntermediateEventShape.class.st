@@ -20,10 +20,11 @@ OPBPMNIntermediateEventShape >> attachedShapes [
 
 { #category : 'connecting' }
 OPBPMNIntermediateEventShape >> createRoassalShape [
+
 	^ RSCircle new
-		size: 39;
-		borderColor: Color black;
-		yourself
+		  size: 44;
+		  borderColor: Color black;
+		  yourself
 ]
 
 { #category : 'rendering' }
@@ -41,6 +42,7 @@ OPBPMNIntermediateEventShape >> removeRender [
 
 { #category : 'rendering' }
 OPBPMNIntermediateEventShape >> renderShapeDetails [
+
 	| label |
 	label := RSLabeled new.
 	label location below.
@@ -52,10 +54,10 @@ OPBPMNIntermediateEventShape >> renderShapeDetails [
 	self attachIconShape.
 
 	innerCircle := RSCircle new
-		size: 31;
-		borderColor: Color black;
-		color: Color transparent;
-		yourself.
+		               size: 36;
+		               borderColor: Color black;
+		               color: Color transparent;
+		               yourself.
 	self canvas add: innerCircle.
 	RSLocation new stick: innerCircle on: self roassalShape
 ]
