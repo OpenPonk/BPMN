@@ -16,20 +16,18 @@ GW07LabeledOutgoingFlows class >> validateClass [
 
 { #category : 'verification' }
 GW07LabeledOutgoingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| outgoingSequenceFlows hasUnlabeledFlow |
-	(aVerifiedObject isKindOf: OPBPMNGatewayModel) ifFalse: [ ^ {  } ].
-	(aVerifiedObject type = OPBPMNNodeType Parallel
-		or: [ aVerifiedObject type = OPBPMNNodeType Eventbased ]) ifTrue: [ ^ {  } ].
+	(aVerifiedObject type = OPBPMNNodeType Parallel or: [ aVerifiedObject type = OPBPMNNodeType Eventbased ]) ifTrue: [ ^ {  } ].
 	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ].
 	outgoingSequenceFlows size > 1 ifFalse: [ ^ {  } ].
 	hasUnlabeledFlow := outgoingSequenceFlows anySatisfy: [ :each |
-		each type ~= 'Default' and: [
-			each name isNil or: [ each name trimBoth isEmpty ] ] ].
+		                    each type ~= 'Default' and: [ each name isNil or: [ each name trimBoth isEmpty ] ] ].
 	hasUnlabeledFlow ifTrue: [
-		^ { (OPBPMNValidationMessageWarning
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(GW07) ' , aVerifiedObject class name
-				, ' should have labeled outgoing flows (except Default Flow). Label should answer the Gateway condition.') } ].
+			^ { (OPBPMNValidationMessageWarning
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(GW07) ' , aVerifiedObject class name
+					   , ' should have labeled outgoing flows (except Default Flow). Label should answer the Gateway condition.') } ].
 	^ {  }
 ]

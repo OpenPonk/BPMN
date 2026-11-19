@@ -48,12 +48,12 @@ OPBPMNValidationResultsUI >> controller: aController [
 
 { #category : 'accessing' }
 OPBPMNValidationResultsUI >> getElementColor: anElement [
-	self controller controllers
-		detect: [ :eachController | eachController model = anElement ]
-		ifFound: [ :matchingController |
-			(matchingController respondsTo: #diagramElement) ifFalse: [ ^ nil ].
-			(matchingController diagramElement respondsTo: #borderColor)
-				ifTrue: [ ^ matchingController diagramElement borderColor ].
+
+	self controller controllers detect: [ :eachController | eachController model = anElement ] ifFound: [ :matchingController |
+			| diagramElement |
+			diagramElement := matchingController diagramElement.
+			diagramElement exists ifFalse: [ ^ nil ].
+			(diagramElement respondsTo: #borderColor) ifTrue: [ ^ diagramElement borderColor ].
 			^ Color black ].
 	^ nil
 ]

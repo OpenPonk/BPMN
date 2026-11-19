@@ -19,15 +19,6 @@ PR2347ProcessErrors class >> PR02ActivityCounterError: aValidateModel [
 ]
 
 { #category : 'as yet unclassified' }
-PR2347ProcessErrors class >> PR03MoreProcesses: aValidateModel [
-	^ (OPBPMNValidationMessageWarning
-				   createFor: aValidateModel
-				   withValidation: self
-				   withText: '(PR03) ' , aValidateModel class name
-					   , ' elements of one process should be in one Pool.').
-]
-
-{ #category : 'as yet unclassified' }
 PR2347ProcessErrors class >> PR04AllInsidePool: aValidateModel [
 	^ (OPBPMNValidationMessageWarning
 				   createFor: aValidateModel

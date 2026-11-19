@@ -11,10 +11,12 @@ Class {
 
 { #category : 'specs' }
 OPBPMNValidationUI class >> changeElementColorTo: aColor using: aController [
-	(aController respondsTo: #diagramElement) ifFalse: [ ^ self ].
-	(aController diagramElement respondsTo: #strokeColor:) ifFalse: [ ^ self ].
-	aController diagramElement strokeColor: aColor.
-	aController diagramElement updateRenderFromSelf
+
+	| diagramElement |
+	diagramElement := aController diagramElement.
+	(diagramElement exists and: [ diagramElement respondsTo: #strokeColor: ]) ifFalse: [ ^ self ].
+	diagramElement strokeColor: aColor.
+	diagramElement updateRenderFromSelf
 ]
 
 { #category : 'specs' }
@@ -27,16 +29,15 @@ OPBPMNValidationUI class >> removeHighlightsFromElementsIn: aDiagramController [
 
 { #category : 'specs' }
 OPBPMNValidationUI class >> updateValidatedElementStyle: aVerificationResults using: aController [
-	| color |
-	(aController respondsTo: #diagramElement) ifFalse: [ ^ self ].
-	(aController diagramElement respondsTo: #strokeColor:) ifFalse: [ ^ self ].
+
+	| diagramElement color |
+	diagramElement := aController diagramElement.
+	(diagramElement exists and: [ diagramElement respondsTo: #strokeColor: ]) ifFalse: [ ^ self ].
 	color := Color black.
-	(aVerificationResults hasWarnings: aController model) ifTrue: [ 
-		color := Color orange ].
-	(aVerificationResults hasErrors: aController model) ifTrue: [ 
-		color := Color red ].
-	aController diagramElement strokeColor: color.
-	aController diagramElement updateRenderFromSelf
+	(aVerificationResults hasWarnings: aController model) ifTrue: [ color := Color orange ].
+	(aVerificationResults hasErrors: aController model) ifTrue: [ color := Color red ].
+	diagramElement strokeColor: color.
+	diagramElement updateRenderFromSelf
 ]
 
 { #category : 'specs' }

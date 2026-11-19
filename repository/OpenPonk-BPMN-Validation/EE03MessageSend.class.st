@@ -16,14 +16,12 @@ EE03MessageSend class >> validateClass [
 
 { #category : 'verification' }
 EE03MessageSend >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	(aVerifiedObject isKindOf: OPBPMNEndEventModel) ifFalse: [ ^ {  } ].
+
 	(aVerifiedObject type = OPBPMNNodeType Send and: [
-		aVerifiedObject outgoing noneSatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ] ])
-		ifTrue: [
+		 aVerifiedObject outgoing noneSatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ] ]) ifTrue: [
 			^ { (OPBPMNValidationMessageWarning
-				createFor: aVerifiedObject
-				withValidation: self
-				withText: '(EE03) ' , aVerifiedObject class name
-					, ' of Message Send type should have outgoing Message Flow.') } ].
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(EE03) ' , aVerifiedObject class name , ' of Message Send type should have outgoing Message Flow.') } ].
 	^ {  }
 ]

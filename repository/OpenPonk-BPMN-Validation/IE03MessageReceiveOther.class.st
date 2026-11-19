@@ -22,19 +22,19 @@ IE03MessageReceiveOther class >> validateClass [
 
 { #category : 'verification' }
 IE03MessageReceiveOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| hasIncomingMessageFlow allowedTypes |
-	(self class canValidate: aVerifiedObject) ifFalse: [ ^ {  } ].
-	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow | eachFlow isKindOf: OPBPMNMessageFlowModel ].
 	hasIncomingMessageFlow ifFalse: [ ^ {  } ].
 	allowedTypes := {
-		OPBPMNNodeType Receive .
-		OPBPMNNodeType Multiple .
-		OPBPMNNodeType ParallelMultiple }.
+		                OPBPMNNodeType Receive.
+		                OPBPMNNodeType Multiple.
+		                OPBPMNNodeType ParallelMultiple }.
 	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(IE03) ' , aVerifiedObject class name
-			, ' can have incoming Message Flow only as Message, Multiple, or ParallelMultiple type.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText:
+		   '(IE03) ' , aVerifiedObject class name
+		   , ' can have incoming Message Flow only as Message, Multiple, or ParallelMultiple type.') }
 ]

@@ -16,13 +16,11 @@ AC01MessageReceive class >> validateClass [
 
 { #category : 'verification' }
 AC01MessageReceive >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifFalse: [ ^ {  } ].
+
 	aVerifiedObject type = OPBPMNNodeType Receive ifFalse: [ ^ {  } ].
-	(aVerifiedObject incoming anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
-		ifTrue: [ ^ {  } ].
+	(aVerifiedObject incoming anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ]) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageWarning
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(AC01) ' , aVerifiedObject class name
-			, ' of Message Receive type should have incoming Message Flow.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText: '(AC01) ' , aVerifiedObject class name , ' of Message Receive type should have incoming Message Flow.') }
 ]

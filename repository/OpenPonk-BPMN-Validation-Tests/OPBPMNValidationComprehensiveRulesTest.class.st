@@ -49,6 +49,12 @@ OPBPMNValidationComprehensiveRulesTest >> testAN06TriggeredWhenSingleConditional
 	self assert: results first severity equals: 'Error'
 ]
 
+{ #category : 'tests - activities' }
+OPBPMNValidationComprehensiveRulesTest >> testAN07ValidateClassReturnsNodeModel [
+
+	self assert: AN07UnconnectedArtifactOrData validateClass identicalTo: OPBPMNNodeModel
+]
+
 { #category : 'tests - pools' }
 OPBPMNValidationComprehensiveRulesTest >> testBlackBoxPoolWithAnnotationRemainsBlackBoxAndDoesNotTriggerPR02OrPR05 [
 	| poolCustomer poolVendor annotation msgFlow results |
@@ -73,6 +79,58 @@ OPBPMNValidationComprehensiveRulesTest >> testBlackBoxPoolWithAnnotationRemainsB
 	self
 		deny: (results hasErrors: poolVendor)
 		description: 'Target Black-Box pool must not trigger PR05 error'
+]
+
+{ #category : 'tests - events' }
+OPBPMNValidationComprehensiveRulesTest >> testBoundaryErrorAndEscalationSiblingsInSubProcessPassBE03AndBE04 [
+
+	| sub1 sub2 errorBoundary errorEnd escalationBoundary1 escalationEnd escalationBoundary2 escalationIntermediate results |
+	sub1 := OPBPMNSubProcessModel new name: 'Sub With End Siblings'.
+	errorEnd := OPBPMNEndEventModel new
+		            name: 'Throw Error';
+		            type: OPBPMNNodeType Error;
+		            yourself.
+	escalationEnd := OPBPMNEndEventModel new
+		                 name: 'Throw Escalation End';
+		                 type: OPBPMNNodeType EscalationThrow;
+		                 yourself.
+	errorBoundary := OPBPMNBoundaryEventModel new
+		                 name: 'Catch Error';
+		                 type: OPBPMNNodeType Error;
+		                 yourself.
+	escalationBoundary1 := OPBPMNBoundaryEventModel new
+		                       name: 'Catch Escalation 1';
+		                       type: OPBPMNNodeType Escalation;
+		                       yourself.
+	sub1
+		add: errorEnd;
+		add: escalationEnd;
+		add: errorBoundary;
+		add: escalationBoundary1.
+
+	sub2 := OPBPMNSubProcessModel new name: 'Sub With Intermediate Escalation'.
+	escalationIntermediate := OPBPMNIntermediateEventModel new
+		                          name: 'Throw Escalation Mid';
+		                          type: OPBPMNNodeType EscalationThrow;
+		                          yourself.
+	escalationBoundary2 := OPBPMNBoundaryEventModel new
+		                       name: 'Catch Escalation 2';
+		                       type: OPBPMNNodeType Escalation;
+		                       yourself.
+	sub2
+		add: escalationIntermediate;
+		add: escalationBoundary2.
+	model
+		add: sub1;
+		add: sub2.
+
+	results := controller validate: model.
+	self
+		deny: (results selectWarnings anySatisfy: [ :each | each messageText includesSubstring: 'BE03' ])
+		description: 'Error boundary event with matching Error End Event in SubProcess must not trigger BE03'.
+	self
+		deny: (results selectWarnings anySatisfy: [ :each | each messageText includesSubstring: 'BE04' ])
+		description: 'Escalation boundary events with matching EscalationThrow End or Intermediate Event must not trigger BE04'
 ]
 
 { #category : 'tests - controller' }
@@ -213,6 +271,54 @@ OPBPMNValidationComprehensiveRulesTest >> testCompensationBoundaryEventAndCompen
 ]
 
 { #category : 'tests - events' }
+OPBPMNValidationComprehensiveRulesTest >> testCompensationBoundaryEventToSubProcessAndCollapsedSubProcessPassesBE02AndIsCompensationActivity [
+
+	| mainTask boundaryToSub boundaryToCollapsed subProcess collapsedSubProcess assocToSub assocToCollapsed results |
+	mainTask := OPBPMNActivityModel new name: 'Main Task'.
+	boundaryToSub := OPBPMNBoundaryEventModel new
+		                 name: 'Compensate Sub';
+		                 type: OPBPMNNodeType Compensation;
+		                 yourself.
+	boundaryToCollapsed := OPBPMNBoundaryEventModel new
+		                       name: 'Compensate Collapsed';
+		                       type: OPBPMNNodeType CatchCompensation;
+		                       yourself.
+	mainTask
+		add: boundaryToSub;
+		add: boundaryToCollapsed.
+	subProcess := OPBPMNSubProcessModel new name: 'Compensation SubProcess'.
+	collapsedSubProcess := OPBPMNCollapsedSubProcessModel new name: 'Compensation Collapsed'.
+	assocToSub := OPBPMNAssociationModel new
+		              source: boundaryToSub;
+		              target: subProcess;
+		              yourself.
+	boundaryToSub addAssociation: assocToSub.
+	subProcess addAssociation: assocToSub.
+	assocToCollapsed := OPBPMNAssociationModel new
+		                    source: boundaryToCollapsed;
+		                    target: collapsedSubProcess;
+		                    yourself.
+	boundaryToCollapsed addAssociation: assocToCollapsed.
+	collapsedSubProcess addAssociation: assocToCollapsed.
+	model
+		add: mainTask;
+		add: subProcess;
+		add: collapsedSubProcess.
+
+	results := controller validate: model.
+	self
+		deny: (results selectErrors anySatisfy: [ :each |
+					 (each objectReference == boundaryToSub or: [ each objectReference == boundaryToCollapsed ]) and: [
+						 each messageText includesSubstring: 'BE02' ] ])
+		description: 'Compensation boundary events associated to SubProcess or CollapsedSubProcess must not trigger BE02'.
+	self
+		deny: (results selectErrors anySatisfy: [ :each |
+					 (each objectReference == subProcess or: [ each objectReference == collapsedSubProcess ]) and: [
+						 (each messageText includesSubstring: 'AN01') or: [ each messageText includesSubstring: 'AN02' ] ] ])
+		description: 'Compensation SubProcess targets must not trigger AN01 or AN02'
+]
+
+{ #category : 'tests - events' }
 OPBPMNValidationComprehensiveRulesTest >> testCompensationBoundaryEventWithOutgoingSequenceFlowTriggersBE02Error [
 
 	| boundaryEvent targetTask seqFlow results |
@@ -250,6 +356,44 @@ OPBPMNValidationComprehensiveRulesTest >> testCompensationSubProcessDoesNotTrigg
 	           , (AN01FlowNodeIncomingFlow validate: innerTask withModel: model)
 	           , (AN02FlowNodeOutgoingFlow validate: innerTask withModel: model).
 	self assertEmpty: results
+]
+
+{ #category : 'tests - events' }
+OPBPMNValidationComprehensiveRulesTest >> testEndEventOutgoingMessageFlowTriggersEE04ForInvalidTypeAndAllowsMultipleThrow [
+
+	| pool1 pool2 plainEnd multipleThrowEnd invalidMessage validMessage results |
+	pool1 := OPBPMNPoolModel new name: 'Sender'.
+	pool2 := OPBPMNPoolModel new name: 'Receiver'.
+	plainEnd := OPBPMNEndEventModel new name: 'Plain End'.
+	multipleThrowEnd := OPBPMNEndEventModel new
+		                    name: 'Multiple Throw End';
+		                    type: OPBPMNNodeType MultipleThrow;
+		                    yourself.
+	pool1
+		add: plainEnd;
+		add: multipleThrowEnd.
+	invalidMessage := OPBPMNMessageFlowModel from: plainEnd to: pool2.
+	invalidMessage name: 'Unexpected'.
+	plainEnd addFlow: invalidMessage.
+	pool2 addFlow: invalidMessage.
+	validMessage := OPBPMNMessageFlowModel from: multipleThrowEnd to: pool2.
+	validMessage name: 'Broadcast'.
+	multipleThrowEnd addFlow: validMessage.
+	pool2 addFlow: validMessage.
+	model
+		add: pool1;
+		add: pool2.
+
+	results := controller validate: model.
+	self
+		assert:
+		(results selectErrors anySatisfy: [ :each |
+			 each objectReference == plainEnd and: [ each messageText includesSubstring: 'EE04' ] ])
+		description: 'None End Event with outgoing Message Flow must trigger EE04 error'.
+	self
+		deny: (results selectErrors anySatisfy: [ :each |
+				 each objectReference == multipleThrowEnd and: [ each messageText includesSubstring: 'EE04' ] ])
+		description: 'MultipleThrow End Event with outgoing Message Flow must not trigger EE04 error'
 ]
 
 { #category : 'tests - events' }
@@ -437,6 +581,20 @@ OPBPMNValidationComprehensiveRulesTest >> testEventBasedGatewayRejectsMixingRece
 	self assert: resultsBoundary first severity equals: 'Error'
 ]
 
+{ #category : 'tests - gateways' }
+OPBPMNValidationComprehensiveRulesTest >> testEventBasedGatewayWithoutOutgoingFlowsSkipsGW04 [
+
+	| gateway results |
+	gateway := OPBPMNGatewayModel new type: OPBPMNNodeType Eventbased.
+	model add: gateway.
+
+	results := controller validate: model.
+	self
+		deny:
+		(results selectErrors anySatisfy: [ :each | each objectReference == gateway and: [ each messageText includesSubstring: 'GW04' ] ])
+		description: 'Event-based gateway with zero outgoing sequence flows must not trigger GW04'
+]
+
 { #category : 'tests - events' }
 OPBPMNValidationComprehensiveRulesTest >> testEventSubProcessAndNonInterruptingErrorStartEventInSubProcessValidation [
 
@@ -477,6 +635,78 @@ OPBPMNValidationComprehensiveRulesTest >> testEventSubProcessAndNonInterruptingE
 	self assert: resultsInvalidStart first validation class identicalTo: SE05Error.
 	self assert: resultsInvalidStart first objectReference identicalTo: invalidErrorStart.
 	self assert: resultsInvalidStart first severity equals: 'Error'
+]
+
+{ #category : 'tests - events' }
+OPBPMNValidationComprehensiveRulesTest >> testEventSubProcessWithNoneStartEventTriggersSE06Error [
+
+	| eventSubProcess errorStart noneStart results |
+	eventSubProcess := OPBPMNSubProcessModel new name: 'Event Handler'.
+	errorStart := OPBPMNStartEventModel new
+		              name: 'On Error';
+		              type: OPBPMNNodeType Error;
+		              yourself.
+	noneStart := OPBPMNStartEventModel new name: 'Invalid None Start'.
+	eventSubProcess
+		add: errorStart;
+		add: noneStart.
+	model add: eventSubProcess.
+
+	results := controller validate: model.
+	self
+		assert:
+		(results selectErrors anySatisfy: [ :each |
+			 each objectReference == noneStart and: [ each messageText includesSubstring: 'SE06' ] ])
+		description: 'None Start Event inside an Event Sub-Process must trigger SE06 error'
+]
+
+{ #category : 'tests - gateways' }
+OPBPMNValidationComprehensiveRulesTest >> testExclusiveGatewayWithConditionalFlowTriggersGW06AndParallelSkipsGW06AndGW07 [
+
+	| exclusiveGateway parallelGateway task1 task2 task3 condFlow normalFlow pFlow1 pFlow2 results |
+	exclusiveGateway := OPBPMNGatewayModel new name: 'Decision'.
+	parallelGateway := OPBPMNGatewayModel new type: OPBPMNNodeType Parallel.
+	task1 := OPBPMNActivityModel new name: 'T1'.
+	task2 := OPBPMNActivityModel new name: 'T2'.
+	task3 := OPBPMNActivityModel new name: 'T3'.
+	condFlow := OPBPMNFlowModel from: exclusiveGateway to: task1.
+	condFlow
+		type: 'Conditional';
+		name: 'Cond'.
+	normalFlow := OPBPMNFlowModel from: exclusiveGateway to: task2.
+	normalFlow name: 'Other'.
+	exclusiveGateway
+		addFlow: condFlow;
+		addFlow: normalFlow.
+	task1 addFlow: condFlow.
+	task2 addFlow: normalFlow.
+	pFlow1 := OPBPMNFlowModel from: parallelGateway to: task2.
+	pFlow2 := OPBPMNFlowModel from: parallelGateway to: task3.
+	parallelGateway
+		addFlow: pFlow1;
+		addFlow: pFlow2.
+	task2 addFlow: pFlow1.
+	task3 addFlow: pFlow2.
+	model
+		add: exclusiveGateway;
+		add: parallelGateway;
+		add: task1;
+		add: task2;
+		add: task3.
+
+	results := controller validate: model.
+	self
+		assert: (results selectErrors anySatisfy: [ :each |
+				 each objectReference == exclusiveGateway and: [ each messageText includesSubstring: 'GW06' ] ])
+		description: 'Exclusive gateway with Conditional outgoing flow must trigger GW06 error'.
+	self
+		deny: (results selectErrors anySatisfy: [ :each |
+				 each objectReference == parallelGateway and: [ each messageText includesSubstring: 'GW06' ] ])
+		description: 'Parallel gateway must be skipped by GW06'.
+	self
+		deny: (results selectWarnings anySatisfy: [ :each |
+				 each objectReference == parallelGateway and: [ each messageText includesSubstring: 'GW07' ] ])
+		description: 'Parallel gateway must be skipped by GW07'
 ]
 
 { #category : 'tests - gateways' }
@@ -550,6 +780,44 @@ OPBPMNValidationComprehensiveRulesTest >> testExpandedSubProcessAndPoolsProcessV
 		assert: (resultsSubProcess selectWarnings anySatisfy: [ :each |
 				 each objectReference == incompleteSubProcess and: [ each messageText includesSubstring: 'PR07' ] ])
 		description: 'Expanded subprocess without inner start and end events must trigger PR07 warning on the subprocess'
+]
+
+{ #category : 'tests - gateways' }
+OPBPMNValidationComprehensiveRulesTest >> testGatewayBothMergingAndSplittingTriggersGW03Warning [
+
+	| gateway in1 in2 out1 out2 f1 f2 f3 f4 results |
+	gateway := OPBPMNGatewayModel new name: 'Mixed Gateway'.
+	in1 := OPBPMNActivityModel new name: 'In 1'.
+	in2 := OPBPMNActivityModel new name: 'In 2'.
+	out1 := OPBPMNActivityModel new name: 'Out 1'.
+	out2 := OPBPMNActivityModel new name: 'Out 2'.
+	f1 := OPBPMNFlowModel from: in1 to: gateway.
+	f2 := OPBPMNFlowModel from: in2 to: gateway.
+	f3 := OPBPMNFlowModel from: gateway to: out1.
+	f3 name: 'Yes'.
+	f4 := OPBPMNFlowModel from: gateway to: out2.
+	f4 name: 'No'.
+	in1 addFlow: f1.
+	gateway addFlow: f1.
+	in2 addFlow: f2.
+	gateway addFlow: f2.
+	gateway addFlow: f3.
+	out1 addFlow: f3.
+	gateway addFlow: f4.
+	out2 addFlow: f4.
+	model
+		add: in1;
+		add: in2;
+		add: gateway;
+		add: out1;
+		add: out2.
+
+	results := controller validate: model.
+	self
+		assert:
+		(results selectWarnings anySatisfy: [ :each |
+			 each objectReference == gateway and: [ each messageText includesSubstring: 'GW03' ] ])
+		description: 'Gateway with multiple incoming and multiple outgoing flows must trigger GW03 warning'
 ]
 
 { #category : 'tests - gateways' }
@@ -630,6 +898,78 @@ OPBPMNValidationComprehensiveRulesTest >> testInterruptingTimerEventSubProcessDo
 		assert: (resultsNormalSub selectErrors anySatisfy: [ :each |
 				 each objectReference == invalidTypedStart and: [ each messageText includesSubstring: 'SE06' ] ])
 		description: 'Typed Start Event inside a normal Embedded Sub-Process (connected to sequence flows) must trigger SE06 error'
+]
+
+{ #category : 'tests - events' }
+OPBPMNValidationComprehensiveRulesTest >> testLinkEventWithEmptyOrNilNameTriggersIE05AndScopesWorkAcrossPoolLaneSubProcessAndDetached [
+
+	| nilLink blankThrow pool lane laneThrow laneCatch subProcess subThrow subCatch detachedThrow results detachedResults |
+	nilLink := OPBPMNIntermediateEventModel new
+		           name: nil;
+		           type: OPBPMNNodeType Link;
+		           yourself.
+	blankThrow := OPBPMNIntermediateEventModel new
+		              name: '   ';
+		              type: OPBPMNNodeType LinkThrow;
+		              yourself.
+	pool := OPBPMNPoolModel new name: 'Pool Scope'.
+	lane := OPBPMNLaneModel new name: 'Lane 1'.
+	laneThrow := OPBPMNIntermediateEventModel new
+		             name: 'L1';
+		             type: OPBPMNNodeType LinkThrow;
+		             yourself.
+	laneCatch := OPBPMNIntermediateEventModel new
+		             name: 'L1';
+		             type: OPBPMNNodeType Link;
+		             yourself.
+	lane
+		add: laneThrow;
+		add: laneCatch.
+	pool add: lane.
+	subProcess := OPBPMNSubProcessModel new name: 'Sub Scope'.
+	subThrow := OPBPMNIntermediateEventModel new
+		            name: 'S1';
+		            type: OPBPMNNodeType LinkThrow;
+		            yourself.
+	subCatch := OPBPMNIntermediateEventModel new
+		            name: 'S1';
+		            type: OPBPMNNodeType Link;
+		            yourself.
+	subProcess
+		add: subThrow;
+		add: subCatch.
+	model
+		add: nilLink;
+		add: blankThrow;
+		add: pool;
+		add: subProcess.
+
+	results := controller validate: model.
+	self
+		assert:
+		(results selectErrors anySatisfy: [ :each | each objectReference == nilLink and: [ each messageText includesSubstring: 'IE05' ] ])
+		description: 'Link event with nil name must trigger IE05 error'.
+	self
+		assert: (results selectErrors anySatisfy: [ :each |
+				 each objectReference == blankThrow and: [ each messageText includesSubstring: 'IE05' ] ])
+		description: 'Link event with whitespace name must trigger IE05 error'.
+	self
+		deny: (results selectErrors anySatisfy: [ :each |
+					 ({
+						  laneThrow.
+						  laneCatch.
+						  subThrow.
+						  subCatch } includes: each objectReference) and: [ each messageText includesSubstring: 'IE05' ] ])
+		description: 'Properly paired Link events inside Pool/Lane and SubProcess scopes must pass IE05'.
+
+	detachedThrow := OPBPMNIntermediateEventModel new
+		                 name: 'Orphan';
+		                 type: OPBPMNNodeType LinkThrow;
+		                 yourself.
+	detachedResults := IE05LinkEventPairing validate: detachedThrow withModel: model.
+	self
+		assert: (detachedResults anySatisfy: [ :each | each messageText includesSubstring: 'IE05' ])
+		description: 'Detached LinkThrow without owner must trigger IE05 error'
 ]
 
 { #category : 'tests - events' }
@@ -890,6 +1230,31 @@ OPBPMNValidationComprehensiveRulesTest >> testNonInterruptingCancelOrCompensatio
 	self assert: compResults first severity equals: 'Error'
 ]
 
+{ #category : 'tests - events' }
+OPBPMNValidationComprehensiveRulesTest >> testNonInterruptingTimerBoundaryEventPassesBE05 [
+
+	| task timerBoundary targetTask flow results |
+	task := OPBPMNActivityModel new name: 'Work'.
+	targetTask := OPBPMNActivityModel new name: 'Reminder'.
+	timerBoundary := OPBPMNBoundaryEventModel new
+		                 name: 'Every Hour';
+		                 type: OPBPMNNodeType Timer;
+		                 isNonInterrupting: true;
+		                 yourself.
+	task add: timerBoundary.
+	flow := OPBPMNFlowModel from: timerBoundary to: targetTask.
+	timerBoundary addFlow: flow.
+	targetTask addFlow: flow.
+	model
+		add: task;
+		add: targetTask.
+
+	results := controller validate: model.
+	self
+		deny: (results selectErrors anySatisfy: [ :each | each messageText includesSubstring: 'BE05' ])
+		description: 'Non-interrupting Timer boundary event must not trigger BE05'
+]
+
 { #category : 'tests - process' }
 OPBPMNValidationComprehensiveRulesTest >> testPR04AllInsidePoolTriggeredWhenActivityIsOutsidePool [
 	| pool taskInPool taskOutside results |
@@ -1019,6 +1384,56 @@ OPBPMNValidationComprehensiveRulesTest >> testPoolMissingTopLevelStartAndEndEven
 ]
 
 { #category : 'tests - activities' }
+OPBPMNValidationComprehensiveRulesTest >> testReceiveAndSendActivitiesWithMessageFlowsPassAC01AndAC02 [
+
+	| pool1 pool2 receiveTask sendTask sendEvent incomingMessage outgoingMessage eventMessage results |
+	pool1 := OPBPMNPoolModel new name: 'Pool 1'.
+	pool2 := OPBPMNPoolModel new name: 'Pool 2'.
+	receiveTask := OPBPMNActivityModel new
+		               name: 'Receive Order';
+		               type: OPBPMNNodeType Receive;
+		               yourself.
+	sendTask := OPBPMNActivityModel new
+		            name: 'Send Invoice';
+		            type: OPBPMNNodeType Send;
+		            yourself.
+	sendEvent := OPBPMNIntermediateEventModel new
+		             name: 'Notify Partner';
+		             type: OPBPMNNodeType Send;
+		             yourself.
+	pool1
+		add: receiveTask;
+		add: sendTask;
+		add: sendEvent.
+	incomingMessage := OPBPMNMessageFlowModel from: pool2 to: receiveTask.
+	incomingMessage name: 'Order'.
+	pool2 addFlow: incomingMessage.
+	receiveTask addFlow: incomingMessage.
+	outgoingMessage := OPBPMNMessageFlowModel from: sendTask to: pool2.
+	outgoingMessage name: 'Invoice'.
+	sendTask addFlow: outgoingMessage.
+	pool2 addFlow: outgoingMessage.
+	eventMessage := OPBPMNMessageFlowModel from: sendEvent to: pool2.
+	eventMessage name: 'Notification'.
+	sendEvent addFlow: eventMessage.
+	pool2 addFlow: eventMessage.
+	model
+		add: pool1;
+		add: pool2.
+
+	results := controller validate: model.
+	self
+		deny: (results selectWarnings anySatisfy: [ :each | each messageText includesSubstring: 'AC01' ])
+		description: 'Receive task with incoming Message Flow must not trigger AC01'.
+	self
+		deny: (results selectWarnings anySatisfy: [ :each | each messageText includesSubstring: 'AC02' ])
+		description: 'Send task with outgoing Message Flow must not trigger AC02'.
+	self
+		deny: (results selectWarnings anySatisfy: [ :each | each messageText includesSubstring: 'IE02' ])
+		description: 'Send intermediate event with outgoing Message Flow must not trigger IE02'
+]
+
+{ #category : 'tests - activities' }
 OPBPMNValidationComprehensiveRulesTest >> testServiceAndUserTasksCanHaveIncomingAndOutgoingMessageFlowsWithoutAC03OrAC04Error [
 
 	| serviceTask userTask blackBoxPool inMsg1 outMsg1 inMsg2 outMsg2 results |
@@ -1047,6 +1462,34 @@ OPBPMNValidationComprehensiveRulesTest >> testServiceAndUserTasksCanHaveIncoming
 	           , (AC03MessageReceiveOther validate: userTask withModel: model)
 	           , (AC04MessageSendOther validate: userTask withModel: model).
 	self assertEmpty: results
+]
+
+{ #category : 'tests - gateways' }
+OPBPMNValidationComprehensiveRulesTest >> testSplittingExclusiveGatewayWithUnlabeledFlowTriggersGW07Warning [
+
+	| gateway task1 task2 labeledFlow unlabeledFlow results |
+	gateway := OPBPMNGatewayModel new name: 'Check?'.
+	task1 := OPBPMNActivityModel new name: 'A'.
+	task2 := OPBPMNActivityModel new name: 'B'.
+	labeledFlow := OPBPMNFlowModel from: gateway to: task1.
+	labeledFlow name: 'Yes'.
+	unlabeledFlow := OPBPMNFlowModel from: gateway to: task2.
+	gateway
+		addFlow: labeledFlow;
+		addFlow: unlabeledFlow.
+	task1 addFlow: labeledFlow.
+	task2 addFlow: unlabeledFlow.
+	model
+		add: gateway;
+		add: task1;
+		add: task2.
+
+	results := controller validate: model.
+	self
+		assert:
+		(results selectWarnings anySatisfy: [ :each |
+			 each objectReference == gateway and: [ each messageText includesSubstring: 'GW07' ] ])
+		description: 'Splitting exclusive gateway with unlabeled non-Default outgoing flow must trigger GW07 warning'
 ]
 
 { #category : 'tests - activities' }
@@ -1301,4 +1744,27 @@ OPBPMNValidationComprehensiveRulesTest >> testWhiteBoxPoolWithAssociationDoesNot
 	pool addAssociation: association.
 	results := PR06BlackBoxOutgoingMessage validate: pool withModel: model.
 	self assertEmpty: results
+]
+
+{ #category : 'tests - pools' }
+OPBPMNValidationComprehensiveRulesTest >> testWhiteBoxPoolWithIncomingMessageFlowTriggersPR05Error [
+
+	| whiteBoxPool blackBoxPool task messageFlow results |
+	whiteBoxPool := OPBPMNPoolModel new name: 'White Box'.
+	task := OPBPMNActivityModel new name: 'Inner Task'.
+	whiteBoxPool add: task.
+	blackBoxPool := OPBPMNPoolModel new name: 'External Partner'.
+	messageFlow := OPBPMNMessageFlowModel from: blackBoxPool to: whiteBoxPool.
+	messageFlow name: 'Request'.
+	blackBoxPool addFlow: messageFlow.
+	whiteBoxPool addFlow: messageFlow.
+	model
+		add: whiteBoxPool;
+		add: blackBoxPool.
+
+	results := controller validate: model.
+	self
+		assert: (results selectErrors anySatisfy: [ :each |
+				 each objectReference == whiteBoxPool and: [ each messageText includesSubstring: 'PR05' ] ])
+		description: 'White-box pool with incoming Message Flow must trigger PR05 error'
 ]

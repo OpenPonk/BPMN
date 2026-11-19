@@ -22,13 +22,11 @@ IE01MessageReceive class >> validateClass [
 
 { #category : 'verification' }
 IE01MessageReceive >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	(self class canValidate: aVerifiedObject) ifFalse: [ ^ {  } ].
+
 	aVerifiedObject type = OPBPMNNodeType Receive ifFalse: [ ^ {  } ].
-	(aVerifiedObject incoming anySatisfy: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNMessageFlowModel ]) ifTrue: [ ^ {  } ].
+	(aVerifiedObject incoming anySatisfy: [ :eachFlow | eachFlow isKindOf: OPBPMNMessageFlowModel ]) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageWarning
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(IE01) ' , aVerifiedObject class name
-			, ' of Message Receive type should have incoming Message Flow.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText: '(IE01) ' , aVerifiedObject class name , ' of Message Receive type should have incoming Message Flow.') }
 ]

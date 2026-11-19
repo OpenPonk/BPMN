@@ -16,16 +16,14 @@ AC03MessageReceiveOther class >> validateClass [
 
 { #category : 'verification' }
 AC03MessageReceiveOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| hasIncomingMessageFlow |
-	(aVerifiedObject isKindOf: OPBPMNActivityModel) ifFalse: [ ^ {  } ].
-	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow | eachFlow isKindOf: OPBPMNMessageFlowModel ].
 	hasIncomingMessageFlow ifFalse: [ ^ {  } ].
 	aVerifiedObject type = OPBPMNNodeType Send ifFalse: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(AC03) ' , aVerifiedObject class name
-			, ' of type ' , aVerifiedObject type asString
-			, ' cannot have incoming Message Flow.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText:
+		   '(AC03) ' , aVerifiedObject class name , ' of type ' , aVerifiedObject type asString , ' cannot have incoming Message Flow.') }
 ]

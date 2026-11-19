@@ -16,18 +16,17 @@ IE04MessageSendOther class >> validateClass [
 
 { #category : 'verification' }
 IE04MessageSendOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| hasOutgoingMessageFlow allowedTypes |
-	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifFalse: [ ^ {  } ].
-	hasOutgoingMessageFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasOutgoingMessageFlow := aVerifiedObject outgoing anySatisfy: [ :eachFlow | eachFlow isKindOf: OPBPMNMessageFlowModel ].
 	hasOutgoingMessageFlow ifFalse: [ ^ {  } ].
 	allowedTypes := {
-		OPBPMNNodeType Send .
-		OPBPMNNodeType MultipleThrow }.
+		                OPBPMNNodeType Send.
+		                OPBPMNNodeType MultipleThrow }.
 	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(IE04) ' , aVerifiedObject class name
-			, ' can have outgoing Message Flow only as Message Send or MultipleThrow type.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText:
+		   '(IE04) ' , aVerifiedObject class name , ' can have outgoing Message Flow only as Message Send or MultipleThrow type.') }
 ]

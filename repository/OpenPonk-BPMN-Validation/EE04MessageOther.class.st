@@ -16,15 +16,12 @@ EE04MessageOther class >> validateClass [
 
 { #category : 'verification' }
 EE04MessageOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	(aVerifiedObject isKindOf: OPBPMNEndEventModel) ifFalse: [ ^ {  } ].
-	(aVerifiedObject outgoing anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ])
-		ifTrue: [
-			(aVerifiedObject type = OPBPMNNodeType Send
-				or: [ aVerifiedObject type = OPBPMNNodeType MultipleThrow ]) ifFalse: [
-				^ { (OPBPMNValidationMessageError
-					createFor: aVerifiedObject
-					withValidation: self
-					withText: '(EE04) ' , aVerifiedObject class name
-						, ' can have outgoing Message Flow only as Message or Multiple type.') } ] ].
+
+	(aVerifiedObject outgoing anySatisfy: [ :each | each isKindOf: OPBPMNMessageFlowModel ]) ifTrue: [
+			(aVerifiedObject type = OPBPMNNodeType Send or: [ aVerifiedObject type = OPBPMNNodeType MultipleThrow ]) ifFalse: [
+					^ { (OPBPMNValidationMessageError
+						   createFor: aVerifiedObject
+						   withValidation: self
+						   withText: '(EE04) ' , aVerifiedObject class name , ' can have outgoing Message Flow only as Message or Multiple type.') } ] ].
 	^ {  }
 ]

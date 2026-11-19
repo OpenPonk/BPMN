@@ -16,19 +16,19 @@ SE04MessageOther class >> validateClass [
 
 { #category : 'verification' }
 SE04MessageOther >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| hasIncomingMessageFlow allowedTypes |
-	(aVerifiedObject isKindOf: OPBPMNStartEventModel) ifFalse: [ ^ {  } ].
-	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNMessageFlowModel ].
+	hasIncomingMessageFlow := aVerifiedObject incoming anySatisfy: [ :eachFlow | eachFlow isKindOf: OPBPMNMessageFlowModel ].
 	hasIncomingMessageFlow ifFalse: [ ^ {  } ].
 	allowedTypes := {
-		OPBPMNNodeType Receive .
-		OPBPMNNodeType Multiple .
-		OPBPMNNodeType ParallelMultiple }.
+		                OPBPMNNodeType Receive.
+		                OPBPMNNodeType Multiple.
+		                OPBPMNNodeType ParallelMultiple }.
 	(allowedTypes includes: aVerifiedObject type) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(SE04) ' , aVerifiedObject class name
-			, ' can have incoming Message Flow only as Message, Multiple, or ParallelMultiple type.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText:
+		   '(SE04) ' , aVerifiedObject class name
+		   , ' can have incoming Message Flow only as Message, Multiple, or ParallelMultiple type.') }
 ]

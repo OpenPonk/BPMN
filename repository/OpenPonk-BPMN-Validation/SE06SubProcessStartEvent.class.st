@@ -16,24 +16,21 @@ SE06SubProcessStartEvent class >> validateClass [
 
 { #category : 'verification' }
 SE06SubProcessStartEvent >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| parentSubProcess parentHasSequenceFlow |
-	(aVerifiedObject isKindOf: OPBPMNStartEventModel) ifFalse: [ ^ {  } ].
 	parentSubProcess := aVerifiedObject owner.
 	(parentSubProcess isKindOf: OPBPMNSubProcessModel) ifFalse: [ ^ {  } ].
-	parentHasSequenceFlow := (parentSubProcess incoming , parentSubProcess outgoing) anySatisfy: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNFlowModel ].
+	parentHasSequenceFlow := parentSubProcess incoming , parentSubProcess outgoing anySatisfy: [ :eachFlow |
+		                         eachFlow isKindOf: OPBPMNFlowModel ].
 	(parentHasSequenceFlow and: [ aVerifiedObject type ~= OPBPMNNodeType None ]) ifTrue: [
-		^ { (OPBPMNValidationMessageError
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(SE06) ' , aVerifiedObject class name
-				, ' inside an embedded Sub-Process must be of None type.') } ].
-	((self isEventSubProcess: parentSubProcess) and: [
-		aVerifiedObject type = OPBPMNNodeType None ]) ifTrue: [
-		^ { (OPBPMNValidationMessageError
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(SE06) ' , aVerifiedObject class name
-				, ' inside an Event Sub-Process must have an event trigger type.') } ].
+			^ { (OPBPMNValidationMessageError
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(SE06) ' , aVerifiedObject class name , ' inside an embedded Sub-Process must be of None type.') } ].
+	((self isEventSubProcess: parentSubProcess) and: [ aVerifiedObject type = OPBPMNNodeType None ]) ifTrue: [
+			^ { (OPBPMNValidationMessageError
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(SE06) ' , aVerifiedObject class name , ' inside an Event Sub-Process must have an event trigger type.') } ].
 	^ {  }
 ]

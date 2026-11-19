@@ -21,12 +21,6 @@ OPBPMNValidationFrameworkSettings class >> getInstance [
 	^ settingsInstance.
 ]
 
-{ #category : 'accessing' }
-OPBPMNValidationFrameworkSettings class >> settingsInstance [
- 	settingsInstance ifNil: [ settingsInstance := self new. ].
-	^ settingsInstance.
-]
-
 { #category : 'access' }
 OPBPMNValidationFrameworkSettings >> getSettingFor: aVerificationClass [
 	(settings includesKey: aVerificationClass) ifFalse: [ settings add: (aVerificationClass -> true) ].

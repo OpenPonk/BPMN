@@ -23,17 +23,14 @@ AC05ActivityMergingFlows class >> validateClass [
 
 { #category : 'verification' }
 AC05ActivityMergingFlows >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| incomingSequenceFlows outgoingSequenceFlows |
-	(self class canValidate: aVerifiedObject) ifFalse: [ ^ {  } ].
-	incomingSequenceFlows := aVerifiedObject incoming select: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNFlowModel ].
-	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :eachFlow |
-		eachFlow isKindOf: OPBPMNFlowModel ].
+	incomingSequenceFlows := aVerifiedObject incoming select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ].
+	outgoingSequenceFlows := aVerifiedObject outgoing select: [ :eachFlow | eachFlow isKindOf: OPBPMNFlowModel ].
 	(incomingSequenceFlows size > 1 or: [ outgoingSequenceFlows size > 1 ]) ifTrue: [
-		^ { (OPBPMNValidationMessageWarning
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(AC05) ' , aVerifiedObject class name
-				, ' should not be used for merging or splitting flows.') } ].
+			^ { (OPBPMNValidationMessageWarning
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(AC05) ' , aVerifiedObject class name , ' should not be used for merging or splitting flows.') } ].
 	^ {  }
 ]

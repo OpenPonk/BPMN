@@ -30,11 +30,6 @@ OPBPMNValidationMessage class >> new [
 ]
 
 { #category : 'accessing' }
-OPBPMNValidationMessage >> getObjectReferenceName [
-	^ self objectReference name.
-]
-
-{ #category : 'accessing' }
 OPBPMNValidationMessage >> messageText [
 	^ messageText.
 ]

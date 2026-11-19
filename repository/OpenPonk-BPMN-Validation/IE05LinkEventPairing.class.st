@@ -32,37 +32,36 @@ IE05LinkEventPairing >> scopeElementsFor: aNodeModel [
 
 { #category : 'verification' }
 IE05LinkEventPairing >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| trimmedName scopeNodes matchingCatches matchingThrows |
-	(aVerifiedObject isKindOf: OPBPMNIntermediateEventModel) ifFalse: [ ^ {  } ].
-	(aVerifiedObject type = OPBPMNNodeType LinkThrow
-		or: [ aVerifiedObject type = OPBPMNNodeType Link ]) ifFalse: [ ^ {  } ].
+	(aVerifiedObject type = OPBPMNNodeType LinkThrow or: [ aVerifiedObject type = OPBPMNNodeType Link ]) ifFalse: [ ^ {  } ].
 	trimmedName := aVerifiedObject name ifNil: [ '' ] ifNotNil: [ :rawName | rawName trimBoth ].
 	trimmedName ifEmpty: [
-		^ { (OPBPMNValidationMessageError
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(IE05) ' , aVerifiedObject class name
-				, ' of Link type must have a non-empty name for pairing.') } ].
+			^ { (OPBPMNValidationMessageError
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(IE05) ' , aVerifiedObject class name , ' of Link type must have a non-empty name for pairing.') } ].
 	scopeNodes := self scopeElementsFor: aVerifiedObject.
 	matchingCatches := scopeNodes select: [ :eachNode |
-		(eachNode isKindOf: OPBPMNIntermediateEventModel) and: [
-			eachNode type = OPBPMNNodeType Link and: [
-				eachNode name isNotNil and: [ eachNode name trimBoth = trimmedName ] ] ] ].
+			                   (eachNode isKindOf: OPBPMNIntermediateEventModel) and: [
+				                   eachNode type = OPBPMNNodeType Link and: [
+					                   eachNode name isNotNil and: [ eachNode name trimBoth = trimmedName ] ] ] ].
 	matchingThrows := scopeNodes select: [ :eachNode |
-		(eachNode isKindOf: OPBPMNIntermediateEventModel) and: [
-			eachNode type = OPBPMNNodeType LinkThrow and: [
-				eachNode name isNotNil and: [ eachNode name trimBoth = trimmedName ] ] ] ].
+			                  (eachNode isKindOf: OPBPMNIntermediateEventModel) and: [
+				                  eachNode type = OPBPMNNodeType LinkThrow and: [
+					                  eachNode name isNotNil and: [ eachNode name trimBoth = trimmedName ] ] ] ].
 	aVerifiedObject type = OPBPMNNodeType LinkThrow ifTrue: [
-		matchingCatches size = 1 ifTrue: [ ^ {  } ].
-		^ { (OPBPMNValidationMessageError
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(IE05) ' , aVerifiedObject class name
-				, ' of LinkThrow type must have exactly one matching Catch Link Event in the same scope.') } ].
+			matchingCatches size = 1 ifTrue: [ ^ {  } ].
+			^ { (OPBPMNValidationMessageError
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText:
+				   '(IE05) ' , aVerifiedObject class name
+				   , ' of LinkThrow type must have exactly one matching Catch Link Event in the same scope.') } ].
 	(matchingThrows isNotEmpty and: [ matchingCatches size = 1 ]) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageError
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(IE05) ' , aVerifiedObject class name
-			, ' of Catch Link type must have a unique name and at least one matching Throw Link Event in the same scope.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText: '(IE05) ' , aVerifiedObject class name
+			   , ' of Catch Link type must have a unique name and at least one matching Throw Link Event in the same scope.') }
 ]

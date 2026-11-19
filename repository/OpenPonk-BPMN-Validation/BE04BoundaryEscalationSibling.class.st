@@ -16,16 +16,15 @@ BE04BoundaryEscalationSibling class >> validateClass [
 
 { #category : 'verification' }
 BE04BoundaryEscalationSibling >> validateObject: aVerifiedObject withModel: aVerifiedModel [
-	(aVerifiedObject isKindOf: OPBPMNBoundaryEventModel) ifFalse: [ ^ {  } ].
+
 	aVerifiedObject type = OPBPMNNodeType Escalation ifFalse: [ ^ {  } ].
 	(aVerifiedObject owner isKindOf: OPBPMNSubProcessModel) ifFalse: [ ^ {  } ].
 	(aVerifiedObject owner elements anySatisfy: [ :each |
-		((each isKindOf: OPBPMNEndEventModel) or: [ each isKindOf: OPBPMNIntermediateEventModel ])
-			and: [ each type = OPBPMNNodeType EscalationThrow ] ])
-		ifTrue: [ ^ {  } ].
+			 ((each isKindOf: OPBPMNEndEventModel) or: [ each isKindOf: OPBPMNIntermediateEventModel ]) and: [
+				 each type = OPBPMNNodeType EscalationThrow ] ]) ifTrue: [ ^ {  } ].
 	^ { (OPBPMNValidationMessageWarning
-		createFor: aVerifiedObject
-		withValidation: self
-		withText: '(BE04) ' , aVerifiedObject class name
-			, ' should have pair Throw Escalation Intermediate/End Event in Sub-Process.') }
+		   createFor: aVerifiedObject
+		   withValidation: self
+		   withText:
+		   '(BE04) ' , aVerifiedObject class name , ' should have pair Throw Escalation Intermediate/End Event in Sub-Process.') }
 ]

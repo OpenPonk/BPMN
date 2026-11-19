@@ -35,27 +35,26 @@ OPBPMNValidationController >> isActivityNode: aModelObject [
 
 { #category : 'validating' }
 OPBPMNValidationController >> validate: aValidateModel [
+
 	| validateObjects validations results rootModel |
 	validateObjects := self getValidateObjects: aValidateModel.
 	validations := self getValidations select: [ :validation |
-		OPBPMNValidationFrameworkSettings getInstance
-			getSettingFor: validation ].
+		               OPBPMNValidationFrameworkSettings getInstance getSettingFor: validation ].
 	results := OPBPMNValidationResults new.
 	rootModel := (aValidateModel respondsTo: #rootOwner)
-		ifTrue: [ aValidateModel rootOwner ]
-		ifFalse: [ aValidateModel ].
+		             ifTrue: [ aValidateModel rootOwner ]
+		             ifFalse: [ aValidateModel ].
 
-	(aValidateModel isKindOf: OPBPMNModel) ifTrue: [
+	((aValidateModel isKindOf: OPBPMNModel) and: [ validations includes: PR2347ProcessErrors ]) ifTrue: [
 		results addResults: (self validateProcess: aValidateModel) ].
 
 	validateObjects do: [ :validateObject |
-		(self getValidateObjects: validateObject) isNotEmpty ifTrue: [
-			results addResults: (self validate: validateObject) ].
-		self
-			validateSingleObject: validateObject
-			withValidations: validations
-			withModel: rootModel
-			withResults: results ].
+			(self getValidateObjects: validateObject) isNotEmpty ifTrue: [ results addResults: (self validate: validateObject) ].
+			self
+				validateSingleObject: validateObject
+				withValidations: validations
+				withModel: rootModel
+				withResults: results ].
 	^ results
 ]
 

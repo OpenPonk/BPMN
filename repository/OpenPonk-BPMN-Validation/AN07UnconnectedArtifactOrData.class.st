@@ -22,25 +22,23 @@ AN07UnconnectedArtifactOrData class >> validateClass [
 
 { #category : 'verification' }
 AN07UnconnectedArtifactOrData >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| hasConnection |
-	(self class canValidate: aVerifiedObject) ifFalse: [ ^ {  } ].
 	(aVerifiedObject isKindOf: OPBPMNDataObjectModel) ifTrue: [
-		hasConnection := (aVerifiedObject incoming , aVerifiedObject outgoing) anySatisfy: [ :eachEdge |
-			eachEdge isKindOf: OPBPMNDataFlowModel ].
-		hasConnection ifFalse: [
-			^ { (OPBPMNValidationMessageWarning
-				createFor: aVerifiedObject
-				withValidation: self
-				withText: '(AN07) ' , aVerifiedObject class name
-					, ' should be connected to a process element via Data Flow.') } ] ].
+			hasConnection := aVerifiedObject incoming , aVerifiedObject outgoing anySatisfy: [ :eachEdge |
+				                 eachEdge isKindOf: OPBPMNDataFlowModel ].
+			hasConnection ifFalse: [
+					^ { (OPBPMNValidationMessageWarning
+						   createFor: aVerifiedObject
+						   withValidation: self
+						   withText: '(AN07) ' , aVerifiedObject class name , ' should be connected to a process element via Data Flow.') } ] ].
 	(aVerifiedObject isKindOf: OPBPMNAnnotationModel) ifTrue: [
-		hasConnection := (aVerifiedObject incoming , aVerifiedObject outgoing) anySatisfy: [ :eachEdge |
-			eachEdge isKindOf: OPBPMNAssociationModel ].
-		hasConnection ifFalse: [
-			^ { (OPBPMNValidationMessageWarning
-				createFor: aVerifiedObject
-				withValidation: self
-				withText: '(AN07) ' , aVerifiedObject class name
-					, ' should be connected to a diagram element via Association.') } ] ].
+			hasConnection := aVerifiedObject incoming , aVerifiedObject outgoing anySatisfy: [ :eachEdge |
+				                 eachEdge isKindOf: OPBPMNAssociationModel ].
+			hasConnection ifFalse: [
+					^ { (OPBPMNValidationMessageWarning
+						   createFor: aVerifiedObject
+						   withValidation: self
+						   withText: '(AN07) ' , aVerifiedObject class name , ' should be connected to a diagram element via Association.') } ] ].
 	^ {  }
 ]

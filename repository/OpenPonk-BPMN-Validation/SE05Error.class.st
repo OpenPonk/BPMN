@@ -16,31 +16,28 @@ SE05Error class >> validateClass [
 
 { #category : 'verification' }
 SE05Error >> validateObject: aVerifiedObject withModel: aVerifiedModel [
+
 	| eventSubProcessOnlyTypes alwaysInterruptingStartTypes |
-	(aVerifiedObject isKindOf: OPBPMNStartEventModel) ifFalse: [ ^ {  } ].
 	alwaysInterruptingStartTypes := {
-		OPBPMNNodeType Error .
-		OPBPMNNodeType Compensation .
-		OPBPMNNodeType None }.
-	(aVerifiedObject isNonInterrupting and: [
-		alwaysInterruptingStartTypes includes: aVerifiedObject type ]) ifTrue: [
-		^ { (OPBPMNValidationMessageError
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(SE05) ' , aVerifiedObject class name
-				, ' of type ' , aVerifiedObject type asString
-				, ' cannot be Non-Interrupting.') } ].
+		                                OPBPMNNodeType Error.
+		                                OPBPMNNodeType Compensation.
+		                                OPBPMNNodeType None }.
+	(aVerifiedObject isNonInterrupting and: [ alwaysInterruptingStartTypes includes: aVerifiedObject type ]) ifTrue: [
+			^ { (OPBPMNValidationMessageError
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText:
+				   '(SE05) ' , aVerifiedObject class name , ' of type ' , aVerifiedObject type asString , ' cannot be Non-Interrupting.') } ].
 	(aVerifiedObject owner isKindOf: OPBPMNSubProcessModel) ifTrue: [ ^ {  } ].
 	eventSubProcessOnlyTypes := {
-		OPBPMNNodeType Error .
-		OPBPMNNodeType Escalation .
-		OPBPMNNodeType Compensation }.
-	((eventSubProcessOnlyTypes includes: aVerifiedObject type)
-		or: [ aVerifiedObject isNonInterrupting ]) ifTrue: [
-		^ { (OPBPMNValidationMessageError
-			createFor: aVerifiedObject
-			withValidation: self
-			withText: '(SE05) ' , aVerifiedObject class name
-				, ' of Error/Escalation/Compensation or Non-Interrupting type can be used only in Sub-Process.') } ].
+		                            OPBPMNNodeType Error.
+		                            OPBPMNNodeType Escalation.
+		                            OPBPMNNodeType Compensation }.
+	((eventSubProcessOnlyTypes includes: aVerifiedObject type) or: [ aVerifiedObject isNonInterrupting ]) ifTrue: [
+			^ { (OPBPMNValidationMessageError
+				   createFor: aVerifiedObject
+				   withValidation: self
+				   withText: '(SE05) ' , aVerifiedObject class name
+					   , ' of Error/Escalation/Compensation or Non-Interrupting type can be used only in Sub-Process.') } ].
 	^ {  }
 ]
