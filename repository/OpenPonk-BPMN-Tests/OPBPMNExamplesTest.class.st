@@ -3,7 +3,7 @@ Tests loading, diagram rendering, and model integrity for bundled BPMN example w
 "
 Class {
 	#name : 'OPBPMNExamplesTest',
-	#superclass : 'TestCase',
+	#superclass : 'OPAbstractUITest',
 	#instVars : [
 		'workbench'
 	],
