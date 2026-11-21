@@ -22,12 +22,6 @@ OPBPMNFlowSimulatorTest class >> isAbstract [
 ]
 
 { #category : 'running' }
-OPBPMNFlowSimulatorTest >> controllerClass [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'running' }
 OPBPMNFlowSimulatorTest >> exampleModel [
 
 	^ self subclassResponsibility
@@ -38,10 +32,28 @@ OPBPMNFlowSimulatorTest >> setUp [
 
 	super setUp.
 	model := self exampleModel.
-	simulator := self controllerClass model: model.
+	simulator := self simulatorClass model: model.
 	nodeIn := (OPBPMNNodeSimulator model: OPBPMNSemanticNodeModel) bpmnTokens: 10.
 	nodeOut := (OPBPMNNodeSimulator model: OPBPMNSemanticNodeModel) blocked: true.
 	simulator
 		source: nodeIn;
 		target: nodeOut
+]
+
+{ #category : 'running' }
+OPBPMNFlowSimulatorTest >> simulatorClass [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'tests' }
+OPBPMNFlowSimulatorTest >> testFire [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'tests' }
+OPBPMNFlowSimulatorTest >> testTokens [
+
+	^ self subclassResponsibility
 ]

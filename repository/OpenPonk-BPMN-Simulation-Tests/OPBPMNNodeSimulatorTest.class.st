@@ -22,12 +22,6 @@ OPBPMNNodeSimulatorTest class >> isAbstract [
 ]
 
 { #category : 'accessing' }
-OPBPMNNodeSimulatorTest >> controllerClass [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
 OPBPMNNodeSimulatorTest >> exampleModel [
 
 	^ self subclassResponsibility
@@ -38,12 +32,18 @@ OPBPMNNodeSimulatorTest >> setUp [
 
 	super setUp.
 	model := self exampleModel.
-	simulator := self controllerClass model: model.
+	simulator := self simulatorClass model: model.
 	flowIn1 := (OPBPMNSequenceFlowSimulator model: OPBPMNFlowModel)
 		           bpmnTokens: 10.
 	flowOut1 := OPBPMNSequenceFlowSimulator model: OPBPMNFlowModel.
 	simulator addedIncoming: flowIn1.
 	simulator addedOutgoing: flowOut1
+]
+
+{ #category : 'accessing' }
+OPBPMNNodeSimulatorTest >> simulatorClass [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'tests' }

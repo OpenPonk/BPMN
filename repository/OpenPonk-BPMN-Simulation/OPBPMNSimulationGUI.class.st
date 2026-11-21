@@ -37,6 +37,21 @@ OPBPMNSimulationGUI >> buttonItems [
 				   action: [ self openConfiguration ])
 ]
 
+{ #category : 'private - updating' }
+OPBPMNSimulationGUI >> closeConfigMenu [
+
+	configMenu ifNil: [ ^ self ].
+	(configMenu hasWindow and: [ configMenu window isOpen ]) ifTrue: [ configMenu window close ].
+	configMenu := nil
+]
+
+{ #category : 'private - updating' }
+OPBPMNSimulationGUI >> closed [
+
+	self closeConfigMenu.
+	super closed
+]
+
 { #category : 'accessing' }
 OPBPMNSimulationGUI >> configMenu [
 
@@ -53,22 +68,16 @@ OPBPMNSimulationGUI >> configMenu: aPresenter [
 OPBPMNSimulationGUI >> loadSimulation [
 	"prepares simulation - called with every reload"
 
+	self closeConfigMenu.
 	super loadSimulation.
-	diagramSimulator
-		when: OPSimulatorStepped
-		do: [ self updateColors ]
-		for: self.
+	diagramSimulator when: OPSimulatorStepped do: [ self updateColors ] for: self.
 	self updateColors
 ]
 
 { #category : 'instance creation' }
 OPBPMNSimulationGUI >> openConfiguration [
 
-	self configMenu ifNil: [
-		self configMenu: (OPBPMNSimConfigurationGUI new
-				 diagramSimulator: self diagramSimulator;
-				 yourself) ].
-
+	self configMenu ifNil: [ self configMenu: (OPBPMNSimConfigurationGUI on: self diagramSimulator) ].
 	self configMenu open
 ]
 
@@ -81,20 +90,19 @@ OPBPMNSimulationGUI >> simulatorClass [
 
 { #category : 'private - hooks' }
 OPBPMNSimulationGUI >> updateColors [
-	| controller |
+
 	diagramSimulator elementsDo: [ :element |
-		controller := self diagramController controllerForModel: element model.
-		(controller notNil and: [
-			(controller respondsTo: #diagramElement) and: [
-				controller diagramElement respondsTo: #strokeColor: ] ])
-			ifTrue: [
-				element bpmnTokens > 0
-					ifFalse: [ controller diagramElement strokeColor: Color black ]
-					ifTrue: [
-						element bpmnTokens > 1
-							ifTrue: [
-								controller diagramElement strokeColor: Color orange darker ]
-							ifFalse: [
-								controller diagramElement strokeColor: Color green darker ] ].
-				controller diagramElement updateRenderFromSelf ] ]
+			(self diagramController controllerForModel: element model ifNone: [ nil ]) ifNotNil: [ :controller |
+					| diagramElement strokeColor |
+					diagramElement := controller diagramElement.
+					(diagramElement exists and: [ diagramElement isRendered ]) ifTrue: [
+							strokeColor := element bpmnTokens > 0
+								               ifFalse: [ Color black ]
+								               ifTrue: [
+										               element bpmnTokens > 1
+											               ifTrue: [ Color orange darker ]
+											               ifFalse: [ Color green darker ] ].
+							diagramElement
+								strokeColor: strokeColor;
+								updateRenderFromSelf ] ] ]
 ]

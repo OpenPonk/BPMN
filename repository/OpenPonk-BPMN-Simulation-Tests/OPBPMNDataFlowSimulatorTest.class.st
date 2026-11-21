@@ -11,15 +11,15 @@ Class {
 }
 
 { #category : 'running' }
-OPBPMNDataFlowSimulatorTest >> controllerClass [
-
-	^ OPBPMNDataFlowSimulator
-]
-
-{ #category : 'running' }
 OPBPMNDataFlowSimulatorTest >> exampleModel [
 
 	^ OPBPMNDataFlowModel new
+]
+
+{ #category : 'running' }
+OPBPMNDataFlowSimulatorTest >> simulatorClass [
+
+	^ OPBPMNDataFlowSimulator
 ]
 
 { #category : 'tests' }

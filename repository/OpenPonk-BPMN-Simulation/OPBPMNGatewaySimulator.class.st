@@ -45,7 +45,7 @@ OPBPMNGatewaySimulator class >> model: anElement diagramSimulator: aDiagramSimul
 { #category : 'testing' }
 OPBPMNGatewaySimulator >> canSendBpmnTokens [
 
-	^ outgoingActive notEmpty
+	^ outgoingActive isNotEmpty
 ]
 
 { #category : 'initialization' }
@@ -71,15 +71,14 @@ OPBPMNGatewaySimulator >> isGateway [
 OPBPMNGatewaySimulator >> loadConnectedItems [
 	"loads and/or connects appropriate tokens and elements"
 
+	| outgoingFlows |
 	super loadConnectedItems.
-	model outgoing ifEmpty: [ ^ self ].
-	outgoingActive := model outgoing
-		                  select: [ :flow | flow type = #Default ]
-		                  thenCollect: [ :flow |
-		                  diagramSimulator simulatorOf: flow ].
-	outgoingActive ifEmpty: [
-		outgoingActive add:
-			(diagramSimulator simulatorOf: model outgoing first) ]
+	outgoingFlows := model outgoing select: [ :each | diagramSimulator class hasSimulatorFor: each ].
+	outgoingFlows ifEmpty: [ ^ self ].
+	outgoingActive := outgoingFlows
+		                  select: [ :flow | (flow isKindOf: OPBPMNFlowModel) and: [ flow type = #Default ] ]
+		                  thenCollect: [ :flow | diagramSimulator simulatorOf: flow ].
+	outgoingActive ifEmpty: [ outgoingActive add: (diagramSimulator simulatorOf: outgoingFlows first) ]
 ]
 
 { #category : 'accessing' }

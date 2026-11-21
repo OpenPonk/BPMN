@@ -29,30 +29,20 @@ OPBPMNSubProcessSimulator >> initialize [
 OPBPMNSubProcessSimulator >> loadConnectedItems [
 	"loads and/or connects appropriate tokens and elements"
 
-	| simulator |
 	super loadConnectedItems.
 	model allElements ifEmpty: [ ^ self ].
 
 	model allElements do: [ :each |
-		simulator := diagramSimulator simulatorOf: each.
-
-		(each isKindOf: OPBPMNStartEventModel) ifTrue: [
-			startEvents add: simulator ].
-		(each isKindOf: OPBPMNEndEventModel) ifTrue: [
-			simulator
-				when: OPSimulatorWillDoAction 
-				do: [ :event | self bpmnTokens: event simulator bpmnTokens ]
-				for: self ] ]
+			(each isKindOf: OPBPMNStartEventModel) ifTrue: [ startEvents add: (diagramSimulator simulatorOf: each) ].
+			(each isKindOf: OPBPMNEndEventModel) ifTrue: [
+					(diagramSimulator simulatorOf: each)
+						when: OPSimulatorWillDoAction
+						do: [ :event | self bpmnTokens: event simulator bpmnTokens ]
+						for: self ] ]
 ]
 
 { #category : 'accessing' }
 OPBPMNSubProcessSimulator >> startEvents [
 
 	^ startEvents
-]
-
-{ #category : 'accessing' }
-OPBPMNSubProcessSimulator >> startEvents: anOrderedCollection [
-
-	startEvents := anOrderedCollection
 ]

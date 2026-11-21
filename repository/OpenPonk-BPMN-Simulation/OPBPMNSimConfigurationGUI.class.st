@@ -17,12 +17,12 @@ Class {
 OPBPMNSimConfigurationGUI >> connectPresenters [
 
 	gatewayPresenters keysAndValuesDo: [ :element :row |
-		row doWithIndex: [ :presenter :index |
-			index = 1 ifFalse: [
-				presenter whenActivatedDo: [
-					element outgoingActive add: (element outgoing at: index - 1) ].
-				presenter whenDeactivatedDo: [
-					element outgoingActive remove: (element outgoing at: index - 1) ] ] ] ]
+			row doWithIndex: [ :presenter :index |
+					index = 1 ifFalse: [
+							| flow |
+							flow := element outgoing at: index - 1.
+							presenter whenActivatedDo: [ (element outgoingActive includes: flow) ifFalse: [ element outgoingActive add: flow ] ].
+							presenter whenDeactivatedDo: [ element outgoingActive remove: flow ifAbsent: [ ] ] ] ] ]
 ]
 
 { #category : 'layout' }
@@ -44,36 +44,32 @@ OPBPMNSimConfigurationGUI >> diagramSimulator [
 OPBPMNSimConfigurationGUI >> diagramSimulator: aDiagramSimulator [
 
 	diagramSimulator := aDiagramSimulator.
-	super initialize
-]
-
-{ #category : 'initialization' }
-OPBPMNSimConfigurationGUI >> initialize [
-
-	super initialize.
-	gatewayPresenters := Dictionary new
+	self
+		initializePresenters;
+		connectPresenters
 ]
 
 { #category : 'initialization' }
 OPBPMNSimConfigurationGUI >> initializePresenters [
 
 	| row |
+	gatewayPresenters := Dictionary new.
+	diagramSimulator ifNil: [ ^ self ].
 	diagramSimulator configurableGateways do: [ :element |
 			row := OrderedCollection new.
 			({
 				 OPBPMNNodeType ExclusiveEmpty.
 				 OPBPMNNodeType Exclusive.
-				 OPBPMNNodeType Eventbased } includes: element model type)
-				ifTrue: [
-						element outgoingDo: [ :flow |
-								row add: (self newRadioButton
-										 label: flow model name;
-										 yourself) ].
-						row notEmpty ifTrue: [
-								row anyOne associatedRadioButtons: row.
-								(row at:
-									 (element outgoing indexOf: element outgoingActive first))
-									state: true ] ].
+				 OPBPMNNodeType Eventbased } includes: element model type) ifTrue: [
+					element outgoingDo: [ :flow |
+							row add: (self newRadioButton
+									 label: flow model name;
+									 yourself) ].
+					(row isNotEmpty and: [ element outgoingActive isNotEmpty ]) ifTrue: [
+							| activeIndex |
+							row anyOne associatedRadioButtons: row.
+							activeIndex := element outgoing indexOf: element outgoingActive first ifAbsent: [ 0 ].
+							activeIndex > 0 ifTrue: [ (row at: activeIndex) state: true ] ] ].
 			({
 				 OPBPMNNodeType Inclusive.
 				 OPBPMNNodeType Complex } includes: element model type) ifTrue: [
@@ -93,5 +89,11 @@ OPBPMNSimConfigurationGUI >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Simulator Configuration';
-		initialExtent: 400 @ 50 * (gatewayPresenters size + 1)
+		initialExtent: 400 @ (50 * (gatewayPresenters size + 1))
+]
+
+{ #category : 'accessing - model' }
+OPBPMNSimConfigurationGUI >> setModelBeforeInitialization: aDiagramSimulator [
+
+	diagramSimulator := aDiagramSimulator
 ]

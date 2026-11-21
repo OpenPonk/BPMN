@@ -16,36 +16,29 @@ Class {
 { #category : 'adding' }
 OPBPMNInclusiveGatewaySimulator >> addBpmnTokens: anInteger from: aFlow [
 
-	| tokenAmount |
-	self incomingBpmnTokens
-		at: aFlow
-		update: [ :value | value + anInteger ].
+	| nonZero tokenAmount |
+	self incomingBpmnTokens at: aFlow update: [ :value | value + anInteger ].
 
-	(self incomingBpmnTokens values allSatisfy: [ :each | each strictlyPositive ])
-		ifFalse: [
+	(self incomingBpmnTokens values allSatisfy: [ :each | each strictlyPositive ]) ifFalse: [
 			| queue visited node |
 			queue := OrderedCollection new.
 			visited := Set new.
 			visited add: self.
-			self incomingBpmnTokens keysAndValuesDo: [ :key :val |
-				val isZero ifTrue: [ queue add: key ] ].
+			self incomingBpmnTokens keysAndValuesDo: [ :key :val | val isZero ifTrue: [ queue add: key ] ].
 
-			[ queue notEmpty ] whileTrue: [
-				node := queue removeFirst.
-				node bpmnTokens strictlyPositive ifTrue: [ ^ self ].
-				node incomingDo: [ :each |
-					(visited includes: each) ifFalse: [
-						visited add: each.
-						queue add: each ] ] ] ].
+			[ queue isNotEmpty ] whileTrue: [
+					node := queue removeFirst.
+					node bpmnTokens strictlyPositive ifTrue: [ ^ self ].
+					node incomingDo: [ :each |
+							(visited includes: each) ifFalse: [
+									visited add: each.
+									queue add: each ] ] ] ].
 
-	tokenAmount := (self incomingBpmnTokens reject: [ :each |
-		                each isZero ]) min.
+	nonZero := self incomingBpmnTokens reject: [ :each | each isZero ].
+	nonZero ifEmpty: [ ^ self ].
+	tokenAmount := nonZero min.
 	self bpmnTokens: self bpmnTokens + tokenAmount.
-	(self incomingBpmnTokens reject: [ :each | each isZero ]) keysDo: [
-		:key |
-		self incomingBpmnTokens
-			at: key
-			update: [ :value | value - tokenAmount ] ]
+	nonZero keysDo: [ :key | self incomingBpmnTokens at: key update: [ :value | value - tokenAmount ] ]
 ]
 
 { #category : 'actions' }
@@ -80,8 +73,7 @@ OPBPMNInclusiveGatewaySimulator >> initialize [
 OPBPMNInclusiveGatewaySimulator >> loadConnectedItems [
 
 	super loadConnectedItems.
-	model incoming do: [ :flow |
-		self incomingBpmnTokens
-			at: (diagramSimulator simulatorOf: flow)
-			put: 0 ]
+	model incoming
+		select: [ :flow | diagramSimulator class hasSimulatorFor: flow ]
+		thenDo: [ :flow | self incomingBpmnTokens at: (diagramSimulator simulatorOf: flow) put: 0 ]
 ]

@@ -56,7 +56,7 @@ OPBPMNSimulator >> loadConfigurableGateways [
 			                        element isConfigurable ]
 ]
 
-{ #category : 'private - creation' }
+{ #category : 'initialization' }
 OPBPMNSimulator >> loadItems [
 	"creates simulators for model elements"
 

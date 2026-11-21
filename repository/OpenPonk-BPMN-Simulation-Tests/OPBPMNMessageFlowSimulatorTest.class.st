@@ -11,15 +11,15 @@ Class {
 }
 
 { #category : 'running' }
-OPBPMNMessageFlowSimulatorTest >> controllerClass [
-
-	^ OPBPMNMessageFlowSimulator
-]
-
-{ #category : 'running' }
 OPBPMNMessageFlowSimulatorTest >> exampleModel [
 
 	^ OPBPMNMessageFlowModel new
+]
+
+{ #category : 'running' }
+OPBPMNMessageFlowSimulatorTest >> simulatorClass [
+
+	^ OPBPMNMessageFlowSimulator
 ]
 
 { #category : 'tests' }

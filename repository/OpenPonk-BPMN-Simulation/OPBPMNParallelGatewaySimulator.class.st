@@ -17,19 +17,13 @@ Class {
 OPBPMNParallelGatewaySimulator >> addBpmnTokens: anInteger from: aFlow [
 
 	| tokenAmount |
-	self incomingBpmnTokens
-		at: aFlow
-		update: [ :value | value + anInteger ].
+	self incomingBpmnTokens at: aFlow update: [ :value | value + anInteger ].
 
-	(self incomingBpmnTokens values allSatisfy: [ :each | each positive ])
-		ifFalse: [ ^ self ].
+	(self incomingBpmnTokens values allSatisfy: [ :each | each strictlyPositive ]) ifFalse: [ ^ self ].
 
 	tokenAmount := self incomingBpmnTokens values min.
 	self bpmnTokens: self bpmnTokens + tokenAmount.
-	self incomingBpmnTokens keysDo: [ :key |
-		self incomingBpmnTokens
-			at: key
-			update: [ :value | value - tokenAmount ] ]
+	self incomingBpmnTokens keysDo: [ :key | self incomingBpmnTokens at: key update: [ :value | value - tokenAmount ] ]
 ]
 
 { #category : 'accessing' }
@@ -61,8 +55,7 @@ OPBPMNParallelGatewaySimulator >> isConfigurable [
 OPBPMNParallelGatewaySimulator >> loadConnectedItems [
 
 	super loadConnectedItems.
-	model incoming do: [ :flow |
-		self incomingBpmnTokens
-			at: (diagramSimulator simulatorOf: flow)
-			put: 0 ]
+	model incoming
+		select: [ :flow | diagramSimulator class hasSimulatorFor: flow ]
+		thenDo: [ :flow | self incomingBpmnTokens at: (diagramSimulator simulatorOf: flow) put: 0 ]
 ]

@@ -10,12 +10,6 @@ Class {
 	#tag : 'Simulation'
 }
 
-{ #category : 'accessing' }
-OPBPMNParallelGatewaySimulatorTest >> controllerClass [
-
-	^ OPBPMNParallelGatewaySimulator 
-]
-
 { #category : 'running' }
 OPBPMNParallelGatewaySimulatorTest >> setUp [
 
@@ -25,6 +19,12 @@ OPBPMNParallelGatewaySimulatorTest >> setUp [
 			 at: flowIn1 put: 0;
 			 at: flowIn2 put: 0;
 			 yourself)
+]
+
+{ #category : 'accessing' }
+OPBPMNParallelGatewaySimulatorTest >> simulatorClass [
+
+	^ OPBPMNParallelGatewaySimulator 
 ]
 
 { #category : 'tests' }
@@ -43,6 +43,16 @@ OPBPMNParallelGatewaySimulatorTest >> testAddBpmnTokensFrom [
 ]
 
 { #category : 'tests' }
+OPBPMNParallelGatewaySimulatorTest >> testAddBpmnTokensFromDoesNotReassignTokensWhenBranchIsEmpty [
+
+	simulator stub bpmnTokens: Any.
+	simulator addBpmnTokens: 3 from: flowIn1.
+	simulator should not receive bpmnTokens: Any.
+	self assert: (simulator incomingBpmnTokens at: flowIn1) equals: 3.
+	self assert: (simulator incomingBpmnTokens at: flowIn2) equals: 0
+]
+
+{ #category : 'tests' }
 OPBPMNParallelGatewaySimulatorTest >> testFire [
 
 	self assert: simulator bpmnTokens equals: 1.
@@ -53,4 +63,43 @@ OPBPMNParallelGatewaySimulatorTest >> testFire [
 	self assert: simulator bpmnTokens equals: 0.
 	simulator outgoingDo: [ :each |
 		self assert: each bpmnTokens equals: 1 ]
+]
+
+{ #category : 'tests' }
+OPBPMNParallelGatewaySimulatorTest >> testIsConfigurableReturnsFalse [
+
+	self deny: simulator isConfigurable description: 'Parallel gateways are not user-configurable'
+]
+
+{ #category : 'tests' }
+OPBPMNParallelGatewaySimulatorTest >> testLoadConnectedItemsIgnoresIncomingAssociation [
+
+	| testModel gateway start annotation sequenceFlow association diagramSimulator gatewaySimulator |
+	testModel := OPBPMNModel new name: 'Parallel With Association'.
+	start := OPBPMNStartEventModel new name: 'Start'.
+	gateway := OPBPMNGatewayModel new
+		           name: 'AND';
+		           type: OPBPMNNodeType Parallel;
+		           yourself.
+	annotation := OPBPMNAnnotationModel new name: 'Note'.
+	sequenceFlow := OPBPMNFlowModel from: start to: gateway.
+	association := OPBPMNAssociationModel new
+		               source: annotation;
+		               target: gateway;
+		               yourself.
+	start addFlow: sequenceFlow.
+	gateway
+		addAssociation: association;
+		addFlow: sequenceFlow.
+	testModel
+		add: start;
+		add: gateway;
+		add: annotation;
+		add: sequenceFlow;
+		add: association.
+
+	diagramSimulator := OPBPMNSimulator model: testModel.
+	gatewaySimulator := diagramSimulator simulatorOf: gateway.
+	self assert: gatewaySimulator incomingBpmnTokens size equals: 1.
+	self assert: (gatewaySimulator incomingBpmnTokens at: (diagramSimulator simulatorOf: sequenceFlow)) equals: 0
 ]

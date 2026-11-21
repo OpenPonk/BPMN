@@ -14,12 +14,6 @@ Class {
 }
 
 { #category : 'running' }
-OPBPMNSimulatorTest >> controllerClass [
-
-	^ OPBPMNSimulator
-]
-
-{ #category : 'running' }
 OPBPMNSimulatorTest >> exampleModel [
 
 	| model activity1 flow1 flow2 start1 end1 |
@@ -50,7 +44,38 @@ OPBPMNSimulatorTest >> setUp [
 
 	super setUp.
 
-	simulator := self controllerClass model: self exampleModel
+	simulator := self simulatorClass model: self exampleModel
+]
+
+{ #category : 'running' }
+OPBPMNSimulatorTest >> simulatorClass [
+
+	^ OPBPMNSimulator
+]
+
+{ #category : 'tests' }
+OPBPMNSimulatorTest >> testConfigurableGatewaysExcludesParallelGateways [
+
+	| testModel exclusiveGateway inclusiveGateway parallelGateway diagramSimulator |
+	testModel := OPBPMNModel new name: 'Gateways'.
+	exclusiveGateway := OPBPMNGatewayModel new
+		                    type: OPBPMNNodeType Exclusive;
+		                    yourself.
+	inclusiveGateway := OPBPMNGatewayModel new
+		                    type: OPBPMNNodeType Inclusive;
+		                    yourself.
+	parallelGateway := OPBPMNGatewayModel new
+		                   type: OPBPMNNodeType Parallel;
+		                   yourself.
+	testModel
+		add: exclusiveGateway;
+		add: inclusiveGateway;
+		add: parallelGateway.
+
+	diagramSimulator := self simulatorClass model: testModel.
+	self assertCollection: (diagramSimulator configurableGateways collect: #model) hasSameElements: {
+			exclusiveGateway.
+			inclusiveGateway }
 ]
 
 { #category : 'tests' }
@@ -79,6 +104,35 @@ OPBPMNSimulatorTest >> testDefaultStepping [
 ]
 
 { #category : 'tests' }
+OPBPMNSimulatorTest >> testExampleAllElementsAndTypesLoadsWithoutError [
+
+	| exampleModel diagramSimulator |
+	exampleModel := OPBPMNExamples exampleAllElementsAndTypes.
+	diagramSimulator := self simulatorClass model: exampleModel.
+	self denyEmpty: diagramSimulator elements
+]
+
+{ #category : 'tests' }
+OPBPMNSimulatorTest >> testInitialClassMappingContainsAllSupportedBPMNModels [
+
+	| mapping |
+	mapping := OPBPMNSimulator initialClassMapping.
+	self assert: (mapping at: OPBPMNDataFlowModel) identicalTo: OPBPMNDataFlowSimulator.
+	self assert: (mapping at: OPBPMNFlowModel) identicalTo: OPBPMNSequenceFlowSimulator.
+	self assert: (mapping at: OPBPMNMessageFlowModel) identicalTo: OPBPMNMessageFlowSimulator.
+	self assert: (mapping at: OPBPMNBoundaryEventModel) identicalTo: OPBPMNBoundaryEventSimulator.
+	self assert: (mapping at: OPBPMNDataObjectModel) identicalTo: OPBPMNDataObjectSimulator.
+	self assert: (mapping at: OPBPMNActivityModel) identicalTo: OPBPMNActivitySimulator.
+	self assert: (mapping at: OPBPMNCollapsedSubProcessModel) identicalTo: OPBPMNCollapsedSubProcessSimulator.
+	self assert: (mapping at: OPBPMNEndEventModel) identicalTo: OPBPMNEndEventSimulator.
+	self assert: (mapping at: OPBPMNIntermediateEventModel) identicalTo: OPBPMNIntermediateEventSimulator.
+	self assert: (mapping at: OPBPMNStartEventModel) identicalTo: OPBPMNStartEventSimulator.
+	self assert: (mapping at: OPBPMNGatewayModel) identicalTo: OPBPMNGatewaySimulator.
+	self assert: (mapping at: OPBPMNSubProcessModel) identicalTo: OPBPMNSubProcessSimulator.
+	self assert: (mapping at: OPBPMNPoolModel) identicalTo: OPBPMNPoolSimulator
+]
+
+{ #category : 'tests' }
 OPBPMNSimulatorTest >> testOrderFulfillmentExampleStartEventIsSteppable [
 
 	| exampleModel sim startEvent startSim |
@@ -86,7 +140,7 @@ OPBPMNSimulatorTest >> testOrderFulfillmentExampleStartEventIsSteppable [
 	startEvent := exampleModel allElements detect: [ :each |
 		              (each isKindOf: OPBPMNStartEventModel) and: [ each name = 'Order Placed' ] ].
 
-	sim := self controllerClass model: exampleModel.
+	sim := self simulatorClass model: exampleModel.
 	sim setDefaultStepping.
 
 	startSim := sim simulatorOf: startEvent.
@@ -99,7 +153,8 @@ OPBPMNSimulatorTest >> testOrderFulfillmentExampleStartEventIsSteppable [
 
 { #category : 'tests' }
 OPBPMNSimulatorTest >> testSimulationWithAssociation [
-	| testModel activity end association |
+
+	| testModel activity end association diagramSimulator |
 	testModel := self exampleModel.
 	activity := testModel elements detect: [ :each | each name = 'A1' ].
 	end := testModel elements detect: [ :each | each name = 'E1' ].
@@ -109,7 +164,11 @@ OPBPMNSimulatorTest >> testSimulationWithAssociation [
 		target: end.
 	testModel add: association.
 
-	self controllerClass model: testModel
+	diagramSimulator := self simulatorClass model: testModel.
+	self assert: diagramSimulator elements size equals: 5.
+	self
+		deny: (diagramSimulator elements anySatisfy: [ :each | each model == association ])
+		description: 'Non-simulable associations must be excluded from diagram simulator elements'
 ]
 
 { #category : 'tests' }
@@ -138,7 +197,7 @@ OPBPMNSimulatorTest >> testStartEventInLaneReceivesInitialTokenAndIsSteppable [
 		add: task.
 	testModel add: flow.
 
-	sim := self controllerClass model: testModel.
+	sim := self simulatorClass model: testModel.
 	sim setDefaultStepping.
 
 	startSim := sim simulatorOf: start.

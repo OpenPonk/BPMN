@@ -11,27 +11,28 @@ Class {
 }
 
 { #category : 'running' }
-OPBPMNSequenceFlowSimulatorTest >> controllerClass [
-
-	^ OPBPMNSequenceFlowSimulator 
-]
-
-{ #category : 'running' }
 OPBPMNSequenceFlowSimulatorTest >> exampleModel [
 
 	^ OPBPMNFlowModel new
 ]
 
 { #category : 'running' }
+OPBPMNSequenceFlowSimulatorTest >> simulatorClass [
+
+	^ OPBPMNSequenceFlowSimulator 
+]
+
+{ #category : 'tests' }
 OPBPMNSequenceFlowSimulatorTest >> testFire [
 
 	simulator addBpmnTokens: 3.
 	self assert: simulator bpmnTokens equals: 3.
 	simulator fire.
-	self assert: simulator bpmnTokens equals: 0
+	self assert: simulator bpmnTokens equals: 0.
+	self assert: nodeOut bpmnTokens equals: 3
 ]
 
-{ #category : 'running' }
+{ #category : 'tests' }
 OPBPMNSequenceFlowSimulatorTest >> testTokens [
 
 	self assert: simulator bpmnTokens equals: 0.
