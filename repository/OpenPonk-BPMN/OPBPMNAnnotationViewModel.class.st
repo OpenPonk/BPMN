@@ -13,27 +13,16 @@ Class {
 OPBPMNAnnotationViewModel class >> modelClass [ ^ OPBPMNAnnotationModel
 ]
 
+{ #category : 'forms' }
+OPBPMNAnnotationViewModel >> buildEditorForm: aForm [
+
+	aForm bindText: 'Text' property: #text
+]
+
 { #category : 'accessing' }
 OPBPMNAnnotationViewModel >> childrenModels [
 	"Answers contained elements and connected associations belonging to this annotation."
 	^ self model elements asArray , self model associations asArray
-]
-
-{ #category : 'forms' }
-OPBPMNAnnotationViewModel >> descriptionName [
-
-	<magritteDescription>
-	| accessor |
-	accessor := MAPluggableAccessor
-		            read: [ :me | me model text ]
-		            write: [ :me :newValue | 
-			            me model text: newValue.
-			            self modelChanged ].
-	^ MAMemoDescription new
-		  accessor: accessor;
-		  label: 'Text';
-		  priority: 1;
-		  yourself
 ]
 
 { #category : 'accessing' }

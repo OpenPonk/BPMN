@@ -31,6 +31,29 @@ OPBPMNLaneViewModelTest >> setUpParentModel [
 ]
 
 { #category : 'tests' }
+OPBPMNLaneViewModelTest >> testCaptureLanePositionOnUnattachedLaneAndDefaultInsertBefore [
+
+	| testProject projectController testRegistry orphanLaneModel orphanLaneViewModel poolModel detachedLaneModel detachedLaneViewModel |
+	testProject := OPProject new.
+	projectController := OPProjectController forProject: testProject.
+	testRegistry := projectController viewModelRegistry.
+
+	orphanLaneModel := OPBPMNLaneModel new name: 'Orphan'.
+	orphanLaneViewModel := testRegistry viewModelFor: orphanLaneModel.
+	self deny: orphanLaneViewModel insertBefore description: 'Default insertBefore must be false'.
+	orphanLaneViewModel captureLanePosition.
+	self deny: orphanLaneViewModel insertBefore description: 'Capturing position on an unattached lane must keep insertBefore false'.
+
+	poolModel := OPBPMNPoolModel new name: 'Pool'.
+	testProject addModel: poolModel.
+	detachedLaneModel := OPBPMNLaneModel new name: 'Detached'.
+	detachedLaneModel addedTo: poolModel.
+	detachedLaneViewModel := testRegistry viewModelFor: detachedLaneModel.
+	detachedLaneViewModel basicRemoveModel.
+	self assertEmpty: poolModel lanes
+]
+
+{ #category : 'tests' }
 OPBPMNLaneViewModelTest >> testChildrenModelsContainsContainedNodes [
 	| laneModel taskModel laneViewModel |
 	laneModel := OPBPMNLaneModel new name: 'Operations'.
@@ -111,6 +134,36 @@ OPBPMNLaneViewModelTest >> testRemoveLastLaneViaViewModelPreservesContainedEleme
 	self assertCollection: poolModel elements includesAll: { taskModel }.
 	self assert: taskModel owner equals: poolModel.
 	self assert: taskViewModel parentViewModel equals: (testRegistry viewModelFor: poolModel)
+]
+
+{ #category : 'tests' }
+OPBPMNLaneViewModelTest >> testUndoRemovingLastAndFirstLaneRestoresExactOrder [
+
+	| testProject projectController undoManager poolModel firstLane secondLane removeLastCommand removeFirstCommand |
+	testProject := OPProject new.
+	projectController := OPProjectController forProject: testProject.
+	undoManager := projectController undoManager.
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLane := OPBPMNLaneModel new name: 'Sales'.
+	secondLane := OPBPMNLaneModel new name: 'Warehouse'.
+	poolModel
+		addLane: firstLane;
+		addLane: secondLane.
+	testProject addModel: poolModel.
+
+	removeLastCommand := OPRemoveModelElementCommand model: secondLane projectController: projectController.
+	undoManager inTransaction: [ undoManager execute: removeLastCommand ].
+	self assert: (poolModel lanes collect: #name as: Array) equals: #( 'Sales' ).
+
+	undoManager undo.
+	self assert: (poolModel lanes collect: #name as: Array) equals: #( 'Sales' 'Warehouse' ).
+
+	removeFirstCommand := OPRemoveModelElementCommand model: firstLane projectController: projectController.
+	undoManager inTransaction: [ undoManager execute: removeFirstCommand ].
+	self assert: (poolModel lanes collect: #name as: Array) equals: #( 'Warehouse' ).
+
+	undoManager undo.
+	self assert: (poolModel lanes collect: #name as: Array) equals: #( 'Sales' 'Warehouse' )
 ]
 
 { #category : 'constants' }

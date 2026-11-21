@@ -4,6 +4,9 @@ I am a specialized graph layouter for BPMN diagrams, applying automated spatial 
 Class {
 	#name : 'OPBPMNLayouter',
 	#superclass : 'OPHierarchicalNodesAndEdgesLayouter',
+	#instVars : [
+		'activeSnapshot'
+	],
 	#category : 'OpenPonk-BPMN-Plugin',
 	#package : 'OpenPonk-BPMN',
 	#tag : 'Plugin'
@@ -40,24 +43,25 @@ OPBPMNLayouter >> allNodes [
 
 { #category : 'userinterface' }
 OPBPMNLayouter >> applyLayout: aTwoArgBlock [
-	| allTargetNodes snapshot activeContainers topLevelBoxes commands |
+
+	| allTargetNodes snapshot activeContainers topLevelBoxes topLevelEdges |
+	activeSnapshot ifNotNil: [
+			topLevelBoxes := self topLevelNodeShapes.
+			topLevelEdges := self topLevelEdgesFor: topLevelBoxes.
+			aTwoArgBlock value: topLevelBoxes value: topLevelEdges.
+			^ self finalizeLayoutWithSnapshot: activeSnapshot ].
 	allTargetNodes := self allRenderedNodeShapes.
 	snapshot := OPDiagramGeometrySnapshot onNodes: allTargetNodes.
-
+	activeSnapshot := snapshot.
 	activeContainers := self containerElementsBottomUp.
-	self layoutContainersHierarchically: activeContainers.
-
-	topLevelBoxes := self topLevelNodeShapes.
-
-	RSVerticalLineLayout new
-		gapSize: 60;
-		on: topLevelBoxes.
-
-	self unsubscribeContainers: activeContainers.
-
-	commands := snapshot deltaCommands.
-	self executeLayoutCommands: commands.
-	self updateCanvas
+	[
+		self layoutContainersHierarchically: activeContainers.
+		topLevelBoxes := self topLevelNodeShapes.
+		topLevelEdges := self topLevelEdgesFor: topLevelBoxes.
+		aTwoArgBlock value: topLevelBoxes value: topLevelEdges.
+		self finalizeLayoutWithSnapshot: snapshot ] ensure: [
+			self unsubscribeContainers: activeContainers.
+			activeSnapshot := nil ]
 ]
 
 { #category : 'accessing' }
@@ -71,7 +75,13 @@ OPBPMNLayouter >> containerElementsBottomUp [
 OPBPMNLayouter >> defaultLayout [
 	"Applies the default hierarchical process layout to pools and contained semantic nodes."
 
-	self applyLayout: [ :nodes :edges | ]
+	self applyLayout: [ :boxes :edges |
+			(boxes anySatisfy: [ :eachShape | eachShape model isKindOf: OPBPMNPoolShape ])
+				ifTrue: [
+						RSVerticalLineLayout new
+							gapSize: 60;
+							on: boxes ]
+				ifFalse: [ self layoutPoolContent: nil shapes: boxes edges: edges ] ]
 ]
 
 { #category : 'private' }
@@ -95,6 +105,16 @@ OPBPMNLayouter >> directShapeIn: aCollectionOfShapes forDiagramElement: aDiagram
 			^ currentElement roassalShape ].
 		currentElement := currentElement owningElement ].
 	^ nil
+]
+
+{ #category : 'private' }
+OPBPMNLayouter >> finalizeLayoutWithSnapshot: aSnapshot [
+
+	| commands |
+	self unsubscribeContainers: self containerElementsBottomUp.
+	commands := aSnapshot deltaCommands.
+	self executeLayoutCommands: commands.
+	self updateCanvas
 ]
 
 { #category : 'processing' }
@@ -148,10 +168,9 @@ OPBPMNLayouter >> layoutInnerContentOf: aContainerElement shapes: directShapes e
 { #category : 'layouts' }
 OPBPMNLayouter >> layoutPoolContent: aPoolShape shapes: directShapes edges: directEdges [
 	"Arranges pool flow nodes horizontally and secondary shapes around them."
+
 	| secondaryShapes flowShapes flowEdges |
-	secondaryShapes := (directShapes select: [ :eachShape |
-		(eachShape model isKindOf: OPBPMNDataObjectShape) or: [
-			eachShape model isKindOf: OPBPMNAnnotationShape ] ]) asGroup.
+	secondaryShapes := (directShapes select: [ :eachShape | eachShape model isSecondaryLayoutShape ]) asGroup.
 	flowShapes := (directShapes copyWithoutAll: secondaryShapes) asGroup.
 	flowEdges := self sequenceFlowLayoutEdgesForNodes: flowShapes.
 	self layoutHorizontalFlowShapes: flowShapes edges: flowEdges.
@@ -310,9 +329,8 @@ OPBPMNLayouter >> layoutSubProcessContent: aSubProcessShape shapes: directShapes
 OPBPMNLayouter >> sequenceFlowLayoutEdgesForNodes: aCollectionOfShapes [
 	"Answers associations representing sequence flow dependencies (sourceShape -> targetShape)."
 
-	| flowControllers layoutEdges |
+	| flowControllers |
 	flowControllers := diagramController controllers select: [ :eachController | eachController isKindOf: OPBPMNFlowController ].
-	layoutEdges := OrderedCollection new.
 	^ flowControllers
 		  collect: [ :eachFlowController |
 				  | sourceShape targetShape |
@@ -326,16 +344,38 @@ OPBPMNLayouter >> sequenceFlowLayoutEdgesForNodes: aCollectionOfShapes [
 				  sourceShape isNotNil and: [ targetShape isNotNil and: [ sourceShape ~~ targetShape ] ] ]
 ]
 
+{ #category : 'private' }
+OPBPMNLayouter >> topLevelEdgesFor: aCollectionOfShapes [
+	"Answers top-level edges interconnecting the given shapes, including derived cross-container message and sequence flow edges."
+
+	| edges seenPairs |
+	edges := OrderedCollection withAll: (self innerEdgesFor: aCollectionOfShapes).
+	seenPairs := edges collect: [ :eachEdge | eachEdge from -> eachEdge to ] as: Set.
+	diagramController controllers do: [ :eachController |
+			((eachController isKindOf: OPBPMNMessageFlowController) or: [ eachController isKindOf: OPBPMNFlowController ]) ifTrue: [
+					| sourceShape targetShape |
+					sourceShape := self directShapeIn: aCollectionOfShapes forController: eachController source.
+					targetShape := self directShapeIn: aCollectionOfShapes forController: eachController target.
+					(sourceShape isNotNil and: [ targetShape isNotNil and: [ sourceShape ~~ targetShape ] ]) ifTrue: [
+							| pair |
+							pair := sourceShape -> targetShape.
+							(seenPairs includes: pair) ifFalse: [
+									seenPairs add: pair.
+									edges add: (RSLine new
+											 from: sourceShape;
+											 to: targetShape;
+											 yourself) ] ] ] ].
+	^ edges asGroup
+]
+
 { #category : 'layouts' }
 OPBPMNLayouter >> wirePositionPropagationFor: aContainerElement children: aCollectionOfShapes [
-	"Subscribes to container shape position change to synchronously translate inner lane flow nodes."
+	"Subscribes to container shape position change to synchronously translate inner lane or direct flow nodes."
+
 	| innerShapesToPropagate |
 	innerShapesToPropagate := OrderedCollection new.
-	(aContainerElement isKindOf: OPBPMNPoolShape)
-		ifTrue: [
-			aContainerElement laneShapes do: [ :eachLane |
-				innerShapesToPropagate addAll: eachLane directNodeRoassalShapes ] ]
-		ifFalse: [
-			innerShapesToPropagate addAll: aCollectionOfShapes ].
+	((aContainerElement isKindOf: OPBPMNPoolShape) and: [ aContainerElement hasLanes ])
+		ifTrue: [ aContainerElement laneShapes do: [ :eachLane | innerShapesToPropagate addAll: eachLane directNodeRoassalShapes ] ]
+		ifFalse: [ innerShapesToPropagate addAll: aCollectionOfShapes ].
 	super wirePositionPropagationFor: aContainerElement children: innerShapesToPropagate asGroup
 ]

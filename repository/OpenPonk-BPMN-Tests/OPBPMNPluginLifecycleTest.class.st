@@ -14,3 +14,9 @@ OPBPMNPluginLifecycleTest class >> pluginClass [
 	"Answers the OPPlugin class under test."
 	^ OPBPMNPlugin
 ]
+
+{ #category : 'tests' }
+OPBPMNPluginLifecycleTest >> testPluginRepositoryName [
+
+	self assert: OPBPMNPlugin repositoryName equals: #BPMN
+]

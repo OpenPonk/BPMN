@@ -82,6 +82,114 @@ OPBPMNLayouterTest >> testDefaultLayoutIsUndoable [
 ]
 
 { #category : 'tests' }
+OPBPMNLayouterTest >> testDefaultLayoutOnPoollessDiagramArrangesFlowLeftToRight [
+
+	| startModel taskModel endModel dataObjectModel annotationModel flowStartToTask flowTaskToEnd dataFlow association customDiagram customDiagramController customLayouter startShape taskShape endShape dataObjectShape annotationShape |
+	model := OPBPMNModel named: 'Poolless Process'.
+	startModel := OPBPMNStartEventModel new name: 'Start'.
+	taskModel := OPBPMNActivityModel new name: 'Do Work'.
+	endModel := OPBPMNEndEventModel new name: 'Done'.
+	dataObjectModel := OPBPMNDataObjectModel new name: 'Document'.
+	annotationModel := OPBPMNAnnotationModel new text: 'Remark'.
+	model
+		add: startModel;
+		add: taskModel;
+		add: endModel;
+		add: dataObjectModel;
+		add: annotationModel.
+	flowStartToTask := OPBPMNFlowModel from: startModel to: taskModel.
+	startModel addFlow: flowStartToTask.
+	taskModel addFlow: flowStartToTask.
+	flowTaskToEnd := OPBPMNFlowModel from: taskModel to: endModel.
+	taskModel addFlow: flowTaskToEnd.
+	endModel addFlow: flowTaskToEnd.
+	dataFlow := OPBPMNDataFlowModel from: dataObjectModel to: taskModel.
+	dataObjectModel addFlow: dataFlow.
+	taskModel addFlow: dataFlow.
+	association := OPBPMNAssociationModel from: annotationModel to: taskModel.
+	annotationModel addAssociation: association.
+	taskModel addAssociation: association.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter defaultLayout.
+
+	startShape := (customDiagramController controllerForModel: startModel) roassalShape.
+	taskShape := (customDiagramController controllerForModel: taskModel) roassalShape.
+	endShape := (customDiagramController controllerForModel: endModel) roassalShape.
+	dataObjectShape := (customDiagramController controllerForModel: dataObjectModel) roassalShape.
+	annotationShape := (customDiagramController controllerForModel: annotationModel) roassalShape.
+
+	self assert: startShape position x < taskShape position x description: 'Start event must sit left of task'.
+	self assert: taskShape position x < endShape position x description: 'Task must sit left of end event'.
+	self
+		assert: annotationShape encompassingRectangle bottom < taskShape encompassingRectangle top
+		description: 'Annotation must sit above task'.
+	self
+		assert: dataObjectShape encompassingRectangle top > taskShape encompassingRectangle bottom
+		description: 'Data object must sit below task'
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testDirectShapeLookupReturnsNilForMissingInputs [
+
+	| layouter |
+	layouter := OPBPMNLayouter new diagramController: diagramController.
+	self assert: (layouter directShapeIn: #(  ) forController: nil) identicalTo: nil.
+	self assert: (layouter directShapeIn: #(  ) forDiagramElement: nil) identicalTo: nil
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testGridLayoutArrangesTopLevelPoolsDifferentlyFromDefaultLayout [
+
+	| layouter customerShape orderFulfillmentShape defaultDelta gridDelta |
+	layouter := OPBPMNLayouter new diagramController: diagramController.
+	layouter defaultLayout.
+	customerShape := (diagramController controllers detect: [ :eachController | eachController model name = 'Customer' ])
+		                 roassalShape.
+	orderFulfillmentShape := (diagramController controllers detect: [ :eachController |
+		                          eachController model name = 'Order Fulfillment' ]) roassalShape.
+	defaultDelta := orderFulfillmentShape position - customerShape position.
+	self assert: defaultDelta y abs > 0 description: 'Default layout must stack pools vertically'.
+
+	layouter gridLayout.
+	gridDelta := orderFulfillmentShape position - customerShape position.
+	self deny: gridDelta equals: defaultDelta.
+	self assert: gridDelta x abs > 0 description: 'Grid layout must arrange the two pools horizontally side-by-side'
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testLayoutCommandExecutesDefaultLayoutAndAllNodesReturnsRenderedShapes [
+
+	| layouter layoutCommand |
+	layouter := OPBPMNLayouter new diagramController: diagramController.
+	self assert: layouter allNodes equals: layouter allRenderedNodeShapes.
+	self denyEmpty: layouter allNodes.
+
+	layoutCommand := OPBPMNLayoutCommand new.
+	layoutCommand instVarNamed: #layouter put: layouter.
+	self assert: layoutCommand defaultMenuItemName equals: 'Process Flow'.
+	layoutCommand execute.
+	self assert: undoManager undoStack size equals: 1
+]
+
+{ #category : 'tests' }
 OPBPMNLayouterTest >> testPoolEncompassesInnerNodesAfterDefaultLayout [
 
 	| layouter poolController poolShape innerShapes |
@@ -96,6 +204,60 @@ OPBPMNLayouterTest >> testPoolEncompassesInnerNodesAfterDefaultLayout [
 			self
 				assert: (poolShape encompassingRectangle containsRect: eachNodeShape encompassingRectangle)
 				description: 'Pool bounds must encompass every inner node shape after default layout' ]
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testPoolWithEmptyLanesLayoutsWithoutError [
+
+	| emptyPool mixedPool laneOne laneTwo laneEmpty laneFilled taskModel customDiagram customDiagramController customLayouter emptyPoolShape mixedPoolShape |
+	model := OPBPMNModel named: 'Empty Lanes'.
+	emptyPool := OPBPMNPoolModel new name: 'All Empty Pool'.
+	laneOne := OPBPMNLaneModel new name: 'Empty 1'.
+	laneTwo := OPBPMNLaneModel new name: 'Empty 2'.
+	emptyPool
+		addLane: laneOne;
+		addLane: laneTwo.
+	mixedPool := OPBPMNPoolModel new name: 'Mixed Pool'.
+	laneEmpty := OPBPMNLaneModel new name: 'Idle Lane'.
+	laneFilled := OPBPMNLaneModel new name: 'Active Lane'.
+	taskModel := OPBPMNActivityModel new name: 'Task'.
+	mixedPool
+		addLane: laneEmpty;
+		addLane: laneFilled.
+	laneFilled add: taskModel.
+	model
+		add: emptyPool;
+		add: mixedPool.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter defaultLayout.
+
+	emptyPoolShape := (customDiagramController controllerForModel: emptyPool) roassalShape.
+	mixedPoolShape := (customDiagramController controllerForModel: mixedPool) roassalShape.
+	self assert: (customDiagramController controllerForModel: laneOne) diagramElement laneHeight equals: 130.
+	self assert: (customDiagramController controllerForModel: laneEmpty) diagramElement laneHeight equals: 130.
+	self assert: emptyPoolShape width >= 620 description: 'Pool with only empty lanes must keep minimum inner width'.
+	self
+		assert: (mixedPoolShape encompassingRectangle containsRect:
+				 (customDiagramController controllerForModel: taskModel) roassalShape encompassingRectangle)
+		description: 'Mixed pool must encompass task in non-empty lane'
 ]
 
 { #category : 'tests' }
@@ -192,6 +354,51 @@ OPBPMNLayouterTest >> testSecondaryShapesDoNotOverlapTargetFlowNodesAfterDefault
 ]
 
 { #category : 'tests' }
+OPBPMNLayouterTest >> testSecondaryShapesHandlesReversedAssociationAndUnconnectedSecondaryNodes [
+
+	| taskModel connectedAnnotation unconnectedAnnotation unconnectedDataObject association customDiagram customDiagramController customLayouter taskShape connectedAnnotationShape |
+	model := OPBPMNModel named: 'Secondary Shapes'.
+	taskModel := OPBPMNActivityModel new name: 'Target Task'.
+	connectedAnnotation := OPBPMNAnnotationModel new text: 'Target Annotation'.
+	unconnectedAnnotation := OPBPMNAnnotationModel new text: 'Floating Annotation'.
+	unconnectedDataObject := OPBPMNDataObjectModel new name: 'Floating Data'.
+	model
+		add: taskModel;
+		add: connectedAnnotation;
+		add: unconnectedAnnotation;
+		add: unconnectedDataObject.
+	association := OPBPMNAssociationModel from: taskModel to: connectedAnnotation.
+	taskModel addAssociation: association.
+	connectedAnnotation addAssociation: association.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter defaultLayout.
+
+	taskShape := (customDiagramController controllerForModel: taskModel) roassalShape.
+	connectedAnnotationShape := (customDiagramController controllerForModel: connectedAnnotation) roassalShape.
+	self
+		assert: connectedAnnotationShape encompassingRectangle bottom < taskShape encompassingRectangle top
+		description: 'Annotation attached as association target must be positioned above its source task'
+]
+
+{ #category : 'tests' }
 OPBPMNLayouterTest >> testSequenceFlowFollowsLeftToRightDirection [
 
 	| layouter startShape checkStockShape gatewayShape subProcessShape shipmentShape endShape orderedPositions |
@@ -240,4 +447,178 @@ OPBPMNLayouterTest >> testSubProcessEncompassesInnerNodesAfterDefaultLayout [
 					stream print: subProcessRect.
 					stream << ' does not contain inner task rect '.
 					stream print: taskRect ] ]
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testSubProcessWithSingleInnerNodeLayoutsAndEncompassesNode [
+
+	| subProcessModel innerTaskModel customDiagram customDiagramController customLayouter subProcessShape innerTaskShape |
+	model := OPBPMNModel named: 'Single Inner SubProcess'.
+	subProcessModel := OPBPMNSubProcessModel new name: 'SubProcess'.
+	innerTaskModel := OPBPMNActivityModel new name: 'Only Task'.
+	subProcessModel add: innerTaskModel.
+	model add: subProcessModel.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter defaultLayout.
+
+	subProcessShape := (customDiagramController controllerForModel: subProcessModel) roassalShape.
+	innerTaskShape := (customDiagramController controllerForModel: innerTaskModel) roassalShape.
+	self
+		assert: (subProcessShape encompassingRectangle containsRect: innerTaskShape encompassingRectangle)
+		description: 'SubProcess must encompass its single inner node after layout'
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testTreeLayoutOnCyclicCollaborationFallsBackToGridInSingleUndoTransaction [
+
+	| poolA poolB taskA taskB messageAB messageBA customDiagram customDiagramController customLayouter poolAShape poolBShape initialAPosition initialBPosition rectA rectB |
+	model := OPBPMNModel named: 'Cyclic Collaboration'.
+	poolA := OPBPMNPoolModel new name: 'Pool A'.
+	poolB := OPBPMNPoolModel new name: 'Pool B'.
+	taskA := OPBPMNActivityModel new name: 'Send Request'.
+	taskB := OPBPMNActivityModel new name: 'Send Reply'.
+	poolA add: taskA.
+	poolB add: taskB.
+	model
+		add: poolA;
+		add: poolB.
+	messageAB := OPBPMNMessageFlowModel from: taskA to: taskB.
+	taskA addFlow: messageAB.
+	taskB addFlow: messageAB.
+	messageBA := OPBPMNMessageFlowModel from: taskB to: taskA.
+	taskB addFlow: messageBA.
+	taskA addFlow: messageBA.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	poolAShape := (customDiagramController controllerForModel: poolA) roassalShape.
+	poolBShape := (customDiagramController controllerForModel: poolB) roassalShape.
+	initialAPosition := poolAShape position copy.
+	initialBPosition := poolBShape position copy.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter treeLayout.
+
+	rectA := poolAShape encompassingRectangle.
+	rectB := poolBShape encompassingRectangle.
+	self assert: undoManager undoStack size equals: 1.
+	self
+		assert: (rectB left >= rectA right or: [ rectA left >= rectB right ])
+		description: 'Cyclic tree layout must fall back to grid layout placing pools side by side'.
+	customDiagramController undo.
+	self assert: poolAShape position x closeTo: initialAPosition x precision: 0.5.
+	self assert: poolAShape position y closeTo: initialAPosition y precision: 0.5.
+	self assert: poolBShape position x closeTo: initialBPosition x precision: 0.5.
+	self assert: poolBShape position y closeTo: initialBPosition y precision: 0.5
+]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testUnpartitionedPoolLayoutEncompassesInnerNodesAndArrangesFlowLeftToRight [
+
+	| poolModel startModel taskModel endModel dataObjectModel annotationModel flowStartToTask flowTaskToEnd dataFlow association customDiagram customDiagramController customLayouter poolShape startShape taskShape endShape dataObjectShape annotationShape poolRect |
+	model := OPBPMNModel named: 'Unpartitioned Process'.
+	poolModel := OPBPMNPoolModel new name: 'Single Pool'.
+	startModel := OPBPMNStartEventModel new name: 'Start'.
+	taskModel := OPBPMNActivityModel new name: 'Execute Work'.
+	endModel := OPBPMNEndEventModel new name: 'End'.
+	dataObjectModel := OPBPMNDataObjectModel new name: 'Input Data'.
+	annotationModel := OPBPMNAnnotationModel new text: 'Important Note'.
+	poolModel
+		add: startModel;
+		add: taskModel;
+		add: endModel;
+		add: dataObjectModel;
+		add: annotationModel.
+	flowStartToTask := OPBPMNFlowModel from: startModel to: taskModel.
+	startModel addFlow: flowStartToTask.
+	taskModel addFlow: flowStartToTask.
+	flowTaskToEnd := OPBPMNFlowModel from: taskModel to: endModel.
+	taskModel addFlow: flowTaskToEnd.
+	endModel addFlow: flowTaskToEnd.
+	dataFlow := OPBPMNDataFlowModel from: dataObjectModel to: taskModel.
+	dataObjectModel addFlow: dataFlow.
+	taskModel addFlow: dataFlow.
+	association := OPBPMNAssociationModel from: annotationModel to: taskModel.
+	annotationModel addAssociation: association.
+	taskModel addAssociation: association.
+	model add: poolModel.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter defaultLayout.
+
+	poolShape := (customDiagramController controllerForModel: poolModel) roassalShape.
+	startShape := (customDiagramController controllerForModel: startModel) roassalShape.
+	taskShape := (customDiagramController controllerForModel: taskModel) roassalShape.
+	endShape := (customDiagramController controllerForModel: endModel) roassalShape.
+	dataObjectShape := (customDiagramController controllerForModel: dataObjectModel) roassalShape.
+	annotationShape := (customDiagramController controllerForModel: annotationModel) roassalShape.
+	poolRect := poolShape encompassingRectangle.
+
+	{
+		startShape.
+		taskShape.
+		endShape.
+		dataObjectShape.
+		annotationShape } do: [ :eachInnerShape |
+			self
+				assert: (poolRect containsRect: eachInnerShape encompassingRectangle)
+				description: 'Unpartitioned pool must encompass every inner shape after default layout' ].
+	self assert: startShape position x < taskShape position x description: 'Start event must sit left of task'.
+	self assert: taskShape position x < endShape position x description: 'Task must sit left of end event'.
+	self
+		assert: annotationShape encompassingRectangle bottom < taskShape encompassingRectangle top
+		description: 'Annotation must sit above task'.
+	self
+		assert: dataObjectShape encompassingRectangle top > taskShape encompassingRectangle bottom
+		description: 'Data object must sit below task'
 ]

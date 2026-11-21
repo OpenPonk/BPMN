@@ -33,23 +33,23 @@ OPBPMNLaneViewModel >> buildEditorForm: aPropertiesForm [
 
 { #category : 'private' }
 OPBPMNLaneViewModel >> captureLanePosition [
+
 	| parent lanes myIndex |
-	parent := self parentContainerModel.
+	parent := self model pool.
 	parent ifNil: [ ^ self ].
 	lanes := parent lanes.
 	myIndex := lanes indexOf: self model.
 	myIndex = 0 ifTrue: [ ^ self ].
 	myIndex < lanes size
 		ifTrue: [
-			targetLaneModel := lanes at: myIndex + 1.
-			insertBefore := true ]
+				targetLaneModel := lanes at: myIndex + 1.
+				insertBefore := true ]
 		ifFalse: [
-			myIndex > 1
-				ifTrue: [
-					targetLaneModel := lanes at: myIndex - 1.
-					insertBefore := false ]
-				ifFalse: [
-					targetLaneModel := nil ] ]
+				myIndex > 1
+					ifTrue: [
+							targetLaneModel := lanes at: myIndex - 1.
+							insertBefore := false ]
+					ifFalse: [ targetLaneModel := nil ] ]
 ]
 
 { #category : 'accessing' }

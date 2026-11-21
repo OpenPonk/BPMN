@@ -18,6 +18,13 @@ OPBPMNViewModelFormTest >> testAbstractFlowViewModelIsAbstract [
 ]
 
 { #category : 'tests' }
+OPBPMNViewModelFormTest >> testAbstractViewModelsReportModelClass [
+
+	self assert: OPBPMNEdgeViewModel modelClass identicalTo: OPBPMNEdgeModel.
+	self assert: OPBPMNSemanticNodeViewModel modelClass identicalTo: OPBPMNSemanticNodeModel
+]
+
+{ #category : 'tests' }
 OPBPMNViewModelFormTest >> testActivityViewModelBindsMultilineName [
 
 	| model viewModel form |
@@ -110,6 +117,64 @@ OPBPMNViewModelFormTest >> testActivityViewModelRebuildsFormOnUndo [
 			OPFormTextBinding.
 			OPFormDropListBinding.
 			OPFormCheckboxBinding }
+]
+
+{ #category : 'tests' }
+OPBPMNViewModelFormTest >> testAllDropListBindingsDisplayStringForEveryItem [
+
+	| cases |
+	cases := {
+		         (OPBPMNActivityViewModel -> (OPBPMNActivityModel new type: OPBPMNNodeType Service)).
+		         (OPBPMNAssociationViewModel -> OPBPMNAssociationModel new).
+		         (OPBPMNBoundaryEventViewModel -> (OPBPMNBoundaryEventModel new type: OPBPMNNodeType Timer)).
+		         (OPBPMNCollapsedSubProcessViewModel -> OPBPMNCollapsedSubProcessModel new).
+		         (OPBPMNDataObjectViewModel -> OPBPMNDataObjectModel new).
+		         (OPBPMNEndEventViewModel -> (OPBPMNEndEventModel new type: OPBPMNNodeType Send)).
+		         (OPBPMNFlowViewModel -> OPBPMNFlowModel new).
+		         (OPBPMNGatewayViewModel -> OPBPMNGatewayModel new).
+		         (OPBPMNIntermediateEventViewModel -> (OPBPMNIntermediateEventModel new type: OPBPMNNodeType Timer)).
+		         (OPBPMNStartEventViewModel -> (OPBPMNStartEventModel new type: OPBPMNNodeType Timer)).
+		         (OPBPMNSubProcessViewModel -> OPBPMNSubProcessModel new) }.
+	cases do: [ :eachCase |
+			| viewModel form dropListBindings |
+			viewModel := eachCase key new model: eachCase value.
+			form := OPPropertiesForm new.
+			form viewModel: viewModel.
+			dropListBindings := form bindings select: [ :eachBinding | eachBinding isKindOf: OPFormDropListBinding ].
+			self denyEmpty: dropListBindings.
+			dropListBindings do: [ :eachBinding |
+					| dropList displayBlock |
+					dropList := eachBinding presenter.
+					displayBlock := dropList display.
+					self denyEmpty: dropList items.
+					dropList items do: [ :eachItem | self assert: (displayBlock value: eachItem) equals: eachItem asString ] ] ]
+]
+
+{ #category : 'tests' }
+OPBPMNViewModelFormTest >> testAnnotationViewModelBindsMultilineTextDeclaratively [
+
+	| annotationModel annotationViewModel form |
+	annotationModel := OPBPMNAnnotationModel new text: 'Review note'.
+	annotationViewModel := OPBPMNAnnotationViewModel new model: annotationModel.
+	form := OPPropertiesForm new.
+	form viewModel: annotationViewModel.
+
+	self assert: (form bindings collect: #selector as: Array) equals: #( #text ).
+	self assert: (form bindings collect: #class as: Array) equals: { OPFormTextBinding }.
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: { SpTextPresenter }.
+	self
+		deny: (OPBPMNAnnotationViewModel includesSelector: #descriptionName)
+		description: 'OPBPMNAnnotationViewModel must use declarative buildEditorForm: instead of Magritte descriptionName'
+]
+
+{ #category : 'tests' }
+OPBPMNViewModelFormTest >> testAnnotationViewModelNameOfModelWithNilText [
+
+	| annotationModel annotationViewModel |
+	annotationModel := OPBPMNAnnotationModel new.
+	annotationModel name: nil.
+	annotationViewModel := OPBPMNAnnotationViewModel new model: annotationModel.
+	self assert: annotationViewModel nameOfModel equals: ''
 ]
 
 { #category : 'tests' }
@@ -321,6 +386,14 @@ OPBPMNViewModelFormTest >> testIntermediateEventViewModelBindsTimerAndSendFields
 			SpDropListPresenter.
 			SpTextInputFieldPresenter.
 			SpTextInputFieldPresenter }
+]
+
+{ #category : 'tests' }
+OPBPMNViewModelFormTest >> testPoolViewModelAuxiliaryRemovalCommandsWithNilProjectController [
+
+	| poolViewModel |
+	poolViewModel := OPBPMNPoolViewModel new model: OPBPMNPoolModel new.
+	self assertEmpty: (poolViewModel auxiliaryRemovalCommandsIn: nil)
 ]
 
 { #category : 'tests' }

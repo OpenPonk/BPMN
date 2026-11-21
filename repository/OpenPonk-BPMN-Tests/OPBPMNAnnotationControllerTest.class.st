@@ -28,23 +28,19 @@ OPBPMNAnnotationControllerTest >> modelClass [
 ]
 
 { #category : 'tests' }
-OPBPMNAnnotationControllerTest >> testDescriptionName [
+OPBPMNAnnotationControllerTest >> testBuildEditorFormBindsText [
 
-	| diagramElement |
-	model stub text willReturn: 'bravo'.
-	diagramElement := Mock new.
-	controller diagramController: diagramController.
-	controller model: model.
-	controller diagramElement: diagramElement.
-	controller viewModel descriptionName accessor
-		write: 'charlie'
-		to: controller.
-	model should receive text: 'charlie'.
-	self
-		assert:
-		(controller viewModel descriptionName accessor read: controller)
-		equals: 'bravo'.
-	diagramElement should receive modelChanged
+	| annotationModel annotationViewModel form |
+	annotationModel := OPBPMNAnnotationModel new text: 'bravo'.
+	annotationViewModel := OPBPMNAnnotationViewModel new model: annotationModel.
+	controller viewModel: annotationViewModel.
+	form := OPPropertiesForm new.
+	form viewModel: controller.
+
+	self assert: (form bindings collect: #selector as: Array) equals: #( #text ).
+	self assert: form bindings first presenter text equals: 'bravo'.
+	controller propertyNamed: #text put: 'charlie'.
+	self assert: annotationModel text equals: 'charlie'
 ]
 
 { #category : 'tests' }
