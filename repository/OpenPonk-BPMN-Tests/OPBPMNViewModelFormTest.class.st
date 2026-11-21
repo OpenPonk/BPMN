@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : 'tests' }
+OPBPMNViewModelFormTest >> testAbstractFlowViewModelIsAbstract [
+
+	self
+		assert: OPBPMNAbstractFlowViewModel isAbstract
+		description: 'OPBPMNAbstractFlowViewModel is a base class and must report as abstract'
+]
+
+{ #category : 'tests' }
 OPBPMNViewModelFormTest >> testActivityViewModelBindsMultilineName [
 
 	| model viewModel form |

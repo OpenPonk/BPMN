@@ -9,6 +9,12 @@ Class {
 	#tag : 'ViewModels'
 }
 
+{ #category : 'testing' }
+OPBPMNAbstractFlowViewModel class >> isAbstract [
+
+	^ self = OPBPMNAbstractFlowViewModel
+]
+
 { #category : 'construction' }
 OPBPMNAbstractFlowViewModel >> attachModelFrom: sourceViewModel to: targetViewModel [
 	self model source: sourceViewModel model.
