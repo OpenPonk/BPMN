@@ -231,6 +231,12 @@ OPBPMNPoolControllerTest >> testFlowNodesDisplacedWhenLaneRelocatedInLayout [
 ]
 
 { #category : 'tests' }
+OPBPMNPoolControllerTest >> testIsBlackBoxReturnsTrueWhenModelIsNil [
+
+	self assert: OPBPMNPoolController new isBlackBox description: 'Pool controller without a model must default to black-box'
+]
+
+{ #category : 'tests' }
 OPBPMNPoolControllerTest >> testMovingPoolDragsAllContainedLanes [
 
 	| poolModel laneModel poolShape laneController laneShape initialLanePosition dragDelta |
@@ -465,6 +471,7 @@ OPBPMNPoolControllerTest >> testResizingPoolPreservesFlowNodesPositions [
 
 { #category : 'tests - resizing' }
 OPBPMNPoolControllerTest >> testResizingPoolRelocatesLanes [
+
 	| poolModel firstLaneModel secondLaneModel poolShape firstLaneController firstLaneShape initialFirstLaneHeight |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
 	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
@@ -486,9 +493,11 @@ OPBPMNPoolControllerTest >> testResizingPoolRelocatesLanes [
 	initialFirstLaneHeight := firstLaneShape height.
 
 	poolShape roassalShape extent: poolShape roassalShape width @ (poolShape roassalShape height + 100).
-	poolShape roassalShape announce: (RSExtentChangedEvent new shape: poolShape roassalShape; oldExtent: poolShape roassalShape extent).
+	poolShape roassalShape announce: (RSExtentChangedEvent new
+			 shape: poolShape roassalShape;
+			 oldExtent: poolShape roassalShape extent).
 
-	"V Režimu A si pruhy zachovávají svou nastavenou výšku a nedeformují se proporcionálně"
+	"In Mode A, lanes preserve their configured height rather than scaling proportionally."
 	self assert: firstLaneShape height equals: initialFirstLaneHeight
 ]
 

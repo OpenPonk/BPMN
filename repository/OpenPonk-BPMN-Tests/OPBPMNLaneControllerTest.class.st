@@ -35,6 +35,21 @@ OPBPMNLaneControllerTest >> modelClass [
 ]
 
 { #category : 'tests' }
+OPBPMNLaneControllerTest >> testAddAsTargetForRejectsInvalidController [
+
+	| poolModel laneModel laneController invalidController |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	laneModel := OPBPMNLaneModel new name: 'Sales'.
+	poolModel addLane: laneModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	laneController := diagramController controllerForModel: laneModel.
+	invalidController := OPBPMNPoolController new.
+	self should: [ laneController addAsTargetFor: invalidController onPosition: 0 @ 0 ] raise: Error
+]
+
+{ #category : 'tests' }
 OPBPMNLaneControllerTest >> testAddFirstLaneMigratesPoolElementsToLaneShapeAndSupportsUndoRedo [
 
 	| poolModel taskModel poolController taskController laneController laneModel |
@@ -120,6 +135,26 @@ OPBPMNLaneControllerTest >> testCanBeTargetForLaneController [
 	self
 		assert: (controller canBeTargetFor: OPBPMNLaneController new)
 		description: 'Lane controller must accept another lane controller as drop target'
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testCreateModelInDefaultsInsertBeforeToFalseWhenNil [
+
+	| poolModel firstLaneModel secondLaneModel newLaneController |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Lane 1'.
+	secondLaneModel := OPBPMNLaneModel new name: 'Lane 2'.
+	poolModel
+		addLane: firstLaneModel;
+		addLane: secondLaneModel.
+	diagramController model add: poolModel.
+
+	newLaneController := OPBPMNLaneController new.
+	newLaneController diagramController: diagramController.
+	newLaneController configureInsertionTargetLane: firstLaneModel before: nil.
+	newLaneController createModelIn: poolModel.
+
+	self assert: (poolModel lanes collect: #name as: Array) equals: #( 'Lane 1' '' 'Lane 2' )
 ]
 
 { #category : 'tests' }
@@ -287,6 +322,28 @@ OPBPMNLaneControllerTest >> testDraggingLaneSeparatorRespectsMinimumLaneHeight [
 ]
 
 { #category : 'tests' }
+OPBPMNLaneControllerTest >> testIntendedModelOfOwningDiagramElementFallsBackToOwner [
+
+	| ownerActivityModel ownerActivityController orphanLaneModel orphanLaneController |
+	ownerActivityModel := OPBPMNActivityModel new name: 'Detached Owner'.
+	ownerActivityController := OPBPMNActivityController new.
+	ownerActivityController
+		diagramController: diagramController;
+		model: ownerActivityModel.
+	diagramController addController: ownerActivityController.
+
+	orphanLaneModel := OPBPMNLaneModel new name: 'Orphan'.
+	orphanLaneModel addedTo: ownerActivityModel.
+	orphanLaneController := OPBPMNLaneController new.
+	orphanLaneController
+		diagramController: diagramController;
+		model: orphanLaneModel.
+
+	self assert: orphanLaneModel pool identicalTo: nil.
+	self assert: orphanLaneController intendedModelOfOwningDiagramElement identicalTo: ownerActivityModel
+]
+
+{ #category : 'tests' }
 OPBPMNLaneControllerTest >> testMoveLaneSeparatorUpdatesLaneHeightsAndSupportsUndoRedo [
 	| poolModel firstLaneModel secondLaneModel firstTaskModel secondTaskModel poolController firstLaneController secondLaneController firstTaskController secondTaskController firstTaskInitialPosition secondTaskInitialPosition initialFirstHeight initialSecondHeight accumulatedDelta |
 	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
@@ -334,6 +391,127 @@ OPBPMNLaneControllerTest >> testMoveLaneSeparatorUpdatesLaneHeightsAndSupportsUn
 	firstLaneController undoManager redo.
 	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight + accumulatedDelta.
 	self assert: secondLaneController diagramElement laneHeight equals: initialSecondHeight - accumulatedDelta
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testMoveSeparatorOnLastLaneIsNoOp [
+
+	| poolModel firstLaneModel secondLaneModel secondLaneController initialHeight |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
+	secondLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
+	poolModel
+		addLane: firstLaneModel;
+		addLane: secondLaneModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	secondLaneController := diagramController controllerForModel: secondLaneModel.
+	initialHeight := secondLaneController diagramElement laneHeight.
+	secondLaneController undoManager clear.
+
+	self assert: secondLaneController nextLaneController identicalTo: nil.
+	secondLaneController moveSeparatorBy: 30.
+	self assert: secondLaneController diagramElement laneHeight equals: initialHeight.
+	self
+		deny: secondLaneController undoManager canUndo
+		description: 'Moving separator on the last lane must not record an undo command'
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testNextLaneControllerReturnsNilWhenRemainingLanesAreHidden [
+
+	| poolModel firstLaneModel hiddenLaneModel firstLaneController initialFirstHeight |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
+	hiddenLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
+	poolModel
+		addLane: firstLaneModel;
+		addLane: hiddenLaneModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+	diagramController hideModelFromDiagram: hiddenLaneModel.
+
+	firstLaneController := diagramController controllerForModel: firstLaneModel.
+	initialFirstHeight := firstLaneController diagramElement laneHeight.
+	firstLaneController undoManager clear.
+
+	self assert: firstLaneController nextLaneController identicalTo: nil.
+	firstLaneController moveSeparatorBy: 30.
+	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight.
+	self
+		deny: firstLaneController undoManager canUndo
+		description: 'Moving separator with no visible next lane must not record an undo command'
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testNextLaneControllerSkipsHiddenLanesAndMoveSeparatorResizesNextVisibleLane [
+
+	| poolModel firstLaneModel hiddenLaneModel thirdLaneModel firstLaneController thirdLaneController initialFirstHeight initialThirdHeight |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
+	hiddenLaneModel := OPBPMNLaneModel new name: 'Quality'.
+	thirdLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
+	poolModel
+		addLane: firstLaneModel;
+		addLane: hiddenLaneModel;
+		addLane: thirdLaneModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+	diagramController hideModelFromDiagram: hiddenLaneModel.
+
+	firstLaneController := diagramController controllerForModel: firstLaneModel.
+	thirdLaneController := diagramController controllerForModel: thirdLaneModel.
+	initialFirstHeight := firstLaneController diagramElement laneHeight.
+	initialThirdHeight := thirdLaneController diagramElement laneHeight.
+
+	self assert: firstLaneController nextLaneController identicalTo: thirdLaneController.
+
+	firstLaneController moveSeparatorBy: 30.
+	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight + 30.
+	self assert: thirdLaneController diagramElement laneHeight equals: initialThirdHeight - 30.
+
+	firstLaneController undoManager undo.
+	self assert: firstLaneController diagramElement laneHeight equals: initialFirstHeight.
+	self assert: thirdLaneController diagramElement laneHeight equals: initialThirdHeight
+]
+
+{ #category : 'tests' }
+OPBPMNLaneControllerTest >> testNextLaneControllerWithDetachedAndOwnerFallback [
+
+	| poolModel firstLaneModel secondLaneModel firstLaneController secondLaneController unlistedLaneModel unlistedLaneController detachedLaneModel detachedLaneController detachedViewModel |
+	poolModel := OPBPMNPoolModel new name: 'Order Fulfillment'.
+	firstLaneModel := OPBPMNLaneModel new name: 'Sales'.
+	secondLaneModel := OPBPMNLaneModel new name: 'Warehouse'.
+	poolModel
+		addLane: firstLaneModel;
+		addLane: secondLaneModel.
+	diagramController model add: poolModel.
+	diagramController showAllElements.
+
+	firstLaneController := diagramController controllerForModel: firstLaneModel.
+	secondLaneController := diagramController controllerForModel: secondLaneModel.
+	firstLaneController viewModel parentViewModel.
+
+	firstLaneModel addedTo: nil.
+	self assert: firstLaneController nextLaneController identicalTo: secondLaneController.
+
+	unlistedLaneModel := OPBPMNLaneModel new name: 'Unlisted'.
+	unlistedLaneModel addedTo: poolModel.
+	unlistedLaneController := OPBPMNLaneController new.
+	unlistedLaneController
+		diagramController: diagramController;
+		model: unlistedLaneModel.
+	self assert: unlistedLaneController nextLaneController identicalTo: nil.
+
+	detachedLaneModel := OPBPMNLaneModel new name: 'Detached'.
+	detachedViewModel := OPBPMNLaneViewModel new model: detachedLaneModel.
+	detachedViewModel instVarNamed: #parentViewModel put: OPBPMNPoolViewModel new.
+	detachedLaneController := OPBPMNLaneController new.
+	detachedLaneController
+		diagramController: diagramController;
+		viewModel: detachedViewModel.
+	self assert: detachedLaneController nextLaneController identicalTo: nil
 ]
 
 { #category : 'tests' }

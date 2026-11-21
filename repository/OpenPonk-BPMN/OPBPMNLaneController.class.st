@@ -22,13 +22,17 @@ OPBPMNLaneController class >> viewModelClass [
 
 { #category : 'user interface' }
 OPBPMNLaneController >> addAsTargetFor: aController onPosition: aPoint [
+
 	| targetCenterY willInsertBefore |
 	(self canBeTargetFor: aController) ifFalse: [
-		self error: self class asString , ' cannot be target for ' , aController class asString ].
+			self error: (String streamContents: [ :stream |
+						 stream << self class asString.
+						 stream << ' cannot be target for '.
+						 stream << aController class asString ]) ].
 	(aController isKindOf: self class) ifTrue: [
-		targetCenterY := self diagramElement roassalShape position y.
-		willInsertBefore := aPoint y < targetCenterY.
-		aController configureInsertionTargetLane: self model before: willInsertBefore ].
+			targetCenterY := self diagramElement roassalShape position y.
+			willInsertBefore := aPoint y < targetCenterY.
+			aController configureInsertionTargetLane: self model before: willInsertBefore ].
 	super addAsTargetFor: aController onPosition: aPoint
 ]
 
@@ -86,14 +90,11 @@ OPBPMNLaneController >> hookDiagramElement [
 { #category : 'diagram elements' }
 OPBPMNLaneController >> intendedModelOfOwningDiagramElement [
 	"Resolves the model element of the owning diagram element, prioritizing domain pool ownership."
+
 	self model ifNotNil: [ :laneModel |
-		(laneModel respondsTo: #pool) ifTrue: [
 			laneModel pool ifNotNil: [ :enclosingPool |
-				(self diagramController hasControllerForModel: enclosingPool) ifTrue: [
-					^ enclosingPool ] ] ].
-		laneModel owner ifNotNil: [ :ownerModel |
-			(self diagramController hasControllerForModel: ownerModel) ifTrue: [
-				^ ownerModel ] ] ].
+				(self diagramController hasControllerForModel: enclosingPool) ifTrue: [ ^ enclosingPool ] ].
+			laneModel owner ifNotNil: [ :ownerModel | (self diagramController hasControllerForModel: ownerModel) ifTrue: [ ^ ownerModel ] ] ].
 	^ super intendedModelOfOwningDiagramElement
 ]
 
@@ -116,23 +117,26 @@ OPBPMNLaneController >> moveSeparatorBy: aDeltaNumber [
 
 { #category : 'accessing' }
 OPBPMNLaneController >> nextLaneController [
+
 	| poolModel laneCollection currentLaneIndex |
-	poolModel := self model pool ifNil: [
-		self owner ifNotNil: [ :parentController | parentController model ] ].
+	poolModel := self model pool ifNil: [ self owner ifNotNil: [ :parentController | parentController model ] ].
 	poolModel ifNil: [ ^ nil ].
 	laneCollection := poolModel lanes.
 	currentLaneIndex := laneCollection indexOf: self model.
-	(currentLaneIndex > 0 and: [ currentLaneIndex < laneCollection size ]) ifFalse: [ ^ nil ].
-	^ self diagramController controllerForModel: (laneCollection at: currentLaneIndex + 1)
+	currentLaneIndex > 0 ifFalse: [ ^ nil ].
+	currentLaneIndex + 1 to: laneCollection size do: [ :eachIndex |
+			(self diagramController controllerForModel: (laneCollection at: eachIndex) ifNone: [ nil ]) ifNotNil: [ :nextController |
+				^ nextController ] ].
+	^ nil
 ]
 
 { #category : 'connecting' }
 OPBPMNLaneController >> parentWhenTargetFor: aCreatedController [
 	"When aCreatedController is targeting self (a lane), the parent model for creation is the enclosing pool."
+
 	(aCreatedController isKindOf: self class) ifTrue: [
-		(self model respondsTo: #pool) ifTrue: [
-			self model pool ifNotNil: [ :enclosingPool | ^ enclosingPool ] ].
-		^ self model owner ].
+			self model pool ifNotNil: [ :enclosingPool | ^ enclosingPool ].
+			^ self model owner ].
 	^ super parentWhenTargetFor: aCreatedController
 ]
 

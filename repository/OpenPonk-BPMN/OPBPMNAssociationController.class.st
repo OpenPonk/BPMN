@@ -22,6 +22,7 @@ OPBPMNAssociationController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNAssociationController >> canConnectSource: aSourceController toTarget: aTargetController [
+
 	| sourceModel targetModel |
 	(super canConnectSource: aSourceController toTarget: aTargetController) ifFalse: [ ^ false ].
 	aSourceController ifNil: [ ^ true ].
@@ -30,18 +31,16 @@ OPBPMNAssociationController >> canConnectSource: aSourceController toTarget: aTa
 		^ (aTargetController isKindOf: OPBPMNAnnotationController) not ].
 	(aTargetController isKindOf: OPBPMNAnnotationController) ifTrue: [ ^ true ].
 	((aSourceController isKindOf: OPBPMNBoundaryEventController) and: [
-		aSourceController model isNotNil and: [
-			(aSourceController model type = OPBPMNNodeType CatchCompensation
-				or: [ aSourceController model type = OPBPMNNodeType Compensation ]) and: [
-				(aTargetController isKindOf: OPBPMNActivityController) or: [
-					(aTargetController isKindOf: OPBPMNSubProcessController) or: [
-						aTargetController isKindOf: OPBPMNCollapsedSubProcessController ] ] ] ] ])
-		ifFalse: [ ^ false ].
+			 aSourceController model isNotNil and: [
+					 (aSourceController model type = OPBPMNNodeType CatchCompensation or: [
+						  aSourceController model type = OPBPMNNodeType Compensation ]) and: [
+							 (aTargetController isKindOf: OPBPMNActivityController) or: [
+								 (aTargetController isKindOf: OPBPMNSubProcessController) or: [
+									 aTargetController isKindOf: OPBPMNCollapsedSubProcessController ] ] ] ] ]) ifFalse: [ ^ false ].
 	sourceModel := aSourceController model.
 	targetModel := aTargetController model.
-	(sourceModel isNil or: [ targetModel isNil ]) ifTrue: [ ^ true ].
+	targetModel ifNil: [ ^ true ].
 	sourceModel owner == targetModel ifTrue: [ ^ false ].
-	(self enclosingSubProcessOf: sourceModel) == (self enclosingSubProcessOf: targetModel)
-		ifFalse: [ ^ false ].
+	(self enclosingSubProcessOf: sourceModel) == (self enclosingSubProcessOf: targetModel) ifFalse: [ ^ false ].
 	^ sourceModel enclosingPool == targetModel enclosingPool
 ]

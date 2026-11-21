@@ -22,6 +22,7 @@ OPBPMNMessageFlowController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNMessageFlowController >> canConnectSource: aSourceController toTarget: aTargetController [
+
 	| sourcePool targetPool |
 	(super canConnectSource: aSourceController toTarget: aTargetController) ifFalse: [ ^ false ].
 	aSourceController ifNil: [ ^ true ].
@@ -29,10 +30,7 @@ OPBPMNMessageFlowController >> canConnectSource: aSourceController toTarget: aTa
 	sourcePool := aSourceController model enclosingPool.
 	targetPool := aTargetController model enclosingPool.
 	((sourcePool isKindOf: OPBPMNPoolModel) and: [ targetPool isKindOf: OPBPMNPoolModel ]) ifFalse: [ ^ false ].
-	sourcePool == targetPool ifTrue: [ ^ false ].
-	(aSourceController isKindOf: OPBPMNPoolController) ifTrue: [
-		aSourceController isBlackBox ifFalse: [ ^ false ] ].
-	^ true
+	^ sourcePool ~~ targetPool
 ]
 
 { #category : 'private' }

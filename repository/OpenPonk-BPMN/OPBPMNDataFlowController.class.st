@@ -22,34 +22,25 @@ OPBPMNDataFlowController class >> viewModelClass [
 
 { #category : 'connecting' }
 OPBPMNDataFlowController >> canConnectSource: aSourceController toTarget: aTargetController [
+
 	| sourceModel targetModel isDataStoreInvolved |
 	(super canConnectSource: aSourceController toTarget: aTargetController) ifFalse: [ ^ false ].
 	aSourceController ifNil: [ ^ true ].
 	sourceModel := aSourceController model.
 	((aSourceController isKindOf: OPBPMNDataObjectController) and: [
-		sourceModel isNotNil and: [ sourceModel type = OPBPMNNodeType DataOutput ] ])
-		ifTrue: [ ^ false ].
-	(aSourceController isKindOf: OPBPMNEndEventController) ifTrue: [ ^ false ].
+		 sourceModel isNotNil and: [ sourceModel type = OPBPMNNodeType DataOutput ] ]) ifTrue: [ ^ false ].
 	((aSourceController isKindOf: OPBPMNIntermediateEventController) and: [
-		sourceModel isNotNil and: [ sourceModel printType = 'intermediateThrowEvent' ] ])
-		ifTrue: [ ^ false ].
+		 sourceModel isNotNil and: [ sourceModel printType = 'intermediateThrowEvent' ] ]) ifTrue: [ ^ false ].
 	aTargetController ifNil: [ ^ true ].
 	targetModel := aTargetController model.
-	((aSourceController isKindOf: OPBPMNDataObjectController) and: [
-		aTargetController isKindOf: OPBPMNDataObjectController ]) ifTrue: [ ^ false ].
-	(aTargetController isKindOf: OPBPMNStartEventController) ifTrue: [ ^ false ].
-	(aTargetController isKindOf: OPBPMNBoundaryEventController) ifTrue: [ ^ false ].
 	(aSourceController isKindOf: OPBPMNDataObjectController)
 		ifTrue: [ (self isValidFlowTarget: aTargetController) ifFalse: [ ^ false ] ]
 		ifFalse: [
-			(aTargetController isKindOf: OPBPMNDataObjectController) ifFalse: [ ^ false ].
-			(targetModel isNotNil and: [ targetModel type = OPBPMNNodeType DataInput ])
-				ifTrue: [ ^ false ] ].
+				(aTargetController isKindOf: OPBPMNDataObjectController) ifFalse: [ ^ false ].
+				(targetModel isNotNil and: [ targetModel type = OPBPMNNodeType DataInput ]) ifTrue: [ ^ false ] ].
 	(sourceModel isNil or: [ targetModel isNil ]) ifTrue: [ ^ true ].
-	isDataStoreInvolved := ((sourceModel isKindOf: OPBPMNDataObjectModel) and: [
-		sourceModel type = OPBPMNNodeType DataStore ]) or: [
-		(targetModel isKindOf: OPBPMNDataObjectModel) and: [
-			targetModel type = OPBPMNNodeType DataStore ] ].
+	isDataStoreInvolved := ((sourceModel isKindOf: OPBPMNDataObjectModel) and: [ sourceModel type = OPBPMNNodeType DataStore ]) or: [
+		                       (targetModel isKindOf: OPBPMNDataObjectModel) and: [ targetModel type = OPBPMNNodeType DataStore ] ].
 	isDataStoreInvolved ifTrue: [ ^ true ].
 	^ sourceModel enclosingPool == targetModel enclosingPool
 ]

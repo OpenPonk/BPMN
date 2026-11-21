@@ -63,15 +63,46 @@ OPBPMNDiagramControllerTest >> testControllerFactory [
 ]
 
 { #category : 'tests' }
+OPBPMNDiagramControllerTest >> testHasPoolsAndRootElementsReturnFalseWithoutModel [
+
+	| emptyDiagramController |
+	emptyDiagramController := OPBPMNDiagramController new.
+	self deny: emptyDiagramController hasPoolsInDiagramOrModel description: 'Diagram controller without a model must report no pools'.
+	self
+		deny: emptyDiagramController hasRootProcessElementsInDiagramOrModel
+		description: 'Diagram controller without a model must report no root process elements'
+]
+
+{ #category : 'tests' }
 OPBPMNDiagramControllerTest >> testInitializePalette [
 
-	| palette entryLabels |
+	| palette entries expectedToolClasses |
 	palette := OPPalette new.
 	controller initializePalette: palette.
 	self assert: palette items size equals: 18.
-	entryLabels := palette items select: [ :eachItem | eachItem class == OPPaletteEntry ] thenCollect: #label.
-	self
-		assert: entryLabels asArray
-		equals: #( 'Select' 'Activity' 'Start Event' 'Intermediate Event' 'End Event' 'Gateway' 'Pool' 'Lane' 'Expanded SubProcess'
-			   'Collapsed SubProcess' 'Boundary Event' 'Data Object' 'Sequence Flow' 'Message Flow' 'Data Flow' 'Association' 'Annotation' )
+	entries := palette items select: [ :eachItem | eachItem class == OPPaletteEntry ].
+	expectedToolClasses := {
+		                       ('Activity' -> OPBPMNActivityController).
+		                       ('Start Event' -> OPBPMNStartEventController).
+		                       ('Intermediate Event' -> OPBPMNIntermediateEventController).
+		                       ('End Event' -> OPBPMNEndEventController).
+		                       ('Gateway' -> OPBPMNGatewayController).
+		                       ('Pool' -> OPBPMNPoolController).
+		                       ('Lane' -> OPBPMNLaneController).
+		                       ('Expanded SubProcess' -> OPBPMNSubProcessController).
+		                       ('Collapsed SubProcess' -> OPBPMNCollapsedSubProcessController).
+		                       ('Boundary Event' -> OPBPMNBoundaryEventController).
+		                       ('Data Object' -> OPBPMNDataObjectController).
+		                       ('Sequence Flow' -> OPBPMNFlowController).
+		                       ('Message Flow' -> OPBPMNMessageFlowController).
+		                       ('Data Flow' -> OPBPMNDataFlowController).
+		                       ('Association' -> OPBPMNAssociationController).
+		                       ('Annotation' -> OPBPMNAnnotationController) }.
+	self assert: (entries collect: #label as: Array) equals: { 'Select' } , (expectedToolClasses collect: #key).
+	expectedToolClasses do: [ :eachPair |
+			| entry createdController |
+			entry := entries detect: [ :eachEntry | eachEntry label = eachPair key ].
+			entry performAction.
+			createdController := palette selectedTool instVarNamed: #controller.
+			self assert: createdController class identicalTo: eachPair value ]
 ]

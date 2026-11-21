@@ -12,9 +12,9 @@ Class {
 		'diagramController',
 		'undoManager'
 	],
-	#category : 'OpenPonk-BPMN-Tests-Models',
+	#category : 'OpenPonk-BPMN-Tests-Controllers',
 	#package : 'OpenPonk-BPMN-Tests',
-	#tag : 'Models'
+	#tag : 'Controllers'
 }
 
 { #category : 'running' }
@@ -106,6 +106,54 @@ OPBPMNConnectionAndTargetingRulesTest >> testAssociationCannotConnectTwoAnnotati
 	self
 		deny: (annotation2Controller canBeTargetFor: assocController)
 		description: 'Association must not connect two annotations together'
+]
+
+{ #category : 'tests - connection rules' }
+OPBPMNConnectionAndTargetingRulesTest >> testAssociationCompensationTargetsHostRejectionAndNilChecks [
+
+	| hostActivity compensationBoundary subProcess collapsedSubProcess hostController boundaryController subProcessController collapsedSubProcessController unattachedActivityController associationController |
+	hostActivity := OPBPMNActivityModel new name: 'Host Task'.
+	compensationBoundary := OPBPMNBoundaryEventModel new
+		                        name: 'Compensation';
+		                        type: OPBPMNNodeType Compensation;
+		                        yourself.
+	hostActivity add: compensationBoundary.
+	subProcess := OPBPMNSubProcessModel new name: 'Compensation SubProcess'.
+	collapsedSubProcess := OPBPMNCollapsedSubProcessModel new name: 'Compensation Collapsed'.
+	model
+		add: hostActivity;
+		add: subProcess;
+		add: collapsedSubProcess.
+
+	hostController := diagramController newControllerFor: hostActivity.
+	boundaryController := diagramController newControllerFor: compensationBoundary.
+	subProcessController := diagramController newControllerFor: subProcess.
+	collapsedSubProcessController := diagramController newControllerFor: collapsedSubProcess.
+	unattachedActivityController := OPBPMNActivityController new.
+	associationController := OPBPMNAssociationController new.
+	associationController diagramController: diagramController.
+
+	self
+		assert: (associationController canConnectSource: boundaryController toTarget: subProcessController)
+		description: 'Compensation boundary event must connect via association to SubProcess'.
+	self
+		assert: (associationController canConnectSource: boundaryController toTarget: collapsedSubProcessController)
+		description: 'Compensation boundary event must connect via association to Collapsed SubProcess'.
+	self
+		deny: (associationController canConnectSource: boundaryController toTarget: hostController)
+		description: 'Compensation boundary event must not connect via association back to its own host'.
+	self
+		deny: (associationController canConnectSource: hostController toTarget: hostController)
+		description: 'Association must reject connecting an element to itself'.
+	self
+		assert: (associationController canConnectSource: nil toTarget: hostController)
+		description: 'Association must allow nil source before source selection'.
+	self
+		assert: (associationController canConnectSource: hostController toTarget: nil)
+		description: 'Association must allow nil target before target selection'.
+	self
+		assert: (associationController canConnectSource: boundaryController toTarget: unattachedActivityController)
+		description: 'Compensation association must allow target controller without model during creation'
 ]
 
 { #category : 'tests - association' }
@@ -350,6 +398,83 @@ OPBPMNConnectionAndTargetingRulesTest >> testDataFlowCannotTargetStartEvent [
 		description: 'Data flow must not target a start event'
 ]
 
+{ #category : 'tests - connection rules' }
+OPBPMNConnectionAndTargetingRulesTest >> testDataFlowValidFlowTargetsAndDataStoreAsTargetAndNilChecks [
+
+	| pool1 pool2 dataObject dataStore activityInPool1 subProcess collapsedSubProcess endEvent startEvent boundaryEvent dataObjectController dataStoreController activityController subProcessController collapsedSubProcessController endEventController startEventController boundaryEventController unattachedActivityController dataFlowController |
+	pool1 := OPBPMNPoolModel new name: 'Pool 1'.
+	pool2 := OPBPMNPoolModel new name: 'Pool 2'.
+	dataObject := OPBPMNDataObjectModel new name: 'Document'.
+	dataStore := OPBPMNDataObjectModel new
+		             name: 'Database';
+		             type: OPBPMNNodeType DataStore;
+		             yourself.
+	activityInPool1 := OPBPMNActivityModel new name: 'Task'.
+	subProcess := OPBPMNSubProcessModel new name: 'Expanded SubProcess'.
+	collapsedSubProcess := OPBPMNCollapsedSubProcessModel new name: 'Collapsed SubProcess'.
+	endEvent := OPBPMNEndEventModel new name: 'End'.
+	startEvent := OPBPMNStartEventModel new name: 'Start'.
+	boundaryEvent := OPBPMNBoundaryEventModel new name: 'Boundary'.
+	activityInPool1 add: boundaryEvent.
+	pool1
+		add: dataObject;
+		add: activityInPool1;
+		add: subProcess;
+		add: collapsedSubProcess;
+		add: endEvent;
+		add: startEvent.
+	pool2 add: dataStore.
+	model
+		add: pool1;
+		add: pool2.
+
+	dataObjectController := diagramController newControllerFor: dataObject.
+	dataStoreController := diagramController newControllerFor: dataStore.
+	activityController := diagramController newControllerFor: activityInPool1.
+	subProcessController := diagramController newControllerFor: subProcess.
+	collapsedSubProcessController := diagramController newControllerFor: collapsedSubProcess.
+	endEventController := diagramController newControllerFor: endEvent.
+	startEventController := diagramController newControllerFor: startEvent.
+	boundaryEventController := diagramController newControllerFor: boundaryEvent.
+	unattachedActivityController := OPBPMNActivityController new.
+	dataFlowController := OPBPMNDataFlowController new.
+	dataFlowController diagramController: diagramController.
+
+	self
+		assert: (dataFlowController canConnectSource: dataObjectController toTarget: subProcessController)
+		description: 'DataFlow must allow DataObject to Expanded SubProcess'.
+	self
+		assert: (dataFlowController canConnectSource: dataObjectController toTarget: collapsedSubProcessController)
+		description: 'DataFlow must allow DataObject to Collapsed SubProcess'.
+	self
+		assert: (dataFlowController canConnectSource: dataObjectController toTarget: endEventController)
+		description: 'DataFlow must allow DataObject to End Event'.
+	self
+		assert: (dataFlowController canConnectSource: activityController toTarget: dataStoreController)
+		description: 'DataFlow must allow Activity to write to DataStore in another pool'.
+	self
+		deny: (dataFlowController canConnectSource: activityController toTarget: subProcessController)
+		description: 'DataFlow must reject connecting two non-data-object nodes'.
+	self
+		deny: (dataFlowController canConnectSource: dataObjectController toTarget: startEventController)
+		description: 'DataFlow must reject StartEvent as target'.
+	self
+		deny: (dataFlowController canConnectSource: dataObjectController toTarget: boundaryEventController)
+		description: 'DataFlow must reject BoundaryEvent as target'.
+	self
+		deny: (dataFlowController canConnectSource: endEventController toTarget: dataObjectController)
+		description: 'DataFlow must reject EndEvent as source'.
+	self
+		assert: (dataFlowController canConnectSource: nil toTarget: activityController)
+		description: 'DataFlow must allow nil source before source selection'.
+	self
+		assert: (dataFlowController canConnectSource: dataObjectController toTarget: nil)
+		description: 'DataFlow must allow nil target before target selection'.
+	self
+		assert: (dataFlowController canConnectSource: dataObjectController toTarget: unattachedActivityController)
+		description: 'DataFlow must allow target controller without model during creation'
+]
+
 { #category : 'tests - data flow' }
 OPBPMNConnectionAndTargetingRulesTest >> testDataInputDataOutputAndDataStoreConnectionRules [
 	| pool1 pool2 taskInPool1 taskInPool2 dataInput dataOutput dataStore catchEvent throwEvent startEvent task1Controller task2Controller dataInputController dataOutputController dataStoreController catchEventController throwEventController startEventController dataFlowController |
@@ -487,6 +612,20 @@ OPBPMNConnectionAndTargetingRulesTest >> testDiagramCannotBeTargetForPoolWhenDia
 	self
 		deny: (diagramController canBeTargetFor: poolController)
 		description: 'Diagram controller must not accept pool when root diagram already contains process elements'
+]
+
+{ #category : 'tests - connection rules' }
+OPBPMNConnectionAndTargetingRulesTest >> testDiagramCannotBeTargetForPoolWhenRootDataObjectIsHiddenInModel [
+
+	| hiddenDataObject poolController |
+	hiddenDataObject := OPBPMNDataObjectModel new name: 'Hidden Data'.
+	model add: hiddenDataObject.
+	poolController := OPBPMNPoolController new.
+	poolController diagramController: diagramController.
+
+	self
+		deny: (diagramController canBeTargetFor: poolController)
+		description: 'Diagram controller must reject a pool when a hidden root data object exists in the model'
 ]
 
 { #category : 'tests - containment' }
@@ -630,6 +769,33 @@ OPBPMNConnectionAndTargetingRulesTest >> testMessageFlowCannotTargetWhiteBoxPool
 		description: 'Message flow must not target the boundary of a white-box pool containing elements'
 ]
 
+{ #category : 'tests - connection rules' }
+OPBPMNConnectionAndTargetingRulesTest >> testMessageFlowRejectsSamePoolAndAcceptsNilSource [
+
+	| pool firstActivity secondActivity firstController secondController messageFlowController |
+	pool := OPBPMNPoolModel new name: 'Pool 1'.
+	firstActivity := OPBPMNActivityModel new name: 'Task 1'.
+	secondActivity := OPBPMNActivityModel new name: 'Task 2'.
+	pool
+		add: firstActivity;
+		add: secondActivity.
+	model add: pool.
+	firstController := diagramController newControllerFor: firstActivity.
+	secondController := diagramController newControllerFor: secondActivity.
+	messageFlowController := OPBPMNMessageFlowController new.
+	messageFlowController diagramController: diagramController.
+
+	self
+		assert: (messageFlowController canConnectSource: nil toTarget: secondController)
+		description: 'MessageFlow must allow nil source before source selection'.
+	self
+		deny: (messageFlowController canConnectSource: firstController toTarget: secondController)
+		description: 'MessageFlow must reject connecting two elements within the same pool'.
+	self
+		deny: (messageFlowController canConnectSource: firstController toTarget: firstController)
+		description: 'MessageFlow must reject connecting an element to itself'
+]
+
 { #category : 'tests - containment' }
 OPBPMNConnectionAndTargetingRulesTest >> testMultipleBoundaryEventsOnSameActivityDoNotOverlap [
 	| activityModel firstBoundary secondBoundary firstShape secondShape |
@@ -654,6 +820,58 @@ OPBPMNConnectionAndTargetingRulesTest >> testMultipleBoundaryEventsOnSameActivit
 	self
 		deny: (firstShape encompassingRectangle intersects: secondShape encompassingRectangle)
 		description: 'Multiple boundary events attached to the same activity must not overlap visually'
+]
+
+{ #category : 'tests - connection rules' }
+OPBPMNConnectionAndTargetingRulesTest >> testNodeControllersRejectInvalidTargetAndSourceControllers [
+
+	| activityController annotationController boundaryController collapsedSubProcessController endEventController gatewayController intermediateEventController startEventController subProcessController poolController laneController flowController dataFlowController messageFlowController |
+	activityController := diagramController newControllerFor: (OPBPMNActivityModel new name: 'Task').
+	annotationController := diagramController newControllerFor: (OPBPMNAnnotationModel new text: 'Note').
+	boundaryController := diagramController newControllerFor: (OPBPMNBoundaryEventModel new name: 'Boundary').
+	collapsedSubProcessController := diagramController newControllerFor: (OPBPMNCollapsedSubProcessModel new name: 'Collapsed').
+	endEventController := diagramController newControllerFor: (OPBPMNEndEventModel new name: 'End').
+	gatewayController := diagramController newControllerFor: (OPBPMNGatewayModel new name: 'GW').
+	intermediateEventController := diagramController newControllerFor: (OPBPMNIntermediateEventModel new name: 'Intermediate').
+	startEventController := diagramController newControllerFor: (OPBPMNStartEventModel new name: 'Start').
+	subProcessController := diagramController newControllerFor: (OPBPMNSubProcessModel new name: 'SubProcess').
+	poolController := OPBPMNPoolController new.
+	laneController := OPBPMNLaneController new.
+	flowController := OPBPMNFlowController new.
+	dataFlowController := OPBPMNDataFlowController new.
+	messageFlowController := OPBPMNMessageFlowController new.
+
+	self
+		deny: (startEventController canBeSourceFor: messageFlowController)
+		description: 'StartEvent must not be source of a MessageFlow'.
+	self deny: (startEventController canBeTargetFor: flowController) description: 'StartEvent must not be target of a SequenceFlow'.
+	self
+		deny: (startEventController canBeTargetFor: activityController)
+		description: 'StartEvent must reject non-edge controllers as target'.
+	self deny: (boundaryController canBeTargetFor: flowController) description: 'BoundaryEvent must not be target of a SequenceFlow'.
+	self deny: (boundaryController canBeTargetFor: dataFlowController) description: 'BoundaryEvent must not be target of a DataFlow'.
+	self
+		deny: (boundaryController canBeTargetFor: activityController)
+		description: 'BoundaryEvent must reject non-edge controllers as target'.
+	self deny: (subProcessController canBeTargetFor: poolController) description: 'SubProcess must reject Pool as child'.
+	self deny: (subProcessController canBeTargetFor: laneController) description: 'SubProcess must reject Lane as child'.
+	self
+		deny: (subProcessController canBeTargetFor: diagramController)
+		description: 'SubProcess must reject non-node non-edge controllers'.
+	self
+		deny: (activityController canBeTargetFor: activityController)
+		description: 'Activity must reject non-boundary non-edge controllers'.
+	self
+		deny: (annotationController canBeTargetFor: flowController)
+		description: 'Annotation must reject non-association controllers'.
+	self
+		deny: (collapsedSubProcessController canBeTargetFor: activityController)
+		description: 'CollapsedSubProcess must reject non-boundary non-edge controllers'.
+	self deny: (endEventController canBeTargetFor: activityController) description: 'EndEvent must reject non-edge controllers'.
+	self deny: (gatewayController canBeTargetFor: dataFlowController) description: 'Gateway must reject DataFlow controllers'.
+	self
+		deny: (intermediateEventController canBeTargetFor: activityController)
+		description: 'IntermediateEvent must reject non-edge controllers'
 ]
 
 { #category : 'tests - containment' }
@@ -681,6 +899,28 @@ OPBPMNConnectionAndTargetingRulesTest >> testPoolCannotBeTargetForBoundaryEvent 
 	self
 		deny: (poolController canBeTargetFor: boundaryEventController)
 		description: 'Pool controller must not accept boundary event controller directly'
+]
+
+{ #category : 'tests - connection rules' }
+OPBPMNConnectionAndTargetingRulesTest >> testSequenceFlowAndEdgeControllerAcceptNilSourceOrNilModel [
+
+	| activity activityController unattachedActivityController edgeController flowController |
+	activity := OPBPMNActivityModel new name: 'Task'.
+	model add: activity.
+	activityController := diagramController newControllerFor: activity.
+	unattachedActivityController := OPBPMNActivityController new.
+	edgeController := OPBPMNEdgeController new.
+	flowController := OPBPMNFlowController new.
+
+	self
+		assert: (edgeController canConnectSource: nil toTarget: activityController)
+		description: 'Base edge controller must allow nil source'.
+	self
+		assert: (flowController canConnectSource: nil toTarget: activityController)
+		description: 'Sequence flow controller must allow nil source'.
+	self
+		assert: (flowController canConnectSource: activityController toTarget: unattachedActivityController)
+		description: 'Sequence flow controller must allow target controller without model during creation'
 ]
 
 { #category : 'tests - sequence flow' }
