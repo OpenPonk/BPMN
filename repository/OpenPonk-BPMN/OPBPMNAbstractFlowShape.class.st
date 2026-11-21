@@ -41,3 +41,10 @@ OPBPMNAbstractFlowShape >> renderBasicShape [
 		  to: self target roassalShape;
 		  yourself
 ]
+
+{ #category : 'accessing' }
+OPBPMNAbstractFlowShape >> strokeColor: aColor [
+
+	self isRendered ifFalse: [ ^ self ].
+	self roassalShape color: aColor
+]

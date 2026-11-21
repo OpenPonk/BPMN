@@ -10,7 +10,8 @@ Class {
 		'nameLabel',
 		'nameAreaSeparator',
 		'lastRectangle',
-		'isAdjustingExtent'
+		'isAdjustingExtent',
+		'isRemovingRender'
 	],
 	#category : 'OpenPonk-BPMN-DiagramElements',
 	#package : 'OpenPonk-BPMN',
@@ -162,7 +163,8 @@ OPBPMNPoolShape >> hasLanes [
 OPBPMNPoolShape >> initialize [
 
 	super initialize.
-	isAdjustingExtent := false
+	isAdjustingExtent := false.
+	isRemovingRender := false
 ]
 
 { #category : 'accessing' }
@@ -192,7 +194,8 @@ OPBPMNPoolShape >> isContainer [
 
 { #category : 'testing' }
 OPBPMNPoolShape >> isRemovingRender [
-	^ isAdjustingExtent ifNil: [ false ]
+
+	^ isRemovingRender ifNil: [ false ]
 ]
 
 { #category : 'accessing' }
@@ -309,10 +312,11 @@ OPBPMNPoolShape >> relocateLanesDisplacingElements: aBoolean [
 
 { #category : 'removing' }
 OPBPMNPoolShape >> removeRender [
+
 	self roassalShape ifNotNil: [ :shape | shape announcer unsubscribe: self ].
 	nameLabel ifNotNil: [ :label | label announcer unsubscribe: self ].
-	isAdjustingExtent := true.
-	[ super removeRender ] ensure: [ isAdjustingExtent := false ].
+	isRemovingRender := true.
+	[ super removeRender ] ensure: [ isRemovingRender := false ].
 	topBox := nil.
 	bottomBox := nil.
 	nameLabel := nil.
@@ -458,13 +462,6 @@ OPBPMNPoolShape >> strokeColor: aColor [
 	self isRendered ifFalse: [ ^ self ].
 	roassalShape borderColor: aColor.
 	nameAreaSeparator ifNotNil: [ :separator | separator color: aColor ]
-]
-
-{ #category : 'initialization' }
-OPBPMNPoolShape >> updateBorderColorFromStyles [
-
-	self updateBasicShapeBorderColorFromStyles.
-	nameAreaSeparator color: self borderColor
 ]
 
 { #category : 'updating' }

@@ -134,12 +134,12 @@ OPBPMNBoundaryEventShape >> renderShapeDetails [
 
 { #category : 'rendering' }
 OPBPMNBoundaryEventShape >> repositionSiblingBoundaryShapes [
+
 	| hostDiagramElement |
 	hostDiagramElement := self owningElement.
-	hostDiagramElement ifNil: [ ^ self ].
+	hostDiagramElement ifNotExists: [ ^ self ].
 	hostDiagramElement ownedElements do: [ :eachOwnedElement |
-		(eachOwnedElement isKindOf: OPBPMNBoundaryEventShape) ifTrue: [
-			eachOwnedElement attachToHostShape ] ]
+		(eachOwnedElement isKindOf: OPBPMNBoundaryEventShape) ifTrue: [ eachOwnedElement attachToHostShape ] ]
 ]
 
 { #category : 'interactions' }
@@ -175,12 +175,10 @@ OPBPMNBoundaryEventShape >> unsubscribeFromHostShape [
 
 { #category : 'rendering' }
 OPBPMNBoundaryEventShape >> updateRenderFromModel [
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
-	self updateIcon.
+
 	self createBorder.
 	self subscribeToHostShape.
 	self attachToHostShape.
 	self repositionSiblingBoundaryShapes.
-	super updateRenderFromModel.
-	roassalShape signalUpdate
+	super updateRenderFromModel
 ]

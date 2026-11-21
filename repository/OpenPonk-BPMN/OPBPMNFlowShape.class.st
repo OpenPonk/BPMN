@@ -21,10 +21,13 @@ OPBPMNFlowShape >> headMarker [
 		  yourself
 ]
 
-{ #category : 'accessing' }
-OPBPMNFlowShape >> strokeColor: aColor [
+{ #category : 'rendering' }
+OPBPMNFlowShape >> renderBasicShape [
 
-	self roassalShape color: aColor.
+	^ super renderBasicShape
+		  markerStart: self tailMarker;
+		  markerEnd: self headMarker;
+		  yourself
 ]
 
 { #category : 'hooks' }

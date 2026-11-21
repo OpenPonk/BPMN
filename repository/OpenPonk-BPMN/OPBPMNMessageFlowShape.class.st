@@ -31,12 +31,6 @@ OPBPMNMessageFlowShape >> renderBasicShape [
 		  yourself
 ]
 
-{ #category : 'accessing' }
-OPBPMNMessageFlowShape >> strokeColor: aColor [
-
-	self roassalShape color: aColor
-]
-
 { #category : 'hooks' }
 OPBPMNMessageFlowShape >> tailMarker [
 

@@ -30,6 +30,30 @@ OPBPMNLaneShapeTest >> tearDown [
 	super tearDown
 ]
 
+{ #category : 'tests - geometry' }
+OPBPMNLaneShapeTest >> testAdaptBoundsToInnerBoundsForEmptyAndPopulatedLane [
+
+	| innerTaskShape innerRectangle expectedWidth expectedHeight |
+	laneShape renderIn: canvas.
+	laneShape adaptBoundsToInnerBounds: (Rectangle center: 0 @ 0 extent: 100 @ 50).
+	self assert: laneShape roassalShape extent equals: 620 @ 150.
+
+	innerTaskShape := OPBPMNActivityShape in: laneShape forModelElement: (OPBPMNActivityModel new
+			                   name: 'Task';
+			                   yourself).
+	innerTaskShape renderIn: canvas.
+	innerRectangle := Rectangle
+		                  left: 100
+		                  right: 210
+		                  top: 50
+		                  bottom: 120.
+	laneShape adaptBoundsToInnerBounds: innerRectangle.
+
+	expectedWidth := 210 + 40 - (100 - (laneShape nameAreaWidth + 30)).
+	expectedHeight := 120 + 45 - (50 - 40).
+	self assert: laneShape roassalShape extent equals: expectedWidth @ expectedHeight
+]
+
 { #category : 'tests' }
 OPBPMNLaneShapeTest >> testAttachedShapesContainsHorizontalSeparatorAndNoVerticalSeparator [
 
@@ -43,16 +67,6 @@ OPBPMNLaneShapeTest >> testAttachedShapesContainsHorizontalSeparatorAndNoVertica
 			(laneShape instVarNamed: #leftBox).
 			(laneShape instVarNamed: #rightBox).
 			(laneShape instVarNamed: #laneSeparator) }
-]
-
-{ #category : 'tests' }
-OPBPMNLaneShapeTest >> testAttachedShapesIncludesHeaderElements [
-	laneShape renderIn: canvas.
-	self assertCollection: laneShape attachedShapes hasSameElements: {
-		(laneShape instVarNamed: #nameLabel).
-		(laneShape instVarNamed: #leftBox).
-		(laneShape instVarNamed: #rightBox).
-		(laneShape instVarNamed: #laneSeparator) }
 ]
 
 { #category : 'tests - interaction' }
@@ -125,6 +139,31 @@ OPBPMNLaneShapeTest >> testLaneLabelPositionedInsideLaneHeader [
 ]
 
 { #category : 'tests - geometry' }
+OPBPMNLaneShapeTest >> testLaneQueriesAndGuardsWhenUnrenderedOrOutsidePool [
+
+	| poolShape nonPoolOwner innerTaskShape |
+	self deny: laneShape isLaneHighlighted description: 'Unrendered lane must not be highlighted'.
+	self deny: laneShape shouldShowSeparatorHandle description: 'Unrendered lane must not show separator handle'.
+	self assert: laneShape previousLaneShape identicalTo: nil.
+	laneShape updatePosition.
+	self deny: laneShape isRendered description: 'Calling updatePosition on unrendered lane must be a no-op'.
+
+	poolShape := OPBPMNPoolShape new
+		             bounds: (OPNodeBounds withPosition: 0 @ 0 extent: 600 @ 310);
+		             yourself.
+	laneShape owningElement: poolShape.
+	self assert: laneShape defaultLaneHeight equals: 310.
+
+	nonPoolOwner := OPBPMNActivityShape new.
+	laneShape owningElement: nonPoolOwner.
+	innerTaskShape := OPBPMNActivityShape in: laneShape forModelElement: (OPBPMNActivityModel new
+			                   name: 'Task';
+			                   yourself).
+	laneShape evacuateOwnedElementsToPoolIfLastLane.
+	self assert: innerTaskShape owningElement identicalTo: laneShape
+]
+
+{ #category : 'tests - geometry' }
 OPBPMNLaneShapeTest >> testLaneShapeHasLaneHeightAndSerializesToSton [
 
 	| poolShape laneShape1 laneShape2 stonString serializedLaneHeightLines materializedPool materializedLane1 materializedLane2 |
@@ -160,6 +199,27 @@ OPBPMNLaneShapeTest >> testLaneShapeHasLaneHeightAndSerializesToSton [
 	self assert: materializedLane2 class identicalTo: OPBPMNLaneShape.
 	self assert: materializedLane1 laneHeight equals: 260.
 	self assert: materializedLane2 laneHeight equals: 180
+]
+
+{ #category : 'tests - geometry' }
+OPBPMNLaneShapeTest >> testRenderAndUpdateNameLabelHandlesNilNameAndExtentChange [
+
+	| nameLabel |
+	laneShape modelElement: (OPBPMNLaneModel new
+			 name: nil;
+			 yourself).
+	laneShape renderIn: canvas.
+	nameLabel := laneShape instVarNamed: #nameLabel.
+	self assert: nameLabel text equals: ''.
+
+	laneShape updateRenderFromModel.
+	self assert: nameLabel text equals: ''.
+
+	laneShape roassalShape
+		extent: 600 @ 150;
+		translateTo: 100 @ 200.
+	nameLabel text: 'Updated Longer Lane Name'.
+	self assert: nameLabel position y equals: 200
 ]
 
 { #category : 'tests - visual' }
@@ -249,6 +309,47 @@ OPBPMNLaneShapeTest >> testSelectingLaneShowsSeparatorHandleOnAdjacentInternalSe
 	self assert: laneShape1 separatorHandle identicalTo: nil.
 	self assert: laneShape2 separatorHandle identicalTo: nil.
 	self assert: laneShape3 separatorHandle identicalTo: nil
+]
+
+{ #category : 'tests - geometry' }
+OPBPMNLaneShapeTest >> testSeparatorHandleMouseEnterAndLeaveUpdatesTemporaryCursor [
+
+	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 selectable1 handle |
+	poolModel := OPBPMNPoolModel new name: 'Pool'.
+	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
+	lane2Model := OPBPMNLaneModel new name: 'Lane 2'.
+	poolModel
+		addLane: lane1Model;
+		addLane: lane2Model.
+
+	poolShape := OPBPMNPoolShape new
+		             modelElement: poolModel;
+		             bounds: (OPNodeBounds withPosition: 0 @ 0 extent: 600 @ 440);
+		             renderIn: canvas;
+		             yourself.
+	laneShape1 := OPBPMNLaneShape in: poolShape forModelElement: lane1Model.
+	laneShape2 := OPBPMNLaneShape in: poolShape forModelElement: lane2Model.
+	laneShape1 renderIn: canvas.
+	laneShape2 renderIn: canvas.
+	poolShape layoutLanes.
+
+	selectable1 := laneShape1 roassalShape propertyAt: OPRSSelectable.
+	selectable1 doHighlight: laneShape1 roassalShape.
+	handle := laneShape1 separatorHandle.
+
+	[
+		handle announce: (RSMouseEnter new
+				 shape: handle;
+				 yourself).
+		self currentWorld ifNotNil: [ :world |
+				self
+					assert: world currentHand temporaryCursor isNotNil
+					description: 'Hovering separator handle must set a temporary resize cursor' ].
+		handle announce: (RSMouseLeave new
+				 shape: handle;
+				 yourself).
+		self currentWorld ifNotNil: [ :world | self assert: world currentHand temporaryCursor identicalTo: nil ] ] ensure: [
+		self currentWorld ifNotNil: [ :world | world currentHand showTemporaryCursor: nil ] ]
 ]
 
 { #category : 'tests - interaction' }

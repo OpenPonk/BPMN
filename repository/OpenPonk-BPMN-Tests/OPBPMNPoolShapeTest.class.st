@@ -25,6 +25,45 @@ OPBPMNPoolShapeTest >> testClickingNameLabelForwardsClickToRoassalShape [
 	self assert: forwardedEvents first shape identicalTo: poolShape roassalShape
 ]
 
+{ #category : 'tests - lifecycle' }
+OPBPMNPoolShapeTest >> testIsRemovingRenderIsFalseDuringExtentAdjustmentAndTrueDuringRemoveRender [
+
+	| canvas poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 observedDuringResize observedDuringRemove |
+	canvas := RSCanvas new.
+	poolModel := OPBPMNPoolModel new name: 'Pool'.
+	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
+	lane2Model := OPBPMNLaneModel new name: 'Lane 2'.
+	poolModel
+		addLane: lane1Model;
+		addLane: lane2Model.
+
+	poolShape := OPBPMNPoolShape new
+		             modelElement: poolModel;
+		             bounds: (OPNodeBounds withPosition: 0 @ 0 extent: 600 @ 440);
+		             renderIn: canvas;
+		             yourself.
+	laneShape1 := OPBPMNLaneShape in: poolShape forModelElement: lane1Model.
+	laneShape2 := OPBPMNLaneShape in: poolShape forModelElement: lane2Model.
+	laneShape1 renderIn: canvas.
+	laneShape2 renderIn: canvas.
+	poolShape layoutLanes.
+
+	observedDuringResize := true.
+	poolShape roassalShape when: RSExtentChangedEvent do: [ observedDuringResize := poolShape isRemovingRender ] for: self.
+	poolShape resizeToRectangle: (Rectangle center: 0 @ 0 extent: 600 @ 500).
+	self deny: observedDuringResize description: 'Pool must not report removing render while resizing'.
+	self deny: poolShape isRemovingRender description: 'Pool must not report removing render after resize'.
+
+	observedDuringRemove := false.
+	laneShape1 announcer
+		when: OPDiagramElementRenderRemovedAnnouncement
+		do: [ observedDuringRemove := poolShape isRemovingRender ]
+		for: self.
+	poolShape removeRender.
+	self assert: observedDuringRemove description: 'Pool must report removing render while removing its render'.
+	self deny: poolShape isRemovingRender description: 'Pool must reset isRemovingRender after removeRender finishes'
+]
+
 { #category : 'tests - moving' }
 OPBPMNPoolShapeTest >> testMovingPoolDoesNotChangeLaneHeights [
 
@@ -57,13 +96,71 @@ OPBPMNPoolShapeTest >> testMovingPoolDoesNotChangeLaneHeights [
 
 	initialSeparatorY := laneShape1 roassalShape encompassingRectangle bottom.
 
-	"Simulace posunu poolu po plátně (Move) o 50 @ 50 bez změny extent"
+	"Simulate moving the pool on the canvas by 50 @ 50 without changing its extent"
 	poolShape roassalShape translateTo: 50 @ 50.
 
 	self assert: laneShape1 laneHeight equals: 220.
 	self assert: laneShape2 laneHeight equals: 220.
 	self assert: laneShape1 roassalShape encompassingRectangle bottom closeTo: initialSeparatorY + 50.
 	self assert: laneShape2 roassalShape encompassingRectangle top closeTo: initialSeparatorY + 50
+]
+
+{ #category : 'tests - rendering' }
+OPBPMNPoolShapeTest >> testPoolMinimumHeightBorderColorStrokeColorAndUnrenderedGuards [
+
+	| poolShape canvas |
+	poolShape := OPBPMNPoolShape new
+		             modelElement: (OPBPMNPoolModel new
+				              name: nil;
+				              yourself);
+		             yourself.
+	self assert: OPBPMNPoolShape minimumHeight equals: 50.
+	self assert: poolShape minimumHeight equals: 50.
+	self assert: poolShape borderColor equals: Color black.
+
+	poolShape
+		strokeColor: Color red;
+		adjustExtentToLanes;
+		handlePositionChanged;
+		updateNameArea;
+		updateRenderFromBounds;
+		resizeToRectangle: (0 @ 0 corner: 600 @ 200);
+		adoptOwnedElementsIntoLane: OPBPMNLaneShape new.
+	self deny: poolShape isRendered description: 'Unrendered pool guards must leave pool unrendered'.
+
+	canvas := RSCanvas new.
+	poolShape renderIn: canvas.
+	self assert: (poolShape instVarNamed: #nameLabel) text equals: ''.
+
+	poolShape strokeColor: Color red.
+	self assert: poolShape borderColor equals: Color red.
+	self assert: poolShape roassalShape borderColor equals: Color red.
+	self assert: (poolShape instVarNamed: #nameAreaSeparator) color equals: Color red
+]
+
+{ #category : 'tests - rendering' }
+OPBPMNPoolShapeTest >> testPoolSelectionDraggableInteractionIncludesInnerShapes [
+
+	| canvas poolModel laneModel poolShape laneShape taskShape interaction draggedInnerShapes |
+	canvas := RSCanvas new.
+	poolModel := OPBPMNPoolModel new name: 'Pool'.
+	laneModel := OPBPMNLaneModel new name: 'Lane 1'.
+	poolModel addLane: laneModel.
+
+	poolShape := OPBPMNPoolShape new
+		             modelElement: poolModel;
+		             renderIn: canvas;
+		             yourself.
+	laneShape := OPBPMNLaneShape in: poolShape forModelElement: laneModel.
+	laneShape renderIn: canvas.
+	taskShape := OPBPMNActivityShape in: laneShape forModelElement: (OPBPMNActivityModel new
+			              name: 'Task';
+			              yourself).
+	taskShape renderIn: canvas.
+
+	interaction := poolShape roassalShape propertyAt: OPRSSelectionDraggable.
+	draggedInnerShapes := interaction shapesToDragInside: poolShape roassalShape.
+	self assertCollection: draggedInnerShapes hasSameElements: { taskShape roassalShape }
 ]
 
 { #category : 'tests - resizing' }
@@ -99,6 +196,37 @@ OPBPMNPoolShapeTest >> testRemovingLaneShrinksPoolToRemainingLaneHeight [
 	laneShape1 removeRender.
 
 	self assert: poolShape roassalShape height closeTo: 100 precision: 0.5
+]
+
+{ #category : 'tests - rendering' }
+OPBPMNPoolShapeTest >> testResizeToRectangleWithoutLastRectangleAndProportionalLaneScaling [
+
+	| canvas poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 |
+	canvas := RSCanvas new.
+	poolModel := OPBPMNPoolModel new name: 'Pool'.
+	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
+	lane2Model := OPBPMNLaneModel new name: 'Lane 2'.
+	poolModel
+		addLane: lane1Model;
+		addLane: lane2Model.
+
+	poolShape := OPBPMNPoolShape new
+		             modelElement: poolModel;
+		             bounds: (OPNodeBounds withPosition: 0 @ 0 extent: 600 @ 440);
+		             renderIn: canvas;
+		             yourself.
+	laneShape1 := OPBPMNLaneShape in: poolShape forModelElement: lane1Model.
+	laneShape2 := OPBPMNLaneShape in: poolShape forModelElement: lane2Model.
+	laneShape1 renderIn: canvas.
+	laneShape2 renderIn: canvas.
+	poolShape layoutLanes.
+
+	poolShape lastRectangle: nil.
+	poolShape resizeToRectangle: (Rectangle center: 0 @ 0 extent: 600 @ 660).
+
+	self assert: poolShape roassalShape extent equals: 600 @ 660.
+	self assert: laneShape1 laneHeight closeTo: 330 precision: 0.5.
+	self assert: laneShape2 laneHeight closeTo: 330 precision: 0.5
 ]
 
 { #category : 'tests - resizing' }
@@ -140,7 +268,7 @@ OPBPMNPoolShapeTest >> testResizingPoolBottomEdgePastMinimumLaneHeightAndBackPre
 { #category : 'tests - resizing' }
 OPBPMNPoolShapeTest >> testResizingPoolFromBottomEdgeExpandsLastLaneAndPreservesOtherLanes [
 
-	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 initialSeparatorY initialPoolRect |
+	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 initialSeparatorY |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
 	lane2Model := OPBPMNLaneModel new name: 'Lane 2'.
@@ -167,11 +295,10 @@ OPBPMNPoolShapeTest >> testResizingPoolFromBottomEdgeExpandsLastLaneAndPreserves
 	laneShape2 renderIn: poolShape canvas.
 	poolShape layoutLanes.
 
-	initialPoolRect := poolShape roassalShape encompassingRectangle.
 	initialSeparatorY := laneShape1 roassalShape encompassingRectangle bottom.
 	self assert: initialSeparatorY closeTo: 0.
 
-	"Simulace tahu spodní hranou v Roassalu (posun bottom z 220 na 320 o 100 px dolů)"
+	"Simulate dragging the bottom edge in Roassal (moving bottom from 220 to 320 by 100 px downward)"
 	poolShape roassalShape extent: 600 @ 540.
 	poolShape roassalShape translateTo: 0 @ 50.
 
@@ -185,7 +312,7 @@ OPBPMNPoolShapeTest >> testResizingPoolFromBottomEdgeExpandsLastLaneAndPreserves
 { #category : 'tests - resizing' }
 OPBPMNPoolShapeTest >> testResizingPoolFromTopEdgeExpandsFirstLaneAndPreservesSeparatorPosition [
 
-	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 initialSeparatorY initialPoolRect |
+	| poolModel lane1Model lane2Model poolShape laneShape1 laneShape2 initialSeparatorY |
 	poolModel := OPBPMNPoolModel new name: 'Pool'.
 	lane1Model := OPBPMNLaneModel new name: 'Lane 1'.
 	lane2Model := OPBPMNLaneModel new name: 'Lane 2'.
@@ -212,11 +339,10 @@ OPBPMNPoolShapeTest >> testResizingPoolFromTopEdgeExpandsFirstLaneAndPreservesSe
 	laneShape2 renderIn: poolShape canvas.
 	poolShape layoutLanes.
 
-	initialPoolRect := poolShape roassalShape encompassingRectangle.
 	initialSeparatorY := laneShape1 roassalShape encompassingRectangle bottom.
 	self assert: initialSeparatorY closeTo: 0.
 
-	"Simulace tahu horní hranou v Roassalu (posun top z -220 na -320 o 100 px nahoru)"
+	"Simulate dragging the top edge in Roassal (moving top from -220 to -320 by 100 px upward)"
 	poolShape roassalShape extent: 600 @ 540.
 	poolShape roassalShape translateTo: 0 @ -50.
 
@@ -295,7 +421,7 @@ OPBPMNPoolShapeTest >> testResizingPoolWidthPreservesLaneHeights [
 
 	initialSeparatorY := laneShape1 roassalShape encompassingRectangle bottom.
 
-	"Simulace rozšíření poolu doprava o 100 px (extent: 700@440, translateTo: 50@0)"
+	"Simulate widening the pool to the right by 100 px (extent: 700@440, translateTo: 50@0)"
 	poolShape roassalShape extent: 700 @ 440.
 	poolShape roassalShape translateTo: 50 @ 0.
 

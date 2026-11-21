@@ -64,6 +64,30 @@ OPBPMNNodeShapeTest >> testActivityShapeDefaultExtentAndBorderWidth [
 	self assert: activityShape roassalShape border width equals: 1
 ]
 
+{ #category : 'tests - rendering' }
+OPBPMNNodeShapeTest >> testBoundaryEventRepositionAndAttachGuardsWithoutRenderedHost [
+
+	| unownedBoundaryShape hostShape attachedBoundaryShape |
+	unownedBoundaryShape := OPBPMNBoundaryEventShape new.
+	unownedBoundaryShape
+		repositionSiblingBoundaryShapes;
+		attachToHostShape.
+	self deny: unownedBoundaryShape isRendered description: 'Unrendered boundary event must remain unrendered'.
+
+	hostShape := OPBPMNActivityShape new
+		             modelElement: (OPBPMNActivityModel new
+				              name: 'Host';
+				              yourself);
+		             yourself.
+	attachedBoundaryShape := OPBPMNBoundaryEventShape in: hostShape forModelElement: (OPBPMNBoundaryEventModel new
+			                          name: 'Timer';
+			                          yourself).
+	attachedBoundaryShape
+		renderIn: canvas;
+		attachToHostShape.
+	self assert: attachedBoundaryShape isRendered description: 'Boundary event must stay rendered when host is unrendered'
+]
+
 { #category : 'tests - labels' }
 OPBPMNNodeShapeTest >> testCollapsedSubProcessLabelWrapsAndOffsetsAboveBottomMarkers [
 
@@ -97,6 +121,62 @@ OPBPMNNodeShapeTest >> testCollapsedSubProcessShapeDefaultExtentAndBorderWidth [
 	collapsedShape renderIn: canvas.
 	self assert: collapsedShape roassalShape baseRectangle extent equals: 110 @ 70.
 	self assert: collapsedShape roassalShape border width equals: 1
+]
+
+{ #category : 'tests - rendering' }
+OPBPMNNodeShapeTest >> testCreateTypeIconShapeFallsBackWhenModelElementIsNil [
+
+	{
+		OPBPMNNodeShape.
+		OPBPMNActivityShape.
+		OPBPMNBoundaryEventShape.
+		OPBPMNCollapsedSubProcessShape.
+		OPBPMNEndEventShape.
+		OPBPMNGatewayShape.
+		OPBPMNIntermediateEventShape.
+		OPBPMNStartEventShape.
+		OPBPMNSubProcessShape } do: [ :eachShapeClass |
+			| iconShape |
+			iconShape := eachShapeClass new createTypeIconShape.
+			self assert: iconShape class identicalTo: RSComposite.
+			self assertEmpty: iconShape shapes ].
+
+	self denyEmpty: OPBPMNDataObjectShape new createTypeIconShape shapes
+]
+
+{ #category : 'tests - rendering' }
+OPBPMNNodeShapeTest >> testDataObjectAndNodeShapeColorStrokeAndIconGuardsBeforeAndAfterRender [
+
+	| dataObjectShape activityShape |
+	dataObjectShape := OPBPMNDataObjectShape new
+		                   modelElement: (OPBPMNDataObjectModel new
+				                    name: 'Invoice';
+				                    yourself);
+		                   yourself.
+	dataObjectShape
+		attachIconShape;
+		updateIcon;
+		updateIconPosition;
+		color: Color yellow;
+		strokeColor: Color red.
+	self assert: dataObjectShape color equals: Color yellow.
+	self assert: dataObjectShape borderColor equals: Color red.
+
+	dataObjectShape strokeColor: Color black.
+	self assert: dataObjectShape borderColor equals: Color transparent.
+
+	dataObjectShape renderIn: canvas.
+	dataObjectShape strokeColor: Color blue.
+	self assert: dataObjectShape borderColor equals: Color blue.
+	self assert: dataObjectShape roassalShape borderColor equals: Color blue.
+	self assert: dataObjectShape roassalShape color equals: Color yellow.
+
+	activityShape := OPBPMNActivityShape new.
+	activityShape
+		attachIconShape;
+		updateIcon;
+		updateIconPosition.
+	self deny: activityShape isRendered description: 'Icon guard methods must keep unrendered node shape unrendered'
 ]
 
 { #category : 'tests - geometry' }
@@ -241,6 +321,26 @@ OPBPMNNodeShapeTest >> testSubProcessLabelWrapsInsideTopAndRewrapsOnResize [
 	self assert: narrowLabelWidth <= subProcessShape wrapMaxWidth description: 'SubProcess label must re-wrap when resized narrower'
 ]
 
+{ #category : 'tests - rendering' }
+OPBPMNNodeShapeTest >> testSubProcessSelectionDraggableInteractionIncludesInnerShapes [
+
+	| subProcessShape innerTaskShape interaction draggedInnerShapes |
+	subProcessShape := OPBPMNSubProcessShape new
+		                   modelElement: (OPBPMNSubProcessModel new
+				                    name: 'Sub';
+				                    yourself);
+		                   renderIn: canvas;
+		                   yourself.
+	innerTaskShape := OPBPMNActivityShape in: subProcessShape forModelElement: (OPBPMNActivityModel new
+			                   name: 'Inner Task';
+			                   yourself).
+	innerTaskShape renderIn: canvas.
+
+	interaction := subProcessShape roassalShape propertyAt: OPRSSelectionDraggable.
+	draggedInnerShapes := interaction shapesToDragInside: subProcessShape roassalShape.
+	self assertCollection: draggedInnerShapes hasSameElements: { innerTaskShape roassalShape }
+]
+
 { #category : 'tests - geometry' }
 OPBPMNNodeShapeTest >> testSubProcessShapeDefaultExtentAndMinimumAdaptedExtent [
 
@@ -253,4 +353,77 @@ OPBPMNNodeShapeTest >> testSubProcessShapeDefaultExtentAndMinimumAdaptedExtent [
 	self assert: subProcessShape roassalShape baseRectangle extent equals: 190 @ 125.
 	subProcessShape adaptBoundsToInnerBounds: (Rectangle center: 0 @ 0 extent: 50 @ 30).
 	self assert: subProcessShape roassalShape extent equals: 250 @ 150
+]
+
+{ #category : 'tests - rendering' }
+OPBPMNNodeShapeTest >> testUpdateRenderFromModelHandlesNilNamesAcrossNodeShapes [
+
+	| unrenderedSubProcess activityShape collapsedShape subProcessShape annotationShape dataObjectShape gatewayShape startEventShape boundaryEventShape |
+	unrenderedSubProcess := OPBPMNSubProcessShape new.
+	unrenderedSubProcess updateLabel.
+	self deny: unrenderedSubProcess isRendered description: 'Calling updateLabel before render must leave shape unrendered'.
+
+	activityShape := OPBPMNActivityShape new
+		                 modelElement: (OPBPMNActivityModel new
+				                  name: nil;
+				                  yourself);
+		                 renderIn: canvas;
+		                 yourself.
+	self assert: (activityShape instVarNamed: #labeled) labelShape text equals: ''.
+
+	collapsedShape := OPBPMNCollapsedSubProcessShape new
+		                  modelElement: (OPBPMNCollapsedSubProcessModel new
+				                   name: nil;
+				                   yourself);
+		                  renderIn: canvas;
+		                  yourself.
+	self assert: (collapsedShape instVarNamed: #labeled) labelShape text equals: ''.
+
+	subProcessShape := OPBPMNSubProcessShape new
+		                   modelElement: (OPBPMNSubProcessModel new
+				                    name: nil;
+				                    yourself);
+		                   renderIn: canvas;
+		                   yourself.
+	self assert: (subProcessShape instVarNamed: #labeled) labelShape text equals: ''.
+
+	annotationShape := OPBPMNAnnotationShape new
+		                   modelElement: (OPBPMNAnnotationModel new
+				                    text: nil;
+				                    yourself);
+		                   renderIn: canvas;
+		                   yourself.
+	self assert: (annotationShape instVarNamed: #labeled) labelShape text equals: ''.
+
+	dataObjectShape := OPBPMNDataObjectShape new
+		                   modelElement: (OPBPMNDataObjectModel new
+				                    name: nil;
+				                    yourself);
+		                   renderIn: canvas;
+		                   yourself.
+	self assert: (dataObjectShape instVarNamed: #labeled) labelShape text equals: ''.
+
+	gatewayShape := OPBPMNGatewayShape new
+		                modelElement: (OPBPMNGatewayModel new
+				                 name: nil;
+				                 yourself);
+		                renderIn: canvas;
+		                yourself.
+	self assert: (gatewayShape roassalShape propertyAt: #RSLabeled) text equals: ''.
+
+	startEventShape := OPBPMNStartEventShape new
+		                   modelElement: (OPBPMNStartEventModel new
+				                    name: nil;
+				                    yourself);
+		                   renderIn: canvas;
+		                   yourself.
+	self assert: (startEventShape roassalShape propertyAt: #RSLabeled) text equals: ''.
+
+	boundaryEventShape := OPBPMNBoundaryEventShape new
+		                      modelElement: (OPBPMNBoundaryEventModel new
+				                       name: nil;
+				                       yourself);
+		                      renderIn: canvas;
+		                      yourself.
+	self assert: (boundaryEventShape roassalShape propertyAt: #RSLabeled) text equals: ''
 ]

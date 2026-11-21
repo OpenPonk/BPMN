@@ -52,10 +52,6 @@ OPBPMNStartEventShape >> initialize [
 { #category : 'rendering' }
 OPBPMNStartEventShape >> updateRenderFromModel [
 
-	(roassalShape propertyAt: #RSLabeled) text: self modelElement name.
-	self updateIcon.
 	self createBorder.
-	super updateRenderFromModel.
-
-	roassalShape signalUpdate
+	super updateRenderFromModel
 ]
