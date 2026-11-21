@@ -459,6 +459,37 @@ OPBPMNViewModelFormTest >> testSubProcessAndBoundaryEventViewModelsBindAllProper
 ]
 
 { #category : 'tests' }
+OPBPMNViewModelFormTest >> testSubProcessViewModelAllChildrenModelsAndInnerDependentElements [
+
+	| project projectController registry subProcess nestedSubProcess innerTask externalAnnotation incomingAssociation subProcessViewModel innerTaskViewModel |
+	subProcess := OPBPMNSubProcessModel new name: 'Outer SubProcess'.
+	nestedSubProcess := OPBPMNSubProcessModel new name: 'Nested SubProcess'.
+	innerTask := OPBPMNActivityModel new name: 'Deep Task'.
+	nestedSubProcess add: innerTask.
+	subProcess add: nestedSubProcess.
+
+	externalAnnotation := OPBPMNAnnotationModel new text: 'Note'.
+	incomingAssociation := OPBPMNAssociationModel new
+		                       source: externalAnnotation;
+		                       target: innerTask;
+		                       yourself.
+	externalAnnotation addAssociation: incomingAssociation.
+	innerTask addAssociation: incomingAssociation.
+
+	project := OPProject named: 'BPMNSubProcess'.
+	projectController := OPProjectController forProject: project.
+	registry := projectController viewModelRegistry.
+	subProcessViewModel := registry viewModelFor: subProcess.
+	innerTaskViewModel := registry viewModelFor: innerTask.
+
+	self assertCollection: subProcessViewModel childrenModels hasSameElements: { nestedSubProcess }.
+	self assertCollection: subProcessViewModel allChildrenModels hasSameElements: {
+			nestedSubProcess.
+			innerTask }.
+	self assertCollection: innerTaskViewModel dependentElements includesAll: { incomingAssociation }
+]
+
+{ #category : 'tests' }
 OPBPMNViewModelFormTest >> testSubProcessViewModelBindsMultilineName [
 
 	| model viewModel form |
@@ -473,27 +504,4 @@ OPBPMNViewModelFormTest >> testSubProcessViewModelBindsMultilineName [
 	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: {
 			SpTextPresenter.
 			SpDropListPresenter }
-]
-
-{ #category : 'tests' }
-OPBPMNViewModelFormTest >> testSubProcessViewModelEssentialChildrenModelsIncludesNestedNodesAndIncomingAssociations [
-	| subProcess nestedSubProcess innerTask externalAnnotation incomingAssociation viewModel essential |
-	subProcess := OPBPMNSubProcessModel new name: 'Outer SubProcess'.
-	nestedSubProcess := OPBPMNSubProcessModel new name: 'Nested SubProcess'.
-	innerTask := OPBPMNActivityModel new name: 'Deep Task'.
-	nestedSubProcess add: innerTask.
-	subProcess add: nestedSubProcess.
-
-	externalAnnotation := OPBPMNAnnotationModel new text: 'Note'.
-	incomingAssociation := OPBPMNAssociationModel new
-		source: externalAnnotation;
-		target: innerTask;
-		yourself.
-	externalAnnotation addAssociation: incomingAssociation.
-	innerTask addAssociation: incomingAssociation.
-
-	viewModel := OPBPMNSubProcessViewModel new model: subProcess.
-	essential := viewModel essentialChildrenModels.
-
-	self assertCollection: essential includesAll: { nestedSubProcess . innerTask . incomingAssociation }
 ]

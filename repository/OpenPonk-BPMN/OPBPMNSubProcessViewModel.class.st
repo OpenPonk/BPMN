@@ -28,21 +28,6 @@ OPBPMNSubProcessViewModel >> buildEditorForm: aForm [
 ]
 
 { #category : 'accessing' }
-OPBPMNSubProcessViewModel >> essentialChildrenModels [
-	"Answers all nodes and edges belonging directly or transitively to this subprocess."
-	| collectedNodes collectedEdges |
-	collectedNodes := Set new.
-	collectedEdges := Set new.
-	self model allElements do: [ :eachModelElement |
-		eachModelElement isNode ifTrue: [
-			collectedNodes add: eachModelElement.
-			collectedEdges addAll: eachModelElement edges ].
-		eachModelElement isEdge ifTrue: [
-			collectedEdges add: eachModelElement ] ].
-	^ (collectedNodes asArray , collectedEdges asArray) asSet asArray
-]
-
-{ #category : 'accessing' }
 OPBPMNSubProcessViewModel >> icon [ ^ OPBPMNIcon current expandedSubprocess
 ]
 

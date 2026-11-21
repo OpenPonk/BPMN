@@ -27,20 +27,15 @@ OPBPMNExamplesTest >> tearDown [
 ]
 
 { #category : 'tests' }
-OPBPMNExamplesTest >> testEmptyModel [
-	| model |
-	model := OPBPMNExamples emptyModel.
-	self assert: model class equals: OPBPMNModel.
-	self assertEmpty: model elements
-]
+OPBPMNExamplesTest >> testAllChildrenModelsResolvesAllElements [
 
-{ #category : 'tests' }
-OPBPMNExamplesTest >> testEssentialChildrenModelsResolvesAllElements [
-
-	| model modelViewModel essentialElements expectedClasses presentClasses |
+	| model project projectController modelViewModel allElements expectedClasses presentClasses |
 	model := OPBPMNExamples exampleOrderFulfillment.
-	modelViewModel := OPBPMNModelViewModel new model: model.
-	essentialElements := modelViewModel essentialChildrenModels.
+	project := OPProject named: 'BPMNOrderFulfillment'.
+	project addModel: model.
+	projectController := OPProjectController forProject: project.
+	modelViewModel := projectController viewModelRegistry viewModelFor: model.
+	allElements := modelViewModel allChildrenModels.
 	expectedClasses := {
 		                   OPBPMNPoolModel.
 		                   OPBPMNStartEventModel.
@@ -57,8 +52,16 @@ OPBPMNExamplesTest >> testEssentialChildrenModelsResolvesAllElements [
 		                   OPBPMNMessageFlowModel.
 		                   OPBPMNDataFlowModel.
 		                   OPBPMNAssociationModel } asSet.
-	presentClasses := essentialElements collect: #class as: Set.
+	presentClasses := allElements collect: #class as: Set.
 	self assertCollection: presentClasses includesAll: expectedClasses
+]
+
+{ #category : 'tests' }
+OPBPMNExamplesTest >> testEmptyModel [
+	| model |
+	model := OPBPMNExamples emptyModel.
+	self assert: model class equals: OPBPMNModel.
+	self assertEmpty: model elements
 ]
 
 { #category : 'tests' }
