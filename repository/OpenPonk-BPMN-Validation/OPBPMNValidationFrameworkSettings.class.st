@@ -15,10 +15,47 @@ Class {
 	#tag : 'Settings'
 }
 
+{ #category : 'settings' }
+OPBPMNValidationFrameworkSettings class >> addSettingsFor: aValidationClasses to: aBuilder inGroup: aGroupSymbol [
+
+	((aValidationClasses reject: #isAbstract) sorted: [ :first :second | first name <= second name ]) do: [ :validationClass |
+			| settingName |
+			settingName := (String streamContents: [ :stream |
+					                stream << 'access'.
+					                stream << validationClass name ]) asSymbol.
+			(aBuilder setting: settingName)
+				parent: aGroupSymbol;
+				target: validationClass;
+				getSelector: #isEnabled;
+				setSelector: #isEnabled:;
+				default: true;
+				label: validationClass name;
+				description: (self descriptionFor: validationClass) ]
+]
+
+{ #category : 'settings' }
+OPBPMNValidationFrameworkSettings class >> descriptionFor: aValidationClass [
+
+	| comment |
+	comment := aValidationClass comment trimBoth.
+	^ comment ifEmpty: [ 'Allow or deny execution of this BPMN validation.' ]
+]
+
 { #category : 'accessing' }
 OPBPMNValidationFrameworkSettings class >> getInstance [
 	settingsInstance ifNil: [ settingsInstance := self new. ].
 	^ settingsInstance.
+]
+
+{ #category : 'settings' }
+OPBPMNValidationFrameworkSettings class >> settingsOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder group: #bpmnValidations)
+		label: 'BPMN Validations';
+		parent: #openponk;
+		order: 230.
+	self addSettingsFor: OPBPMNValidationController new getValidations to: aBuilder inGroup: #bpmnValidations
 ]
 
 { #category : 'access' }

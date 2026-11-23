@@ -15,6 +15,24 @@ OPBPMNValidation class >> canValidate: aVerifiedObject [
 	^ aVerifiedObject isKindOf: self validateClass.
 ]
 
+{ #category : 'testing' }
+OPBPMNValidation class >> isAbstract [
+
+	^ self = OPBPMNValidation
+]
+
+{ #category : 'settings' }
+OPBPMNValidation class >> isEnabled [
+
+	^ OPBPMNValidationFrameworkSettings getInstance getSettingFor: self
+]
+
+{ #category : 'settings' }
+OPBPMNValidation class >> isEnabled: aBoolean [
+
+	OPBPMNValidationFrameworkSettings getInstance setSettingFor: self withValue: aBoolean
+]
+
 { #category : 'instance creation' }
 OPBPMNValidation class >> new [
 	^ self shouldNotImplement.

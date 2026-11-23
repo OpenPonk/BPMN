@@ -42,6 +42,13 @@ OPBPMNValidationTest >> testExampleOrderFulfillmentHasZeroValidationErrorsAndZer
 	self assertEmpty: (results selectWarnings collect: #messageText as: Array) sorted
 ]
 
+{ #category : 'tests' }
+OPBPMNValidationTest >> testIsAbstract [
+
+	self assert: OPBPMNValidation isAbstract description: 'Base OPBPMNValidation class must report itself as abstract'.
+	self deny: AN01FlowNodeIncomingFlow isAbstract description: 'Concrete BPMN validation rule must not report itself as abstract'
+]
+
 { #category : 'constants' }
 OPBPMNValidationTest >> testNew [
 	self newTest.
