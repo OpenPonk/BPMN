@@ -12,8 +12,15 @@ Class {
 { #category : 'actions' }
 OPBPMNMessageFlowSimulator >> fire [
 
+	| tokenAmount |
+	tokenAmount := self bpmnTokens.
 	self target blocked: false.
-	self bpmnTokens: 0
+	self bpmnTokens: 0.
+	(tokenAmount > 0 and: [ diagramSimulator isNotNil ]) ifTrue: [
+			diagramSimulator recordTransfer: ((OPSimulationTransfer source: self source model edge: self model target: self target model)
+					 amount: tokenAmount;
+					 kind: #message;
+					 yourself) ]
 ]
 
 { #category : 'testing' }

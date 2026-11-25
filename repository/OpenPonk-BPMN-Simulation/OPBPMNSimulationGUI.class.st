@@ -43,5 +43,8 @@ OPBPMNSimulationGUI >> updateSimulationVisuals [
 	self highlighter replaceHighlightsDuring: [
 			diagramSimulator elementsDo: [ :eachElement |
 					eachElement bpmnTokens > 0 ifTrue: [
-						self highlighter highlightStrokeOfModel: eachElement model color: (self highlightColorForTokens: eachElement bpmnTokens) ] ] ]
+						self highlighter
+							highlightStrokeOfModel: eachElement model
+							color: (self highlightColorForTokens: eachElement bpmnTokens)
+							width: 3 ] ] ]
 ]

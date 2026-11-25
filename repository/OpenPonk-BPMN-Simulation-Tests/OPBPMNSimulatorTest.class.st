@@ -455,3 +455,65 @@ OPBPMNSimulatorTest >> testStartEventInLaneReceivesInitialTokenAndIsSteppable [
 	self assert: startSim bpmnTokens equals: 0.
 	self assert: (sim simulatorOf: task) bpmnTokens equals: 1
 ]
+
+{ #category : 'tests' }
+OPBPMNSimulatorTest >> testStepRecordsSequenceAndMessageFlowTransfersExcludingUntakenBranches [
+
+	| testModel startNode gateway taskA taskB receiverTask flowToGateway flowBranchA flowBranchB messageFlow diagramSimulator steppedEvents gatewaySimulator |
+	testModel := OPBPMNModel new name: 'Transfer BPMN'.
+	startNode := OPBPMNStartEventModel new name: 'Start'.
+	gateway := OPBPMNGatewayModel new
+		           name: 'Decision';
+		           type: OPBPMNNodeType Exclusive;
+		           yourself.
+	taskA := OPBPMNActivityModel new name: 'Task A'.
+	taskB := OPBPMNActivityModel new name: 'Task B'.
+	receiverTask := OPBPMNActivityModel new name: 'Receiver'.
+	flowToGateway := OPBPMNFlowModel from: startNode to: gateway.
+	flowBranchA := (OPBPMNFlowModel from: gateway to: taskA)
+		               type: #Default;
+		               yourself.
+	flowBranchB := OPBPMNFlowModel from: gateway to: taskB.
+	messageFlow := OPBPMNMessageFlowModel from: taskA to: receiverTask.
+	{
+		startNode.
+		gateway.
+		taskA.
+		taskB.
+		receiverTask.
+		flowToGateway.
+		flowBranchA.
+		flowBranchB.
+		messageFlow } do: [ :each | testModel add: each ].
+	{
+		flowToGateway.
+		flowBranchA.
+		flowBranchB.
+		messageFlow } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow ].
+
+	diagramSimulator := OPBPMNSimulator model: testModel.
+	gatewaySimulator := diagramSimulator simulatorOf: gateway.
+	gatewaySimulator outgoingActive: (OrderedCollection with: (diagramSimulator simulatorOf: flowBranchA)).
+	steppedEvents := OrderedCollection new.
+	diagramSimulator when: OPSimulatorStepped do: [ :event | steppedEvents add: event ] for: self.
+
+	diagramSimulator step.
+	self
+		assert: steppedEvents first transfers
+		equals: { (OPSimulationTransfer source: startNode edge: flowToGateway target: gateway) }.
+
+	diagramSimulator step.
+	self assert: steppedEvents second transfers equals: { (OPSimulationTransfer source: gateway edge: flowBranchA target: taskA) }.
+
+	diagramSimulator step.
+	self assert: (diagramSimulator simulatorOf: messageFlow) bpmnTokens equals: 1.
+
+	diagramSimulator step.
+	self
+		assert: steppedEvents fourth transfers
+		equals: { ((OPSimulationTransfer source: taskA edge: messageFlow target: receiverTask)
+				 kind: #message;
+				 yourself) }
+]

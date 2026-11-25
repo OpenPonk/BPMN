@@ -82,6 +82,35 @@ OPBPMNSimulationGUITest >> tearDown [
 ]
 
 { #category : 'tests' }
+OPBPMNSimulationGUITest >> testActiveNodesUseThickerBorderAndRestoreOnResetAndClose [
+
+	| startShape activityShape originalStartWidth originalActivityWidth |
+	rootModel elements do: [ :each | diagramController showInDiagramModel: each ].
+	startShape := (diagramController controllerForModel: startEvent) roassalShape.
+	activityShape := (diagramController controllerForModel: activity) roassalShape.
+	originalStartWidth := startShape border width.
+	originalActivityWidth := activityShape border width.
+
+	simulationGui := OPBPMNSimulationGUI diagramController: diagramController.
+	self assert: startShape borderColor equals: Color green darker.
+	self assert: startShape border width equals: 3.
+	self assert: activityShape border width equals: originalActivityWidth.
+
+	simulationGui session step.
+	self assert: startShape border width equals: originalStartWidth.
+	self assert: activityShape borderColor equals: Color green darker.
+	self assert: activityShape border width equals: 3.
+
+	simulationGui session reset.
+	self assert: startShape border width equals: 3.
+	self assert: activityShape border width equals: originalActivityWidth.
+
+	simulationGui close.
+	self assert: startShape border width equals: originalStartWidth.
+	self assert: activityShape border width equals: originalActivityWidth
+]
+
+{ #category : 'tests' }
 OPBPMNSimulationGUITest >> testButtonItemsAndConfigurationLifecycle [
 
 	| buttonsByLabel windowsCountBefore initialConfiguration |

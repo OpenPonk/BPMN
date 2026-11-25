@@ -12,8 +12,14 @@ Class {
 { #category : 'actions' }
 OPBPMNSequenceFlowSimulator >> fire [
 
-	self target addBpmnTokens: self bpmnTokens from: self.
-	self bpmnTokens: 0
+	| tokenAmount |
+	tokenAmount := self bpmnTokens.
+	self target addBpmnTokens: tokenAmount from: self.
+	self bpmnTokens: 0.
+	(tokenAmount > 0 and: [ diagramSimulator isNotNil ]) ifTrue: [
+			diagramSimulator recordTransfer: ((OPSimulationTransfer source: self source model edge: self model target: self target model)
+					 amount: tokenAmount;
+					 yourself) ]
 ]
 
 { #category : 'testing' }
