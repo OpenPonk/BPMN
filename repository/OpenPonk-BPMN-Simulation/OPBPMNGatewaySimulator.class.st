@@ -61,12 +61,6 @@ OPBPMNGatewaySimulator >> isConfigurable [
 	^ outgoing size > 1
 ]
 
-{ #category : 'testing' }
-OPBPMNGatewaySimulator >> isGateway [
-
-	^ true
-]
-
 { #category : 'creation' }
 OPBPMNGatewaySimulator >> loadConnectedItems [
 	"loads and/or connects appropriate tokens and elements"

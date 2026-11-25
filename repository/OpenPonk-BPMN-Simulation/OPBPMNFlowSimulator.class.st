@@ -51,12 +51,6 @@ OPBPMNFlowSimulator >> isConfigurable [
 ]
 
 { #category : 'testing' }
-OPBPMNFlowSimulator >> isGateway [
-
-	^ false
-]
-
-{ #category : 'testing' }
 OPBPMNFlowSimulator >> isSimulable [
 	"could there be any possibility to step? - rigid: should return always true or always false"
 

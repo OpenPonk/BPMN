@@ -72,12 +72,6 @@ OPBPMNNodeSimulator >> isConfigurable [
 ]
 
 { #category : 'testing' }
-OPBPMNNodeSimulator >> isGateway [
-
-	^ false
-]
-
-{ #category : 'testing' }
 OPBPMNNodeSimulator >> isSimulable [
 	"could there be any possibility to step? - rigid: should return always true or always false"
 	

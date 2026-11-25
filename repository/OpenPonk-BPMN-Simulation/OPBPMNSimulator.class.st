@@ -61,9 +61,8 @@ OPBPMNSimulator >> isGateway: firstGateway orderedBefore: secondGateway [
 OPBPMNSimulator >> loadConfigurableGateways [
 	"Selects branching configurable gateways in deterministic order."
 
-	configurableGateways := (elements select: [ :element | element isGateway and: [ element isConfigurable ] ]) sorted: [
-		                        :firstGateway
-		                        :secondGateway | self isGateway: firstGateway orderedBefore: secondGateway ]
+	configurableGateways := (elements select: #isConfigurable) sorted: [ :firstGateway :secondGateway |
+		                        self isGateway: firstGateway orderedBefore: secondGateway ]
 ]
 
 { #category : 'initialization' }
