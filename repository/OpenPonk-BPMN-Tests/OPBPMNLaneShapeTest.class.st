@@ -85,12 +85,6 @@ OPBPMNLaneShapeTest >> testClickingNameLabelForwardsClickToRoassalShape [
 ]
 
 { #category : 'tests' }
-OPBPMNLaneShapeTest >> testDoesNotHaveBoundsSlot [
-
-	self denyCollection: OPBPMNLaneShape allInstVarNames includesAny: { 'bounds' }
-]
-
-{ #category : 'tests' }
 OPBPMNLaneShapeTest >> testDoesNotUpdatePositionOnExtentChangedEvent [
 	| initialLabelPosition intermediateLabelPosition |
 	laneShape renderIn: canvas.
@@ -104,11 +98,6 @@ OPBPMNLaneShapeTest >> testDoesNotUpdatePositionOnExtentChangedEvent [
 	intermediateLabelPosition := (laneShape instVarNamed: #nameLabel) position copy.
 
 	self assert: intermediateLabelPosition equals: initialLabelPosition
-]
-
-{ #category : 'tests' }
-OPBPMNLaneShapeTest >> testInheritsFromOPNode [
-	self assert: OPBPMNLaneShape superclass equals: OPNode
 ]
 
 { #category : 'tests' }

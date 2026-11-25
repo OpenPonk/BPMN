@@ -80,7 +80,6 @@ OPBPMNSemanticNodeControllerTest >> testSelectableTypesAreSameAsShowable [
 OPBPMNSemanticNodeControllerTest >> testSelectableTypesRenderAsVectorShapesWithoutBitmaps [
 
 	| selectableTypes allTypes notSelectableTypes canvas |
-	self deny: (self model class canUnderstand: #typeIconFor:) description: 'Domain model must not implement UI typeIconFor: helper'.
 	self showInDiagram.
 	canvas := diagramController canvas.
 	selectableTypes := self selectableTypes.

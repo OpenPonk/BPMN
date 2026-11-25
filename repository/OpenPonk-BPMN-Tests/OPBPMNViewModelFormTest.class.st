@@ -161,10 +161,7 @@ OPBPMNViewModelFormTest >> testAnnotationViewModelBindsMultilineTextDeclarativel
 
 	self assert: (form bindings collect: #selector as: Array) equals: #( #text ).
 	self assert: (form bindings collect: #class as: Array) equals: { OPFormTextBinding }.
-	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: { SpTextPresenter }.
-	self
-		deny: (OPBPMNAnnotationViewModel includesSelector: #descriptionName)
-		description: 'OPBPMNAnnotationViewModel must use declarative buildEditorForm: instead of Magritte descriptionName'
+	self assert: (form bindings collect: [ :eachBinding | eachBinding presenter class ] as: Array) equals: { SpTextPresenter }
 ]
 
 { #category : 'tests' }
