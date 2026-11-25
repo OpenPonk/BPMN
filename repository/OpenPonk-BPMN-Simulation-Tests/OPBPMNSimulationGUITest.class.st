@@ -84,40 +84,96 @@ OPBPMNSimulationGUITest >> tearDown [
 { #category : 'tests' }
 OPBPMNSimulationGUITest >> testButtonItemsAndConfigurationLifecycle [
 
-	| buttonItems buttonsByLabel configMenuFirst |
+	| buttonsByLabel windowsCountBefore initialConfiguration |
 	rootModel elements do: [ :each | diagramController showInDiagramModel: each ].
 	simulationGui := OPBPMNSimulationGUI diagramController: diagramController.
 	self assert: simulationGui simulatorClass identicalTo: OPBPMNSimulator.
+	self assert: simulationGui hasConfiguration description: 'BPMN simulation GUI must advertise configuration sidebar'.
+	self deny: simulationGui isConfigurationVisible description: 'Configuration sidebar must start collapsed'.
+	self assert: (simulationGui buttons collect: #label as: Array) equals: #( 'Play' 'Step' 'Reset' 'Configure' ).
+	self assert: simulationGui controlsPresenter showsDelayControl description: 'Step delay control must be shown'.
 
-	buttonItems := simulationGui buttonItems.
-	self assert: (buttonItems collect: #label as: Array) equals: #( 'Pause' 'Play' 'Step' 'Configure' ).
-
-	buttonsByLabel := (buttonItems collect: [ :eachButton | eachButton label -> eachButton ]) asDictionary.
+	buttonsByLabel := (simulationGui buttons collect: [ :eachButton | eachButton label -> eachButton ]) asDictionary.
 
 	(buttonsByLabel at: 'Step') performAction.
 	self assert: (simulationGui diagramSimulator simulatorOf: startEvent) bpmnTokens equals: 0.
 	self assert: (simulationGui diagramSimulator simulatorOf: activity) bpmnTokens equals: 1.
-	self assert: (diagramController controllerForModel: activity) diagramElement borderColor equals: Color green darker.
+	self assert: (diagramController controllerForModel: activity) roassalShape borderColor equals: Color green darker.
+	self assert: (diagramController controllerForModel: activity) diagramElement borderColor equals: Color black.
 
-	(buttonsByLabel at: 'Pause') performAction.
-	self
-		deny: (simulationGui diagramSimulator instVarNamed: #shouldRun)
-		description: 'Pause button must stop simulation running flag'.
-
+	windowsCountBefore := self currentWorld submorphs count: [ :eachMorph | eachMorph isSystemWindow ].
 	(buttonsByLabel at: 'Configure') performAction.
-	configMenuFirst := simulationGui configMenu.
-	self assert: configMenuFirst class identicalTo: OPBPMNSimConfigurationGUI.
-	self assert: configMenuFirst diagramSimulator identicalTo: simulationGui diagramSimulator.
-	self assert: configMenuFirst window isOpen description: 'Configure button must open configuration window'.
+	self assert: simulationGui isConfigurationVisible description: 'Configure button must expand embedded sidebar'.
+	self assert: (self currentWorld submorphs count: [ :eachMorph | eachMorph isSystemWindow ]) equals: windowsCountBefore.
+	initialConfiguration := simulationGui configurationPresenter.
+	self assert: initialConfiguration class identicalTo: OPBPMNSimConfigurationGUI.
+	self assert: initialConfiguration diagramSimulator identicalTo: simulationGui diagramSimulator.
 
-	simulationGui loadSimulation.
-	self assert: simulationGui configMenu identicalTo: nil.
-	self deny: configMenuFirst window isOpen description: 'Reloading simulation must close stale configuration window'.
+	(buttonsByLabel at: 'Reset') performAction.
+	self assert: (simulationGui diagramSimulator simulatorOf: startEvent) bpmnTokens equals: 1.
+	self assert: (simulationGui diagramSimulator simulatorOf: activity) bpmnTokens equals: 0.
+	self assert: (diagramController controllerForModel: startEvent) roassalShape borderColor equals: Color green darker.
+	self assert: (diagramController controllerForModel: activity) roassalShape borderColor equals: Color black.
 
-	simulationGui openConfiguration.
-	self assert: simulationGui configMenu window isOpen description: 'openConfiguration must create a fresh configuration window'.
+	rootModel add: (OPBPMNActivityModel new name: 'Added Task').
+	self assert: simulationGui isConfigurationVisible description: 'Open configuration sidebar must stay open across reload'.
+	self deny: simulationGui configurationPresenter identicalTo: initialConfiguration.
+	self assert: simulationGui configurationPresenter diagramSimulator identicalTo: simulationGui diagramSimulator.
+
 	simulationGui close.
-	self assert: simulationGui configMenu identicalTo: nil
+	self assert: (diagramController controllerForModel: startEvent) roassalShape borderColor equals: Color black.
+	self assert: simulationGui configurationPresenter identicalTo: nil
+]
+
+{ #category : 'tests' }
+OPBPMNSimulationGUITest >> testConfigurationSidebarRendersBranchingGatewayAndResetPreservesSelection [
+
+	| gateway branchTaskA branchTaskB flowToGateway flowBranchA flowBranchB buttonsByLabel entry gatewaySimulator branchButtons |
+	gateway := OPBPMNGatewayModel new
+		           name: 'Decision';
+		           type: OPBPMNNodeType Exclusive;
+		           yourself.
+	branchTaskA := OPBPMNActivityModel new name: 'Option A'.
+	branchTaskB := OPBPMNActivityModel new name: 'Option B'.
+	flowToGateway := OPBPMNFlowModel from: activity to: gateway.
+	flowBranchA := (OPBPMNFlowModel from: gateway to: branchTaskA)
+		               name: 'Path A';
+		               type: #Default;
+		               yourself.
+	flowBranchB := (OPBPMNFlowModel from: gateway to: branchTaskB)
+		               name: 'Path B';
+		               yourself.
+	{
+		flowToGateway.
+		flowBranchA.
+		flowBranchB } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			rootModel add: eachFlow ].
+	{
+		gateway.
+		branchTaskA.
+		branchTaskB } do: [ :eachElement | rootModel add: eachElement ].
+	rootModel elements do: [ :each | diagramController showInDiagramModel: each ].
+
+	simulationGui := OPBPMNSimulationGUI diagramController: diagramController.
+	buttonsByLabel := (simulationGui buttons collect: [ :eachButton | eachButton label -> eachButton ]) asDictionary.
+	(buttonsByLabel at: 'Configure') performAction.
+
+	entry := simulationGui configurationPresenter gatewayEntries first.
+	gatewaySimulator := entry at: #gateway.
+	branchButtons := (entry at: #branches) collect: #value.
+	self assert: (entry at: #headerLabel) label equals: 'Decision (Exclusive)'.
+	self assert: (branchButtons collect: #label as: Array) equals: #( 'Path A (→ Option A)' 'Path B (→ Option B)' ).
+
+	branchButtons second state: true.
+	self assert: gatewaySimulator outgoingActive asArray equals: { (simulationGui diagramSimulator simulatorOf: flowBranchB) }.
+
+	(buttonsByLabel at: 'Step') performAction.
+	(buttonsByLabel at: 'Reset') performAction.
+	self assert: (simulationGui diagramSimulator simulatorOf: startEvent) bpmnTokens equals: 1.
+	self assert: gatewaySimulator outgoingActive asArray equals: { (simulationGui diagramSimulator simulatorOf: flowBranchB) }.
+	self assert: branchButtons second state description: 'Reset must keep user-selected branch active in sidebar'
 ]
 
 { #category : 'tests' }
@@ -145,36 +201,60 @@ OPBPMNSimulationGUITest >> testSimulationCommandActivationAndExecution [
 ]
 
 { #category : 'tests' }
-OPBPMNSimulationGUITest >> testUpdateColorsIgnoresHiddenAndUnrenderedElements [
+OPBPMNSimulationGUITest >> testUpdateSimulationVisualsHighlightsByTokenCountAndPreservesCustomStrokeColors [
 
-	| startController |
-	startController := diagramController showInDiagramModel: startEvent.
-	simulationGui := OPBPMNSimulationGUI diagramController: diagramController.
-
-	self assert: startController diagramElement borderColor equals: Color green darker.
-
-	startController removeRender.
-	(simulationGui diagramSimulator simulatorOf: startEvent) bpmnTokens: 2.
-	simulationGui updateColors.
-	self assert: startController diagramElement borderColor equals: Color green darker
-]
-
-{ #category : 'tests' }
-OPBPMNSimulationGUITest >> testUpdateColorsUpdatesPoolAndNodeColorsByTokenCount [
-
-	| poolController startController activityController |
+	| poolController startController activityController flowController firstFlow |
 	rootModel elements do: [ :each | diagramController showInDiagramModel: each ].
+	firstFlow := startEvent outgoing first.
 	poolController := diagramController controllerForModel: poolModel.
 	startController := diagramController controllerForModel: startEvent.
 	activityController := diagramController controllerForModel: activity.
+	flowController := diagramController controllerForModel: firstFlow.
+
+	activityController roassalShape borderColor: Color blue.
+	flowController roassalShape color: Color purple.
 
 	simulationGui := OPBPMNSimulationGUI diagramController: diagramController.
 
-	self assert: poolController diagramElement roassalShape borderColor equals: Color black.
-	self assert: startController diagramElement borderColor equals: Color green darker.
-	self assert: activityController diagramElement borderColor equals: Color black.
+	self assert: poolController roassalShape borderColor equals: Color black.
+	self assert: startController roassalShape borderColor equals: Color green darker.
+	self assert: activityController roassalShape borderColor equals: Color blue.
+	self assert: flowController roassalShape color equals: Color purple.
 
 	(simulationGui diagramSimulator simulatorOf: activity) bpmnTokens: 2.
-	simulationGui updateColors.
-	self assert: activityController diagramElement borderColor equals: Color orange darker
+	(simulationGui diagramSimulator simulatorOf: firstFlow) bpmnTokens: 1.
+	simulationGui updateSimulationVisuals.
+	self assert: activityController roassalShape borderColor equals: Color orange darker.
+	self assert: activityController diagramElement borderColor equals: Color black.
+	self assert: flowController roassalShape color equals: Color green darker.
+
+	(simulationGui diagramSimulator simulatorOf: activity) bpmnTokens: 0.
+	(simulationGui diagramSimulator simulatorOf: firstFlow) bpmnTokens: 0.
+	simulationGui updateSimulationVisuals.
+	self assert: activityController roassalShape borderColor equals: Color blue.
+	self assert: flowController roassalShape color equals: Color purple.
+
+	simulationGui close.
+	self assert: startController roassalShape borderColor equals: Color black
+]
+
+{ #category : 'tests' }
+OPBPMNSimulationGUITest >> testUpdateSimulationVisualsIgnoresHiddenAndUnrenderedElements [
+
+	| startController unattachedGui |
+	unattachedGui := OPBPMNSimulationGUI new.
+	unattachedGui updateSimulationVisuals.
+	self assert: unattachedGui diagramSimulator identicalTo: nil.
+
+	startController := diagramController showInDiagramModel: startEvent.
+	simulationGui := OPBPMNSimulationGUI diagramController: diagramController.
+
+	self assert: startController roassalShape borderColor equals: Color green darker.
+	self assert: startController diagramElement borderColor equals: Color black.
+
+	startController removeRender.
+	(simulationGui diagramSimulator simulatorOf: startEvent) bpmnTokens: 2.
+	simulationGui updateSimulationVisuals.
+	self assert: startController roassalShape identicalTo: nil.
+	self assert: startController diagramElement borderColor equals: Color black
 ]

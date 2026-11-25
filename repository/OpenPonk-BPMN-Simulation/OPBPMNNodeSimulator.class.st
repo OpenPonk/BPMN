@@ -91,6 +91,14 @@ OPBPMNNodeSimulator >> isSteppable [
 	^ self bpmnTokens > 0 and: self blocked not
 ]
 
+{ #category : 'actions' }
+OPBPMNNodeSimulator >> loadState [
+
+	super loadState.
+	bpmnTokens := 0.
+	blocked := false
+]
+
 { #category : 'initialization' }
 OPBPMNNodeSimulator >> setDefaultStepping [
 	"sets default stepping settings"

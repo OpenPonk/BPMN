@@ -56,26 +56,120 @@ OPBPMNSimulatorTest >> simulatorClass [
 { #category : 'tests' }
 OPBPMNSimulatorTest >> testConfigurableGatewaysExcludesParallelGateways [
 
-	| testModel exclusiveGateway inclusiveGateway parallelGateway diagramSimulator |
+	| testModel exclusiveGateway inclusiveGateway parallelGateway mergeGateway deadEndGateway task1 task2 task3 task4 task5 task6 task7 diagramSimulator |
 	testModel := OPBPMNModel new name: 'Gateways'.
 	exclusiveGateway := OPBPMNGatewayModel new
+		                    name: 'ExclusiveSplit';
 		                    type: OPBPMNNodeType Exclusive;
 		                    yourself.
 	inclusiveGateway := OPBPMNGatewayModel new
+		                    name: 'InclusiveSplit';
 		                    type: OPBPMNNodeType Inclusive;
 		                    yourself.
 	parallelGateway := OPBPMNGatewayModel new
+		                   name: 'ParallelSplit';
 		                   type: OPBPMNNodeType Parallel;
 		                   yourself.
-	testModel
-		add: exclusiveGateway;
-		add: inclusiveGateway;
-		add: parallelGateway.
+	mergeGateway := OPBPMNGatewayModel new
+		                name: 'MergeGateway';
+		                type: OPBPMNNodeType Exclusive;
+		                yourself.
+	deadEndGateway := OPBPMNGatewayModel new
+		                  name: 'DeadEndGateway';
+		                  type: OPBPMNNodeType Exclusive;
+		                  yourself.
+	task1 := OPBPMNActivityModel new name: 'T1'.
+	task2 := OPBPMNActivityModel new name: 'T2'.
+	task3 := OPBPMNActivityModel new name: 'T3'.
+	task4 := OPBPMNActivityModel new name: 'T4'.
+	task5 := OPBPMNActivityModel new name: 'T5'.
+	task6 := OPBPMNActivityModel new name: 'T6'.
+	task7 := OPBPMNActivityModel new name: 'T7'.
+	{
+		exclusiveGateway.
+		inclusiveGateway.
+		parallelGateway.
+		mergeGateway.
+		deadEndGateway.
+		task1.
+		task2.
+		task3.
+		task4.
+		task5.
+		task6.
+		task7 } do: [ :eachElement | testModel add: eachElement ].
+	{
+		(exclusiveGateway -> task1).
+		(exclusiveGateway -> task2).
+		(inclusiveGateway -> task3).
+		(inclusiveGateway -> task4).
+		(parallelGateway -> task5).
+		(parallelGateway -> task6).
+		(mergeGateway -> task7) } do: [ :eachPair |
+			| sequenceFlow |
+			sequenceFlow := OPBPMNFlowModel from: eachPair key to: eachPair value.
+			eachPair key addFlow: sequenceFlow.
+			eachPair value addFlow: sequenceFlow.
+			testModel add: sequenceFlow ].
 
 	diagramSimulator := self simulatorClass model: testModel.
 	self assertCollection: (diagramSimulator configurableGateways collect: #model) hasSameElements: {
 			exclusiveGateway.
 			inclusiveGateway }
+]
+
+{ #category : 'tests' }
+OPBPMNSimulatorTest >> testConfigurableGatewaysInBuiltInExamples [
+
+	| orderFulfillmentSimulator allElementsSimulator |
+	orderFulfillmentSimulator := self simulatorClass model: OPBPMNExamples exampleOrderFulfillment.
+	self assert: orderFulfillmentSimulator configurableGateways size equals: 1.
+	self assert: orderFulfillmentSimulator configurableGateways first model name equals: 'In Stock?'.
+
+	allElementsSimulator := self simulatorClass model: OPBPMNExamples exampleAllElementsAndTypes.
+	self assertEmpty: allElementsSimulator configurableGateways
+]
+
+{ #category : 'tests' }
+OPBPMNSimulatorTest >> testConfigurableGatewaysOrderIsDeterministic [
+
+	| testModel zetaGateway alphaGateway unnamedGateway targets diagramSimulator |
+	testModel := OPBPMNModel new name: 'Deterministic Gateways'.
+	zetaGateway := OPBPMNGatewayModel new
+		               name: 'Zeta';
+		               type: OPBPMNNodeType Exclusive;
+		               yourself.
+	alphaGateway := OPBPMNGatewayModel new
+		                name: 'Alpha';
+		                type: OPBPMNNodeType Inclusive;
+		                yourself.
+	unnamedGateway := OPBPMNGatewayModel new
+		                  name: '';
+		                  type: OPBPMNNodeType Exclusive;
+		                  yourself.
+	targets := (1 to: 6) collect: [ :index | OPBPMNActivityModel new name: 'Task ' , index asString ].
+	{
+		zetaGateway.
+		alphaGateway.
+		unnamedGateway } , targets do: [ :eachElement | testModel add: eachElement ].
+	{
+		(zetaGateway -> targets first).
+		(zetaGateway -> (targets at: 2)).
+		(alphaGateway -> (targets at: 3)).
+		(alphaGateway -> (targets at: 4)).
+		(unnamedGateway -> (targets at: 5)).
+		(unnamedGateway -> (targets at: 6)) } do: [ :eachPair |
+			| sequenceFlow |
+			sequenceFlow := OPBPMNFlowModel from: eachPair key to: eachPair value.
+			eachPair key addFlow: sequenceFlow.
+			eachPair value addFlow: sequenceFlow.
+			testModel add: sequenceFlow ].
+
+	diagramSimulator := self simulatorClass model: testModel.
+	self assert: (diagramSimulator configurableGateways collect: #model as: Array) equals: {
+			alphaGateway.
+			zetaGateway.
+			unnamedGateway }
 ]
 
 { #category : 'tests' }
@@ -149,6 +243,159 @@ OPBPMNSimulatorTest >> testOrderFulfillmentExampleStartEventIsSteppable [
 
 	sim step.
 	self assert: startSim bpmnTokens equals: 0
+]
+
+{ #category : 'tests' }
+OPBPMNSimulatorTest >> testResetRestoresInitialTokensBlockedStatesAndPreservesGatewayConfiguration [
+
+	| testModel startEvent activity exclusiveGateway inclusiveGateway parallelGateway subProcess innerStart innerEnd catchingEvent dataObject task1 task2 flowStartToActivity flowActivityToExclusive flowExclusiveA flowExclusiveB flowInclusiveInA flowInclusiveInB flowInclusiveOutA flowInclusiveOutB flowParallelInA flowParallelInB flowInner dataFlow diagramSimulator startSimulator innerStartSimulator activitySimulator exclusiveSimulator inclusiveSimulator parallelSimulator catchingSimulator dataFlowSimulator flowStartSimulator branchBSimulator incASimulator incBSimulator |
+	testModel := OPBPMNModel new name: 'Reset Model'.
+	startEvent := OPBPMNStartEventModel new
+		              name: 'Start';
+		              type: OPBPMNNodeType Receive;
+		              yourself.
+	activity := OPBPMNActivityModel new name: 'Activity'.
+	exclusiveGateway := OPBPMNGatewayModel new
+		                    name: 'Exclusive';
+		                    type: OPBPMNNodeType Exclusive;
+		                    yourself.
+	inclusiveGateway := OPBPMNGatewayModel new
+		                    name: 'Inclusive';
+		                    type: OPBPMNNodeType Inclusive;
+		                    yourself.
+	parallelGateway := OPBPMNGatewayModel new
+		                   name: 'Parallel';
+		                   type: OPBPMNNodeType Parallel;
+		                   yourself.
+	subProcess := OPBPMNSubProcessModel new name: 'SubProcess'.
+	innerStart := OPBPMNStartEventModel new
+		              name: 'InnerStart';
+		              type: OPBPMNNodeType None;
+		              yourself.
+	innerEnd := OPBPMNEndEventModel new
+		            name: 'InnerEnd';
+		            type: OPBPMNNodeType None;
+		            yourself.
+	catchingEvent := OPBPMNIntermediateEventModel new
+		                 name: 'WaitMessage';
+		                 type: OPBPMNNodeType Receive;
+		                 yourself.
+	dataObject := OPBPMNDataObjectModel new
+		              name: 'OrderData';
+		              type: OPBPMNNodeType DataObject;
+		              yourself.
+	task1 := OPBPMNActivityModel new name: 'Task 1'.
+	task2 := OPBPMNActivityModel new name: 'Task 2'.
+
+	flowInner := OPBPMNFlowModel from: innerStart to: innerEnd.
+	innerStart addFlow: flowInner.
+	innerEnd addFlow: flowInner.
+	subProcess
+		add: innerStart;
+		add: innerEnd;
+		add: flowInner.
+
+	flowStartToActivity := OPBPMNFlowModel from: startEvent to: activity.
+	flowActivityToExclusive := OPBPMNFlowModel from: activity to: exclusiveGateway.
+	flowExclusiveA := (OPBPMNFlowModel from: exclusiveGateway to: task1)
+		                  name: 'Branch A';
+		                  type: #Default;
+		                  yourself.
+	flowExclusiveB := (OPBPMNFlowModel from: exclusiveGateway to: task2)
+		                  name: 'Branch B';
+		                  yourself.
+	flowInclusiveInA := OPBPMNFlowModel from: task1 to: inclusiveGateway.
+	flowInclusiveInB := OPBPMNFlowModel from: task2 to: inclusiveGateway.
+	flowInclusiveOutA := (OPBPMNFlowModel from: inclusiveGateway to: parallelGateway)
+		                     name: 'Inc A';
+		                     yourself.
+	flowInclusiveOutB := (OPBPMNFlowModel from: inclusiveGateway to: catchingEvent)
+		                     name: 'Inc B';
+		                     yourself.
+	flowParallelInA := OPBPMNFlowModel from: task1 to: parallelGateway.
+	flowParallelInB := OPBPMNFlowModel from: task2 to: parallelGateway.
+	dataFlow := OPBPMNDataFlowModel from: dataObject to: activity.
+
+	{
+		flowStartToActivity.
+		flowActivityToExclusive.
+		flowExclusiveA.
+		flowExclusiveB.
+		flowInclusiveInA.
+		flowInclusiveInB.
+		flowInclusiveOutA.
+		flowInclusiveOutB.
+		flowParallelInA.
+		flowParallelInB.
+		dataFlow } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			testModel add: eachFlow ].
+	{
+		startEvent.
+		activity.
+		exclusiveGateway.
+		inclusiveGateway.
+		parallelGateway.
+		subProcess.
+		catchingEvent.
+		dataObject.
+		task1.
+		task2 } do: [ :eachElement | testModel add: eachElement ].
+
+	diagramSimulator := self simulatorClass model: testModel.
+	startSimulator := diagramSimulator simulatorOf: startEvent.
+	innerStartSimulator := diagramSimulator simulatorOf: innerStart.
+	activitySimulator := diagramSimulator simulatorOf: activity.
+	exclusiveSimulator := diagramSimulator simulatorOf: exclusiveGateway.
+	inclusiveSimulator := diagramSimulator simulatorOf: inclusiveGateway.
+	parallelSimulator := diagramSimulator simulatorOf: parallelGateway.
+	catchingSimulator := diagramSimulator simulatorOf: catchingEvent.
+	dataFlowSimulator := diagramSimulator simulatorOf: dataFlow.
+	flowStartSimulator := diagramSimulator simulatorOf: flowStartToActivity.
+	branchBSimulator := diagramSimulator simulatorOf: flowExclusiveB.
+	incASimulator := diagramSimulator simulatorOf: flowInclusiveOutA.
+	incBSimulator := diagramSimulator simulatorOf: flowInclusiveOutB.
+
+	exclusiveSimulator outgoingActive: (OrderedCollection with: branchBSimulator).
+	inclusiveSimulator outgoingActive: (OrderedCollection with: incASimulator with: incBSimulator).
+
+	startSimulator bpmnTokens: 0.
+	innerStartSimulator bpmnTokens: 2.
+	activitySimulator
+		bpmnTokens: 3;
+		blocked: true.
+	catchingSimulator
+		bpmnTokens: 1;
+		blocked: false.
+	flowStartSimulator bpmnTokens: 2.
+	dataFlowSimulator bpmnTokens: 4.
+	inclusiveSimulator addBpmnTokens: 2 from: (diagramSimulator simulatorOf: flowInclusiveInA).
+	parallelSimulator addBpmnTokens: 3 from: (diagramSimulator simulatorOf: flowParallelInA).
+
+	diagramSimulator reset.
+
+	self assert: startSimulator bpmnTokens equals: 1.
+	self deny: startSimulator blocked description: 'Top-level start event must be unblocked after reset'.
+	self assert: innerStartSimulator bpmnTokens equals: 0.
+	self assert: activitySimulator bpmnTokens equals: 0.
+	self deny: activitySimulator blocked description: 'Regular activity must be unblocked after reset'.
+	self assert: catchingSimulator bpmnTokens equals: 0.
+	self assert: catchingSimulator blocked description: 'Catching intermediate event must restore initial blocked state on reset'.
+	self assert: flowStartSimulator bpmnTokens equals: 0.
+	self assert: dataFlowSimulator bpmnTokens equals: 0.
+	self assert: inclusiveSimulator bpmnTokens equals: 0.
+	self assert: parallelSimulator bpmnTokens equals: 0.
+	self
+		assert: (inclusiveSimulator incomingBpmnTokens values allSatisfy: [ :eachCount | eachCount = 0 ])
+		description: 'Inclusive gateway incoming merge counters must reset to zero'.
+	self
+		assert: (parallelSimulator incomingBpmnTokens values allSatisfy: [ :eachCount | eachCount = 0 ])
+		description: 'Parallel gateway incoming merge counters must reset to zero'.
+	self assert: exclusiveSimulator outgoingActive asArray equals: { branchBSimulator }.
+	self assert: inclusiveSimulator outgoingActive asArray equals: {
+			incASimulator.
+			incBSimulator }
 ]
 
 { #category : 'tests' }

@@ -9,18 +9,30 @@ Class {
 	#tag : 'Simulation'
 }
 
+{ #category : 'testing' }
+OPBPMNEventSimulator >> isCatchingEvent [
+
+	^ {
+		  OPBPMNNodeType Receive.
+		  OPBPMNNodeType Escalation.
+		  OPBPMNNodeType Link.
+		  OPBPMNNodeType Compensation.
+		  OPBPMNNodeType Signal.
+		  OPBPMNNodeType Multiple.
+		  OPBPMNNodeType ParallelMultiple } includes: self model type
+]
+
 { #category : 'creation' }
 OPBPMNEventSimulator >> loadConnectedItems [
-	"loads and/or connects appropriate tokens and elements"
+	"Loads initial catching state for event simulators."
 
-	"if event is catching start blocked"
-	({
-		 OPBPMNNodeType Receive.
-		 OPBPMNNodeType Escalation.
-		 OPBPMNNodeType Link.
-		 OPBPMNNodeType Compensation.
-		 OPBPMNNodeType Signal.
-		 OPBPMNNodeType Multiple.
-		 OPBPMNNodeType ParallelMultiple } includes: self model type)
-		ifTrue: [ blocked := true ]
+	super loadConnectedItems.
+	self isCatchingEvent ifTrue: [ blocked := true ]
+]
+
+{ #category : 'actions' }
+OPBPMNEventSimulator >> loadState [
+
+	super loadState.
+	self isCatchingEvent ifTrue: [ blocked := true ]
 ]

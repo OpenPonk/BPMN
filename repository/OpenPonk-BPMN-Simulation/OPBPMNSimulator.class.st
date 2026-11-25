@@ -48,12 +48,22 @@ OPBPMNSimulator >> initialize [
 ]
 
 { #category : 'private - creation' }
-OPBPMNSimulator >> loadConfigurableGateways [
-	"selects elements which are configurable gateways"
+OPBPMNSimulator >> isGateway: firstGateway orderedBefore: secondGateway [
 
-	configurableGateways := elements select: [ :element |
-		                        element isGateway and:
-			                        element isConfigurable ]
+	| firstKey secondKey |
+	firstKey := self sortKeyForGateway: firstGateway.
+	secondKey := self sortKeyForGateway: secondGateway.
+	firstKey with: secondKey do: [ :firstPart :secondPart | firstPart = secondPart ifFalse: [ ^ firstPart < secondPart ] ].
+	^ true
+]
+
+{ #category : 'private - creation' }
+OPBPMNSimulator >> loadConfigurableGateways [
+	"Selects branching configurable gateways in deterministic order."
+
+	configurableGateways := (elements select: [ :element | element isGateway and: [ element isConfigurable ] ]) sorted: [
+		                        :firstGateway
+		                        :secondGateway | self isGateway: firstGateway orderedBefore: secondGateway ]
 ]
 
 { #category : 'initialization' }
@@ -75,4 +85,18 @@ OPBPMNSimulator >> setDefaultStepping [
 		selectAll;
 		resetActions;
 		addAction: [ :item | item step ]
+]
+
+{ #category : 'private - creation' }
+OPBPMNSimulator >> sortKeyForGateway: aGatewaySimulator [
+
+	| trimmedName |
+	trimmedName := (aGatewaySimulator model name ifNil: [ '' ]) trimBoth.
+	^ {
+		  (trimmedName isEmpty
+			   ifTrue: [ 1 ]
+			   ifFalse: [ 0 ]).
+		  trimmedName asLowercase.
+		  aGatewaySimulator model type asString asLowercase.
+		  aGatewaySimulator model uuid asString }
 ]

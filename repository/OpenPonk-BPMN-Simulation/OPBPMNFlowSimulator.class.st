@@ -63,6 +63,13 @@ OPBPMNFlowSimulator >> isSimulable [
 	^ true
 ]
 
+{ #category : 'actions' }
+OPBPMNFlowSimulator >> loadState [
+
+	super loadState.
+	bpmnTokens := 0
+]
+
 { #category : 'initialization' }
 OPBPMNFlowSimulator >> setDefaultStepping [
 	"sets default stepping settings"

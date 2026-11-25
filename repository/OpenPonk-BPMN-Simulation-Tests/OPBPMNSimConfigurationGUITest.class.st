@@ -17,7 +17,7 @@ Class {
 { #category : 'running' }
 OPBPMNSimConfigurationGUITest >> buildGatewayModel [
 
-	| model start exclusiveGateway inclusiveGateway parallelGateway emptyGateway task1 task2 task3 task4 flow1 flow2 flow3 flow4 flow5 flow6 |
+	| model start exclusiveGateway inclusiveGateway parallelGateway mergeGateway emptyGateway task1 task2 task3 task4 task5 task6 task7 flow1 flow2 flow3 flow4 flow5 flow6 flow7 flow8 flow9 |
 	model := OPBPMNModel new name: 'Gateway Config Model'.
 	start := OPBPMNStartEventModel new name: 'Start'.
 	exclusiveGateway := OPBPMNGatewayModel new
@@ -32,6 +32,10 @@ OPBPMNSimConfigurationGUITest >> buildGatewayModel [
 		                   name: 'AND';
 		                   type: OPBPMNNodeType Parallel;
 		                   yourself.
+	mergeGateway := OPBPMNGatewayModel new
+		                name: 'MergeXOR';
+		                type: OPBPMNNodeType Exclusive;
+		                yourself.
 	emptyGateway := OPBPMNGatewayModel new
 		                name: 'EmptyXOR';
 		                type: OPBPMNNodeType ExclusiveEmpty;
@@ -40,6 +44,9 @@ OPBPMNSimConfigurationGUITest >> buildGatewayModel [
 	task2 := OPBPMNActivityModel new name: 'T2'.
 	task3 := OPBPMNActivityModel new name: 'T3'.
 	task4 := OPBPMNActivityModel new name: 'T4'.
+	task5 := OPBPMNActivityModel new name: 'T5'.
+	task6 := OPBPMNActivityModel new name: 'T6'.
+	task7 := OPBPMNActivityModel new name: 'T7'.
 	flow1 := (OPBPMNFlowModel from: start to: exclusiveGateway)
 		         name: 'F1';
 		         yourself.
@@ -56,40 +63,45 @@ OPBPMNSimConfigurationGUITest >> buildGatewayModel [
 	flow5 := (OPBPMNFlowModel from: inclusiveGateway to: task4)
 		         name: 'IncB';
 		         yourself.
-	flow6 := (OPBPMNFlowModel from: start to: parallelGateway)
-		         name: 'F6';
+	flow6 := (OPBPMNFlowModel from: parallelGateway to: task5)
+		         name: 'ParA';
 		         yourself.
-	start
-		addFlow: flow1;
-		addFlow: flow6.
-	exclusiveGateway
-		addFlow: flow1;
-		addFlow: flow2;
-		addFlow: flow3.
-	inclusiveGateway
-		addFlow: flow4;
-		addFlow: flow5.
-	parallelGateway addFlow: flow6.
-	task1 addFlow: flow2.
-	task2 addFlow: flow3.
-	task3 addFlow: flow4.
-	task4 addFlow: flow5.
-	model
-		add: start;
-		add: exclusiveGateway;
-		add: inclusiveGateway;
-		add: parallelGateway;
-		add: emptyGateway;
-		add: task1;
-		add: task2;
-		add: task3;
-		add: task4;
-		add: flow1;
-		add: flow2;
-		add: flow3;
-		add: flow4;
-		add: flow5;
-		add: flow6.
+	flow7 := (OPBPMNFlowModel from: parallelGateway to: task6)
+		         name: 'ParB';
+		         yourself.
+	flow8 := (OPBPMNFlowModel from: start to: mergeGateway)
+		         name: 'ToMerge';
+		         yourself.
+	flow9 := (OPBPMNFlowModel from: mergeGateway to: task7)
+		         name: 'FromMerge';
+		         yourself.
+	{
+		flow1.
+		flow2.
+		flow3.
+		flow4.
+		flow5.
+		flow6.
+		flow7.
+		flow8.
+		flow9 } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			model add: eachFlow ].
+	{
+		start.
+		exclusiveGateway.
+		inclusiveGateway.
+		parallelGateway.
+		mergeGateway.
+		emptyGateway.
+		task1.
+		task2.
+		task3.
+		task4.
+		task5.
+		task6.
+		task7 } do: [ :eachElement | model add: eachElement ].
 	^ model
 ]
 
@@ -114,62 +126,289 @@ OPBPMNSimConfigurationGUITest >> tearDown [
 ]
 
 { #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testEventBasedAndComplexGatewayLabelsAndExclusiveRefresh [
+
+	| model eventBasedGateway complexGateway unnamedActivity unnamedIntermediate unnamedGateway flow1 flow2 flow3 flow4 diagramSimulator entries eventEntry complexEntry secondEventFlow |
+	model := OPBPMNModel new name: 'EventBased And Complex'.
+	eventBasedGateway := OPBPMNGatewayModel new
+		                     name: 'Wait Choice';
+		                     type: OPBPMNNodeType Eventbased;
+		                     yourself.
+	complexGateway := OPBPMNGatewayModel new
+		                  name: '';
+		                  type: OPBPMNNodeType Complex;
+		                  yourself.
+	unnamedActivity := OPBPMNActivityModel new name: ''.
+	unnamedIntermediate := OPBPMNIntermediateEventModel new name: ''.
+	unnamedGateway := OPBPMNGatewayModel new
+		                  name: '';
+		                  type: OPBPMNNodeType Parallel;
+		                  yourself.
+	flow1 := OPBPMNFlowModel from: eventBasedGateway to: unnamedActivity.
+	flow2 := OPBPMNFlowModel from: eventBasedGateway to: unnamedIntermediate.
+	flow3 := OPBPMNFlowModel from: complexGateway to: unnamedGateway.
+	flow4 := (OPBPMNFlowModel from: complexGateway to: unnamedActivity)
+		         name: 'Fallback';
+		         yourself.
+	{
+		flow1.
+		flow2.
+		flow3.
+		flow4 } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			model add: eachFlow ].
+	{
+		eventBasedGateway.
+		complexGateway.
+		unnamedActivity.
+		unnamedIntermediate.
+		unnamedGateway } do: [ :eachElement | model add: eachElement ].
+
+	diagramSimulator := OPBPMNSimulator model: model.
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	entries := configGui gatewayEntries.
+	self assert: entries size equals: 2.
+
+	eventEntry := entries first.
+	complexEntry := entries second.
+	self assert: (eventEntry at: #headerLabel) label equals: 'Wait Choice (Event-based)'.
+	self assert: (complexEntry at: #headerLabel) label equals: 'Complex gateway'.
+	self
+		assert: ((eventEntry at: #branches) collect: [ :eachPair | eachPair value label ] as: Array)
+		equals: #( '→ Activity' '→ Intermediate event' ).
+	self
+		assert: ((complexEntry at: #branches) collect: [ :eachPair | eachPair value label ] as: Array)
+		equals: #( '→ Parallel gateway' 'Fallback' ).
+
+	secondEventFlow := (eventEntry at: #branches) second key.
+	(eventEntry at: #gateway) outgoingActive: (OrderedCollection with: secondEventFlow).
+	configGui refreshFromSimulator.
+	self
+		assert: (eventEntry at: #branches) second value state
+		description: 'Refresh must select matching exclusive branch radio button'.
+	self
+		deny: (eventEntry at: #branches) first value state
+		description: 'Refresh must deselect previous exclusive branch radio button'
+]
+
+{ #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testExclusiveAndInclusiveGatewayControlsLabelsAndDeterministicOrder [
+
+	| model exclusiveGateway mergeGateway inclusiveGateway procureSubProcess prepareSubProcess endEvent flowOutOfStock flowInStock flowUnnamedToNamed flowUnnamedToUnnamed diagramSimulator entries exclusiveEntry inclusiveEntry exclusiveButtons inclusiveButtons outOfStockButton inStockButton firstInclusiveButton secondInclusiveButton warningLabel |
+	model := OPBPMNModel new name: 'Labels And Order'.
+	exclusiveGateway := OPBPMNGatewayModel new
+		                    name: 'In Stock?';
+		                    type: OPBPMNNodeType Exclusive;
+		                    yourself.
+	mergeGateway := OPBPMNGatewayModel new
+		                name: '';
+		                type: OPBPMNNodeType Exclusive;
+		                yourself.
+	inclusiveGateway := OPBPMNGatewayModel new
+		                    name: '';
+		                    type: OPBPMNNodeType Inclusive;
+		                    yourself.
+	procureSubProcess := OPBPMNSubProcessModel new name: 'Procure Items'.
+	prepareSubProcess := OPBPMNCollapsedSubProcessModel new name: 'Prepare Shipment'.
+	endEvent := OPBPMNEndEventModel new name: ''.
+
+	flowOutOfStock := (OPBPMNFlowModel from: exclusiveGateway to: procureSubProcess)
+		                  name: 'Out of Stock';
+		                  yourself.
+	flowInStock := (OPBPMNFlowModel from: exclusiveGateway to: mergeGateway)
+		               name: 'In Stock';
+		               type: #Default;
+		               yourself.
+	flowUnnamedToNamed := (OPBPMNFlowModel from: inclusiveGateway to: prepareSubProcess)
+		                      name: '';
+		                      yourself.
+	flowUnnamedToUnnamed := (OPBPMNFlowModel from: inclusiveGateway to: endEvent)
+		                        name: '';
+		                        yourself.
+	{
+		flowOutOfStock.
+		flowInStock.
+		flowUnnamedToNamed.
+		flowUnnamedToUnnamed } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			model add: eachFlow ].
+	{
+		exclusiveGateway.
+		mergeGateway.
+		inclusiveGateway.
+		procureSubProcess.
+		prepareSubProcess.
+		endEvent } do: [ :eachElement | model add: eachElement ].
+
+	diagramSimulator := OPBPMNSimulator model: model.
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	self assert: configGui defaultLayout class identicalTo: SpBoxLayout.
+
+	entries := configGui gatewayEntries.
+	self assert: entries size equals: 2.
+	exclusiveEntry := entries first.
+	inclusiveEntry := entries second.
+
+	self assert: (exclusiveEntry at: #headerLabel) label equals: 'In Stock? (Exclusive)'.
+	self assert: (inclusiveEntry at: #headerLabel) label equals: 'Inclusive gateway'.
+
+	exclusiveButtons := (exclusiveEntry at: #branches) collect: #value.
+	self assert: (exclusiveButtons collect: #label as: Array) equals: #( 'Out of Stock (→ Procure Items)'
+	   'In Stock' ).
+	outOfStockButton := exclusiveButtons first.
+	inStockButton := exclusiveButtons second.
+	self assert: outOfStockButton associatedRadioButtons asArray equals: { inStockButton }.
+	self assert: inStockButton associatedRadioButtons asArray equals: { outOfStockButton }.
+	self assert: inStockButton state description: 'Default outgoing branch radio button must start selected'.
+
+	outOfStockButton state: true.
+	self assert: (exclusiveEntry at: #gateway) outgoingActive asArray equals: { (diagramSimulator simulatorOf: flowOutOfStock) }.
+
+	inclusiveButtons := (inclusiveEntry at: #branches) collect: #value.
+	self assert: (inclusiveButtons collect: #label as: Array) equals: #( '→ Prepare Shipment' '→ End event' ).
+	firstInclusiveButton := inclusiveButtons first.
+	secondInclusiveButton := inclusiveButtons second.
+	warningLabel := inclusiveEntry at: #warningLabel.
+	self assert: firstInclusiveButton state description: 'Initially active inclusive branch must start checked'.
+	self deny: secondInclusiveButton state description: 'Initially inactive inclusive branch must start unchecked'.
+	self assertEmpty: warningLabel label.
+
+	firstInclusiveButton state: false.
+	self assertEmpty: (inclusiveEntry at: #gateway) outgoingActive.
+	self
+		deny: (inclusiveEntry at: #gateway) canSendBpmnTokens
+		description: 'Inclusive gateway with no checked branches cannot send tokens'.
+	self denyEmpty: warningLabel label.
+
+	secondInclusiveButton state: true.
+	self
+		assert: (inclusiveEntry at: #gateway) outgoingActive asArray
+		equals: { (diagramSimulator simulatorOf: flowUnnamedToUnnamed) }.
+	self assertEmpty: warningLabel label
+]
+
+{ #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testExclusiveRadioButtonsAreGroupedEvenWhenOutgoingActiveIsEmpty [
+
+	| diagramSimulator exclusiveSimulator exclusiveEntry exclusiveButtons firstButton secondButton |
+	diagramSimulator := OPBPMNSimulator model: self buildGatewayModel.
+	exclusiveSimulator := diagramSimulator configurableGateways detect: [ :each | each model name = 'XOR' ].
+	exclusiveSimulator outgoingActive removeAll.
+
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	exclusiveEntry := configGui gatewayEntries detect: [ :eachEntry | (eachEntry at: #gateway) == exclusiveSimulator ].
+	exclusiveButtons := (exclusiveEntry at: #branches) collect: #value.
+	firstButton := exclusiveButtons first.
+	secondButton := exclusiveButtons second.
+
+	self assert: firstButton associatedRadioButtons asArray equals: { secondButton }.
+	self assert: secondButton associatedRadioButtons asArray equals: { firstButton }.
+	self deny: firstButton isInitialStateSet description: 'Empty outgoingActive radio group must not mark initial state set'.
+
+	secondButton state: true.
+	self assert: exclusiveSimulator outgoingActive asArray equals: { (exclusiveEntry at: #branches) second key }.
+	firstButton state: true.
+	self assert: exclusiveSimulator outgoingActive asArray equals: { (exclusiveEntry at: #branches) first key }.
+	self deny: secondButton state description: 'Activating first radio button must deactivate sibling radio button'
+]
+
+{ #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testIsSimulationConfigurationSubclassWithEmptyStateWhenNoBranchingGateways [
+
+	| diagramSimulator |
+	diagramSimulator := OPBPMNSimulator model: OPBPMNExamples exampleAllElementsAndTypes.
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	self
+		assert: (configGui isKindOf: OPSimulationConfigurationGUI)
+		description: 'BPMN configuration GUI must subclass OPSimulationConfigurationGUI'.
+	self deny: configGui hasConfigurableItems description: 'Diagram without branching gateways must report empty configuration'.
+	self assert: configGui defaultLayout children first label equals: configGui emptyStateMessage
+]
+
+{ #category : 'tests' }
 OPBPMNSimConfigurationGUITest >> testNewFollowedByDiagramSimulatorSetterInitializesPresenters [
 
-	| diagramSimulator gatewayPresenters |
+	| diagramSimulator |
 	diagramSimulator := OPBPMNSimulator model: self buildGatewayModel.
 	configGui := OPBPMNSimConfigurationGUI new
 		             diagramSimulator: diagramSimulator;
 		             yourself.
 	self assert: configGui diagramSimulator identicalTo: diagramSimulator.
-	gatewayPresenters := configGui instVarNamed: #gatewayPresenters.
-	self assert: gatewayPresenters size equals: 3
+	self assert: configGui hasConfigurableItems description: 'Branching gateways must make configuration non-empty'.
+	self
+		assert: (configGui gatewayEntries collect: [ :eachEntry | (eachEntry at: #gateway) model name ] as: Array)
+		equals: #( 'OR' 'XOR' )
 ]
 
 { #category : 'tests' }
-OPBPMNSimConfigurationGUITest >> testOpenConfigurationWithExclusiveAndInclusiveGateways [
+OPBPMNSimConfigurationGUITest >> testNilNamesUnnamedSubProcessAndNilSimulatorRefresh [
 
-	| diagramSimulator gatewayPresenters exclusiveSimulator inclusiveSimulator emptySimulator exclusiveRow inclusiveRow emptyRow branchAButton branchBButton incAButton incBButton |
-	diagramSimulator := OPBPMNSimulator model: self buildGatewayModel.
+	| model gateway subProcess activity flowToSubProcess flowToActivity diagramSimulator entry branches |
+	model := OPBPMNModel new name: 'Nil Names'.
+	gateway := OPBPMNGatewayModel new
+		           name: nil;
+		           type: OPBPMNNodeType Exclusive;
+		           yourself.
+	subProcess := OPBPMNSubProcessModel new
+		              name: nil;
+		              yourself.
+	activity := OPBPMNActivityModel new
+		            name: nil;
+		            yourself.
+	flowToSubProcess := (OPBPMNFlowModel from: gateway to: subProcess)
+		                    name: nil;
+		                    yourself.
+	flowToActivity := (OPBPMNFlowModel from: gateway to: activity)
+		                  name: 'Direct';
+		                  yourself.
+	{
+		flowToSubProcess.
+		flowToActivity } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			model add: eachFlow ].
+	{
+		gateway.
+		subProcess.
+		activity } do: [ :eachElement | model add: eachElement ].
+
+	diagramSimulator := OPBPMNSimulator model: model.
 	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
-	window := configGui asWindow.
-	configGui initializeWindow: window.
+	entry := configGui gatewayEntries first.
+	branches := entry at: #branches.
+	self assert: (entry at: #headerLabel) label equals: 'Exclusive gateway'.
+	self assert: (branches collect: [ :eachPair | eachPair value label ] as: Array) equals: #( '→ Sub-process' 'Direct' ).
 
-	self assert: window title equals: 'Simulator Configuration'.
-	self assert: window initialExtent equals: 400 @ 200.
+	configGui diagramSimulator: nil.
+	self deny: configGui hasConfigurableItems description: 'Clearing simulator must clear configurable gateway entries'.
+	self assertEmpty: configGui gatewayEntries
+]
 
-	gatewayPresenters := configGui instVarNamed: #gatewayPresenters.
-	self assert: gatewayPresenters size equals: 3.
+{ #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testRefreshFromSimulatorSynchronizesControlsAfterExternalChangeAndReset [
 
-	exclusiveSimulator := diagramSimulator configurableGateways detect: [ :each | each model name = 'XOR' ].
+	| diagramSimulator inclusiveSimulator inclusiveEntry firstButton secondButton warningLabel secondFlow |
+	diagramSimulator := OPBPMNSimulator model: self buildGatewayModel.
 	inclusiveSimulator := diagramSimulator configurableGateways detect: [ :each | each model name = 'OR' ].
-	emptySimulator := diagramSimulator configurableGateways detect: [ :each | each model name = 'EmptyXOR' ].
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	inclusiveEntry := configGui gatewayEntries detect: [ :eachEntry | (eachEntry at: #gateway) == inclusiveSimulator ].
+	firstButton := (inclusiveEntry at: #branches) first value.
+	secondButton := (inclusiveEntry at: #branches) second value.
+	secondFlow := (inclusiveEntry at: #branches) second key.
+	warningLabel := inclusiveEntry at: #warningLabel.
 
-	emptyRow := gatewayPresenters at: emptySimulator.
-	self assert: emptyRow size equals: 1.
-	self assert: emptyRow first label equals: 'EmptyXOR'.
+	inclusiveSimulator outgoingActive removeAll.
+	configGui refreshFromSimulator.
+	self deny: firstButton state description: 'Refresh must uncheck inactive branch checkbox'.
+	self deny: secondButton state description: 'Refresh must keep inactive branch unchecked'.
+	self denyEmpty: warningLabel label.
 
-	exclusiveRow := gatewayPresenters at: exclusiveSimulator.
-	self assert: exclusiveRow size equals: 3.
-	self assert: exclusiveRow first label equals: 'XOR'.
-	branchAButton := exclusiveRow allButFirst detect: [ :each | each label = 'BranchA' ].
-	branchBButton := exclusiveRow allButFirst detect: [ :each | each label = 'BranchB' ].
-	self assert: branchBButton state description: 'Default outgoing branch radio button must start selected'.
-
-	branchAButton state: true.
-	self assert: exclusiveSimulator outgoingActive size equals: 1.
-	self assert: exclusiveSimulator outgoingActive first model name equals: 'BranchA'.
-
-	inclusiveRow := gatewayPresenters at: inclusiveSimulator.
-	self assert: inclusiveRow size equals: 3.
-	incAButton := inclusiveRow allButFirst detect: [ :each | each label = 'IncA' ].
-	incBButton := inclusiveRow allButFirst detect: [ :each | each label = 'IncB' ].
-	self assert: incAButton state description: 'Initially active outgoing branch checkbox must start checked'.
-	self deny: incBButton state description: 'Initially inactive outgoing branch checkbox must start unchecked'.
-
-	incBButton state: true.
-	self assert: inclusiveSimulator outgoingActive size equals: 2.
-	incAButton state: false.
-	self assert: inclusiveSimulator outgoingActive size equals: 1.
-	self assert: inclusiveSimulator outgoingActive first model name equals: 'IncB'
+	inclusiveSimulator outgoingActive: (OrderedCollection with: secondFlow).
+	diagramSimulator reset.
+	configGui refreshFromSimulator.
+	self deny: firstButton state description: 'Refresh after reset must keep first branch unchecked'.
+	self assert: secondButton state description: 'Refresh after reset must preserve selected branch checked'.
+	self assertEmpty: warningLabel label
 ]

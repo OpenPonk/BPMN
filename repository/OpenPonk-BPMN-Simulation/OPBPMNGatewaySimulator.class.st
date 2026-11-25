@@ -58,7 +58,7 @@ OPBPMNGatewaySimulator >> initialize [
 { #category : 'testing' }
 OPBPMNGatewaySimulator >> isConfigurable [
 
-	^ true
+	^ outgoing size > 1
 ]
 
 { #category : 'testing' }

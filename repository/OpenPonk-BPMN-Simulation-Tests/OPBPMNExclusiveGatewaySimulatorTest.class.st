@@ -104,6 +104,25 @@ OPBPMNExclusiveGatewaySimulatorTest >> testFireDoesNothingWhenOutgoingActiveIsEm
 ]
 
 { #category : 'tests' }
+OPBPMNExclusiveGatewaySimulatorTest >> testIsConfigurableRequiresMoreThanOneOutgoingFlow [
+
+	| singleOutgoingGateway deadEndGateway singleFlow |
+	self assert: simulator isConfigurable description: 'Branching exclusive gateway with two outgoing flows must be configurable'.
+
+	deadEndGateway := self simulatorClass model: (OPBPMNGatewayModel new
+			                   type: OPBPMNNodeType Exclusive;
+			                   yourself).
+	self deny: deadEndGateway isConfigurable description: 'Dead-end gateway with zero outgoing flows must not be configurable'.
+
+	singleOutgoingGateway := self simulatorClass model: (OPBPMNGatewayModel new
+			                          type: OPBPMNNodeType Exclusive;
+			                          yourself).
+	singleFlow := OPBPMNSequenceFlowSimulator model: OPBPMNFlowModel new.
+	singleOutgoingGateway addedOutgoing: singleFlow.
+	self deny: singleOutgoingGateway isConfigurable description: 'Merging gateway with one outgoing flow must not be configurable'
+]
+
+{ #category : 'tests' }
 OPBPMNExclusiveGatewaySimulatorTest >> testLoadConnectedItemsIgnoresOutgoingAssociation [
 
 	| testModel gateway task annotation sequenceFlow association diagramSimulator gatewaySimulator |

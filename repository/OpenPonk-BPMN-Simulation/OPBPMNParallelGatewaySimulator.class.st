@@ -59,3 +59,10 @@ OPBPMNParallelGatewaySimulator >> loadConnectedItems [
 		select: [ :flow | diagramSimulator class hasSimulatorFor: flow ]
 		thenDo: [ :flow | self incomingBpmnTokens at: (diagramSimulator simulatorOf: flow) put: 0 ]
 ]
+
+{ #category : 'actions' }
+OPBPMNParallelGatewaySimulator >> loadState [
+
+	super loadState.
+	incomingBpmnTokens keysDo: [ :eachFlow | incomingBpmnTokens at: eachFlow put: 0 ]
+]

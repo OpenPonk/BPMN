@@ -28,3 +28,12 @@ OPBPMNStartEventSimulator >> loadConnectedItems [
 	bpmnTokens := 1.
 	blocked := false
 ]
+
+{ #category : 'actions' }
+OPBPMNStartEventSimulator >> loadState [
+
+	super loadState.
+	self isInsideSubProcess ifTrue: [ ^ self ].
+	bpmnTokens := 1.
+	blocked := false
+]
