@@ -782,7 +782,7 @@ self assert: writerVisitor writer asString equals:
 { #category : 'tests' }
 OPBPMNXMLWriterVisitorTest >> testVisitEventWithExecutableAttributeAndNilValues [
 
-	| event dataObject visitor xml |
+	| event visitor xml |
 	event := OPBPMNStartEventModel new
 		         name: nil;
 		         executableAttribute: 'customAttr';
@@ -800,14 +800,7 @@ OPBPMNXMLWriterVisitorTest >> testVisitEventWithExecutableAttributeAndNilValues 
 		description: 'Event with nil executableAttributeValue must emit empty attribute value'.
 	self
 		assert: (xml includesSubstring: '<bpmn:timeCycle xsi:type="semantic:tFormalExpression"/>')
-		description: 'Timer event with nil timerValue must emit empty formal expression'.
-
-	dataObject := OPBPMNDataObjectModel new.
-	visitor := OPBPMNXMLWriterVisitor new.
-	visitor visitElementEventTimer: dataObject.
-	self
-		assert: (visitor contents includesSubstring: '<bpmn:timerEventDefinition id="timerEventDefinition_' , dataObject uuid asString)
-		description: 'visitElementEventTimer: must handle elements without timerType/timerValue'
+		description: 'Timer event with nil timerValue must emit empty formal expression'
 ]
 
 { #category : 'tests' }

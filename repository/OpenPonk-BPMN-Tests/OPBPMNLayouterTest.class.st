@@ -622,3 +622,40 @@ OPBPMNLayouterTest >> testUnpartitionedPoolLayoutEncompassesInnerNodesAndArrange
 		assert: dataObjectShape encompassingRectangle top > taskShape encompassingRectangle bottom
 		description: 'Data object must sit below task'
 ]
+
+{ #category : 'tests' }
+OPBPMNLayouterTest >> testUnpartitionedPoolWithOnlySecondaryShapeLayoutsWithoutError [
+
+	| poolModel annotationModel customDiagram customDiagramController customLayouter poolShape annotationShape |
+	model := OPBPMNModel named: 'Secondary Only Pool'.
+	poolModel := OPBPMNPoolModel new name: 'Notes Pool'.
+	annotationModel := OPBPMNAnnotationModel new text: 'Standalone Note'.
+	poolModel add: annotationModel.
+	model add: poolModel.
+
+	project := OPProject new.
+	project addModel: model.
+	customDiagram := OPOpenPonkDiagram forModelElement: model.
+	project addDiagram: customDiagram.
+	undoManager := OPUndoManager new.
+	customDiagramController := OPBPMNDiagramController new.
+	(OPProjectController forProject: project)
+		instVarNamed: #undoManager put: undoManager;
+		addDiagramController: customDiagramController.
+	customDiagramController
+		canvasPresenter: (OPCanvasPresenter new
+				 canvas: RSCanvas new;
+				 yourself);
+		diagramElement: customDiagram;
+		model: model.
+	customDiagramController showAllElements.
+
+	customLayouter := OPBPMNLayouter new diagramController: customDiagramController.
+	customLayouter defaultLayout.
+
+	poolShape := (customDiagramController controllerForModel: poolModel) roassalShape.
+	annotationShape := (customDiagramController controllerForModel: annotationModel) roassalShape.
+	self
+		assert: (poolShape encompassingRectangle containsRect: annotationShape encompassingRectangle)
+		description: 'Unpartitioned pool without flow nodes must still encompass its secondary annotation after default layout'
+]

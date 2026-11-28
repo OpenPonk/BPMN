@@ -41,9 +41,7 @@ OPBPMNValidationController >> validate: aValidateModel [
 	validations := self getValidations select: [ :validation |
 		               OPBPMNValidationFrameworkSettings getInstance getSettingFor: validation ].
 	results := OPBPMNValidationResults new.
-	rootModel := (aValidateModel respondsTo: #rootOwner)
-		             ifTrue: [ aValidateModel rootOwner ]
-		             ifFalse: [ aValidateModel ].
+	rootModel := aValidateModel rootOwner.
 
 	((aValidateModel isKindOf: OPBPMNModel) and: [ validations includes: PR2347ProcessErrors ]) ifTrue: [
 		results addResults: (self validateProcess: aValidateModel) ].

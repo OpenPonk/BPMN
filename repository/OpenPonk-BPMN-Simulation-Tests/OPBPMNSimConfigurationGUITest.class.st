@@ -290,6 +290,31 @@ OPBPMNSimConfigurationGUITest >> testExclusiveAndInclusiveGatewayControlsLabelsA
 ]
 
 { #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testExclusiveGatewayWithStaleOutgoingActiveLeavesRadioGroupUnset [
+
+	| diagramSimulator exclusiveSimulator staleFlow exclusiveEntry exclusiveButtons firstButton secondButton |
+	diagramSimulator := OPBPMNSimulator model: self buildGatewayModel.
+	exclusiveSimulator := diagramSimulator configurableGateways detect: [ :each | each model name = 'XOR' ].
+	staleFlow := OPBPMNFlowSimulator new.
+	exclusiveSimulator outgoingActive: (OrderedCollection with: staleFlow).
+
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	exclusiveEntry := configGui gatewayEntries detect: [ :eachEntry | (eachEntry at: #gateway) == exclusiveSimulator ].
+	exclusiveButtons := (exclusiveEntry at: #branches) collect: #value.
+	firstButton := exclusiveButtons first.
+	secondButton := exclusiveButtons second.
+
+	self assert: firstButton associatedRadioButtons asArray equals: { secondButton }.
+	self assert: secondButton associatedRadioButtons asArray equals: { firstButton }.
+	self
+		deny: firstButton isInitialStateSet
+		description: 'Stale outgoingActive flow must leave exclusive radio group without an initial selection'.
+
+	secondButton state: true.
+	self assert: exclusiveSimulator outgoingActive asArray equals: { (exclusiveEntry at: #branches) second key }
+]
+
+{ #category : 'tests' }
 OPBPMNSimConfigurationGUITest >> testExclusiveRadioButtonsAreGroupedEvenWhenOutgoingActiveIsEmpty [
 
 	| diagramSimulator exclusiveSimulator exclusiveEntry exclusiveButtons firstButton secondButton |
@@ -411,4 +436,55 @@ OPBPMNSimConfigurationGUITest >> testRefreshFromSimulatorSynchronizesControlsAft
 	self deny: firstButton state description: 'Refresh after reset must keep first branch unchecked'.
 	self assert: secondButton state description: 'Refresh after reset must preserve selected branch checked'.
 	self assertEmpty: warningLabel label
+]
+
+{ #category : 'tests' }
+OPBPMNSimConfigurationGUITest >> testTargetlessFlowFallsBackToBranchIndexAndDeactivatingAbsentInclusiveFlowIsSafe [
+
+	| model gateway task1 task2 flow1 flow2 diagramSimulator targetlessFlowSimulator entry branchLabels inclusiveModel inclusiveSimulator inclusiveGateway inclusiveEntry firstCheckbox warningLabel |
+	model := OPBPMNModel new name: 'Targetless Flow'.
+	gateway := OPBPMNGatewayModel new
+		           name: 'Choice';
+		           type: OPBPMNNodeType Exclusive;
+		           yourself.
+	task1 := OPBPMNActivityModel new name: 'Done'.
+	task2 := OPBPMNActivityModel new name: 'Other'.
+	flow1 := (OPBPMNFlowModel from: gateway to: task1)
+		         name: '';
+		         yourself.
+	flow2 := (OPBPMNFlowModel from: gateway to: task2)
+		         name: '';
+		         yourself.
+	{
+		flow1.
+		flow2 } do: [ :eachFlow |
+			eachFlow source addFlow: eachFlow.
+			eachFlow target addFlow: eachFlow.
+			model add: eachFlow ].
+	{
+		gateway.
+		task1.
+		task2 } do: [ :eachElement | model add: eachElement ].
+
+	diagramSimulator := OPBPMNSimulator model: model.
+	targetlessFlowSimulator := diagramSimulator simulatorOf: flow1.
+	targetlessFlowSimulator outgoing removeAll.
+
+	configGui := OPBPMNSimConfigurationGUI on: diagramSimulator.
+	entry := configGui gatewayEntries first.
+	branchLabels := (entry at: #branches) collect: [ :eachPair | eachPair value label ] as: Array.
+	self assert: branchLabels equals: #( '→ Branch 1' '→ Other' ).
+
+	inclusiveModel := self buildGatewayModel.
+	inclusiveSimulator := OPBPMNSimulator model: inclusiveModel.
+	configGui := OPBPMNSimConfigurationGUI on: inclusiveSimulator.
+	inclusiveGateway := inclusiveSimulator configurableGateways detect: [ :each | each model name = 'OR' ].
+	inclusiveEntry := configGui gatewayEntries detect: [ :eachEntry | (eachEntry at: #gateway) == inclusiveGateway ].
+	firstCheckbox := (inclusiveEntry at: #branches) first value.
+	warningLabel := inclusiveEntry at: #warningLabel.
+
+	inclusiveGateway outgoingActive removeAll.
+	firstCheckbox state: false.
+	self assertEmpty: inclusiveGateway outgoingActive.
+	self denyEmpty: warningLabel label
 ]

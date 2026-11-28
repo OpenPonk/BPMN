@@ -149,9 +149,8 @@ OPBPMNLaneShape >> isLaneHighlighted [
 
 { #category : 'testing' }
 OPBPMNLaneShape >> isLastLaneInPool [
-	^ owningElement isNotNil and: [
-		(owningElement respondsTo: #laneElements) and: [
-			owningElement laneElements ifNotEmpty: [ :lanes | lanes last == self ] ifEmpty: [ false ] ] ]
+
+	^ (owningElement isKindOf: OPBPMNPoolShape) and: [ owningElement laneElements last == self ]
 ]
 
 { #category : 'accessing' }
@@ -208,10 +207,10 @@ OPBPMNLaneShape >> previousLaneShape [
 OPBPMNLaneShape >> registerSeparatorHandleEventsOn: aHandleShape [
 
 	| rawDeltaY initialFirstHeight initialSecondHeight nextShape |
-	nextShape := self nextLaneShape.
+	nextShape := nil.
 	rawDeltaY := 0.0.
-	initialFirstHeight := self laneHeight.
-	initialSecondHeight := nextShape ifNil: [ 0 ] ifNotNil: [ :theShape | theShape laneHeight ].
+	initialFirstHeight := 0.
+	initialSecondHeight := 0.
 	aHandleShape
 		when: RSMouseEnter do: [ :event | self showSeparatorResizeCursor ] for: self;
 		when: RSMouseLeave do: [ :event | self removeSeparatorResizeCursor ] for: self;
@@ -423,16 +422,13 @@ OPBPMNLaneShape >> updateRenderFromModel [
 
 { #category : 'updating' }
 OPBPMNLaneShape >> updateSeparatorHandle [
-	| separatorCenter |
+
 	self shouldShowSeparatorHandle ifFalse: [
-		self removeSeparatorHandle.
-		^ self ].
+			self removeSeparatorHandle.
+			^ self ].
 	separatorHandle ifNil: [
-		separatorHandle := self createSeparatorHandle.
-		self canvas add: separatorHandle ].
-	separatorCenter := laneSeparator
-		ifNotNil: [ :separator | separator position ]
-		ifNil: [ roassalShape position x @ (roassalShape position y + (roassalShape height / 2)) ].
-	separatorHandle translateTo: separatorCenter.
+			separatorHandle := self createSeparatorHandle.
+			self canvas add: separatorHandle ].
+	separatorHandle translateTo: laneSeparator position.
 	separatorHandle pushFront
 ]

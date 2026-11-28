@@ -130,10 +130,8 @@ OPBPMNNodeShape >> updateIconPosition [
 
 { #category : 'rendering' }
 OPBPMNNodeShape >> updateLabel [
-	| labelShape |
-	labelShape := roassalShape propertyAt: #RSLabeled ifAbsent: [ nil ].
-	labelShape ifNotNil: [
-		labelShape text: (self modelElement name ifNil: [ '' ]) ]
+
+	roassalShape propertyAt: #RSLabeled ifPresent: [ :labelShape | labelShape text: (self modelElement name ifNil: [ '' ]) ]
 ]
 
 { #category : 'rendering' }

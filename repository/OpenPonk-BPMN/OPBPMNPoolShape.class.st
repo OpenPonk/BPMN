@@ -195,7 +195,7 @@ OPBPMNPoolShape >> isContainer [
 { #category : 'testing' }
 OPBPMNPoolShape >> isRemovingRender [
 
-	^ isRemovingRender ifNil: [ false ]
+	^ isRemovingRender
 ]
 
 { #category : 'accessing' }
@@ -394,54 +394,56 @@ OPBPMNPoolShape >> renderShapeDetails [
 
 { #category : 'geometry' }
 OPBPMNPoolShape >> resizeToRectangle: aRectangle [
+
 	| oldRectangle deltaTop deltaBottom lanes effectiveTop effectiveBottom effectiveRectangle isTopDrag isBottomDrag |
-	oldRectangle := self lastRectangle ifNil: [ roassalShape ifNotNil: [ roassalShape encompassingRectangle copy ] ].
+	oldRectangle := self lastRectangle.
 	oldRectangle ifNil: [ ^ self ].
 	effectiveTop := aRectangle top.
 	effectiveBottom := aRectangle bottom.
 	lanes := self laneShapes.
 	(oldRectangle height closeTo: aRectangle height) ifFalse: [
-		deltaTop := aRectangle top - oldRectangle top.
-		deltaBottom := aRectangle bottom - oldRectangle bottom.
-		isTopDrag := (oldRectangle bottom closeTo: aRectangle bottom precision: 1.0) and: [ deltaTop abs > 0.5 ].
-		isBottomDrag := (oldRectangle top closeTo: aRectangle top precision: 1.0) and: [ deltaBottom abs > 0.5 ].
-		lanes ifNotEmpty: [
-			isTopDrag ifTrue: [
-				| currentFirstHeight minHeight maxShrinkTop actualDeltaTop |
-				currentFirstHeight := lanes first laneHeight.
-				minHeight := lanes first minimumHeight.
-				maxShrinkTop := currentFirstHeight - minHeight max: 0.
-				actualDeltaTop := deltaTop min: maxShrinkTop.
-				lanes first laneHeight: currentFirstHeight - actualDeltaTop.
-				effectiveTop := oldRectangle top + actualDeltaTop ].
-			isBottomDrag ifTrue: [
-				| currentLastHeight minHeight maxShrinkBottom actualDeltaBottom |
-				currentLastHeight := lanes last laneHeight.
-				minHeight := lanes last minimumHeight.
-				maxShrinkBottom := currentLastHeight - minHeight max: 0.
-				actualDeltaBottom := deltaBottom max: maxShrinkBottom negated.
-				lanes last laneHeight: currentLastHeight + actualDeltaBottom.
-				effectiveBottom := oldRectangle bottom + actualDeltaBottom ].
-			(isTopDrag not and: [ isBottomDrag not ]) ifTrue: [
-				| totalCurrentHeight scale |
-				totalCurrentHeight := lanes sumNumbers: #laneHeight.
-				scale := totalCurrentHeight isZero ifTrue: [ 1 ] ifFalse: [ aRectangle height / totalCurrentHeight ].
-				lanes do: [ :eachLane |
-					eachLane laneHeight: (eachLane laneHeight * scale max: eachLane minimumHeight) ] ] ] ].
+			deltaTop := aRectangle top - oldRectangle top.
+			deltaBottom := aRectangle bottom - oldRectangle bottom.
+			isTopDrag := (oldRectangle bottom closeTo: aRectangle bottom precision: 1.0) and: [ deltaTop abs > 0.5 ].
+			isBottomDrag := (oldRectangle top closeTo: aRectangle top precision: 1.0) and: [ deltaBottom abs > 0.5 ].
+			lanes ifNotEmpty: [
+					isTopDrag ifTrue: [
+							| currentFirstHeight minHeight maxShrinkTop actualDeltaTop |
+							currentFirstHeight := lanes first laneHeight.
+							minHeight := lanes first minimumHeight.
+							maxShrinkTop := currentFirstHeight - minHeight max: 0.
+							actualDeltaTop := deltaTop min: maxShrinkTop.
+							lanes first laneHeight: currentFirstHeight - actualDeltaTop.
+							effectiveTop := oldRectangle top + actualDeltaTop ].
+					isBottomDrag ifTrue: [
+							| currentLastHeight minHeight maxShrinkBottom actualDeltaBottom |
+							currentLastHeight := lanes last laneHeight.
+							minHeight := lanes last minimumHeight.
+							maxShrinkBottom := currentLastHeight - minHeight max: 0.
+							actualDeltaBottom := deltaBottom max: maxShrinkBottom negated.
+							lanes last laneHeight: currentLastHeight + actualDeltaBottom.
+							effectiveBottom := oldRectangle bottom + actualDeltaBottom ].
+					(isTopDrag not and: [ isBottomDrag not ]) ifTrue: [
+							| totalCurrentHeight scale |
+							totalCurrentHeight := lanes sumNumbers: #laneHeight.
+							scale := totalCurrentHeight isZero
+								         ifTrue: [ 1 ]
+								         ifFalse: [ aRectangle height / totalCurrentHeight ].
+							lanes do: [ :eachLane | eachLane laneHeight: (eachLane laneHeight * scale max: eachLane minimumHeight) ] ] ] ].
 	effectiveRectangle := Rectangle
-		left: aRectangle left
-		right: aRectangle right
-		top: effectiveTop
-		bottom: effectiveBottom.
+		                      left: aRectangle left
+		                      right: aRectangle right
+		                      top: effectiveTop
+		                      bottom: effectiveBottom.
 	self lastRectangle: effectiveRectangle.
 	roassalShape ifNotNil: [
-		isAdjustingExtent := true.
-		[
-			(roassalShape extent closeTo: effectiveRectangle extent) ifFalse: [ roassalShape extent: effectiveRectangle extent ].
-			(roassalShape position closeTo: effectiveRectangle floatCenter) ifFalse: [ roassalShape translateTo: effectiveRectangle floatCenter ].
-			self updateNameArea.
-			self relocateLanesDisplacingElements: false
-		] ensure: [ isAdjustingExtent := false ] ].
+			isAdjustingExtent := true.
+			[
+				(roassalShape extent closeTo: effectiveRectangle extent) ifFalse: [ roassalShape extent: effectiveRectangle extent ].
+				(roassalShape position closeTo: effectiveRectangle floatCenter) ifFalse: [
+					roassalShape translateTo: effectiveRectangle floatCenter ].
+				self updateNameArea.
+				self relocateLanesDisplacingElements: false ] ensure: [ isAdjustingExtent := false ] ].
 	bounds ifNotNil: [ self bounds: (OPNodeBounds withPosition: effectiveRectangle floatCenter extent: effectiveRectangle extent) ]
 ]
 

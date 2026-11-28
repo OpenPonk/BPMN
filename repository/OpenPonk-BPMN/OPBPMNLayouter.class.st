@@ -125,34 +125,31 @@ OPBPMNLayouter >> layoutHorizontalFlowShapes: aCollectionOfFlowShapes edges: aCo
 	ranks := Dictionary new.
 	aCollectionOfFlowShapes do: [ :eachShape | ranks at: eachShape put: 0 ].
 	aCollectionOfFlowShapes size timesRepeat: [
-		aCollectionOfLayoutEdges do: [ :eachEdge |
-			| sourceRank targetRank |
-			sourceRank := ranks at: eachEdge key ifAbsent: [ 0 ].
-			targetRank := ranks at: eachEdge value ifAbsent: [ 0 ].
-			targetRank < (sourceRank + 1) ifTrue: [
-				ranks at: eachEdge value put: sourceRank + 1 ] ] ].
+			aCollectionOfLayoutEdges do: [ :eachEdge |
+					| sourceRank targetRank |
+					sourceRank := ranks at: eachEdge key.
+					targetRank := ranks at: eachEdge value.
+					targetRank < (sourceRank + 1) ifTrue: [ ranks at: eachEdge value put: sourceRank + 1 ] ] ].
 	maxRank := ranks values ifEmpty: [ 0 ] ifNotEmpty: [ :valuesCollection | valuesCollection max ].
 	nodesByRank := Dictionary new.
-	0 to: maxRank do: [ :eachRank |
-		nodesByRank at: eachRank put: OrderedCollection new ].
-	ranks keysAndValuesDo: [ :eachShape :eachRank |
-		(nodesByRank at: eachRank) add: eachShape ].
+	0 to: maxRank do: [ :eachRank | nodesByRank at: eachRank put: OrderedCollection new ].
+	ranks keysAndValuesDo: [ :eachShape :eachRank | (nodesByRank at: eachRank) add: eachShape ].
 	currentX := 50.
 	horizontalGap := 60.
 	verticalGap := 50.
 	0 to: maxRank do: [ :eachRankIndex |
-		| columnShapes columnMaxWidth totalColumnHeight runningY |
-		columnShapes := nodesByRank at: eachRankIndex.
-		columnShapes ifNotEmpty: [
-			columnMaxWidth := (columnShapes collect: [ :eachShape | eachShape extent x ]) max.
-			totalColumnHeight := (columnShapes sum: [ :eachShape | eachShape extent y ]) + ((columnShapes size - 1) * verticalGap).
-			runningY := 0 - (totalColumnHeight / 2).
-			columnShapes do: [ :eachShape |
-				| shapeCenterY |
-				shapeCenterY := runningY + (eachShape extent y / 2).
-				eachShape translateTo: (currentX + (columnMaxWidth / 2)) @ shapeCenterY.
-				runningY := runningY + eachShape extent y + verticalGap ].
-			currentX := currentX + columnMaxWidth + horizontalGap ] ]
+			| columnShapes columnMaxWidth totalColumnHeight runningY |
+			columnShapes := nodesByRank at: eachRankIndex.
+			columnShapes ifNotEmpty: [
+					columnMaxWidth := (columnShapes collect: [ :eachShape | eachShape extent x ]) max.
+					totalColumnHeight := (columnShapes sum: [ :eachShape | eachShape extent y ]) + (columnShapes size - 1 * verticalGap).
+					runningY := 0 - (totalColumnHeight / 2).
+					columnShapes do: [ :eachShape |
+							| shapeCenterY |
+							shapeCenterY := runningY + (eachShape extent y / 2).
+							eachShape translateTo: currentX + (columnMaxWidth / 2) @ shapeCenterY.
+							runningY := runningY + eachShape extent y + verticalGap ].
+					currentX := currentX + columnMaxWidth + horizontalGap ] ]
 ]
 
 { #category : 'layouts' }
@@ -198,8 +195,8 @@ OPBPMNLayouter >> layoutPoolWithLanes: aPoolShape shapes: aCollectionOfLaneShape
 	allFlowShapes size timesRepeat: [
 			flowEdges do: [ :eachEdge |
 					| sourceRank targetRank |
-					sourceRank := ranks at: eachEdge key ifAbsent: [ 0 ].
-					targetRank := ranks at: eachEdge value ifAbsent: [ 0 ].
+					sourceRank := ranks at: eachEdge key.
+					targetRank := ranks at: eachEdge value.
 					targetRank < (sourceRank + 1) ifTrue: [ ranks at: eachEdge value put: sourceRank + 1 ] ] ].
 
 	maxRank := ranks values ifEmpty: [ 0 ] ifNotEmpty: [ :valuesCollection | valuesCollection max ].
@@ -226,7 +223,7 @@ OPBPMNLayouter >> layoutPoolWithLanes: aPoolShape shapes: aCollectionOfLaneShape
 					columnShapes := (nodesByRank at: eachRankIndex) select: [ :eachShape | eachShape model owningElement == eachLane ].
 					columnShapes ifNotEmpty: [
 							| totalColumnHeight runningY |
-							columnCenterX := columnCenters at: eachRankIndex ifAbsent: [ currentX ].
+							columnCenterX := columnCenters at: eachRankIndex.
 							totalColumnHeight := (columnShapes sum: [ :eachShape | eachShape extent y ]) + (columnShapes size - 1 * 40).
 							runningY := 0 - (totalColumnHeight / 2).
 							columnShapes do: [ :eachShape |

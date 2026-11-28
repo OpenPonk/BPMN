@@ -22,7 +22,6 @@ OPBPMNBoundaryEventShape >> attachToHostShape [
 	hostElement := self hostDiagramElement.
 	(hostElement isNil or: [ hostElement isRendered not ]) ifTrue: [ ^ self ].
 	hostRoassalShape := hostElement roassalShape.
-	hostRoassalShape ifNil: [ ^ self ].
 	boundarySiblings := (self modelElement isNotNil and: [ self modelElement owner isNotNil ])
 		                    ifTrue: [
 		                    self modelElement owner elements select: [ :eachElement | eachElement isKindOf: OPBPMNBoundaryEventModel ] ]

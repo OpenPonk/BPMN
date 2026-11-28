@@ -97,7 +97,8 @@ OPBPMNPoolModel >> printType [
 
 { #category : 'private' }
 OPBPMNPoolModel >> relocateChildElement: aChildElement from: aSourceContainer to: aTargetContainer [
-	aSourceContainer elements remove: aChildElement ifAbsent: [ ].
+
+	aSourceContainer elements remove: aChildElement.
 	aChildElement unsubscribe: aSourceContainer.
 	aTargetContainer add: aChildElement
 ]

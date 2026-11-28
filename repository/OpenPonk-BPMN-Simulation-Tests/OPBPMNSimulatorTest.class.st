@@ -133,7 +133,7 @@ OPBPMNSimulatorTest >> testConfigurableGatewaysInBuiltInExamples [
 { #category : 'tests' }
 OPBPMNSimulatorTest >> testConfigurableGatewaysOrderIsDeterministic [
 
-	| testModel zetaGateway alphaGateway unnamedGateway targets diagramSimulator |
+	| testModel zetaGateway alphaGateway unnamedGateway nilNameGateway targets diagramSimulator |
 	testModel := OPBPMNModel new name: 'Deterministic Gateways'.
 	zetaGateway := OPBPMNGatewayModel new
 		               name: 'Zeta';
@@ -147,18 +147,25 @@ OPBPMNSimulatorTest >> testConfigurableGatewaysOrderIsDeterministic [
 		                  name: '';
 		                  type: OPBPMNNodeType Exclusive;
 		                  yourself.
-	targets := (1 to: 6) collect: [ :index | OPBPMNActivityModel new name: 'Task ' , index asString ].
+	nilNameGateway := OPBPMNGatewayModel new
+		                  name: nil;
+		                  type: OPBPMNNodeType Inclusive;
+		                  yourself.
+	targets := (1 to: 8) collect: [ :index | OPBPMNActivityModel new name: 'Task ' , index asString ].
 	{
 		zetaGateway.
 		alphaGateway.
-		unnamedGateway } , targets do: [ :eachElement | testModel add: eachElement ].
+		unnamedGateway.
+		nilNameGateway } , targets do: [ :eachElement | testModel add: eachElement ].
 	{
 		(zetaGateway -> targets first).
 		(zetaGateway -> (targets at: 2)).
 		(alphaGateway -> (targets at: 3)).
 		(alphaGateway -> (targets at: 4)).
 		(unnamedGateway -> (targets at: 5)).
-		(unnamedGateway -> (targets at: 6)) } do: [ :eachPair |
+		(unnamedGateway -> (targets at: 6)).
+		(nilNameGateway -> (targets at: 7)).
+		(nilNameGateway -> (targets at: 8)) } do: [ :eachPair |
 			| sequenceFlow |
 			sequenceFlow := OPBPMNFlowModel from: eachPair key to: eachPair value.
 			eachPair key addFlow: sequenceFlow.
@@ -169,7 +176,8 @@ OPBPMNSimulatorTest >> testConfigurableGatewaysOrderIsDeterministic [
 	self assert: (diagramSimulator configurableGateways collect: #model as: Array) equals: {
 			alphaGateway.
 			zetaGateway.
-			unnamedGateway }
+			unnamedGateway.
+			nilNameGateway }
 ]
 
 { #category : 'tests' }

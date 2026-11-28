@@ -104,10 +104,9 @@ OPBPMNXMLWriterVisitor >> visitAssociationsFor: aCollectionOfElements [
 	associations := (aCollectionOfElements flatCollect: [ :eachElement |
 			                 | elementAssociations |
 			                 elementAssociations := OrderedCollection new.
-			                 (eachElement isKindOf: OPBPMNNodeModel) ifTrue: [
-				                 elementAssociations addAll: (eachElement associations ifNil: [ #(  ) ]) ].
+			                 (eachElement isKindOf: OPBPMNNodeModel) ifTrue: [ elementAssociations addAll: eachElement associations ].
 			                 (eachElement isKindOf: OPBPMNSemanticNodeModel) ifTrue: [
-					                 elementAssociations addAll: ((eachElement flows ifNil: [ #(  ) ]) select: [ :eachFlow |
+					                 elementAssociations addAll: (eachElement flows select: [ :eachFlow |
 							                  (eachFlow isKindOf: OPBPMNAssociationModel) or: [ eachFlow isKindOf: OPBPMNDataFlowModel ] ]) ].
 			                 elementAssociations ]) asSet.
 	associations do: [ :eachAssociation | self visitElement: eachAssociation ]
@@ -236,20 +235,20 @@ OPBPMNXMLWriterVisitor >> visitElement: anElement [
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitElementActivity: anElement [
+
 	| attributes |
 	attributes := OrderedCollection new.
 	attributes add: 'name' -> (anElement name ifNil: [ '' ]).
 	attributes add: 'id' -> (anElement printIdType , anElement uuid asString).
-	(anElement executableAttribute isNotNil and: [ anElement executableAttribute isNotEmpty ]) ifTrue: [
-		attributes add: anElement executableAttribute -> (anElement executableAttributeValue ifNil: [ '' ]) ].
-	writer
-		tag: self namespace , anElement printType
-		attributes: attributes asArray
-		with: [
-			(anElement incoming select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
-			(anElement outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ]
+	anElement executableAttribute isNotEmpty ifTrue: [
+		attributes add: anElement executableAttribute -> anElement executableAttributeValue ].
+	writer tag: self namespace , anElement printType attributes: attributes asArray with: [
+			anElement incoming
+				select: [ :each | each isKindOf: OPBPMNFlowModel ]
+				thenDo: [ :each | self visitFlowRef: each inOut: 'incoming' ].
+			anElement outgoing
+				select: [ :each | each isKindOf: OPBPMNFlowModel ]
+				thenDo: [ :each | self visitFlowRef: each inOut: 'outgoing' ] ]
 ]
 
 { #category : 'visiting' }
@@ -282,68 +281,58 @@ OPBPMNXMLWriterVisitor >> visitElementAssociation: anAssociation [
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitElementBoundaryEvent: aBoundaryEvent [
+
 	| attributes host |
 	attributes := OrderedCollection new.
 	attributes add: 'id' -> (aBoundaryEvent printIdType , aBoundaryEvent uuid asString).
 	attributes add: 'name' -> (aBoundaryEvent name ifNil: [ '' ]).
 	host := aBoundaryEvent owner.
-	host ifNotNil: [
-		attributes add: 'attachedToRef' -> (host printIdType , host uuid asString) ].
-	(aBoundaryEvent isNonInterrupting ifNil: [ false ]) ifTrue: [
-		attributes add: 'cancelActivity' -> 'false' ].
-	writer
-		tag: self namespace , aBoundaryEvent printType
-		attributes: attributes asArray
-		with: [
-			(aBoundaryEvent incoming select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
-			(aBoundaryEvent outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
-			aBoundaryEvent type = OPBPMNNodeType Timer ifTrue: [
-				self visitElementEventTimer: aBoundaryEvent ] ]
+	host ifNotNil: [ attributes add: 'attachedToRef' -> (host printIdType , host uuid asString) ].
+	aBoundaryEvent isNonInterrupting ifTrue: [ attributes add: 'cancelActivity' -> 'false' ].
+	writer tag: self namespace , aBoundaryEvent printType attributes: attributes asArray with: [
+			aBoundaryEvent incoming
+				select: [ :each | each isKindOf: OPBPMNFlowModel ]
+				thenDo: [ :each | self visitFlowRef: each inOut: 'incoming' ].
+			aBoundaryEvent outgoing
+				select: [ :each | each isKindOf: OPBPMNFlowModel ]
+				thenDo: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
+			aBoundaryEvent type = OPBPMNNodeType Timer ifTrue: [ self visitElementEventTimer: aBoundaryEvent ] ]
 ]
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitElementEvent: anElement [
+
 	| attributes |
 	attributes := OrderedCollection new.
 	attributes add: 'name' -> (anElement name ifNil: [ '' ]).
 	attributes add: 'id' -> (anElement printIdType , anElement uuid asString).
-	(anElement executableAttribute isNotNil and: [ anElement executableAttribute isNotEmpty ]) ifTrue: [
-		attributes add: anElement executableAttribute -> (anElement executableAttributeValue ifNil: [ '' ]) ].
-	writer
-		tag: self namespace , anElement printType
-		attributes: attributes asArray
-		with: [
-			(anElement incoming select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'incoming' ].
-			(anElement outgoing select: [ :each | each isKindOf: OPBPMNFlowModel ])
-				do: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
-			anElement type = OPBPMNNodeType Timer ifTrue: [
-				self visitElementEventTimer: anElement ] ]
+	anElement executableAttribute isNotEmpty ifTrue: [
+		attributes add: anElement executableAttribute -> anElement executableAttributeValue ].
+	writer tag: self namespace , anElement printType attributes: attributes asArray with: [
+			anElement incoming
+				select: [ :each | each isKindOf: OPBPMNFlowModel ]
+				thenDo: [ :each | self visitFlowRef: each inOut: 'incoming' ].
+			anElement outgoing
+				select: [ :each | each isKindOf: OPBPMNFlowModel ]
+				thenDo: [ :each | self visitFlowRef: each inOut: 'outgoing' ].
+			anElement type = OPBPMNNodeType Timer ifTrue: [ self visitElementEventTimer: anElement ] ]
 ]
 
 { #category : 'visiting' }
 OPBPMNXMLWriterVisitor >> visitElementEventTimer: anElement [
+
 	| hasExpression timerTypeValue |
-	timerTypeValue := (anElement respondsTo: #timerType)
-		ifTrue: [ anElement timerType ]
-		ifFalse: [ nil ].
-	hasExpression := timerTypeValue isNotNil and: [
-		timerTypeValue ~= #none and: [
-			timerTypeValue isNotEmpty ] ].
+	timerTypeValue := anElement timerType.
+	hasExpression := timerTypeValue ~= #none and: [ timerTypeValue isNotEmpty ].
 	writer
 		tag: self namespace , 'timerEventDefinition'
-		attributes: (Array with:
-			'id' -> ('timerEventDefinition_' , anElement uuid asString))
+		attributes: (Array with: 'id' -> ('timerEventDefinition_' , anElement uuid asString))
 		with: [
-			hasExpression ifTrue: [
-				writer
-					tag: self namespace , timerTypeValue asString
-					attributes: (Array with: 'xsi:type' -> 'semantic:tFormalExpression')
-					with: ((anElement respondsTo: #timerValue)
-						ifTrue: [ anElement timerValue ifNil: [ '' ] ]
-						ifFalse: [ '' ]) ] ]
+				hasExpression ifTrue: [
+						writer
+							tag: self namespace , timerTypeValue asString
+							attributes: (Array with: 'xsi:type' -> 'semantic:tFormalExpression')
+							with: anElement timerValue ] ]
 ]
 
 { #category : 'visiting' }

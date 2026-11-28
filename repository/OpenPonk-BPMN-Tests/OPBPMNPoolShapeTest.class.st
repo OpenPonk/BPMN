@@ -128,6 +128,12 @@ OPBPMNPoolShapeTest >> testPoolMinimumHeightBorderColorStrokeColorAndUnrenderedG
 		adoptOwnedElementsIntoLane: OPBPMNLaneShape new.
 	self deny: poolShape isRendered description: 'Unrendered pool guards must leave pool unrendered'.
 
+	poolShape
+		bounds: (OPNodeBounds withPosition: 100 @ 100 extent: 600 @ 200);
+		updateRenderFromBounds.
+	self deny: poolShape isRendered description: 'Updating render from bounds before render must leave pool unrendered'.
+	self assert: poolShape bounds equals: (OPNodeBounds withPosition: 100 @ 100 extent: 600 @ 200).
+
 	canvas := RSCanvas new.
 	poolShape renderIn: canvas.
 	self assert: (poolShape instVarNamed: #nameLabel) text equals: ''.
